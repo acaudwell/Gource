@@ -279,10 +279,10 @@ void RUser::logic(float dt) {
 
 void RUser::updateFont() {
     if(selected) {
-        font = fontmanager.grab("LiberationSans-Regular.ttf", 18);
+        font = fontmanager.grab("FreeSans.ttf", 18);
         font.dropShadow(true);
     } else {
-        font = fontmanager.grab("LiberationSans-Regular.ttf", 14);
+        font = fontmanager.grab("FreeSans.ttf", 14);
         font.dropShadow(true);
     }
 

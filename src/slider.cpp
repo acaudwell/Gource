@@ -22,7 +22,7 @@
 PositionSlider::PositionSlider(float percent) {
     this->percent = percent;
 
-    font = fontmanager.grab("LiberationSans-Regular.ttf", 16);
+    font = fontmanager.grab("FreeSans.ttf", 16);
     font.dropShadow(true);
 
     int gap = display.width / 30;

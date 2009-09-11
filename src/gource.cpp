@@ -113,15 +113,15 @@ Gource::Gource(std::string logfile) {
 
     commitlog = 0;
 
-    fontlarge = fontmanager.grab("LiberationSans-Regular.ttf", 42);
+    fontlarge = fontmanager.grab("FreeSans.ttf", 42);
     fontlarge.dropShadow(true);
     fontlarge.roundCoordinates(true);
 
-    fontmedium = fontmanager.grab("LiberationSans-Regular.ttf", 16);
+    fontmedium = fontmanager.grab("FreeSans.ttf", 16);
     fontmedium.dropShadow(true);
     fontmedium.roundCoordinates(false);
 
-    font = fontmanager.grab("LiberationSans-Regular.ttf", 14);
+    font = fontmanager.grab("FreeSans.ttf", 14);
     font.dropShadow(true);
     font.roundCoordinates(true);
 
@@ -146,6 +146,8 @@ Gource::Gource(std::string logfile) {
     hoverFile = 0;
     selectedUser = 0;
     hoverUser = 0;
+
+    date_x_offset = 0;
 
     camera = ZoomCamera(vec3f(0,0, -300), vec3f(0.0, 0.0, 0.0), 250.0, 5000.0);
     setCameraMode(false);
@@ -955,6 +957,10 @@ void Gource::updateTime() {
     struct tm* timeinfo = localtime ( &currtime );
     strftime(datestr, 256, "%A, %d %B, %Y %X", timeinfo);
     displaydate = datestr;
+
+    //avoid wobbling by only moving font if change is sufficient
+    int date_offset = (int) fontmedium.getWidth(displaydate) * 0.5;
+    if(abs(date_x_offset - date_offset) > 5) date_x_offset = date_offset;
 }
 
 void Gource::logic(float t, float dt) {
@@ -1338,8 +1344,7 @@ void Gource::draw(float t, float dt) {
     vec3f campos = camera.getPos();
 
     if(!gGourceHideDate) {
-        float width = fontmedium.getWidth(displaydate);
-        fontmedium.draw(display.width/2 - width/2.0, 20, displaydate);
+        fontmedium.draw(display.width/2 - date_x_offset, 20, displaydate);
     }
 
     if(splash>0.0f) {

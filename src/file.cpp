@@ -106,9 +106,9 @@ void RFile::setPath() {
 void RFile::setSelected(bool selected) {
 
     if(selected) {
-        font = fontmanager.grab("LiberationSans-Regular.ttf", 18);
+        font = fontmanager.grab("FreeSans.ttf", 18);
     } else {
-        font = fontmanager.grab("LiberationSans-Regular.ttf", 11);
+        font = fontmanager.grab("FreeSans.ttf", 11);
     }
     font.dropShadow(false);
     font.roundCoordinates(true);
@@ -265,7 +265,7 @@ void RFile::drawNameText(float alpha) {
 
             glTranslatef(screenpos.x, screenpos.y, 0.0);
 
-            //hard coded drop shadow 
+            //hard coded drop shadow
             glPushMatrix();
                 glTranslatef(1.0, 1.0, 0.0);
                 glColor4f(0.0, 0.0, 0.0, name_alpha * 0.7f);

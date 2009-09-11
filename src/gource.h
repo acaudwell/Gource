@@ -84,6 +84,7 @@ class Gource : public SDLApp {
     RDirNode* root;
 
     std::string displaydate;
+    int date_x_offset;
 
     FXFont font, fontlarge, fontmedium;
 
