@@ -5,3 +5,4 @@ gource.layout
 debug.log
 Makefile
 *.dll
+logs/*
