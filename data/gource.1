@@ -1,0 +1,188 @@
+.TH Gource 1
+.SH NAME
+Gource -  a procedural tree-like version control visualization
+.SH SYNOPSIS
+\fIgource\fR
+<options> <path>
+.SH DESCRIPTION
+\fIgource\fR
+replays a Git commit log as an animated graph of the active files.
+.SH REQUIREMENTS
+\fIgource\fR
+requires a OpenGL capable video card to run.
+.SH OPTIONS
+.TP 8
+\fB\-f\fR
+Fullscreen
+.TP
+\fB\-WIDTHxHEIGHT\fR
+Set the window size. If \-f is also supplied, will attempt to set the video mode to this also.
+.TP
+\fB\-p, \-\-start\-position POSITION\fR
+Begin at some position in the log (between 0.0 and 1.0).
+.TP
+\fB\-a, \-\-auto\-skip\-seconds SECONDS\fR
+Automatically skip to next entry if nothing happens for a specified number of seconds.
+.TP
+\fB\-s, \-\-seconds\-per\-day SECONDS\fR
+Speed of simulation in seconds per day.
+.TP
+\fB\-i, \-\-file\-idle\-time SECONDS\fR
+Time in seconds files remain idle before they are removed.
+.TP
+\fB\-e, \-\-elasticity FLOAT\fR
+Elasticity of nodes.
+.TP
+\fB\-b, \-\-background FFFFFF\fR
+Background colour in hex.
+.TP
+\fB\-\-git\-log\-command\fR
+Print the git-log command used by \fIgource\fR.
+.TP
+\fB\-\-cvs\-exp\-command\fR
+Print the cvs-exp.pl log command used by \fIgource\fR.
+.TP
+\fB\-\-follow\-user USER\fR
+Have the camera automatically follow a particular user.
+.TP
+\fB\-\-highlight\-user USER\fR
+Highlight the names of a particular user.
+.TP
+\fB\-\-highlight\-all\-users\fR
+Highlight the names of all users.
+.TP
+\fB\-\-file\-filter REGEX\fR
+Filter out any files matching a specified regular expression.
+.TP
+\fB\-\-user\-image\-dir DIRECTORY\fR
+Directory containing .jpg images of users to use as avatars.
+.TP
+\fB\-\-default\-user\-image IMAGE\fR
+Path of .jpg to use as the default user image.
+.TP
+\fB\-\-colour\-images\fR
+Colourize user images.
+.TP
+\fB\-\-multi\-sampling\fR
+Enable multi-sampling.
+.TP
+\fB\-\-disable\-progress\fR
+Disable progress bar.
+.TP
+\fB\-\-max\-files\fR
+Set the maximum number of files. Excess files will be discarded.
+.TP
+\fB\-\-hide\-users\fR
+Hide users.
+.TP
+\fB\-\-hide\-usernames\fR
+Hide usernames.
+.TP
+\fB\-\-hide\-filenames\fR
+Hide filenames.
+.TP
+\fB\-\-hide\-date\fR
+Hide the date.
+.TP
+\fBpath\fR
+Either a Git directory, a pre-generated log file (see -\-git\-log\-command, -\-cvs\-exp\-command or the custom log format) or '-' to read STDIN. If path is ommited \fIgource\fR will attempt to read a git log from the current directory.
+.SH GIT EXAMPLES
+
+View the log of the Git respository in the current path:
+
+.ti 10
+\fIgource\fR
+
+View the log of a Git project in the specified directory:
+
+.ti 10
+\fIgource\fR my\-project\-dir
+
+Save a copy of the commit log using the command used by \fIgource\fR and then play it back. This is faster as gource doesn't have to wait for git-log command and also useful if you don't have direct access to your git repository from where you are. Note that just using git-log command \fBwill not work\fR as it is not verbose enough or sorted correctly:
+
+.ti 10
+cd my\-git\-project
+.ti 10
+\`\fIgource\fR \-\-git\-log\-command\` > my\-git\-project.log
+.ti 10
+\fIgource\fR my\-git\-project.log
+
+.SH CVS SUPPORT
+
+You can view CVS projects with gource using the tool cvs-exp (not provided) with the command line specified by the -\-cvs\-exp\-command option:
+
+.ti 10
+cd my\-cvs\-project
+.ti 10
+\`\fIgource\fR \-\-cvs\-exp\-command\` > my\-cvs\-project.log
+.ti 10
+\fIgource\fR my\-cvs\-project.log
+
+.SH CUSTOM LOG FORMAT
+
+If you want to use Gource with something other than Git or CVS, there is a pipe delimited custom log format:
+
+.ti 10
+timestamp - A unix timestamp of when the update occured.
+.ti 10
+username  - The name of the user who made the update.
+.ti 10
+type      - Single character for the update type - (A)dded, (M)odified or (D)eleted.
+.ti 10
+file      - Path of the file updated.
+.ti 10
+colour    - A colour for the file in hex (FFFFFF) format. Optional.
+
+.SH INTERFACE
+The time shown in the top left of the screen is set initially from the first log entry read and is incremented according to the simulation speed (\-\-seconds\-per\-day).
+
+Pressing SPACE at any time will pause/unpause the simulation. While paused you may use the mouse to inspect the detail of individual files and users.
+
+TAB cycles through selecting the current visible users.
+
+The camera mode, either tracking activity, or showing the entire code tree, can be toggled using the V key.
+
+Interactive keyboard commands:
+.sp
+.ti 10
+(V)   Toggle camera mode
+.ti 10
+(C)   Displays Gource logo
+.ti 10
+(N)   Jump forward in time to next log entry.
+.ti 10
+(+)   Increase simulation speed.
+.ti 10
+(-)   Decrease simulation speed.
+.ti 10
+(TAB) Cycle through visible users
+.ti 10
+(ESC) Quit
+.SH AUTHOR
+.nf
+ Written by Andrew Caudwell
+
+ Project Homepage: http://code.google.com/p/gource/
+.SH COPYRIGHT
+.nf
+ Copyright (C) 2009 Andrew Caudwell (acaudwell@gmail.com)
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version
+ 3 of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+.fi
+.SH ACKNOWLEDGEMENTS
+.nf
+ Catalyst IT (catalyst.net.nz)
+
+ For supporting the development of Gource!
+.fi
