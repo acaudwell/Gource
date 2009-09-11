@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Gource" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="default">
+				<Option output="gource" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option parameters="" />
+				<Compiler>
+					<Add option="-W" />
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-O3" />
+			<Add option="-W" />
+			<Add option="-Wall" />
+			<Add option="-g" />
+			<Add option="-Dmain=SDL_main" />
+			<Add directory="C:\source\git\gource\src" />
+		</Compiler>
+		<Linker>
+			<Add option="pcre.dll" />
+			<Add option="glew32.dll" />
+			<Add option="ftgl.dll" />
+			<Add library="mingw32" />
+			<Add library="pcre" />
+			<Add library="SDLmain" />
+			<Add library="SDL" />
+			<Add library="opengl32" />
+			<Add library="SDL_image" />
+			<Add library="glu32" />
+			<Add library="glew32" />
+		</Linker>
+		<Unit filename="gource.1" />
+		<Unit filename="src\action.cpp" />
+		<Unit filename="src\action.h" />
+		<Unit filename="src\commitlog.cpp" />
+		<Unit filename="src\commitlog.h" />
+		<Unit filename="src\core\bounds.h" />
+		<Unit filename="src\core\camera.cpp" />
+		<Unit filename="src\core\camera.h" />
+		<Unit filename="src\core\display.cpp" />
+		<Unit filename="src\core\display.h" />
+		<Unit filename="src\core\extensions.cpp" />
+		<Unit filename="src\core\extensions.h" />
+		<Unit filename="src\core\fontpack.h" />
+		<Unit filename="src\core\frustum.cpp" />
+		<Unit filename="src\core\frustum.h" />
+		<Unit filename="src\core\fxfont.cpp" />
+		<Unit filename="src\core\fxfont.h" />
+		<Unit filename="src\core\logger.cpp" />
+		<Unit filename="src\core\logger.h" />
+		<Unit filename="src\core\pi.h" />
+		<Unit filename="src\core\plane.cpp" />
+		<Unit filename="src\core\plane.h" />
+		<Unit filename="src\core\quadtree.cpp" />
+		<Unit filename="src\core\quadtree.h" />
+		<Unit filename="src\core\regex.cpp" />
+		<Unit filename="src\core\regex.h" />
+		<Unit filename="src\core\resource.cpp" />
+		<Unit filename="src\core\resource.h" />
+		<Unit filename="src\core\sdlapp.cpp" />
+		<Unit filename="src\core\sdlapp.h" />
+		<Unit filename="src\core\seeklog.cpp" />
+		<Unit filename="src\core\seeklog.h" />
+		<Unit filename="src\core\shader.h" />
+		<Unit filename="src\core\stringhash.cpp" />
+		<Unit filename="src\core\stringhash.h" />
+		<Unit filename="src\core\texture.cpp" />
+		<Unit filename="src\core\texture.h" />
+		<Unit filename="src\core\vectors.h" />
+		<Unit filename="src\custom.cpp" />
+		<Unit filename="src\custom.h" />
+		<Unit filename="src\cvs-exp.cpp" />
+		<Unit filename="src\cvs-exp.h" />
+		<Unit filename="src\dirnode.cpp" />
+		<Unit filename="src\dirnode.h" />
+		<Unit filename="src\file.cpp" />
+		<Unit filename="src\file.h" />
+		<Unit filename="src\git.cpp" />
+		<Unit filename="src\git.h" />
+		<Unit filename="src\gource.cpp" />
+		<Unit filename="src\gource.h" />
+		<Unit filename="src\main.cpp" />
+		<Unit filename="src\main.h" />
+		<Unit filename="src\pawn.cpp" />
+		<Unit filename="src\pawn.h" />
+		<Unit filename="src\seeklog.h" />
+		<Unit filename="src\slider.cpp" />
+		<Unit filename="src\slider.h" />
+		<Unit filename="src\spline.cpp" />
+		<Unit filename="src\spline.h" />
+		<Unit filename="src\user.cpp" />
+		<Unit filename="src\user.h" />
+		<Unit filename="src\zoomcamera.cpp" />
+		<Unit filename="src\zoomcamera.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -1,0 +1,27 @@
+LIBS = @LIBS@ @GLU_LIBS@
+
+CPPFLAGS = @CPPFLAGS@ @GLU_CFLAGS@
+
+SUBDIRS = core
+CC = g++
+objects = zoomcamera.o slider.o spline.o dirnode.o action.o pawn.o file.o user.o gource.o commitlog.o git.o custom.o cvs-exp.o main.o
+
+all:	
+	for dir in ${SUBDIRS} ; do ( cd $$dir ; ${MAKE} all ); done
+	${MAKE} gource
+
+distclean:
+	for dir in ${SUBDIRS} ; do ( cd $$dir ; ${MAKE} distclean ); done
+	rm Makefile
+
+clean:
+	for dir in ${SUBDIRS} ; do ( cd $$dir ; ${MAKE} clean ); done
+	rm -f *.o
+
+gource: $(objects) 
+	$(CC) $(CPPFLAGS) -o $@ core/*.o $+ $(LIBS)
+	mv $@ ..
+
+%.o:%.cpp
+	$(CC) $(CPPFLAGS) -c $+
+

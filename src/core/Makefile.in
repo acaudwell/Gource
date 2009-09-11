@@ -1,0 +1,21 @@
+prefix = @prefix@
+exec_prefix = ${prefix}
+bindir = ${exec_prefix}/bin
+datarootdir = @datarootdir@
+gourcedatadir = $(datarootdir)/gource/
+
+CC = g++
+objects = sdlapp.o display.o extensions.o fxfont.o logger.o regex.o resource.o stringhash.o texture.o frustum.o camera.o plane.o quadtree.o seeklog.o
+CPPFLAGS = @CPPFLAGS@
+
+all:	$(objects)
+
+distclean:
+	rm Makefile
+
+clean:
+	rm -f *.o
+
+%.o:%.cpp
+	$(CC) $(CPPFLAGS) -DSDLAPP_RESOURCE_DIR=\"$(gourcedatadir)\" -c $+
+

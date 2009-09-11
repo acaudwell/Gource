@@ -1,0 +1,223 @@
+
+                             Gource
+
+                  version control visualization
+
+                Copyright (C) 2009 Andrew Caudwell
+
+                 http://code.google.com/p/gource/
+
+Contents
+========
+
+1. Requirements
+2. Installation
+3. Using Gource
+4. Building Gource
+5. Changes
+6. Copyright
+
+1. Requirements
+===============
+
+Gource's display is rendered using OpenGL and requires a 3D
+accelerated video card to run.
+
+2. Installation
+===============
+
+You can either build Gource from scratch or install a pre-compiled 
+binary version (recommended). Debian i386 and Windows binaries are 
+available from the homepage.
+
+3. Using Gource
+===============
+
+gource <options> <path>
+
+options:
+
+    -f      Fullscreen
+
+    -WIDTHxHEIGHT
+            Set the window size. If -f is also supplied, will attempt to set the video mode to this also.
+
+    -p, --start-position POSITION
+            Begin at some position in the log (between 0.0 and 1.0).
+
+    -a, --auto-skip-seconds SECONDS
+            Automatically skip to next entry if nothing happens for a specified number of seconds.
+
+    -s, --seconds-per-day SECONDS
+            Speed of simulation in seconds per day.
+
+    -i, --file-idle-time SECONDS
+            Time in seconds files remain idle before they are removed.
+
+    -e, --elasticity FLOAT
+            Elasticity of nodes.
+
+    -b, --background FFFFFF
+            Background colour in hex.
+
+    --git-log-command
+            Print the git-log command used by gource.
+
+    --cvs-exp-command
+            Print the cvs-exp.pl log command used by gource.
+
+    --follow-user USER
+            Have the camera automatically follow a particular user.
+
+    --highlight-user USER
+            Highlight the names of a particular user.
+
+    --highlight-all-users
+            Highlight the names of all users.
+
+    --file-filter REGEX
+            Filter out any files matching a specified regular expression.
+
+    --user-image-dir DIRECTORY
+            Directory containing .jpg images of users to use as avatars.
+
+    --default-user-image IMAGE
+            Path of .jpg to use as the default user image.
+
+    --colour-images
+            Colourize user images.
+
+    --multi-sampling
+            Enable multi-sampling.
+
+    --disable-progress
+            Disable progress bar.
+
+    --max-files
+            Set the maximum number of files. Excess files will be discarded.
+
+    --hide-users
+            Hide users.
+
+    --hide-usernames
+            Hide usernames.
+
+    --hide-filenames
+            Hide filenames.
+
+    --hide-date
+            Hide the date.
+
+    path    Either a git directory, a pre-generated log file (see --git-log-command, --cvs-exp-command or the custom
+            log format) or '-' to read STDIN. If path is ommited gource will attempt to read a git log from the current directory.
+
+Git Examples:
+
+View the log of the Git respository in the current path:
+
+    gource
+
+View the log of a Git project in the specified directory:
+
+    gource my-project-dir
+
+Save a copy of the commit log using the command used by gource and then play it back. This is faster as gource doesn?t have
+to wait for git-log command and also useful if you don?t have direct access to your git repository from where you are. Note
+that just using git-log command will not work as it is not verbose enough or sorted correctly:
+
+    cd my-git-project
+    `gource --git-log-command` > my-git-project.log
+    gource my-git-project.log
+
+
+CVS Support:
+
+You can view CVS projects with gource using the tool cvs-exp  (not  provided)  with  the  command  line  specified  by  the
+--cvs-exp-command option:
+
+    cd my-cvs-project
+    `gource --cvs-exp-command` > my-cvs-project.log
+    gource my-cvs-project.log
+
+
+Custom Log Format:
+
+If you want to use Gource with something other than Git or CVS, there is a pipe delimited custom log format:
+
+    timestamp - A unix timestamp of when the update occured.
+    username  - The name of the user who made the update.
+    type      - Single character for the update type - (A)dded, (M)odified or (D)eleted.
+    file      - Path of the file updated.
+    colour    - A colour for the file in hex (FFFFFF) format. Optional.
+
+Interface:
+
+The time shown in the top left of the screen is set initially from the first log entry read and is incremented
+according to the simulation speed (--seconds-per-day).
+
+Pressing SPACE at any time will pause/unpause the simulation. While paused you may use the mouse to inspect the
+detail of individual files and users.
+
+TAB cycles through selecting the current visible users.
+
+The camera mode, either tracking activity, or showing the entire code tree, can be toggled using the V key.
+
+Interactive keyboard commands:
+
+    (V)   Toggle camera mode
+    (C)   Displays Gource logo
+    (N)   Jump forward in time to next log entry.
+    (+)   Increase simulation speed.
+    (-)   Decrease simulation speed.
+    (TAB) Cycle through visible users
+    (ESC) Quit
+
+4. Building Gource
+==================
+
+The source code to Gource is available from the homepage.
+
+Gource requires the following headers and libraries to compile:
+
+    SDL 1.2 (http://www.libsdl.org)
+    SDL Image 1.2
+    PCRE 3
+    FTGL 2.1.3~rc5-2
+
+Building on Linux:
+
+    ./configure 
+    make
+    make install
+
+If you are unfamilar with configure try reading the INSTALL file.
+
+Building on Windows:
+
+On Windows I recommend compiling the project gource.win32.cbp
+with the Code Blocks IDE (www.codeblocks.org).
+
+5. Changes
+==========
+
+0.1:
+ * First release.
+
+6. Copyright
+============
+
+Gource - version control visualization
+Copyright (C) 2009 Andrew Caudwell <acaudwell@gmail.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
