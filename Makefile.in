@@ -17,6 +17,7 @@ install: all
 	mkdir -p -m 755 ${DESTDIR}/$(mandir)/man1
 	cp data/*.png ${DESTDIR}/$(gourcedatadir)/
 	cp data/fonts/*.ttf ${DESTDIR}/$(gourcedatadir)/fonts/
+	cp data/fonts/README ${DESTDIR}/$(gourcedatadir)/fonts/
 	cp gource ${DESTDIR}/$(bindir)/
 	sed 's|GOURCE_DATADIR|$(gourcedatadir)|g' data/gource.1 > ${DESTDIR}/$(mandir)/man1/gource.1
 	gzip -f9 ${DESTDIR}/$(mandir)/man1/gource.1
