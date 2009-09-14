@@ -1356,7 +1356,7 @@ void Gource::draw(float t, float dt) {
         vec2f corner(display.width/2 - logowidth/2 - 30.0f, display.height/2 - 40);
 
         glDisable(GL_TEXTURE_2D);
-        glColor4f(0.0f, 1.0f, 0.5f, splash * 0.015f);
+        glColor4f(0.0f, 0.5f, 1.0f, splash * 0.015f);
         glBegin(GL_QUADS);
             glVertex2f(0.0f,                 corner.y);
             glVertex2f(0.0f,                 corner.y + logoheight);
