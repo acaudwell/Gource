@@ -23,6 +23,9 @@ Contents
 Gource's display is rendered using OpenGL and requires a 3D
 accelerated video card to run.
 
+Libraries required to build gource:
+	libftgl-dev libpcre3-dev libsdl-image1.2-dev libsdl1.2-dev
+
 2. Installation
 ===============
 
