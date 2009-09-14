@@ -23,9 +23,6 @@ Contents
 Gource's display is rendered using OpenGL and requires a 3D
 accelerated video card to run.
 
-Libraries required to build gource:
-	libftgl-dev libpcre3-dev libsdl-image1.2-dev libsdl1.2-dev
-
 2. Installation
 ===============
 
@@ -180,12 +177,12 @@ Interactive keyboard commands:
 
 The source code to Gource is available from the homepage.
 
-Gource requires the following headers and libraries to compile:
+Gource requires the following libraries to compile:
 
-    SDL 1.2 (http://www.libsdl.org)
-    SDL Image 1.2
-    PCRE 3
-    FTGL 2.1.3~rc5-2
+    SDL 1.2 (libsdl1.2-dev)
+    SDL Image 1.2 (libsdl-image1.2-dev)
+    PCRE3 (libpcre3-dev)
+    FTGL 2.1.3~rc5-2 (libftgl-dev)
 
 Building on Linux:
 
