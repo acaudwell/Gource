@@ -6,3 +6,4 @@ debug.log
 Makefile
 *.dll
 logs/*
+dev/*
