@@ -14,8 +14,16 @@ distclean:
 	rm Makefile
 
 clean:
-	rm -f *.o
+	rm -f *.o *.d
 
 %.o:%.cpp
 	$(CC) $(CPPFLAGS) -DSDLAPP_RESOURCE_DIR=\"$(gourcedatadir)\" -c $+
 
+ifndef NODEPS
+ifeq ($(findstring clean,$(MAKECMDGOALS)),)
+dfiles = $(patsubst %.o,%.d,$(objects))
+%.d: %.cpp
+	$(CXX) $< -o $@ -MT $(patsubst %.cpp,%.o,$<) -MM $(CPPFLAGS)
+-include $(dfiles)
+endif
+endif # NODEPS

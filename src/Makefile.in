@@ -16,7 +16,7 @@ distclean:
 
 clean:
 	for dir in ${SUBDIRS} ; do ( cd $$dir ; ${MAKE} clean ); done
-	rm -f *.o
+	rm -f *.o *.d
 
 gource: $(objects) 
 	$(CC) $(CPPFLAGS) -o $@ core/*.o $+ $(LIBS)
@@ -24,4 +24,13 @@ gource: $(objects)
 
 %.o:%.cpp
 	$(CC) $(CPPFLAGS) -c $+
+
+ifndef NODEPS
+ifeq ($(findstring clean,$(MAKECMDGOALS)),)
+dfiles = $(patsubst %.o,%.d,$(objects))
+%.d: %.cpp
+	$(CXX) $< -o $@ -MT $(patsubst %.cpp,%.o,$<) -MM $(CPPFLAGS)
+-include $(dfiles)
+endif
+endif # NODEPS
 
