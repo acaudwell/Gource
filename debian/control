@@ -1,0 +1,15 @@
+Source: gource
+Section: graphics
+Priority: optional
+Maintainer: Andrew Caudwell <acaudwell@gmail.com>
+Build-Depends: debhelper (>= 7), libsdl1.2-dev, libsdl-image1.2-dev, libpcre3-dev, libftgl-dev
+Standards-Version: 3.8.0
+Homepage: http://gource.googlecode.com/
+Vcs-Browser: http://github.com/acaudwell/gource
+Vcs-Git: git://github.com/acaudwell/gource.git
+ 
+Package: gource
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Gource
+ A software version control visualization for Git and CVS.
