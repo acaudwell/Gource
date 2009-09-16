@@ -175,6 +175,7 @@ FXFont FXFontManager::grab(std::string font_file, int size) {
         ft = create(font_file, size);
 
         if(ft==0) {
+            printf("could not open font %s\n", font_file.c_str());
             exit(1);
         }
 
