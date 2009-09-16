@@ -49,6 +49,19 @@ int main(int argc, char *argv[]) {
             exit(0);
         }
 
+        if(args == "--git-branch") {
+
+            if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {
+                gource_help("specify a git branch");
+            }
+
+            gGourceGitLogCommand += " ";
+            gGourceGitLogCommand += arguments[++i];
+
+            continue;
+        }
+
+
         if(args == "--cvs-exp-command") {
             printf("%s\n", gGourceCvsExpLogCommand.c_str());
             exit(0);
