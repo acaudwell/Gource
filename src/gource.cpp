@@ -463,6 +463,14 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             if(gGourceDaysPerSecond>0.0) gGourceDaysPerSecond *= 0.5;
         }
 
+        if(e->keysym.sym == SDLK_UP) {
+            zoom(true);
+        }
+
+        if(e->keysym.sym == SDLK_DOWN) {
+            zoom(false);
+        }
+
         if(e->keysym.sym == SDLK_LEFTBRACKET) {
             gGourceForceGravity /= 1.1;
         }
