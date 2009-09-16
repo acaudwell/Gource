@@ -63,8 +63,8 @@ void gource_help(std::string error) {
     printf("  --hide-filenames                     hide filenames\n");
     printf("  --hide-date                          hide the date\n\n");
 
-    printf("  --user-image-dir DIRECTORY           Directory containing .jpg images of users to use as avatars.\n");
-    printf("  --default-user-image IMAGE           Path of .jpg to use as the default user image.\n");
+    printf("  --user-image-dir DIRECTORY           Directory containing .jpg or .png images of users (eg 'Full Name.png') to use as avatars.\n");
+    printf("  --default-user-image IMAGE           Path of .jpg or .png to use as the default user image.\n");
     printf("  --colour-images                      Colourize user images.\n\n");
 
     printf("  --max-files NUMBER                   maximum of active files (default: 1000)\n\n");
@@ -412,7 +412,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
         }
 
         if (e->keysym.sym == SDLK_n) {
-            gGourceNodeDebug = !gGourceNodeDebug;
+            idle_time = gGourceAutoSkipSeconds;
         }
 
         if (e->keysym.sym == SDLK_t) {
