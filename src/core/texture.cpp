@@ -61,7 +61,7 @@ TextureResource::TextureResource(std::string file, int mipmaps, int clamp, int t
     SDL_Surface *surface = IMG_Load(file.c_str());
 
     if(surface==0) {
-        debugLog("failed to load image %s", file.c_str());
+        printf("failed to load image %s", file.c_str());
         exit(1);
     }
 
@@ -72,7 +72,7 @@ TextureResource::TextureResource(std::string file, int mipmaps, int clamp, int t
     int format = colourFormat(surface);
 
     if(format==0) {
-        debugLog("image %s has unsupported colour format", file.c_str());
+        printf("image %s has unsupported colour format", file.c_str());
         exit(1);
     }
 
