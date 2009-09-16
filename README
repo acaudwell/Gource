@@ -1,11 +1,11 @@
 
                              Gource
 
-                  version control visualization
+              software version control visualization
 
                 Copyright (C) 2009 Andrew Caudwell
 
-                 http://code.google.com/p/gource/
+                  http://gource.googlecode.com/
 
 Contents
 ========
@@ -79,10 +79,10 @@ options:
             Filter out any files matching a specified regular expression.
 
     --user-image-dir DIRECTORY
-            Directory containing .jpg images of users to use as avatars.
+            Directory containing .jpg or .png images of users (eg 'Full Name.png') to use as avatars.
 
     --default-user-image IMAGE
-            Path of .jpg to use as the default user image.
+            Path of .jpg or .png to use as the default user image.
 
     --colour-images
             Colourize user images.
@@ -177,12 +177,12 @@ Interactive keyboard commands:
 
 The source code to Gource is available from the homepage.
 
-Gource requires the following headers and libraries to compile:
+Gource requires the following libraries to compile:
 
-    SDL 1.2 (http://www.libsdl.org)
-    SDL Image 1.2
-    PCRE 3
-    FTGL 2.1.3~rc5-2
+    SDL 1.2 (libsdl1.2-dev)
+    SDL Image 1.2 (libsdl-image1.2-dev)
+    PCRE3 (libpcre3-dev)
+    FTGL 2.1.3~rc5-2 (libftgl-dev)
 
 Building on Linux:
 
@@ -200,13 +200,18 @@ with the Code Blocks IDE (www.codeblocks.org).
 5. Changes
 ==========
 
+0.11:
+ * Made N key skip to next entry.
+ * Documented --user-image-dir flag.
+ * temp file name now uses uid instead of time
+
 0.1:
  * First release.
 
 6. Copyright
 ============
 
-Gource - version control visualization
+Gource - software version control visualization
 Copyright (C) 2009 Andrew Caudwell <acaudwell@gmail.com>
 
 This program is free software: you can redistribute it and/or modify

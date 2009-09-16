@@ -63,8 +63,8 @@ void gource_help(std::string error) {
     printf("  --hide-filenames                     hide filenames\n");
     printf("  --hide-date                          hide the date\n\n");
 
-    printf("  --user-image-dir DIRECTORY           Directory containing .jpg images of users to use as avatars.\n");
-    printf("  --default-user-image IMAGE           Path of .jpg to use as the default user image.\n");
+    printf("  --user-image-dir DIRECTORY           Directory containing .jpg or .png images of users (eg 'Full Name.png') to use as avatars.\n");
+    printf("  --default-user-image IMAGE           Path of .jpg or .png to use as the default user image.\n");
     printf("  --colour-images                      Colourize user images.\n\n");
 
     printf("  --max-files NUMBER                   maximum of active files (default: 1000)\n\n");
@@ -412,7 +412,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
         }
 
         if (e->keysym.sym == SDLK_n) {
-            gGourceNodeDebug = !gGourceNodeDebug;
+            idle_time = gGourceAutoSkipSeconds;
         }
 
         if (e->keysym.sym == SDLK_t) {
@@ -1358,13 +1358,13 @@ void Gource::draw(float t, float dt) {
     if(splash>0.0f) {
         int logowidth = fontlarge.getWidth("Gource");
         int logoheight = 100;
-        int cwidth    = font.getWidth("Version Control Visualization");
+        int cwidth    = font.getWidth("Software Version Control Visualization");
         int awidth    = font.getWidth("(C) 2009 Andrew Caudwell");
 
         vec2f corner(display.width/2 - logowidth/2 - 30.0f, display.height/2 - 40);
 
         glDisable(GL_TEXTURE_2D);
-        glColor4f(0.0f, 1.0f, 0.5f, splash * 0.015f);
+        glColor4f(0.0f, 0.5f, 1.0f, splash * 0.015f);
         glBegin(GL_QUADS);
             glVertex2f(0.0f,                 corner.y);
             glVertex2f(0.0f,                 corner.y + logoheight);
@@ -1376,7 +1376,7 @@ void Gource::draw(float t, float dt) {
 
         glColor4f(1.0,1.0,1.0,1.0);
         fontlarge.draw(display.width/2 - logowidth/2,display.height/2 - 30, "Gource");
-        font.draw(display.width/2 - cwidth/2,display.height/2 + 10, "Version Control Visualization");
+        font.draw(display.width/2 - cwidth/2,display.height/2 + 10, "Software Version Control Visualization");
         font.draw(display.width/2 - awidth/2,display.height/2 + 30, "(C) 2009 Andrew Caudwell");
     }
 

@@ -20,6 +20,8 @@
 
 #include "commitlog.h"
 
+#include <unistd.h>
+
 extern std::string gGourceGitLogCommand;
 
 class GitCommitLog : public RCommitLog {
