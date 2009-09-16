@@ -37,6 +37,10 @@
 #include "texture.h"
 #include "fxfont.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #include <vector>
 #include <string>
 
@@ -78,12 +82,13 @@ public:
     void   enableAlpha(bool enable);
     void   multiSample(int sample);
 
-
     void   mode3D(float fov, float znear, float zfar);
     void   mode2D();
 
     std::string getPath();
-    void detectPath();
+
+    bool   dirExists(std::string path);
+    void   detectPath();
 
     vec4f  currentColour();
 

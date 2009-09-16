@@ -101,6 +101,11 @@ std::string SDLAppDisplay::getPath() {
     return path;
 }
 
+bool SDLAppDisplay::dirExists(std::string path) {
+    struct stat st;
+    return !stat(path.c_str(), &st) && S_ISDIR(st.st_mode);
+}
+
 void SDLAppDisplay::detectPath() {
 
     std::string resource_dir = "data/";
@@ -120,8 +125,10 @@ void SDLAppDisplay::detectPath() {
 #endif
 
 #ifdef SDLAPP_RESOURCE_DIR
-    resource_dir = SDLAPP_RESOURCE_DIR;
-    fonts_dir    = SDLAPP_RESOURCE_DIR + std::string("/fonts/");
+    if (dirExists(SDLAPP_RESOURCE_DIR)) {
+        resource_dir = SDLAPP_RESOURCE_DIR;
+        fonts_dir    = SDLAPP_RESOURCE_DIR + std::string("/fonts/");
+    }
 #endif
 
     texturemanager.setDir(resource_dir);
