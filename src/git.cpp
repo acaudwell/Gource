@@ -61,7 +61,9 @@ BaseLog* GitCommitLog::generateLog(std::string dir) {
     char cmd_buff[1024];
     char logfile_buff[128];
 
-    sprintf(logfile_buff, "/tmp/gource-%d.tmp", time(0));
+    uid_t myuid = getuid();
+
+    sprintf(logfile_buff, "/tmp/gource-%d.tmp", myuid);
     sprintf(cmd_buff, "%s > %s", command.c_str(), logfile_buff);
 
     temp_file = std::string(logfile_buff);
