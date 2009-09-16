@@ -1350,7 +1350,7 @@ void Gource::draw(float t, float dt) {
     if(splash>0.0f) {
         int logowidth = fontlarge.getWidth("Gource");
         int logoheight = 100;
-        int cwidth    = font.getWidth("Version Control Visualization");
+        int cwidth    = font.getWidth("Software Version Control Visualization");
         int awidth    = font.getWidth("(C) 2009 Andrew Caudwell");
 
         vec2f corner(display.width/2 - logowidth/2 - 30.0f, display.height/2 - 40);
@@ -1368,7 +1368,7 @@ void Gource::draw(float t, float dt) {
 
         glColor4f(1.0,1.0,1.0,1.0);
         fontlarge.draw(display.width/2 - logowidth/2,display.height/2 - 30, "Gource");
-        font.draw(display.width/2 - cwidth/2,display.height/2 + 10, "Version Control Visualization");
+        font.draw(display.width/2 - cwidth/2,display.height/2 + 10, "Software Version Control Visualization");
         font.draw(display.width/2 - awidth/2,display.height/2 + 30, "(C) 2009 Andrew Caudwell");
     }
 
