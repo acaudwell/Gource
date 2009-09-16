@@ -174,9 +174,9 @@ int main(int argc, char *argv[]) {
                 gource_help("specify seconds-per-day (seconds)");
             }
 
-            gGourceDaysPerSecond = (float) atoi(arguments[++i].c_str());
+            gGourceDaysPerSecond = atof(arguments[++i].c_str());
 
-            if(gGourceDaysPerSecond<1.0) {
+            if(gGourceDaysPerSecond<=0.0) {
                 gource_help("invalid seconds-per-day value");
             }
 
