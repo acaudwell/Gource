@@ -50,7 +50,7 @@ void gource_help(std::string error) {
     printf("  -e, --elasticity FLOAT               elasticity of nodes\n");
     printf("  -b, --background FFFFFF              background colour in hex\n\n");
 
-    printf("  --git-branch                         specify another branch than the current one\n");
+    printf("  --git-branch                         get the git log of a branch other than the current one\n");
     printf("  --git-log-command                    print the git-log command used by gource\n");
     printf("  --cvs-exp-command                    print the cvs-exp.pl log command used by gource\n\n");
 
