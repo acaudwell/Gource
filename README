@@ -20,15 +20,12 @@ Contents
 1. Requirements
 ===============
 
-Gource's display is rendered using OpenGL and requires a 3D
-accelerated video card to run.
+Gource's display is rendered using OpenGL and requires a 3D accelerated video card to run.
 
 2. Installation
 ===============
 
-You can either build Gource from scratch or install a pre-compiled 
-binary version (recommended). Debian i386 and Windows binaries are 
-available from the homepage.
+You can either build Gource from scratch or install a pre-compiled binary version from the homepage (recommended).
 
 3. Using Gource
 ===============
