@@ -73,6 +73,7 @@ BaseLog* GitCommitLog::generateLog(std::string dir) {
     }
 
     // check for new-enough Git version
+    // if %aN does not appear to be supported try %an
     std::ifstream in(logfile_buff);
     char firstBytes[4];
     in.read(firstBytes, 3);
@@ -116,6 +117,9 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
     // NOTE: ignoring timezone ... 
     commit.timestamp = atol(line.c_str());
 
+    //this isnt a commit we are parsing, abort
+    if(commit.timestamp == 0) return false;
+
     //debugLog("timestamp = %ld\n", commit.timestamp);
 
     //read files
@@ -132,7 +136,7 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
 
     lastline = "";
 
-//    commit.debug();
+    //commit.debug();
 
     return true;
 }
