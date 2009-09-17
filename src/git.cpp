@@ -17,10 +17,16 @@
 
 #include "git.h"
 
+Regex git_commit("^commit ([0-9a-z]+)");
+Regex git_tree("^tree ([0-9a-z]+)");
+Regex git_parent("^parent ([0-9a-z]+)");
+Regex git_author("^author (.+) <([^@>]+)@?([^>]*)> (\\d+) ([-+]\\d+)");
+Regex git_committer("^committer (.+) <([^@>]+)@?([^>]*)> (\\d+) ([-+]\\d+)");
+Regex git_file("^:[0-9]+ [0-9]+ [0-9a-z]+\\.* ([0-9a-z]+)\\.* ([A-Z])[ \\t]+(.+)");
+
 // parse git log entries
 
-std::string gGourceGitLogCommand = "git log "
-    "--pretty=format:'%aN%n%ct' --reverse --raw";
+std::string gGourceGitLogCommand = "git log --reverse --raw --pretty=raw";
 
 GitCommitLog::GitCommitLog(std::string logfile) : RCommitLog(logfile) {
 
@@ -81,37 +87,90 @@ BaseLog* GitCommitLog::generateLog(std::string dir) {
 #endif
 }
 
-// parse modified git format log entries
+// parse modified cvs format log entries
 
 bool GitCommitLog::parseCommit(RCommit& commit) {
 
     std::string line = lastline;
+    std::vector<std::string> entries;
 
-    //read author name
+    //read commit ref/ branch
     if(!line.size()) {
         if(!logf->getNextLine(line)) return false;
     }
 
-    commit.username = line;
+    //debugLog("first line: %s\n", line.c_str());
+
+    //commit
+    if(!git_commit.match(line, &entries)) return false;
 
     if(!logf->getNextLine(line)) return false;
 
-    //committer time - used instead of author time (most likely cronological)
+    //tree
+    if(!git_tree.match(line, &entries)) return false;
+
+    if(!logf->getNextLine(line)) return false;
+
+    //0 or more parents
+    while(git_parent.match(line, &entries)) {
+        if(!logf->getNextLine(line)) return false;
+    }
+
+    //author - used for display name
+    if(!git_author.match(line, &entries)) return false;
+
+    commit.username = entries[0];
+
+    if(!logf->getNextLine(line)) return false;
+
+    //committer - used for time (most likely cronological)
+    if(!git_committer.match(line, &entries)) return false;
+
     // NOTE: ignoring timezone ... 
-    commit.timestamp = atol(line.c_str());
+    commit.timestamp = atol(entries[3].c_str());
 
     //debugLog("timestamp = %ld\n", commit.timestamp);
+
+/*
+    struct tm time_str;
+    time_str.tm_year  = atoi(entries[0].c_str()) - 1900;
+    time_str.tm_mon   = atoi(entries[1].c_str()) - 1;
+    time_str.tm_mday  = atoi(entries[2].c_str());
+    time_str.tm_hour  = atoi(entries[3].c_str());
+    time_str.tm_min   = atoi(entries[4].c_str());
+    time_str.tm_sec   = atoi(entries[5].c_str());
+    time_str.tm_isdst = -1;
+
+    commit.timestamp = mktime(&time_str);
+*/
+
+    //blank line before message
+    if(!logf->getNextLine(line)) return false;
+
+    //std::string message;
+
+    //read commit message
+    while(logf->getNextLine(line) && line.size()) {
+        /*
+        if(message.size()) message += std::string("\n");
+        while(line[0] == ' ') line = line.substr(1);
+        message += line;
+        */
+    }
+
+    //debugLog("message: %s\n", message.c_str());
 
     //read files
     while(logf->getNextLine(line) && line.size()) {
         //debugLog("file??? %s\n", line.c_str());
 
-        size_t tab = line.find('\t');
-        if(tab == std::string::npos)
-            continue;
-        std::string status = line.substr(tab - 1, 1);
-        line = line.substr(tab + 1);
-        commit.addFile(line, status);
+        if(git_file.match(line, &entries)) {
+                commit.addFile(entries[2], entries[1]);
+        } else {
+            //oops this isnt a file
+            lastline = line;
+            break;
+        }
     }
 
     lastline = "";
