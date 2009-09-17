@@ -98,6 +98,15 @@ BaseLog* GitCommitLog::generateLog(std::string dir) {
 #endif
 }
 
+//get next line, preserving the last line, incase we abort parsing
+bool GitCommitLog::getNextLine(std::string& line) {
+    if(!logf->getNextLine(line)) return false;
+
+    lastline = line;
+
+    return true;
+}
+
 // parse modified git format log entries
 
 bool GitCommitLog::parseCommit(RCommit& commit) {
@@ -106,12 +115,12 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
 
     //read author name
     if(!line.size()) {
-        if(!logf->getNextLine(line)) return false;
+        if(!getNextLine(line)) return false;
     }
 
     commit.username = line;
 
-    if(!logf->getNextLine(line)) return false;
+    if(!getNextLine(line)) return false;
 
     //committer time - used instead of author time (most likely cronological)
     // NOTE: ignoring timezone ... 
@@ -120,12 +129,8 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
     //this isnt a commit we are parsing, abort
     if(commit.timestamp == 0) return false;
 
-    //debugLog("timestamp = %ld\n", commit.timestamp);
-
     //read files
-    while(logf->getNextLine(line) && line.size()) {
-        //debugLog("file??? %s\n", line.c_str());
-
+    while(getNextLine(line) && line.size()) {
         size_t tab = line.find('\t');
         if(tab == std::string::npos)
             continue;
@@ -134,6 +139,7 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
         commit.addFile(line, status);
     }
 
+    //next call should read a new line from the file
     lastline = "";
 
     //commit.debug();
