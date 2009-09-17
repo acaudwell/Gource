@@ -44,11 +44,6 @@ int main(int argc, char *argv[]) {
             gource_help("");
         }
 
-        if(args == "--git-log-command") {
-            printf("%s\n", gGourceGitLogCommand.c_str());
-            exit(0);
-        }
-
         if(args == "--git-branch") {
 
             if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {
@@ -61,6 +56,10 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
+        if(args == "--git-log-command") {
+            printf("%s\n", gGourceGitLogCommand.c_str());
+            exit(0);
+        }
 
         if(args == "--cvs-exp-command") {
             printf("%s\n", gGourceCvsExpLogCommand.c_str());
