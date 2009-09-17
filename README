@@ -201,6 +201,8 @@ with the Code Blocks IDE (www.codeblocks.org).
 ==========
 
 0.12:
+ * Changed the git-log command (see --git-log-command) to require less work to parse. If you have saved logs generated
+   with the command used by a previous version of Gource you will need to regenerate them.
  * Allow --seconds-per-day value less than 1.0.
  * Added --git-branch command.
 0.11:
