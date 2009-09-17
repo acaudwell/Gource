@@ -68,6 +68,22 @@ BaseLog* GitCommitLog::generateLog(std::string dir) {
 
     int command_rc = system(cmd_buff);
 
+    if(command_rc != 0) {
+        return 0;
+    }
+
+    // check for new-enough Git version
+    std::ifstream in(logfile_buff);
+    char firstBytes[4];
+    in.read(firstBytes, 3);
+    in.close();
+    firstBytes[3] = '\0';
+    if(!strcmp(firstBytes, "%aN")) {
+        char *pos = strstr(cmd_buff, "%aN");
+        pos[2] = 'n';
+        command_rc = system(cmd_buff);
+    }
+
     //change back to original directoy
     chdir(cwd_buff);
 
