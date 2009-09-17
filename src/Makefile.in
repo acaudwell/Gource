@@ -3,7 +3,8 @@ LIBS = @LIBS@ @GLU_LIBS@
 CPPFLAGS = @CPPFLAGS@ @GLU_CFLAGS@
 
 SUBDIRS = core
-CC = g++
+CXX = g++
+CC = gcc
 objects = zoomcamera.o slider.o spline.o dirnode.o action.o pawn.o file.o user.o gource.o commitlog.o git.o custom.o cvs-exp.o main.o
 
 all:	
@@ -19,11 +20,11 @@ clean:
 	rm -f *.o *.d
 
 gource: $(objects) 
-	$(CC) $(CPPFLAGS) -o $@ core/*.o $+ $(LIBS)
+	$(CXX) $(CPPFLAGS) -o $@ core/*.o $+ $(LIBS)
 	mv $@ ..
 
-%.o:%.cpp
-	$(CC) $(CPPFLAGS) -c $+
+%.o: %.cpp
+	$(CXX) $(CPPFLAGS) -o $@ -c $<
 
 ifndef NODEPS
 ifeq ($(findstring clean,$(MAKECMDGOALS)),)

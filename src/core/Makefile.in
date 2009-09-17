@@ -4,7 +4,8 @@ bindir = ${exec_prefix}/bin
 datarootdir = @datarootdir@
 gourcedatadir = $(datarootdir)/gource/
 
-CC = g++
+CXX = g++
+CC = gcc
 objects = sdlapp.o display.o extensions.o fxfont.o logger.o regex.o resource.o stringhash.o texture.o frustum.o camera.o plane.o quadtree.o seeklog.o
 CPPFLAGS = @CPPFLAGS@
 
@@ -16,8 +17,8 @@ distclean:
 clean:
 	rm -f *.o *.d
 
-%.o:%.cpp
-	$(CC) $(CPPFLAGS) -DSDLAPP_RESOURCE_DIR=\"$(gourcedatadir)\" -c $+
+%.o: %.cpp
+	$(CXX) $(CPPFLAGS) -DSDLAPP_RESOURCE_DIR=\"$(gourcedatadir)\" -c -o $@ $<
 
 ifndef NODEPS
 ifeq ($(findstring clean,$(MAKECMDGOALS)),)
