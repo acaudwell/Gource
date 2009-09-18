@@ -19,6 +19,11 @@
 
 // parse git log entries
 
+//git-log command notes:
+// - no single quotes as windows system call treats them differently
+// - 'user:' prefix allows us to quickly tell if the log is the wrong format
+//   and try a different format (eg cvs-exp)
+
 std::string gGourceGitLogCommand = "git log "
     "--pretty=format:user:%aN%n%ct --reverse --raw";
 
@@ -75,8 +80,6 @@ BaseLog* GitCommitLog::generateLog(std::string dir) {
 
     sprintf(cmd_buff, "%s > %s", command.c_str(), logfile_buff);
 
-    debugLog("command: %s\n", cmd_buff);
-
     temp_file = std::string(logfile_buff);
 
     if(chdir(dir.c_str()) != 0) {
@@ -108,8 +111,6 @@ BaseLog* GitCommitLog::generateLog(std::string dir) {
     if(command_rc != 0) {
         return 0;
     }
-
-    debugLog("temp_file = %s\n", temp_file.c_str());
 
     BaseLog* seeklog = new SeekLog(temp_file);
 
