@@ -985,9 +985,9 @@ void Gource::logic(float t, float dt) {
 
         if(commitlog == 0) {
             if(logfile.size() == 0 || display.dirExists(logfile)) {
-                printf("Directory not supported.\n", logfile.c_str());
+                printf("Directory not supported.\n");
             } else {
-                printf("Unsupported log format.  You may need to regenerate your log file.\n", logfile.c_str());
+                printf("Unsupported log format.  You may need to regenerate your log file.\n");
             }
 
             exit(1);
