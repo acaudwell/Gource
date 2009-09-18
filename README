@@ -209,6 +209,7 @@ with the Code Blocks IDE (www.codeblocks.org).
    with the command used by a previous version of Gource you will need to regenerate them.
  * Allow --seconds-per-day value less than 1.0.
  * Added --git-branch command.
+ * Added --loop command.
 0.11:
  * Made N key skip to next entry.
  * Documented --user-image-dir flag.
