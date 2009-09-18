@@ -20,12 +20,17 @@
 // parse git log entries
 
 //git-log command notes:
-// - no single quotes as windows system call treats them differently
+// - no single quotes on WIN32 as system call treats them differently
 // - 'user:' prefix allows us to quickly tell if the log is the wrong format
 //   and try a different format (eg cvs-exp)
 
 std::string gGourceGitLogCommand = "git log "
-    "--pretty=format:user:%aN%n%ct --reverse --raw";
+#ifdef _WIN32
+    "--pretty=format:user:%aN%n%ct "
+#else
+    "--pretty=format:'user:%aN%n%ct' "
+#endif
+    "--reverse --raw";
 
 GitCommitLog::GitCommitLog(std::string logfile) : RCommitLog(logfile) {
 
