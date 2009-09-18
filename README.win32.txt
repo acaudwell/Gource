@@ -3,9 +3,7 @@ Special notes for running Gource on Windows:
 
 * Gource will write messages to stout.txt (or stderr.txt) instead of the console as it would on Linux.
 
-* On Windows, gource needs to run using a pre-generated log file (ie gource.exe my-project.log). 
-
-  You can generate a log for your project using the following steps:
+* You can generate a log for your project using the following steps:
 
   1. run gource.exe --git-log-command
   2. get the command written to stdout.txt
