@@ -80,7 +80,13 @@ void gource_help(std::string error) {
     printf("  --file-filter REGEX                  ignore files matching a particular regular expression\n\n");
 
     printf("\nPath is either a git directory or a pre-generated log file. If path is ommited gource will attempt to read a git log from the current directory\n\n");
-    exit(1);
+
+    //check if we should use an error code
+    if(error.size()) {
+        exit(1);
+    } else {
+        exit(0);
+    }
 }
 
 RCommitLog* Gource::determineFormat(std::string logfile) {
