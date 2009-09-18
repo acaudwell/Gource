@@ -137,7 +137,11 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
     }
     //ensure username prefixed with user: otherwise the log is not in
     //the expected format and we can try a different format
-    if(line.size() < 6 || line.compare(0,5, "user:") != 0) return false;
+    if(line.size() < 6 || line.find("user:") != 0) {
+        lastline = ""; //prevent loop
+
+        return false;
+    }
 
     //username follows user prefix
     commit.username = line.substr(5);
