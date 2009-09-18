@@ -17,6 +17,11 @@
 
 #include "main.h"
 
+//hack to stop SDL redirecting stdout/stderr to txt files on windows
+#ifdef _WIN32
+#undef main
+#endif
+
 int main(int argc, char *argv[]) {
 
     int width  = 1024;
