@@ -20,7 +20,7 @@
 // parse git log entries
 
 std::string gGourceGitLogCommand = "git log "
-    "--pretty=format:'%aN%n%ct' --reverse --raw";
+    "--pretty=format:user:%aN%n%ct --reverse --raw";
 
 GitCommitLog::GitCommitLog(std::string logfile) : RCommitLog(logfile) {
 
@@ -38,10 +38,6 @@ GitCommitLog::GitCommitLog(std::string logfile) : RCommitLog(logfile) {
 }
 
 BaseLog* GitCommitLog::generateLog(std::string dir) {
-    // TODO: work on windows?
-#ifdef _WIN32
-    return 0;
-#else
     //get working directory
     char cwd_buff[1024];
 
@@ -52,13 +48,34 @@ BaseLog* GitCommitLog::generateLog(std::string dir) {
     std::string command = getLogCommand();
 
     //create temp file
-    char cmd_buff[1024];
-    char logfile_buff[128];
+    char cmd_buff[2048];
+    char logfile_buff[1024];
 
+#ifdef _WIN32
+    DWORD tmplen = GetTempPath(0, "");
+
+    if(tmplen == 0) return 0;
+
+    std::vector<TCHAR> temp(tmplen+1);
+
+    tmplen = GetTempPath(static_cast<DWORD>(temp.size()), &temp[0]);
+
+    if(tmplen == 0 || tmplen >= temp.size()) return 0;
+
+    std::string temp_file_path(temp.begin(),
+                               temp.begin() + static_cast<std::size_t>(tmplen));
+
+    temp_file_path += "gource.tmp";
+
+    sprintf(logfile_buff, "%s", temp_file_path.c_str());
+#else
     uid_t myuid = getuid();
-
     sprintf(logfile_buff, "/tmp/gource-%d.tmp", myuid);
+#endif
+
     sprintf(cmd_buff, "%s > %s", command.c_str(), logfile_buff);
+
+    debugLog("command: %s\n", cmd_buff);
 
     temp_file = std::string(logfile_buff);
 
@@ -75,11 +92,11 @@ BaseLog* GitCommitLog::generateLog(std::string dir) {
     // check for new-enough Git version
     // if %aN does not appear to be supported try %an
     std::ifstream in(logfile_buff);
-    char firstBytes[4];
-    in.read(firstBytes, 3);
+    char firstBytes[9];
+    in.read(firstBytes, 8);
     in.close();
-    firstBytes[3] = '\0';
-    if(!strcmp(firstBytes, "%aN")) {
+    firstBytes[8] = '\0';
+    if(!strcmp(firstBytes, "user:%aN")) {
         char *pos = strstr(cmd_buff, "%aN");
         pos[2] = 'n';
         command_rc = system(cmd_buff);
@@ -92,10 +109,11 @@ BaseLog* GitCommitLog::generateLog(std::string dir) {
         return 0;
     }
 
+    debugLog("temp_file = %s\n", temp_file.c_str());
+
     BaseLog* seeklog = new SeekLog(temp_file);
 
     return seeklog;
-#endif
 }
 
 //get next line, preserving the last line, incase we abort parsing
@@ -117,13 +135,17 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
     if(!line.size()) {
         if(!getNextLine(line)) return false;
     }
+    //ensure username prefixed with user: otherwise the log is not in
+    //the expected format and we can try a different format
+    if(line.size() < 6 || line.compare(0,5, "user:") != 0) return false;
 
-    commit.username = line;
+    //username follows user prefix
+    commit.username = line.substr(5);
 
     if(!getNextLine(line)) return false;
 
     //committer time - used instead of author time (most likely cronological)
-    // NOTE: ignoring timezone ... 
+    // NOTE: ignoring timezone ...
     commit.timestamp = atol(line.c_str());
 
     //this isnt a commit we are parsing, abort
@@ -132,8 +154,12 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
     //read files
     while(getNextLine(line) && line.size()) {
         size_t tab = line.find('\t');
-        if(tab == std::string::npos)
-            continue;
+
+        if(tab == std::string::npos) continue;
+
+        //incorrect log format
+        if(tab == 0) return false;
+
         std::string status = line.substr(tab - 1, 1);
         line = line.substr(tab + 1);
         commit.addFile(line, status);
