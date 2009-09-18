@@ -190,9 +190,9 @@ int main(int argc, char *argv[]) {
                 gource_help("specify auto-skip-seconds");
             }
 
-            gGourceAutoSkipSeconds = (float) atoi(arguments[++i].c_str());
+            gGourceAutoSkipSeconds = (float) atof(arguments[++i].c_str());
 
-            if(gGourceAutoSkipSeconds<1.0) {
+            if(gGourceAutoSkipSeconds <= 0.0) {
                 gource_help("invalid auto-skip-seconds value");
             }
 
