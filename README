@@ -124,16 +124,15 @@ View the log of a Git project in the specified directory:
 
     gource my-project-dir
 
-Save a copy of the commit log using the command used by gource and then play it back. This is faster as gource doesn?t have
-to wait for git-log command and also useful if you don?t have direct access to your git repository from where you are. Note
-that just using git-log command will not work as it is not verbose enough or sorted correctly:
+Save a copy of the log using in a special git-log format and play it back. Use --git-log-command to get the git-log
+options you should use:
 
     cd my-git-project
     `gource --git-log-command` > my-git-project.log
     gource my-git-project.log
 
-NOTE: --git-log-command assumes you have a recent version git of that supports all the options. You may need to modify the command
-line to work with an older version (changing %aN to %an for instance).
+NOTE: --git-log-command assumes you have a recent version git of that supports all the options. You may need to modify
+the command line to work with an older version (changing %aN to %an for instance).
 
 CVS Support:
 

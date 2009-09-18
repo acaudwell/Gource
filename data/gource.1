@@ -104,7 +104,7 @@ View the log of a Git project in the specified directory:
 .ti 10
 \fIgource\fR my\-project\-dir
 
-Save a copy of the commit log using the command used by \fIgource\fR and then play it back. This is faster as gource doesn't have to wait for git-log command and also useful if you don't have direct access to your git repository from where you are. Note that just using git-log command \fBwill not work\fR as it is not verbose enough or sorted correctly:
+Save a copy of the log using in a special git-log format and play it back. Use --git-log-command to get the git-log options you should use:
 
 .ti 10
 cd my\-git\-project
