@@ -110,6 +110,11 @@ void RCommitLog::reset() {
 void RCommitLog::seekTo(float percent) {
     if(!seekable) return;
 
+    if(percent == 0.0) {
+        ((SeekLog*)logf)->reset();
+        return;
+    }
+
     ((SeekLog*)logf)->seekTo(percent);
 }
 

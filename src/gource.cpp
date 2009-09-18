@@ -652,22 +652,9 @@ void Gource::readLog() {
         }
     }
 
-    if(commitqueue.size()==0) {
-        if(first_read) {
-            debugLog("no commits\n");
-            exit(1);
-        }
-
-        //try and reset the log if its seekable and this isnt the first read
-        if(commitlog->isSeekable()) {
-            reset();
-            commitlog->reset();
-            RCommit commit;
-            if(!commitlog->isFinished() && commitlog->nextCommit(commit)) {
-                commitqueue.push_back(commit);
-            }
-        }
-
+    if(first_read && commitqueue.size()==0) {
+        debugLog("no commits\n");
+        exit(1);
     }
 
     first_read = false;
@@ -1011,17 +998,12 @@ void Gource::logic(float t, float dt) {
 
     //loop in attempt to find commits
     if(commitqueue.size()==0 && commitlog->isSeekable()) {
+        first_read=true;
         seekTo(0.0);
-
         readLog();
-
-        if(commitqueue.size() == 0 && starttime==0) {
-            debugLog("no commits and starttime is not defined - cant continue\n");
-            exit(1);
-        }
     }
 
-    if(starttime==0) {
+    if(starttime==0 && commitqueue.size()) {
         starttime = commitqueue[0].timestamp;
     }
 
