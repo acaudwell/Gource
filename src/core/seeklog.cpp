@@ -57,10 +57,9 @@ bool StreamLog::getNextLine(std::string& line) {
     stream->getline(buff, 1024);
     line = std::string(buff);
 
-    debugLog("line %s\n", line.c_str());
-    if(stream->fail()) debugLog("failed\n");
-    if(stream->eof()) debugLog("eol\n");
-
+    if(isFinished()) {
+        return false;
+    }
 
     return true;
 }
@@ -81,45 +80,10 @@ SeekLog::SeekLog(std::string logfile) {
 
     this->buffstream = 0;
 
-    reset();
-}
-
-SeekLog::~SeekLog() {
-    if(buffstream!=0) delete buffstream;
-}
-
-float SeekLog::getPercent() {
-    return current_percent;
-}
-
-void SeekLog::setPointer(long pointer) {
-    buffstream->seekg(pointer);
-}
-
-long SeekLog::getPointer() {
-    return buffstream->tellg();
-}
-
-void SeekLog::seekTo(float percent) {
-
-    long mem_pointer = (long) (percent * file_size);
-
-    setPointer(mem_pointer);
-
-    //throw away end of line
-    if(mem_pointer!=0) {
-        std::string eol;
-        getNextLine(eol);
-    }
-}
-
-void SeekLog::reset() {
     if(!readFully()) {
         printf("failed to read %s\r\n", logfile.c_str());
         exit(1);
     }
-
-    seekTo(0.0);
 }
 
 bool SeekLog::readFully() {
@@ -150,10 +114,41 @@ bool SeekLog::readFully() {
     return true;
 }
 
+SeekLog::~SeekLog() {
+    if(buffstream!=0) delete buffstream;
+}
+
+float SeekLog::getPercent() {
+    return current_percent;
+}
+
+void SeekLog::setPointer(long pointer) {
+    buffstream->seekg(pointer);
+}
+
+long SeekLog::getPointer() {
+    return buffstream->tellg();
+}
+
+void SeekLog::seekTo(float percent) {
+
+    if(isFinished()) buffstream->clear();
+
+    long mem_pointer = (long) (percent * file_size);
+
+    setPointer(mem_pointer);
+
+    //throw away end of line
+    if(mem_pointer!=0) {
+        std::string eol;
+        getNextLine(eol);
+    }
+}
+
 bool SeekLog::getNextLine(std::string& line) {
 
-    if(isFinished())
-        return false;
+    //try and fix the stream
+    if(isFinished()) buffstream->clear();
 
     char buff[1024];
 
@@ -161,7 +156,7 @@ bool SeekLog::getNextLine(std::string& line) {
     line = std::string(buff);
 
     if(buffstream->fail()) {
-        reset();
+        return false;
     }
 
     current_percent = (float) buffstream->tellg() / file_size;

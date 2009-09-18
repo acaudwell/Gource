@@ -18,10 +18,12 @@
 #include "gource.h"
 
 float gGourceAutoSkipSeconds = 3.0;
+bool  gGourceFileLoop        = false;
 bool  gGourceHideUsernames   = false;
 bool  gGourceHideDate        = false;
 bool  gGourceDisableProgress = false;
 bool  gGourceQuadTreeDebug   = false;
+
 
 bool  gGourceHighlightAllUsers = false;
 
@@ -49,6 +51,8 @@ void gource_help(std::string error) {
     printf("  -i, --file-idle-time SECONDS         time files remain idle before they are removed (default: 60)\n");
     printf("  -e, --elasticity FLOAT               elasticity of nodes\n");
     printf("  -b, --background FFFFFF              background colour in hex\n\n");
+
+    printf("  --loop                               loop back to the start of the log when the end is reached\n\n");
 
     printf("  --git-branch                         get the git log of a branch other than the current one\n");
     printf("  --git-log-command                    print the git-log command used by gource\n");
@@ -659,7 +663,7 @@ void Gource::readLog() {
 
     first_read = false;
 
-    if(commitlog->isSeekable()) {
+    if(!commitlog->isFinished() && commitlog->isSeekable()) {
         float percent = commitlog->getPercent();
         slider.setPercent(percent);
     }
@@ -997,7 +1001,7 @@ void Gource::logic(float t, float dt) {
     }
 
     //loop in attempt to find commits
-    if(commitqueue.size()==0 && commitlog->isSeekable()) {
+    if(commitqueue.size()==0 && commitlog->isSeekable() && gGourceFileLoop) {
         first_read=true;
         seekTo(0.0);
         readLog();

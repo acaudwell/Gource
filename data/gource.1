@@ -36,6 +36,9 @@ Elasticity of nodes.
 \fB\-b, \-\-background FFFFFF\fR
 Background colour in hex.
 .TP
+\fB\-\-loop\fR
+Loop back to the start of the log when the end is reached.
+.TP
 \fB\-\-git\-branch\fR
 Get the git log of a branch other than the current one.
 .TP
@@ -109,6 +112,8 @@ cd my\-git\-project
 \`\fIgource\fR \-\-git\-log\-command\` > my\-git\-project.log
 .ti 10
 \fIgource\fR my\-git\-project.log
+
+NOTE: --git-log-command assumes you have a recent version of git that supports all the options. You may need to modify the command line to work with an older version (changing %aN to %an for instance).
 
 .SH CVS SUPPORT
 

@@ -44,6 +44,11 @@ int main(int argc, char *argv[]) {
             gource_help("");
         }
 
+        if(args == "--loop") {
+            gGourceFileLoop = true;
+            continue;
+        }
+
         if(args == "--git-branch") {
 
             if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {

@@ -182,6 +182,7 @@ extern float gGourceAutoSkipSeconds;
 extern bool  gGourceHideUsernames;
 extern bool  gGourceHideDate;
 extern bool  gGourceDisableProgress;
+extern bool  gGourceFileLoop;
 extern int   gGourceMaxFiles;
 
 extern bool  gGourceHighlightAllUsers;

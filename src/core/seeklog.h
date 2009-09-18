@@ -70,7 +70,6 @@ public:
     void setPointer(long pointer);
     long getPointer();
 
-    void reset();
     void seekTo(float percent);
     bool getNextLine(std::string& line);
     float getPercent();

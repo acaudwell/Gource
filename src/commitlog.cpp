@@ -62,15 +62,21 @@ bool RCommitLog::checkFormat() {
 
     if(!success) return false;
 
-    bool formatok = nextCommit(lastCommit);
+    //read a commit to see if the log is in the correct format
+    if(nextCommit(lastCommit)) {
 
-    if(seekable) ((SeekLog*)logf)->reset();
+        if(seekable) {
+            //if the log is seekable, go back to the start
+            ((SeekLog*)logf)->seekTo(0.0);
+        } else {
+            //otherwise set the buffered flag as we have bufferd one commit
+            buffered = true;
+        }
 
-    if(formatok && !seekable) {
-        buffered = true;
+        return true;
     }
 
-    return formatok;
+    return false;
 }
 
 std::string RCommitLog::getLogCommand() {
@@ -89,8 +95,6 @@ bool RCommitLog::getCommitAt(float percent, RCommit& commit) {
     //get the current pointer
     long currpointer = seeklog->getPointer();
 
-    if(seeklog->isFinished()) seeklog->reset();
-
     seekTo(percent);
 
     bool success = findNextCommit(commit,500);
@@ -101,19 +105,8 @@ bool RCommitLog::getCommitAt(float percent, RCommit& commit) {
     return success;
 }
 
-void RCommitLog::reset() {
-    if(!seekable) return;
-
-    ((SeekLog*)logf)->reset();
-}
-
 void RCommitLog::seekTo(float percent) {
     if(!seekable) return;
-
-    if(percent == 0.0) {
-        ((SeekLog*)logf)->reset();
-        return;
-    }
 
     ((SeekLog*)logf)->seekTo(percent);
 }
@@ -145,8 +138,6 @@ bool RCommitLog::nextCommit(RCommit& commit) {
         buffered = false;
         return true;
     }
-
-    if(logf->isFinished()) return false;
 
     bool success = parseCommit(commit);
 
