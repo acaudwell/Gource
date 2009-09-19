@@ -17,6 +17,7 @@
 
 #include "main.h"
 
+#ifdef _WIN32
 void createWindowsConsole() {
     //create a console on Windows so users can see messages
 
@@ -49,6 +50,7 @@ void createWindowsConsole() {
     HMENU hm = GetSystemMenu(consoleWindow, false);
     DeleteMenu(hm, SC_CLOSE, MF_BYCOMMAND);
 }
+#endif
 
 int main(int argc, char *argv[]) {
 
