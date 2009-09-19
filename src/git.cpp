@@ -168,7 +168,7 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
         if(tab == std::string::npos) continue;
 
         //incorrect log format
-        if(tab == 0) return false;
+        if(tab == 0 || tab == line.size()-1) return false;
 
         std::string status = line.substr(tab - 1, 1);
         line = line.substr(tab + 1);
