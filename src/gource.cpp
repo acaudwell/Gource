@@ -34,12 +34,25 @@ int gGourceUserInnerLoops = 0;
 //min phsyics rate 60fps (ie maximum allowed delta 1.0/60)
 float gGourceMaxDelta = 0.01667f;
 
+void gource_quit(std::string error) {
+    SDL_Quit();
+
+    printf("Error: %s\n\n", error.c_str());
+
+#ifdef _WIN32
+    printf("Press Enter\n");
+    getchar();
+#endif
+
+    exit(1);
+}
+
 void gource_help(std::string error) {
 
     printf("Gource v%s\n", GOURCE_VERSION);
 
     if(error.size()) {
-        printf("Error: %s\n", error.c_str());
+        printf("Error: %s\n\n", error.c_str());
     }
 
     printf("Usage: gource [OPTIONS] [PATH]\n");
@@ -86,7 +99,7 @@ void gource_help(std::string error) {
     printf("If ommited, gource will attempt to generate a git log for the current dir.\n\n");
 
 #ifdef _WIN32
-    printf("Press a key\n");
+    printf("Press Enter\n");
     getchar();
 #endif
 
@@ -672,8 +685,7 @@ void Gource::readLog() {
     }
 
     if(first_read && commitqueue.size()==0) {
-        debugLog("no commits\n");
-        exit(1);
+        gource_quit("No commits found");
     }
 
     first_read = false;
@@ -991,12 +1003,10 @@ void Gource::logic(float t, float dt) {
 
         if(commitlog == 0) {
             if(logfile.size() == 0 || display.dirExists(logfile)) {
-                printf("Directory not supported.\n");
+                gource_quit("Directory not supported.");
             } else {
-                printf("Unsupported log format.  You may need to regenerate your log file.\n");
+                gource_quit("Unsupported log format.  You may need to regenerate your log file.");
             }
-
-            exit(1);
         }
 
         if(start_position>0.0) {

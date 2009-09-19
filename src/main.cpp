@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
                 printf("%s\n", gGourceCvsExpLogCommand.c_str());
             }
 #ifdef _WIN32
-            printf("Press a key\n");
+            printf("Press Enter\n");
             getchar();
 #endif
             exit(0);
