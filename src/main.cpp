@@ -17,12 +17,44 @@
 
 #include "main.h"
 
-//hack to stop SDL redirecting stdout/stderr to txt files on windows
-#ifdef _WIN32
-#undef main
-#endif
+void createWindowsConsole() {
+    //create a console on Windows so users can see messages
+
+    //find an available name for our window
+    int console_suffix = 0;
+    char consoleTitle[512];
+    sprintf(consoleTitle, "%s", "Gource Console");
+
+    while(FindWindow(0, consoleTitle)) {
+        sprintf(consoleTitle, "Gource Console %d", ++console_suffix);
+    }
+
+    AllocConsole();
+    SetConsoleTitle(consoleTitle);
+
+    //redirect streams to console
+    freopen("conin$", "r", stdin);
+    freopen("conout$","w", stdout);
+    freopen("conout$","w", stderr);
+
+    HWND consoleWindow = 0;
+
+    //wait for our console window
+    while(consoleWindow==0) {
+        consoleWindow = FindWindow(0, consoleTitle);
+        SDL_Delay(100);
+    };
+
+    //disable the close button so the user cant crash gource
+    HMENU hm = GetSystemMenu(consoleWindow, false);
+    DeleteMenu(hm, SC_CLOSE, MF_BYCOMMAND);
+}
 
 int main(int argc, char *argv[]) {
+
+#ifdef _WIN32
+    createWindowsConsole();
+#endif
 
     int width  = 1024;
     int height = 768;
@@ -66,13 +98,17 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        if(args == "--git-log-command") {
-            printf("%s\n", gGourceGitLogCommand.c_str());
-            exit(0);
-        }
+        if(args == "--git-log-command" || args == "--cvs-exp-command") {
 
-        if(args == "--cvs-exp-command") {
-            printf("%s\n", gGourceCvsExpLogCommand.c_str());
+            if(args == "--git-log-command") {
+                printf("%s\n", gGourceGitLogCommand.c_str());
+            } else {
+                printf("%s\n", gGourceCvsExpLogCommand.c_str());
+            }
+#ifdef _WIN32
+            printf("Press a key\n");
+            getchar();
+#endif
             exit(0);
         }
 
