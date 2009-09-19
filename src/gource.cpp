@@ -36,50 +36,59 @@ float gGourceMaxDelta = 0.01667f;
 
 void gource_help(std::string error) {
 
+    printf("Gource v%s\n", GOURCE_VERSION);
+
     if(error.size()) {
-        printf("error: %s\n", error.c_str());
+        printf("Error: %s\n", error.c_str());
     }
 
     printf("Usage: gource [OPTIONS] [PATH]\n");
     printf("\nOptions:\n");
-    printf("  -h, --help                           help\n\n");
-    printf("  -WIDTHxHEIGHT                        set window size\n");
-    printf("  -f                                   fullscreen\n\n");
-    printf("  -p, --start-position POSITION        begin at some position in the log (between 0.0 and 1.0)\n");
-    printf("  -a, --auto-skip-seconds SECONDS      auto skip to next entry if nothing happens for a number of seconds (default: 3)\n");
-    printf("  -s, --seconds-per-day SECONDS        speed of simulation in seconds per day (default: 4)\n");
-    printf("  -i, --file-idle-time SECONDS         time files remain idle before they are removed (default: 60)\n");
-    printf("  -e, --elasticity FLOAT               elasticity of nodes\n");
-    printf("  -b, --background FFFFFF              background colour in hex\n\n");
+    printf("  -h, --help                       Help\n\n");
+    printf("  -WIDTHxHEIGHT                    Set window size\n");
+    printf("  -f                               Fullscreen\n\n");
+    printf("  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)\n");
+    printf("  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens\n");
+    printf("                                   for a number of seconds (default: 3)\n");
+    printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 4)\n");
+    printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)\n");
+    printf("  -e, --elasticity FLOAT           Elasticity of nodes\n");
+    printf("  -b, --background FFFFFF          Background colour in hex\n\n");
 
-    printf("  --loop                               loop back to the start of the log when the end is reached\n\n");
+    printf("  --loop                           Loop when the end of the log is reached.\n");
 
-    printf("  --git-branch                         get the git log of a branch other than the current one\n");
-    printf("  --git-log-command                    print the git-log command used by gource\n");
-    printf("  --cvs-exp-command                    print the cvs-exp.pl log command used by gource\n\n");
+    printf("  --git-branch                     Get the git log of a particular branch\n");
+    printf("  --git-log-command                Show git-log command used by gource\n");
+    printf("  --cvs-exp-command                Show cvs-exp.pl log command used by gource\n\n");
 
-    printf("  --multi-sampling                     enable multi-sampling (smooths graphics)\n\n");
+    printf("  --multi-sampling                 Enable multi-sampling (smooths graphics)\n\n");
 
-    printf("  --disable-auto-skip                  disable auto skipping\n");
-    printf("  --disable-progress                   disable the progress bar\n\n");
+    printf("  --disable-auto-skip              Disable auto skipping\n");
+    printf("  --disable-progress               Disable the progress bar\n\n");
 
-    printf("  --hide-users                         hide users\n");
-    printf("  --hide-usernames                     hide usernames\n");
-    printf("  --hide-filenames                     hide filenames\n");
-    printf("  --hide-date                          hide the date\n\n");
+    printf("  --hide-users                     Hide users\n");
+    printf("  --hide-usernames                 Hide usernames\n");
+    printf("  --hide-filenames                 Hide filenames\n");
+    printf("  --hide-date                      Hide the date\n\n");
 
-    printf("  --user-image-dir DIRECTORY           Directory containing .jpg or .png images of users (eg 'Full Name.png') to use as avatars.\n");
-    printf("  --default-user-image IMAGE           Path of .jpg or .png to use as the default user image.\n");
-    printf("  --colour-images                      Colourize user images.\n\n");
+    printf("  --user-image-dir DIRECTORY       Dir containing images to use as avatars.\n");
+    printf("  --default-user-image IMAGE       Default user image file.\n");
+    printf("  --colour-images                  Colourize user images.\n\n");
 
-    printf("  --max-files NUMBER                   maximum of active files (default: 1000)\n\n");
+    printf("  --max-files NUMBER               Maximum of active files (default: 1000)\n\n");
 
-    printf("  --follow-user USER                   have the camera automatically follow particular users\n");
-    printf("  --highlight-user USER                highlight the names of particular users\n");
-    printf("  --highlight-all-users                highlight the names of all users\n");
-    printf("  --file-filter REGEX                  ignore files matching a particular regular expression\n\n");
+    printf("  --follow-user USER               Camera will automatically follow this user\n");
+    printf("  --highlight-user USER            Highlight the names of a particular user\n");
+    printf("  --highlight-all-users            Highlight the names of all users\n");
+    printf("  --file-filter REGEX              Ignore files matching this regexe\n\n");
 
-    printf("\nPath is either a git directory or a pre-generated log file. If path is ommited gource will attempt to read a git log from the current directory\n\n");
+    printf("\nPATH may be either a git directory or a pre-generated log file.\n");
+    printf("If ommited, gource will attempt to generate a git log for the current dir.\n\n");
+
+#ifdef _WIN32
+    printf("Press a key\n");
+    getchar();
+#endif
 
     //check if we should use an error code
     if(error.size()) {
@@ -90,7 +99,7 @@ void gource_help(std::string error) {
 }
 
 RCommitLog* Gource::determineFormat(std::string logfile) {
-    debugLog("determineFormat()\n");
+    debugLog("determineFormat(%s)\n", logfile.c_str());
 
     RCommitLog* clog;
 

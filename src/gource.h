@@ -18,6 +18,8 @@
 #ifndef GOURCE_H
 #define GOURCE_H
 
+#define GOURCE_VERSION "0.12"
+
 #ifdef _WIN32
 #include "windows.h"
 #endif
@@ -44,7 +46,6 @@
 #include "user.h"
 #include "dirnode.h"
 #include "zoomcamera.h"
-
 
 void gource_help(std::string error);
 
