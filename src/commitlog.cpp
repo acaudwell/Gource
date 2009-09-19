@@ -35,6 +35,12 @@ RCommitLog::RCommitLog(std::string logfile) {
         return;
     }
 
+    //remove trailing slash
+    if(logfile.size() &&
+       (logfile[logfile.size()-1] == '\\' || logfile[logfile.size()-1] == '/')) {
+        logfile = logfile.substr(0,logfile.size()-1);
+    }
+
     struct stat fileinfo;
     int rc = stat(logfile.c_str(), &fileinfo);
 
@@ -47,7 +53,6 @@ RCommitLog::RCommitLog(std::string logfile) {
             success = true;
         }
     }
-
 }
 
 RCommitLog::~RCommitLog() {
