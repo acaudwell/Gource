@@ -24,6 +24,7 @@ bool  gGourceHideDate        = false;
 bool  gGourceDisableProgress = false;
 bool  gGourceQuadTreeDebug   = false;
 
+std::string gGourceLogFormat;
 
 bool  gGourceHighlightAllUsers = false;
 
@@ -34,8 +35,68 @@ int gGourceUserInnerLoops = 0;
 //min phsyics rate 60fps (ie maximum allowed delta 1.0/60)
 float gGourceMaxDelta = 0.01667f;
 
+#ifdef _WIN32
+HWND consoleWindow = 0;
+
+void createWindowsConsole() {
+    if(consoleWindow !=0) return;
+
+    //create a console on Windows so users can see messages
+
+    //find an available name for our window
+    int console_suffix = 0;
+    char consoleTitle[512];
+    sprintf(consoleTitle, "%s", "Gource Console");
+
+    while(FindWindow(0, consoleTitle)) {
+        sprintf(consoleTitle, "Gource Console %d", ++console_suffix);
+    }
+
+    AllocConsole();
+    SetConsoleTitle(consoleTitle);
+
+    //redirect streams to console
+    freopen("conin$", "r", stdin);
+    freopen("conout$","w", stdout);
+    freopen("conout$","w", stderr);
+
+    consoleWindow = 0;
+
+    //wait for our console window
+    while(consoleWindow==0) {
+        consoleWindow = FindWindow(0, consoleTitle);
+        SDL_Delay(100);
+    }
+
+    //disable the close button so the user cant crash gource
+    HMENU hm = GetSystemMenu(consoleWindow, false);
+    DeleteMenu(hm, SC_CLOSE, MF_BYCOMMAND);
+}
+#endif
+
+//info message
+void gource_info(std::string msg) {
+#ifdef _WIN32
+    createWindowsConsole();
+#endif
+
+    printf("%s\n", msg.c_str());
+
+#ifdef _WIN32
+    printf("\nPress Enter\n");
+    getchar();
+#endif
+
+    exit(0);
+}
+
+//display error only
 void gource_quit(std::string error) {
     SDL_Quit();
+
+#ifdef _WIN32
+    createWindowsConsole();
+#endif
 
     printf("Error: %s\n\n", error.c_str());
 
@@ -47,7 +108,21 @@ void gource_quit(std::string error) {
     exit(1);
 }
 
+//display help message + error (optional)
 void gource_help(std::string error) {
+
+#ifdef _WIN32
+    createWindowsConsole();
+
+    //resize window to fit help message
+    if(consoleWindow !=0) {
+        RECT windowRect;
+        if(GetWindowRect(consoleWindow, &windowRect)) {
+            float width = windowRect.right - windowRect.left;
+            MoveWindow(consoleWindow,windowRect.left,windowRect.top,width,700,true);
+        }
+    }
+#endif
 
     printf("Gource v%s\n", GOURCE_VERSION);
 
@@ -68,8 +143,9 @@ void gource_help(std::string error) {
     printf("  -e, --elasticity FLOAT           Elasticity of nodes\n");
     printf("  -b, --background FFFFFF          Background colour in hex\n\n");
 
-    printf("  --loop                           Loop when the end of the log is reached.\n");
+    printf("  --loop                           Loop when the end of the log is reached.\n\n");
 
+    printf("  --log-format FORMAT              Specify format of log (git,cvs,custom)\n");
     printf("  --git-branch                     Get the git log of a particular branch\n");
     printf("  --git-log-command                Show git-log command used by gource\n");
     printf("  --cvs-exp-command                Show cvs-exp.pl log command used by gource\n\n");
@@ -114,11 +190,47 @@ void gource_help(std::string error) {
 RCommitLog* Gource::determineFormat(std::string logfile) {
     debugLog("determineFormat(%s)\n", logfile.c_str());
 
-    RCommitLog* clog;
+    RCommitLog* clog = 0;
+
+    //we've been told what format to use
+    if(gGourceLogFormat.size() > 0) {
+        debugLog("--log-format = %s\n", gGourceLogFormat.c_str());
+
+        if(gGourceLogFormat == "git") {
+            clog = new GitCommitLog(logfile);
+            if(clog->checkFormat()) return clog;
+            delete clog;
+
+            clog = new GitRawCommitLog(logfile);
+            if(clog->checkFormat()) return clog;
+            delete clog;
+        }
+
+        if(gGourceLogFormat == "cvs") {
+            clog = new CVSEXPCommitLog(logfile);
+            if(clog->checkFormat()) return clog;
+            delete clog;
+        }
+
+        if(gGourceLogFormat == "custom") {
+            clog = new CustomLog(logfile);
+            if(clog->checkFormat()) return clog;
+            delete clog;
+        }
+
+        return 0;
+    }
 
     //git
     debugLog("trying git...\n");
     clog = new GitCommitLog(logfile);
+    if(clog->checkFormat()) return clog;
+
+    delete clog;
+
+    //git raw
+    debugLog("trying git raw...\n");
+    clog = new GitRawCommitLog(logfile);
     if(clog->checkFormat()) return clog;
 
     delete clog;

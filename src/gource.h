@@ -36,6 +36,7 @@
 #include "core/regex.h"
 
 #include "git.h"
+#include "gitraw.h"
 #include "cvs-exp.h"
 #include "custom.h"
 
@@ -47,6 +48,8 @@
 #include "dirnode.h"
 #include "zoomcamera.h"
 
+void createWindowsConsole();
+void gource_info(std::string msg);
 void gource_help(std::string error);
 
 class Gource : public SDLApp {
@@ -185,6 +188,8 @@ extern bool  gGourceHideDate;
 extern bool  gGourceDisableProgress;
 extern bool  gGourceFileLoop;
 extern int   gGourceMaxFiles;
+
+extern std::string gGourceLogFormat;
 
 extern bool  gGourceHighlightAllUsers;
 
