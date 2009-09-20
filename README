@@ -93,6 +93,9 @@ options:
     --colour-images
             Colourize user images.
 
+    --crop AXIS
+            Crop view on an axis (vertical,horizontal).
+
     --multi-sampling
             Enable multi-sampling.
 

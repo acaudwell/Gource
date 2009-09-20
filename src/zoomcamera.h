@@ -49,4 +49,8 @@ public:
     void adjust(Bounds2D& bounds);
 };
 
+extern bool gGourceVerticalCrop;
+extern bool gGourceHorizontalCrop;
+
+
 #endif

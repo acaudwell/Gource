@@ -110,6 +110,24 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
+        if(args == "--crop") {
+            if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {
+                gource_help("specify crop (vertical,horizontal)");
+            }
+
+            std::string crop = arguments[++i];
+
+            if(crop == "vertical") {
+                gGourceVerticalCrop = true;
+            } else if (crop == "horizontal") {
+                gGourceHorizontalCrop = true;
+            } else {
+                gource_help("invalid crop value");
+            }
+
+            continue;
+        }
+
         if(args == "--log-format") {
             if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {
                 gource_help("specify log-format (format)");

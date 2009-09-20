@@ -150,7 +150,8 @@ void gource_help(std::string error) {
     printf("  --git-log-command                Show git-log command used by gource\n");
     printf("  --cvs-exp-command                Show cvs-exp.pl log command used by gource\n\n");
 
-    printf("  --multi-sampling                 Enable multi-sampling (smooths graphics)\n\n");
+    printf("  --multi-sampling                 Enable multi-sampling\n");
+    printf("  --crop AXIS                      Crop view on an axis (vertical,horizontal)\n\n");
 
     printf("  --disable-auto-skip              Disable auto skipping\n");
     printf("  --disable-progress               Disable the progress bar\n\n");
