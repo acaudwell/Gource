@@ -26,12 +26,8 @@ extern std::string gGourceGitLogCommand;
 
 class GitCommitLog : public RCommitLog {
 protected:
-    std::string lastline;
-
-    bool getNextLine(std::string& line);
     bool parseCommit(RCommit& commit);
     BaseLog* generateLog(std::string dir);
-
 public:
     GitCommitLog(std::string logfile);
 };

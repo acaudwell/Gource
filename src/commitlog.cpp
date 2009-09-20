@@ -19,7 +19,7 @@
 
 //RCommitLog
 
-RCommitLog::RCommitLog(std::string logfile) {
+RCommitLog::RCommitLog(std::string logfile, int firstChar) {
 
     logf     = 0;
     seekable = false;
@@ -28,17 +28,16 @@ RCommitLog::RCommitLog(std::string logfile) {
     buffered = false;
 
     if(logfile == "-") {
-        logf = new StreamLog();
-        is_dir   = false;
-        seekable = false;
-        success  = true;
-        return;
-    }
 
-    //remove trailing slash
-    if(logfile.size() &&
-       (logfile[logfile.size()-1] == '\\' || logfile[logfile.size()-1] == '/')) {
-        logfile = logfile.substr(0,logfile.size()-1);
+        //check first char
+        if(checkFirstChar(firstChar, std::cin)) {
+            logf     = new StreamLog();
+            is_dir   = false;
+            seekable = false;
+            success  = true;
+        }
+
+        return;
     }
 
     struct stat fileinfo;
@@ -48,9 +47,19 @@ RCommitLog::RCommitLog(std::string logfile) {
         is_dir = (fileinfo.st_mode & S_IFDIR) ? true : false;
 
         if(!is_dir) {
-            logf = new SeekLog(logfile);
-            seekable = true;
-            success = true;
+
+            //check first char
+            std::ifstream testf(logfile.c_str());
+
+            bool firstOK = checkFirstChar(firstChar, testf);
+
+            testf.close();
+
+            if(firstOK) {
+                logf = new SeekLog(logfile);
+                seekable = true;
+                success = true;
+            }
         }
     }
 }
@@ -61,6 +70,19 @@ RCommitLog::~RCommitLog() {
     if(temp_file.size()) {
         remove(temp_file.c_str());
     }
+}
+
+//check firstChar of stream is as expected. if no firstChar defined just returns true.
+bool RCommitLog::checkFirstChar(int firstChar, std::istream& stream) {
+
+    //cant check this
+    if(firstChar == -1) return true;
+
+    int c = stream.peek();
+
+    if(firstChar == c) return true;
+
+    return false;
 }
 
 bool RCommitLog::checkFormat() {

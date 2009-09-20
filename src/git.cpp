@@ -32,7 +32,7 @@ std::string gGourceGitLogCommand = "git log "
 #endif
     "--reverse --raw";
 
-GitCommitLog::GitCommitLog(std::string logfile) : RCommitLog(logfile) {
+GitCommitLog::GitCommitLog(std::string logfile) : RCommitLog(logfile, 'u') {
 
     log_command = gGourceGitLogCommand;
 
@@ -41,7 +41,7 @@ GitCommitLog::GitCommitLog(std::string logfile) : RCommitLog(logfile) {
         logf = generateLog(logfile);
 
         if(logf) {
-            success  =  true;
+            success  = true;
             seekable = true;
         }
     }
@@ -52,6 +52,14 @@ BaseLog* GitCommitLog::generateLog(std::string dir) {
     char cwd_buff[1024];
 
     if(getcwd(cwd_buff, 1024) != cwd_buff) {
+        return 0;
+    }
+
+    //does directory have a .git ?
+    std::string gitdir = dir + std::string("/.git");
+    struct stat dirinfo;
+    int stat_rc = stat(gitdir.c_str(), &dirinfo);
+    if(stat_rc!=0 || !(dirinfo.st_mode & S_IFDIR)) {
         return 0;
     }
 
@@ -84,7 +92,6 @@ BaseLog* GitCommitLog::generateLog(std::string dir) {
 #endif
 
     sprintf(cmd_buff, "%s > %s", command.c_str(), logfile_buff);
-
     temp_file = std::string(logfile_buff);
 
     if(chdir(dir.c_str()) != 0) {
@@ -122,37 +129,25 @@ BaseLog* GitCommitLog::generateLog(std::string dir) {
     return seeklog;
 }
 
-//get next line, preserving the last line, incase we abort parsing
-bool GitCommitLog::getNextLine(std::string& line) {
-    if(!logf->getNextLine(line)) return false;
-
-    lastline = line;
-
-    return true;
-}
-
 // parse modified git format log entries
 
 bool GitCommitLog::parseCommit(RCommit& commit) {
 
-    std::string line = lastline;
+    std::string line;
 
     //read author name
-    if(!line.size()) {
-        if(!getNextLine(line)) return false;
-    }
+    if(!logf->getNextLine(line)) return false;
+
     //ensure username prefixed with user: otherwise the log is not in
     //the expected format and we can try a different format
     if(line.size() < 6 || line.find("user:") != 0) {
-        lastline = ""; //prevent loop
-
         return false;
     }
 
     //username follows user prefix
     commit.username = line.substr(5);
 
-    if(!getNextLine(line)) return false;
+    if(!logf->getNextLine(line)) return false;
 
     //committer time - used instead of author time (most likely cronological)
     // NOTE: ignoring timezone ...
@@ -162,7 +157,7 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
     if(commit.timestamp == 0) return false;
 
     //read files
-    while(getNextLine(line) && line.size()) {
+    while(logf->getNextLine(line) && line.size()) {
         size_t tab = line.find('\t');
 
         if(tab == std::string::npos) continue;
@@ -174,9 +169,6 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
         line = line.substr(tab + 1);
         commit.addFile(line, status);
     }
-
-    //next call should read a new line from the file
-    lastline = "";
 
     //commit.debug();
 

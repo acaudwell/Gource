@@ -71,9 +71,11 @@ protected:
     RCommit lastCommit;
     bool buffered;
 
+    bool checkFirstChar(int firstChar, std::istream& stream);
+
     virtual bool parseCommit(RCommit& commit) { return false; };
 public:
-    RCommitLog(std::string logfile);
+    RCommitLog(std::string logfile, int firstChar = -1);
     ~RCommitLog();
 
     void seekTo(float percent);
