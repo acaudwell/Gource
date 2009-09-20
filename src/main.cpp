@@ -17,46 +17,7 @@
 
 #include "main.h"
 
-#ifdef _WIN32
-void createWindowsConsole() {
-    //create a console on Windows so users can see messages
-
-    //find an available name for our window
-    int console_suffix = 0;
-    char consoleTitle[512];
-    sprintf(consoleTitle, "%s", "Gource Console");
-
-    while(FindWindow(0, consoleTitle)) {
-        sprintf(consoleTitle, "Gource Console %d", ++console_suffix);
-    }
-
-    AllocConsole();
-    SetConsoleTitle(consoleTitle);
-
-    //redirect streams to console
-    freopen("conin$", "r", stdin);
-    freopen("conout$","w", stdout);
-    freopen("conout$","w", stderr);
-
-    HWND consoleWindow = 0;
-
-    //wait for our console window
-    while(consoleWindow==0) {
-        consoleWindow = FindWindow(0, consoleTitle);
-        SDL_Delay(100);
-    };
-
-    //disable the close button so the user cant crash gource
-    HMENU hm = GetSystemMenu(consoleWindow, false);
-    DeleteMenu(hm, SC_CLOSE, MF_BYCOMMAND);
-}
-#endif
-
 int main(int argc, char *argv[]) {
-
-#ifdef _WIN32
-    createWindowsConsole();
-#endif
 
     int width  = 1024;
     int height = 768;
@@ -103,15 +64,10 @@ int main(int argc, char *argv[]) {
         if(args == "--git-log-command" || args == "--cvs-exp-command") {
 
             if(args == "--git-log-command") {
-                printf("%s\n", gGourceGitLogCommand.c_str());
+                gource_info(gGourceGitLogCommand);
             } else {
-                printf("%s\n", gGourceCvsExpLogCommand.c_str());
+                gource_info(gGourceCvsExpLogCommand);
             }
-#ifdef _WIN32
-            printf("Press Enter\n");
-            getchar();
-#endif
-            exit(0);
         }
 
         if(args == "--hide-date") {
@@ -152,6 +108,21 @@ int main(int argc, char *argv[]) {
         if(args == "--colour-images") {
             gGourceColourUserImages = true;
             continue;
+        }
+
+        if(args == "--log-format") {
+            if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {
+                gource_help("specify log-format (format)");
+            }
+
+            gGourceLogFormat = arguments[++i];
+
+            if(gGourceLogFormat != "git" && gGourceLogFormat != "cvs" && gGourceLogFormat != "custom") {
+                gource_help("unknown log-format");
+            }
+
+            continue;
+
         }
 
         if(args == "--default-user-image") {
@@ -355,9 +326,39 @@ int main(int argc, char *argv[]) {
 
     // wait for a character on the file handle if reading stdin
     if(logfile == "-") {
+
+        if(gGourceLogFormat.size() == 0) {
+            gource_help("--log-format required when reading from STDIN");
+        }
+
         while(std::cin.peek() == EOF && !std::cin.fail()) SDL_Delay(100);
+        std::cin.clear();
     }
 
+    //remove trailing slash and check if logfile is a directory
+    if(logfile.size() &&
+       (logfile[logfile.size()-1] == '\\' || logfile[logfile.size()-1] == '/')) {
+        logfile = logfile.substr(0,logfile.size()-1);
+    }
+
+#ifdef _WIN32
+    bool isdir = false;
+
+    //on windows, pre-open console window if we think this is a directory the
+    //user is trying to open, as system() commands will create a console window
+    //if there isn't one anyway.
+
+    if(logfile.size()>0) {
+        struct stat fileinfo;
+        int rc = stat(logfile.c_str(), &fileinfo);
+
+        if(rc==0 && fileinfo.st_mode & S_IFDIR) isdir = true;
+    }
+
+    if(logfile.size()==0 || isdir) {
+        createWindowsConsole();
+    }
+#endif
 
     // this causes corruption on some video drivers
     if(multisample) {

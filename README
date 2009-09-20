@@ -60,6 +60,9 @@ options:
     --loop
             Loop back to the start of the log when the end is reached.
 
+    --log-format FORMAT
+            Specify format of the log being read (git,cvs,custom). Required when reading STDIN.
+
     --git-branch
             Get the git log of a branch other than the current one.
 
