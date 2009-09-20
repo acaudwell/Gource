@@ -10,7 +10,7 @@
 				<Option output="gource" prefix_auto="1" extension_auto="1" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="--user-image-dir logs/gravatar/ logs/rails_git.log" />
+				<Option parameters="--help" />
 				<Compiler>
 					<Add option="-W" />
 					<Add option="-g" />
@@ -36,7 +36,6 @@
 			<Add library="SDL_image" />
 			<Add library="glu32" />
 		</Linker>
-		<Unit filename="gource.1" />
 		<Unit filename="src\action.cpp" />
 		<Unit filename="src\action.h" />
 		<Unit filename="src\commitlog.cpp" />
@@ -84,13 +83,14 @@
 		<Unit filename="src\file.h" />
 		<Unit filename="src\git.cpp" />
 		<Unit filename="src\git.h" />
+		<Unit filename="src\gitraw.cpp" />
+		<Unit filename="src\gitraw.h" />
 		<Unit filename="src\gource.cpp" />
 		<Unit filename="src\gource.h" />
 		<Unit filename="src\main.cpp" />
 		<Unit filename="src\main.h" />
 		<Unit filename="src\pawn.cpp" />
 		<Unit filename="src\pawn.h" />
-		<Unit filename="src\seeklog.h" />
 		<Unit filename="src\slider.cpp" />
 		<Unit filename="src\slider.h" />
 		<Unit filename="src\spline.cpp" />
