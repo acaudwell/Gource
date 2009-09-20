@@ -49,7 +49,7 @@ bool CVSEXPCommitLog::parseCommit(RCommit& commit) {
 
     int commitno = atoi(entries[0].c_str());
 
-    debugLog("commitno matched\n");
+    //debugLog("commitno matched\n");
 
     if(!logf->getNextLine(line)) return false;
 
@@ -66,7 +66,7 @@ bool CVSEXPCommitLog::parseCommit(RCommit& commit) {
     //parse date
     if(!cvsexp_date_regex.match(line, &entries)) return false;
 
-    debugLog("date matched\n");
+    //debugLog("date matched\n");
 
     struct tm time_str;
 
@@ -84,7 +84,7 @@ bool CVSEXPCommitLog::parseCommit(RCommit& commit) {
     std::string rest = entries[6];
     if(!cvsexp_detail_regex.match(rest, &entries)) return false;
 
-    debugLog("author/state matched\n");
+    //debugLog("author/state matched\n");
 
     commit.username = entries[0];
 
