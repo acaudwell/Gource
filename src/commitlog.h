@@ -23,6 +23,7 @@
 #include "core/display.h"
 #include "core/regex.h"
 #include "core/stringhash.h"
+#include "core/utf8/utf8.h"
 
 #include <string>
 #include <list>

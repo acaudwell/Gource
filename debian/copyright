@@ -24,9 +24,12 @@ You are free to distribute this software under the terms of the GNU General
 Public License. On Debian systems, the complete text of the GNU General
 Public License can be found in the /usr/share/common-licenses/GPL-3 file.
 
-The files under src/core are from the same author but licensed under the
+The files in src/core are from the same author but licensed under the
 revised BSD license. On Debian systems, the complete text of the BSD license
 can be found in the /usr/share/common-licenses/BSD file.
+
+UTF-8 CPP (src/core/utf8/):
+  Copyright 2006 Nemanja Trifunovic (BSD style license)
 
 data/fonts/FreeSans.ttf:
   Copyright (C) 2002 Free Software Foundation.

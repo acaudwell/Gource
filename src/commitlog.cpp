@@ -185,6 +185,11 @@ RCommitFile::RCommitFile(std::string filename, std::string action, vec3f colour)
     //prepend a root slash
     if(filename[0] != '/') filename = std::string("/") + filename;
 
+    //replace non utf8 characters with ?
+    std::string temp;
+    utf8::replace_invalid(filename.begin(), filename.end(), back_inserter(temp), '?');
+    filename = temp;
+
     this->filename = filename;
     this->action   = action;
     this->colour   = colour;
@@ -215,13 +220,11 @@ void RCommit::addFile(std::string& filename, std::string& action, vec3f colour) 
 }
 
 bool RCommit::isValid() {
-    // hack to deal with not being able to handle non Latin 1
 
-    int size = username.size();
-    for(int i = 0; i<size; i++) {
-        char c = username[i];
-        if(c < 32 || c >= 127 && c <= 159) return false;
-    }
+    //replace non utf8 characters with ?
+    std::string temp;
+    utf8::replace_invalid(username.begin(), username.end(), back_inserter(temp), '?');
+    username = temp;
 
     return true;
 }
