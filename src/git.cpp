@@ -30,7 +30,7 @@ std::string gGourceGitLogCommand = "git log "
 #else
     "--pretty=format:'user:%aN%n%ct' "
 #endif
-    "--reverse --raw";
+    "--reverse --raw --encoding=UTF-8";
 
 GitCommitLog::GitCommitLog(std::string logfile) : RCommitLog(logfile, 'u') {
 
