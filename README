@@ -211,11 +211,13 @@ with the Code Blocks IDE (www.codeblocks.org).
 ==========
 
 0.12:
+ * UTF-8 support using UTF8-CPP (http://utfcpp.sourceforge.net/).
  * Changed the git log command (see --git-log-command) to require less work to parse.
    Log files generated with the previous git-log command used by gource should continue to work.
  * Allow --seconds-per-day value less than 1.0.
  * Added --git-branch command.
  * Added --loop command.
+ * Added --crop command.
 0.11:
  * Made N key skip to next entry.
  * Documented --user-image-dir flag.
