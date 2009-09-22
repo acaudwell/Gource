@@ -1115,7 +1115,11 @@ void Gource::logic(float t, float dt) {
         commitlog = determineFormat(logfile);
 
         if(commitlog == 0) {
-            if(logfile.size() == 0 || display.dirExists(logfile)) {
+            //if not in a git dir and no log file, show help
+            if(logfile.size() == 0 || logfile == ".") {
+                SDL_Quit();
+                gource_help("");
+            } else if(display.dirExists(logfile)) {
                 gource_quit("Directory not supported.");
             } else {
                 gource_quit("Unsupported log format.  You may need to regenerate your log file.");
