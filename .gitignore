@@ -6,7 +6,6 @@ debug.log
 Makefile
 *.dll
 logs/*
-dev/*
 /config.log
 /config.status
 *.swp
