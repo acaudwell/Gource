@@ -331,7 +331,7 @@ int main(int argc, char *argv[]) {
         }
 
         // assume this is the log file
-        if(args == "-" || args.size() > 1 && args[0] != '-') {
+        if(args == "-" || args.size() >= 1 && args[0] != '-') {
             logfile = args;
             continue;
         }
