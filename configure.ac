@@ -40,6 +40,9 @@ AC_CHECK_LIB([ftgl], [main],, AC_MSG_ERROR(ftgl is required. Please see README))
 #Freetype2
 AC_CHECK_FT2([9.0.3],[],[AC_MSG_ERROR([FreeType2 is required by FTGL. Please see README])])
 
+AC_ARG_ENABLE(ttf-font-dir,[AS_HELP_STRING([--enable-ttf-font-dir=DIR],[directory containing FreeSans.ttf])],[gourcefontdir="$enableval"],[gourcefontdir=""])
+AC_SUBST(gourcefontdir)
+
 # Add FT2 flags. Also means FTGL header check will work. Yay.
 CFLAGS="$CFLAGS $FT2_CFLAGS"
 CPPFLAGS="$CPPFLAGS $FT2_CFLAGS"

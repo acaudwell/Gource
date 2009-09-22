@@ -211,6 +211,7 @@ with the Code Blocks IDE (www.codeblocks.org).
 ==========
 
 0.12:
+ * Added --enable-ttf-font-dir=DIR option to configure (to specify the ttf-freefont directory).
  * UTF-8 support using UTF8-CPP (http://utfcpp.sourceforge.net/).
  * Changed the git log command (see --git-log-command) to require less work to parse.
    Log files generated with the previous git-log command used by gource should continue to work.

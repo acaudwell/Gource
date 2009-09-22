@@ -131,6 +131,12 @@ void SDLAppDisplay::detectPath() {
     }
 #endif
 
+#ifdef SDLAPP_FONT_DIR
+    if (dirExists(SDLAPP_FONT_DIR)) {
+        fonts_dir    = SDLAPP_FONT_DIR;
+    }
+#endif
+
     texturemanager.setDir(resource_dir);
     fontmanager.setDir(fonts_dir);
 }
