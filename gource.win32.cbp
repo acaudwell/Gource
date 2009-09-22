@@ -10,7 +10,6 @@
 				<Option output="gource" prefix_auto="1" extension_auto="1" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="--help" />
 				<Compiler>
 					<Add option="-W" />
 					<Add option="-g" />
@@ -21,7 +20,6 @@
 			<Add option="-O3" />
 			<Add option="-W" />
 			<Add option="-Wall" />
-			<Add option="-g" />
 			<Add option="-Dmain=SDL_main" />
 			<Add directory="C:\source\git\gource\src" />
 		</Compiler>
