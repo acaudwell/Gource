@@ -149,6 +149,31 @@ You can view CVS projects with gource using the tool cvs-exp  (not  provided)  w
     `gource --cvs-exp-command` > my-cvs-project.log
     gource my-cvs-project.log
 
+SVN Support:
+
+SVN is not supported directly, but you can use git-svn instead. Assuming you would do
+
+    svn checkout https://my.server.com/path/to/repo myrepo
+
+to checkout your subversion repository, and that the three standard directories "trunk", "tags", and "branches" exist
+(see below if this isn't true), you can use the following commands to get the svn history imported into git:
+
+    git svn init --stdlayout https://my.server.com/path/to/repo myrepo
+    cd myrepo
+    git svn fetch
+
+Note that the last command can take hours if your repository is large.
+After you've executed these commands, you can use the instructions for git above.
+
+Once the initial fetch is done, updating your local copy of the repository should be much quicker. Just use
+
+    git svn rebase
+
+any time you want to get updated to the latest version from svn.
+
+If your repository does not have the standard subdirectories, please check out the git-svn manpage (git help svn) for
+information on how to modify the init line to meet your needs.
+
 
 Custom Log Format:
 
