@@ -5,7 +5,7 @@ use warnings;
 use FindBin;
 
 my $WINBUILD = "$FindBin::Bin/../builds/win32/";
-my $VERSION  = '0.12';
+my $VERSION  = '0.12b';
 
 sub doit {
     my $cmd = shift;
@@ -49,6 +49,7 @@ doit("cp dev/win32/pcre.dll $WINBUILD");
 doit("cp dev/win32/ftgl.dll $WINBUILD");
 doit("cp dev/win32/jpeg.dll $WINBUILD");
 doit("cp dev/win32/libpng12-0.dll $WINBUILD");
+doit("cp dev/win32/zlib1.dll $WINBUILD");
 
 chdir($WINBUILD);
 doit("zip -r gource-$VERSION.win32.zip *");
