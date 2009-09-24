@@ -154,7 +154,6 @@ SVN Support via Git:
 SVN is not supported directly, however if your SVN repository has the standard three directories (trunk/, tags/ and branches/)
 then you can try it in gource by importing it into a Git respository using the 'git svn' command:
 
-    svn checkout https://myrepo.example.org/svn my-repo.git
     git svn init --stdlayout https://myrepo.example.org/svn my-repo.git
     cd my-repo.git
     git svn fetch
