@@ -5,7 +5,7 @@ use warnings;
 use FindBin;
 
 my $WINBUILD = "$FindBin::Bin/../builds/win32/";
-my $VERSION  = '0.12b';
+my $VERSION  = '0.13';
 
 sub doit {
     my $cmd = shift;
