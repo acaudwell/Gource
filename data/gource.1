@@ -132,6 +132,30 @@ cd my\-cvs\-project
 .ti 10
 \fIgource\fR my\-cvs\-project.log
 
+.SH SVN SUPPORT VIA GIT
+
+SVN is not supported directly, however if your SVN repository has the standard three directories (trunk/, tags/ and branches/)
+then you can try it in gource by importing it into a Git respository using the 'git svn' command:
+
+.ti 10
+svn checkout https://myrepo.example.org/svn my\-repo.git
+.ti 10
+git svn init \-\-stdlayout https://myrepo.example.org/svn my\-repo.git
+.ti 10
+cd my\-repo.git
+.ti 10
+git svn fetch
+
+Note that the last command (git svn fetch) can take hours if your repository is large.
+
+You can update this Git version of your SVN repository at any time using the following command:
+
+.ti 10
+git svn rebase
+
+If your repository does not have the standard directories, please check out the git\-svn manpage (git help svn) for
+information on how to modify the init line to meet your needs.
+
 .SH CUSTOM LOG FORMAT
 
 If you want to use Gource with something other than Git or CVS, there is a pipe delimited custom log format:

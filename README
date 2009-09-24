@@ -149,31 +149,24 @@ You can view CVS projects with gource using the tool cvs-exp  (not  provided)  w
     `gource --cvs-exp-command` > my-cvs-project.log
     gource my-cvs-project.log
 
-SVN Support:
+SVN Support via Git:
 
-SVN is not supported directly, but you can use git-svn instead. Assuming you would do
+SVN is not supported directly, however if your SVN repository has the standard three directories (trunk/, tags/ and branches/)
+then you can try it in gource by importing it into a Git respository using the 'git svn' command:
 
-    svn checkout https://my.server.com/path/to/repo myrepo
-
-to checkout your subversion repository, and that the three standard directories "trunk", "tags", and "branches" exist
-(see below if this isn't true), you can use the following commands to get the svn history imported into git:
-
-    git svn init --stdlayout https://my.server.com/path/to/repo myrepo
-    cd myrepo
+    svn checkout https://myrepo.example.org/svn my-repo.git
+    git svn init --stdlayout https://myrepo.example.org/svn my-repo.git
+    cd my-repo.git
     git svn fetch
 
-Note that the last command can take hours if your repository is large.
-After you've executed these commands, you can use the instructions for git above.
+Note that the last command (git svn fetch) can take hours if your repository is large.
 
-Once the initial fetch is done, updating your local copy of the repository should be much quicker. Just use
+You can update this Git version of your SVN repository at any time using the following command:
 
     git svn rebase
 
-any time you want to get updated to the latest version from svn.
-
-If your repository does not have the standard subdirectories, please check out the git-svn manpage (git help svn) for
+If your repository does not have the standard directories, please check out the git-svn manpage (git help svn) for
 information on how to modify the init line to meet your needs.
-
 
 Custom Log Format:
 
@@ -235,6 +228,11 @@ with the Code Blocks IDE (www.codeblocks.org).
 5. Changes
 ==========
 
+0.13:
+ * Removed single quotes from log command (fixes running gource \-\-git-log-command in back ticks)
+ * Added SVN instructions.
+ * Fixed manpage hyphens.
+
 0.12:
  * Added --enable-ttf-font-dir=DIR option to configure (to specify the ttf-freefont directory).
  * UTF-8 support using UTF8-CPP (http://utfcpp.sourceforge.net/).
@@ -244,6 +242,7 @@ with the Code Blocks IDE (www.codeblocks.org).
  * Added --git-branch command.
  * Added --loop command.
  * Added --crop command.
+
 0.11:
  * Made N key skip to next entry.
  * Documented --user-image-dir flag.
