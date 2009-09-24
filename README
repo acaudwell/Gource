@@ -142,7 +142,7 @@ the command line to work with an older version (changing %aN to %an for instance
 
 CVS Support:
 
-You can view CVS projects with gource using the tool cvs-exp  (not  provided)  with  the  command  line  specified  by  the
+You can view CVS projects with gource using the tool cvs-exp (not provided) with the command line specified by the
 --cvs-exp-command option:
 
     cd my-cvs-project
@@ -151,8 +151,10 @@ You can view CVS projects with gource using the tool cvs-exp  (not  provided)  w
 
 SVN Support via Git:
 
-SVN is not supported directly, however if your SVN repository has the standard three directories (trunk/, tags/ and branches/)
-then you can try it in gource by importing it into a Git respository using the 'git svn' command:
+SVN is not supported directly, however you could can import your project into a Git repository using the 'git svn' command.
+
+The below insturctions will work if your SVN repository has the standard three directories - trunk, tags and branches
+(Otherwise, see the 'git svn' documentation):
 
     git svn init --stdlayout https://myrepo.example.org/svn my-repo.git
     cd my-repo.git
@@ -160,12 +162,9 @@ then you can try it in gource by importing it into a Git respository using the '
 
 Note that the last command (git svn fetch) can take hours if your repository is large.
 
-You can update this Git version of your SVN repository at any time using the following command:
+You can pull new changes into the Git copy of your SVN repository at any time using the following command:
 
     git svn rebase
-
-If your repository does not have the standard directories, please check out the git-svn manpage (git help svn) for
-information on how to modify the init line to meet your needs.
 
 Custom Log Format:
 
@@ -226,6 +225,9 @@ with the Code Blocks IDE (www.codeblocks.org).
 
 5. Changes
 ==========
+
+0.14:
+ * Updated SVN instructions.
 
 0.13:
  * Removed single quotes from log command (fixes running gource \-\-git-log-command in back ticks)
