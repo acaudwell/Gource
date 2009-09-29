@@ -166,9 +166,13 @@ You can pull new changes into the Git copy of your SVN repository at any time us
 
     git svn rebase
 
+Support for Other Systems:
+
+Please check the Gource homepage to see guides for other systems that can be used with Gource, or try using the custom log format.
+
 Custom Log Format:
 
-If you want to use Gource with something other than Git or CVS, there is a pipe delimited custom log format:
+If you want to use Gource with something other than the supported systems, there is a pipe delimited custom log format:
 
     timestamp - A unix timestamp of when the update occured.
     username  - The name of the user who made the update.
