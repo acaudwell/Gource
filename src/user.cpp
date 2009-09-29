@@ -18,7 +18,7 @@
 #include "user.h"
 
 float gGourceBeamDist = 100.0;
-float gGourceActionDist = 50.0;
+float gGourceActionDist = 25.0;
 float gGourceMaxUserIdle = 3.0;
 float gGourcePersonalSpaceDist = 100.0;
 float gGourceMaxCommitLag = -1.0;
@@ -50,7 +50,7 @@ RUser::RUser(std::string name, vec2f pos, int tagid) : Pawn(name,pos,tagid) {
     setSelected(false);
 
     last_action = 0.0;
-    action_interval = 0.5;
+    action_interval = 0.2;
     name_interval = 5.0;
 
     min_units_ps = 100.0;
