@@ -21,6 +21,7 @@ float gGourceBeamDist = 100.0;
 float gGourceActionDist = 50.0;
 float gGourceMaxUserIdle = 3.0;
 float gGourcePersonalSpaceDist = 100.0;
+float gGourceMaxCommitLag = -1.0;
 
 bool gGourceColourUserImages = false;
 
@@ -148,20 +149,32 @@ void RUser::applyForceToActions() {
 
     last_action = elapsed;
 
+    int action_influence = 0;
+    int max_influence    = 3;
+
+    // move towards actions being worked on
+
     for(std::list<RAction*>::iterator it = activeActions.begin(); it != activeActions.end(); it++) {
         RAction* action = *it;
 
         applyForceAction(action);
+
+        action_influence++;
+        if(action_influence >= max_influence) break;
     }
 
     if(activeActions.size()!=0) return;
 
+    //if no actions being worked on, move towards one pending action
     for(std::list<RAction*>::iterator it = actions.begin(); it != actions.end(); it++) {
         RAction* action = *it;
 
         applyForceAction(action);
+
         break;
     }
+
+
 }
 
 void RUser::assignIcon() {
@@ -217,28 +230,45 @@ int RUser::getPendingActionCount() {
     return actions.size();
 }
 
-void RUser::logic(float dt) {
+void RUser::logic(float t, float dt) {
     Pawn::logic(dt);
 
     action_interval -= dt;
 
+    bool find_nearby_action = false;
+
+    if(actions.size() && action_interval <= 0) {
+        find_nearby_action = true;
+    }
+
     //add next active action, if it is in range
-    if(action_interval <= 0 && actions.size()) {
+    for(std::list<RAction*>::iterator it = actions.begin(); it != actions.end();) {
+        RAction* action = *it;
 
-        for(std::list<RAction*>::iterator it = actions.begin(); it != actions.end();it++) {
-
-            RAction* action = *it;
-
-            float action_dist = (action->target->getAbsolutePos() - pos).length();
-
-            //queue first action in range
-            if(action_dist < gGourceBeamDist) {
-                    it = actions.erase(it);
-                    activeActions.push_back(action);
-                    break;
-            }
+        //add all files which are too old
+        if(gGourceMaxCommitLag>=0.0 && action->addedtime < t - gGourceMaxCommitLag) {
+            it = actions.erase(it);
+            action->rate = 2.0;
+            activeActions.push_back(action);
+            continue;
         }
 
+        if(!find_nearby_action) break;
+
+        float action_dist = (action->target->getAbsolutePos() - pos).length();
+
+        //queue first action in range
+        if(action_dist < gGourceBeamDist) {
+            it = actions.erase(it);
+            activeActions.push_back(action);
+            break;
+        }
+
+        it++;
+    }
+
+    //reset action interval
+    if(action_interval <= 0) {
         int total_actions = actions.size() + activeActions.size();
 
         action_interval = total_actions ? (1.0 / (float)total_actions) : 1.0;

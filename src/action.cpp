@@ -17,10 +17,13 @@
 
 #include "action.h"
 
-RAction::RAction(RUser* source, RFile* target) {
-    this->source = source;
-    this->target = target;
+RAction::RAction(RUser* source, RFile* target, float addedtime) {
+    this->source    = source;
+    this->target    = target;
+    this->addedtime = addedtime;
+
     progress = 0.0;
+
     rate = 0.5;
 }
 
@@ -76,12 +79,12 @@ void RAction::draw(float dt) {
     glEnd();
 }
 
-CreateAction::CreateAction(RUser* source, RFile* target) : RAction(source, target) {
+CreateAction::CreateAction(RUser* source, RFile* target, float addedtime) : RAction(source, target, addedtime) {
     colour = vec3f(0.0, 1.0, 0.0);
     action = "Create";
 }
 
-RemoveAction::RemoveAction(RUser* source, RFile* target): RAction(source, target) {
+RemoveAction::RemoveAction(RUser* source, RFile* target, float addedtime): RAction(source, target, addedtime) {
     colour = vec3f(1.0, 0.0, 0.0);
     action = "Remove";
 }
@@ -96,7 +99,7 @@ void RemoveAction::logic(float dt) {
     }
 }
 
-ModifyAction::ModifyAction(RUser* source, RFile* target) : RAction(source, target) {
+ModifyAction::ModifyAction(RUser* source, RFile* target, float addedtime) : RAction(source, target, addedtime) {
     colour = vec3f(1.0, 0.7, 0.3);
     action = "Modify";
 }

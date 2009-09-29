@@ -32,10 +32,12 @@ public:
     RUser* source;
     RFile* target;
 
+    float addedtime;
+
     float progress;
     float rate;
 
-    RAction(RUser* source, RFile* target);
+    RAction(RUser* source, RFile* target, float addedtime);
 
     bool isFinished();
 
@@ -45,19 +47,19 @@ public:
 
 class CreateAction : public RAction {
 public:
-    CreateAction(RUser* source, RFile* target);
+    CreateAction(RUser* source, RFile* target, float addedtime);
 };
 
 class RemoveAction : public RAction {
 public:
-    RemoveAction(RUser* source, RFile* target);
+    RemoveAction(RUser* source, RFile* target, float addedtime);
 
     void logic(float dt);
 };
 
 class ModifyAction : public RAction {
 public:
-    ModifyAction(RUser* source, RFile* target);
+    ModifyAction(RUser* source, RFile* target, float addedtime);
 };
 
 #endif

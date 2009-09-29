@@ -136,7 +136,7 @@ class Gource : public SDLApp {
     void selectNextUser();
 
     void readLog();
-    void processCommit(RCommit& commit);
+    void processCommit(RCommit& commit, float t);
 
     std::string dateAtPosition(float percent);
 
@@ -146,7 +146,7 @@ class Gource : public SDLApp {
 
     void interactUsers();
     void interactDirs();
-    void updateUsers(float dt);
+    void updateUsers(float t, float dt);
     void updateDirs(float dt);
 
     void updateTime();

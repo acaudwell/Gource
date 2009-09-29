@@ -165,7 +165,8 @@ void gource_help(std::string error) {
     printf("  --default-user-image IMAGE       Default user image file.\n");
     printf("  --colour-images                  Colourize user images.\n\n");
 
-    printf("  --max-files NUMBER               Maximum of active files (default: 1000)\n\n");
+    printf("  --max-files NUMBER               Maximum of active files (default: 1000)\n");
+    printf("  --max-commit-lag SECONDS         Maximum user time to allow for each commit\n\n");
 
     printf("  --follow-user USER               Camera will automatically follow this user\n");
     printf("  --highlight-user USER            Highlight the names of a particular user\n");
@@ -812,7 +813,7 @@ void Gource::readLog() {
     //debugLog("current date: %s\n", displaydate.c_str());
 }
 
-void Gource::processCommit(RCommit& commit) {
+void Gource::processCommit(RCommit& commit, float t) {
 
     //find user of this commit or create them
     RUser* user = 0;
@@ -916,12 +917,12 @@ void Gource::processCommit(RCommit& commit) {
         int commitNo = commit_seq++;
 
         if(cf.action == "D") {
-            action = new RemoveAction(user, file);
+            action = new RemoveAction(user, file, t);
         } else {
             if(cf.action == "A") {
-                action = new CreateAction(user, file);
+                action = new CreateAction(user, file, t);
             } else {
-                action = new ModifyAction(user, file);
+                action = new ModifyAction(user, file, t);
             }
         }
 
@@ -993,7 +994,7 @@ void Gource::interactUsers() {
 }
 
 
-void Gource::updateUsers(float dt) {
+void Gource::updateUsers(float t, float dt) {
     std::vector<RUser*> inactiveUsers;
 
     int idle_users = 0;
@@ -1005,7 +1006,7 @@ void Gource::updateUsers(float dt) {
     for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
         RUser* u = it->second;
 
-        u->logic(dt);
+        u->logic(t, dt);
 
         //deselect user if fading out from inactivity
         if(u->isFading() && selectedUser == u) {
@@ -1179,7 +1180,7 @@ void Gource::logic(float t, float dt) {
 
         if(commit.timestamp > currtime) break;
 
-        processCommit(commit);
+        processCommit(commit, t);
         commitqueue.pop_front();
     }
 
@@ -1191,7 +1192,7 @@ void Gource::logic(float t, float dt) {
     interactUsers();
     interactDirs();
 
-    updateUsers(dt);
+    updateUsers(t, dt);
     updateDirs(dt);
 
     updateTime();

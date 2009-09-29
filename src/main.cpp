@@ -281,6 +281,21 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
+        if(args == "--max-commit-lag") {
+
+            if((i+1)>=arguments.size()) {
+                gource_help("specify max-commit-lag (seconds)");
+            }
+
+            gGourceMaxCommitLag = atof(arguments[++i].c_str());
+
+            if(gGourceMaxCommitLag==0) {
+                gource_help("invalid max-commit-lag value");
+            }
+
+            continue;
+        }
+
         if(args == "--highlight-all-users") {
 
             gGourceHighlightAllUsers = true;

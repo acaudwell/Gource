@@ -78,7 +78,7 @@ public:
     void applyForceToActions();
     void applyForceAction(RAction* action);
     void applyForceUser(RUser* u);
-    void logic(float dt);
+    void logic(float t, float dt);
 
     void drawActions(float dt);
     void draw(float dt);
@@ -86,6 +86,7 @@ public:
 
 extern float gGourceDaysPerSecond;
 extern float gGourceMaxUserIdle;
+extern float gGourceMaxCommitLag;
 extern bool  gGourceHideUsers;
 
 extern std::map<std::string, std::string> gGourceUserImageMap;
