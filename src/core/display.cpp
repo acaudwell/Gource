@@ -37,7 +37,6 @@ SDLAppDisplay::SDLAppDisplay() {
     enable_alpha=false;
     vsync=false;
     multi_sample = 0;
-    detectPath();
 }
 
 SDLAppDisplay::~SDLAppDisplay() {
@@ -160,6 +159,8 @@ void SDLAppDisplay::multiSample(int samples) {
 }
 
 void SDLAppDisplay::init(std::string window_title, int width, int height, bool fullscreen) {
+    detectPath();
+
     this->width  = width;
     this->height = height;
 
