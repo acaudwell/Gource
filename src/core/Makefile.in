@@ -9,6 +9,7 @@ CXX = g++
 CC = gcc
 objects = sdlapp.o display.o extensions.o fxfont.o logger.o regex.o resource.o stringhash.o texture.o frustum.o camera.o plane.o quadtree.o seeklog.o
 CPPFLAGS = @CPPFLAGS@
+CXXFLAGS = @CXXFLAGS@
 
 ifdef gourcedatadir
 CPPFLAGS += -DSDLAPP_RESOURCE_DIR=\"$(gourcedatadir)\"
@@ -27,13 +28,13 @@ clean:
 	rm -f *.o *.d
 
 %.o: %.cpp
-	$(CXX) $(CPPFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 ifndef NODEPS
 ifeq ($(findstring clean,$(MAKECMDGOALS)),)
 dfiles = $(patsubst %.o,%.d,$(objects))
 %.d: %.cpp
-	$(CXX) $< -o $@ -MT $(patsubst %.cpp,%.o,$<) -MM $(CPPFLAGS)
+	$(CXX) $(CXXFLAGS) $< -o $@ -MT $(patsubst %.cpp,%.o,$<) -MM $(CPPFLAGS)
 -include $(dfiles)
 endif
 endif # NODEPS

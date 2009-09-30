@@ -1,6 +1,7 @@
 LIBS = @LIBS@
 
 CPPFLAGS = @CPPFLAGS@
+CXXFLAGS = @CXXFLAGS@
 
 SUBDIRS = core
 CXX = g++
@@ -20,17 +21,17 @@ clean:
 	rm -f *.o *.d
 
 gource: $(objects) 
-	$(CXX) $(CPPFLAGS) -o $@ core/*.o $+ $(LIBS)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ core/*.o $+ $(LIBS)
 	mv $@ ..
 
 %.o: %.cpp
-	$(CXX) $(CPPFLAGS) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 ifndef NODEPS
 ifeq ($(findstring clean,$(MAKECMDGOALS)),)
 dfiles = $(patsubst %.o,%.d,$(objects))
 %.d: %.cpp
-	$(CXX) $< -o $@ -MT $(patsubst %.cpp,%.o,$<) -MM $(CPPFLAGS)
+	$(CXX) $(CXXFLAGS) $< -o $@ -MT $(patsubst %.cpp,%.o,$<) -MM $(CPPFLAGS)
 -include $(dfiles)
 endif
 endif # NODEPS

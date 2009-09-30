@@ -234,6 +234,7 @@ with the Code Blocks IDE (www.codeblocks.org).
  * Added --no-renames to the git log command as they don't display correctly.
  * Using sdl.m4 to get SDL configuration (hopefully closer to MAC support now).
  * Caught raw exception from replace_invalid().
+ * Added CXXFLAGS. You may want to override the default (eg CXXFLAGS=-O3 ./configure).
 
 0.14:
  * Updated SVN instructions.
