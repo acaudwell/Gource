@@ -230,11 +230,14 @@ with the Code Blocks IDE (www.codeblocks.org).
 5. Changes
 ==========
 
+0.15:
+ * Added --no-renames to the git log command as they don't display correctly.
+
 0.14:
  * Updated SVN instructions.
 
 0.13:
- * Removed single quotes from log command (fixes running gource \-\-git-log-command in back ticks)
+ * Removed single quotes from log command (fixes running gource --git-log-command in back ticks)
  * Added SVN instructions.
  * Fixed manpage hyphens.
 
