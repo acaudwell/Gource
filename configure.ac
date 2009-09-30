@@ -31,30 +31,38 @@ AC_CHECK_FUNCS([atexit getcwd memset sqrt strchr])
 
 #check for GLU
 AX_CHECK_GLU
+CFLAGS="$CFLAGS $GLU_CFLAGS"
+CPPFLAGS="$CPPFLAGS $GLU_CFLAGS"
+LIBS="$LIBS $GLU_LIBS"
 
-AC_CHECK_LIB([SDL], [main],, AC_MSG_ERROR(SDL is required. Please see README))
+#check for SDL
+SDL_VERSION=1.2.0
+AM_PATH_SDL($SDL_VERSION,
+            :,
+            AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
+)
+CFLAGS="$CFLAGS $SDL_CFLAGS"
+CPPFLAGS="$CPPFLAGS $SDL_CFLAGS"
+LIBS="$LIBS $SDL_LIBS"
+
 AC_CHECK_LIB([SDL_image], [main],, AC_MSG_ERROR(SDL_image is required. Please see README))
 AC_CHECK_LIB([pcre], [main],, AC_MSG_ERROR(pcre is required. Please see README))
 AC_CHECK_LIB([ftgl], [main],, AC_MSG_ERROR(ftgl is required. Please see README))
 
 #Freetype2
 AC_CHECK_FT2([9.0.3],[],[AC_MSG_ERROR([FreeType2 is required by FTGL. Please see README])])
-
-AC_ARG_ENABLE(ttf-font-dir,[AS_HELP_STRING([--enable-ttf-font-dir=DIR],[directory containing FreeSans.ttf])],[gourcefontdir="$enableval"],[gourcefontdir=""])
-AC_SUBST(gourcefontdir)
-
-# Add FT2 flags. Also means FTGL header check will work. Yay.
 CFLAGS="$CFLAGS $FT2_CFLAGS"
 CPPFLAGS="$CPPFLAGS $FT2_CFLAGS"
 
 AC_CHECK_HEADER([FTGL/ftgl.h],, AC_MSG_ERROR(FTGL/ftgl.h is required. Please see README))
 
 # Check for SDL, SDL_Image, FTGL, pcre headers
-
-AC_CHECK_HEADER([SDL/SDL.h],, AC_MSG_ERROR(SDL/SDL.h is required. Please see README))
-AC_CHECK_HEADER([SDL/SDL_opengl.h],, AC_MSG_ERROR(SDL/SDL_opengl.h is required. Please see README))
-AC_CHECK_HEADER([SDL/SDL_image.h],, AC_MSG_ERROR(SDL/SDL_image.h is required. Please see README))
+AC_CHECK_HEADER([SDL_image.h],, AC_MSG_ERROR(SDL_image.h is required. Please see README))
 AC_CHECK_HEADER([pcre.h],, AC_MSG_ERROR(pcre.h is required. Please see README))
+
+#see if ttf-font-dir option is enabled
+AC_ARG_ENABLE(ttf-font-dir,[AS_HELP_STRING([--enable-ttf-font-dir=DIR],[directory containing FreeSans.ttf])],[gourcefontdir="$enableval"],[gourcefontdir=""])
+AC_SUBST(gourcefontdir)
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile

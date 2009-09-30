@@ -1059,6 +1059,7 @@ AC_SUBST([am__tar])
 AC_SUBST([am__untar])
 ]) # _AM_PROG_TAR
 
+m4_include([m4/sdl.m4])
 m4_include([m4/freetype2.m4])
 m4_include([m4/acx_pthread.m4])
 m4_include([m4/ax_check_gl.m4])

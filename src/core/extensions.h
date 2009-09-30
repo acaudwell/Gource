@@ -30,8 +30,8 @@
 
 #ifndef SDLAPP_SHADER_SUPPORT
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_opengl.h>
+#include <SDL.h>
+#include <SDL_opengl.h>
 
 #else
 
@@ -42,8 +42,8 @@ extern bool gShadersEnabled;
 #include <GL/glew.h>
 
 #define NO_SDL_GLEXT
-#include <SDL/SDL.h>
-#include <SDL/SDL_opengl.h>
+#include <SDL.h>
+#include <SDL_opengl.h>
 
 void setupARBExtensions();
 
