@@ -17,6 +17,19 @@
 
 #include "commitlog.h"
 
+std::string munge_utf8(std::string& str) {
+
+    std::string munged;
+    try {
+        utf8::replace_invalid(str.begin(), str.end(), back_inserter(munged), '?');
+    }
+    catch(...) {
+        munged = "???";
+    }
+
+    return munged;
+}
+
 //RCommitLog
 
 RCommitLog::RCommitLog(std::string logfile, int firstChar) {
@@ -185,10 +198,7 @@ RCommitFile::RCommitFile(std::string filename, std::string action, vec3f colour)
     //prepend a root slash
     if(filename[0] != '/') filename = std::string("/") + filename;
 
-    //replace non utf8 characters with ?
-    std::string temp;
-    utf8::replace_invalid(filename.begin(), filename.end(), back_inserter(temp), '?');
-    filename = temp;
+    filename = munge_utf8(filename);
 
     this->filename = filename;
     this->action   = action;
@@ -221,10 +231,7 @@ void RCommit::addFile(std::string& filename, std::string& action, vec3f colour) 
 
 bool RCommit::isValid() {
 
-    //replace non utf8 characters with ?
-    std::string temp;
-    utf8::replace_invalid(username.begin(), username.end(), back_inserter(temp), '?');
-    username = temp;
+    username = munge_utf8(username);
 
     return true;
 }
