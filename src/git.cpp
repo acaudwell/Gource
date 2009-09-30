@@ -26,7 +26,8 @@
 
 std::string gGourceGitLogCommand = "git log "
     "--pretty=format:user:%aN%n%ct "
-    "--reverse --raw --encoding=UTF-8";
+    "--reverse --raw --encoding=UTF-8 "
+    "--no-renames";
 
 GitCommitLog::GitCommitLog(std::string logfile) : RCommitLog(logfile, 'u') {
 
