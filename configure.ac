@@ -29,13 +29,13 @@ AC_FUNC_STRFTIME
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([atexit getcwd memset sqrt strchr])
 
-#check for GLU
+#GL
 AX_CHECK_GLU
 CFLAGS="$CFLAGS $GLU_CFLAGS"
 CPPFLAGS="$CPPFLAGS $GLU_CFLAGS"
 LIBS="$LIBS $GLU_LIBS"
 
-#check for SDL
+#SDL
 SDL_VERSION=1.2.0
 AM_PATH_SDL($SDL_VERSION,
             :,
@@ -50,17 +50,25 @@ AC_CHECK_FT2([9.0.3],[],[AC_MSG_ERROR([FreeType2 is required by FTGL. Please see
 CFLAGS="$CFLAGS $FT2_CFLAGS"
 CPPFLAGS="$CPPFLAGS $FT2_CFLAGS"
 
-#detect FTGL
+#FTGL
 PKG_CHECK_MODULES(FTGL, ftgl >= 2.1.3, [], AC_MSG_ERROR(ftgl 2.1.3 or greater is required. Please see README))
 CFLAGS="$CFLAGS $FTGL_CFLAGS"
 CPPFLAGS="$CPPFLAGS $FTGL_CFLAGS"
 LIBS="$LIBS $FTGL_LIBS"
 
-# Check for SDL_Image and pcre libraries
-AC_CHECK_LIB([SDL_image], [main],, AC_MSG_ERROR(SDL_image is required. Please see README))
-AC_CHECK_LIB([pcre], [main],, AC_MSG_ERROR(pcre is required. Please see README))
+#PNG library
+AC_CHECK_LIB(png, png_read_info, , AC_MSG_ERROR([PNG library required. Please see README]))
 
-# Check for required headers
+#JPEG library
+AC_CHECK_LIB(jpeg, jpeg_read_header, , AC_MSG_ERROR([JPEG library required. Please see README]))
+
+#SDL_image library with PNG support
+AC_CHECK_LIB(SDL_image, IMG_LoadPNG_RW, , AC_MSG_ERROR([SDL_image required. Please see README]))
+
+#PCRE
+AC_CHECK_LIB([pcre], [pcre_compile],, AC_MSG_ERROR(PCRE is required. Please see README))
+
+#Check for required headers
 AC_CHECK_HEADER([SDL.h],, AC_MSG_ERROR(SDL.h is required. Please see README))
 AC_CHECK_HEADER([SDL_image.h],, AC_MSG_ERROR(SDL_image.h is required. Please see README))
 AC_CHECK_HEADER([ftgl.h],, AC_MSG_ERROR(ftgl.h is required. Please see README))

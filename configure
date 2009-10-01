@@ -5754,7 +5754,7 @@ fi
 done
 
 
-#check for GLU
+#GL
 ac_aux_dir=
 for ac_dir in "$srcdir" "$srcdir/.." "$srcdir/../.."; do
   if test -f "$ac_dir/install-sh"; then
@@ -7697,7 +7697,7 @@ CFLAGS="$CFLAGS $GLU_CFLAGS"
 CPPFLAGS="$CPPFLAGS $GLU_CFLAGS"
 LIBS="$LIBS $GLU_LIBS"
 
-#check for SDL
+#SDL
 SDL_VERSION=1.2.0
 
 # Check whether --with-sdl-prefix was given.
@@ -8287,7 +8287,7 @@ echo "$as_me: error: FreeType2 is required by FTGL. Please see README" >&2;}
 CFLAGS="$CFLAGS $FT2_CFLAGS"
 CPPFLAGS="$CPPFLAGS $FT2_CFLAGS"
 
-#detect FTGL
+#FTGL
 
 
 if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
@@ -8487,11 +8487,165 @@ CFLAGS="$CFLAGS $FTGL_CFLAGS"
 CPPFLAGS="$CPPFLAGS $FTGL_CFLAGS"
 LIBS="$LIBS $FTGL_LIBS"
 
-# Check for SDL_Image and pcre libraries
+#PNG library
 
-{ echo "$as_me:$LINENO: checking for main in -lSDL_image" >&5
-echo $ECHO_N "checking for main in -lSDL_image... $ECHO_C" >&6; }
-if test "${ac_cv_lib_SDL_image_main+set}" = set; then
+{ echo "$as_me:$LINENO: checking for png_read_info in -lpng" >&5
+echo $ECHO_N "checking for png_read_info in -lpng... $ECHO_C" >&6; }
+if test "${ac_cv_lib_png_png_read_info+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lpng  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char png_read_info ();
+int
+main ()
+{
+return png_read_info ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_link") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest$ac_exeext &&
+       $as_test_x conftest$ac_exeext; then
+  ac_cv_lib_png_png_read_info=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	ac_cv_lib_png_png_read_info=no
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
+      conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_lib_png_png_read_info" >&5
+echo "${ECHO_T}$ac_cv_lib_png_png_read_info" >&6; }
+if test $ac_cv_lib_png_png_read_info = yes; then
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBPNG 1
+_ACEOF
+
+  LIBS="-lpng $LIBS"
+
+else
+  { { echo "$as_me:$LINENO: error: PNG library required. Please see README" >&5
+echo "$as_me: error: PNG library required. Please see README" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+
+#JPEG library
+
+{ echo "$as_me:$LINENO: checking for jpeg_read_header in -ljpeg" >&5
+echo $ECHO_N "checking for jpeg_read_header in -ljpeg... $ECHO_C" >&6; }
+if test "${ac_cv_lib_jpeg_jpeg_read_header+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-ljpeg  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char jpeg_read_header ();
+int
+main ()
+{
+return jpeg_read_header ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_link") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest$ac_exeext &&
+       $as_test_x conftest$ac_exeext; then
+  ac_cv_lib_jpeg_jpeg_read_header=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	ac_cv_lib_jpeg_jpeg_read_header=no
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
+      conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_lib_jpeg_jpeg_read_header" >&5
+echo "${ECHO_T}$ac_cv_lib_jpeg_jpeg_read_header" >&6; }
+if test $ac_cv_lib_jpeg_jpeg_read_header = yes; then
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBJPEG 1
+_ACEOF
+
+  LIBS="-ljpeg $LIBS"
+
+else
+  { { echo "$as_me:$LINENO: error: JPEG library required. Please see README" >&5
+echo "$as_me: error: JPEG library required. Please see README" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+
+#SDL_image library with PNG support
+
+{ echo "$as_me:$LINENO: checking for IMG_LoadPNG_RW in -lSDL_image" >&5
+echo $ECHO_N "checking for IMG_LoadPNG_RW in -lSDL_image... $ECHO_C" >&6; }
+if test "${ac_cv_lib_SDL_image_IMG_LoadPNG_RW+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   ac_check_lib_save_LIBS=$LIBS
@@ -8503,11 +8657,17 @@ cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 
-
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char IMG_LoadPNG_RW ();
 int
 main ()
 {
-return main ();
+return IMG_LoadPNG_RW ();
   ;
   return 0;
 }
@@ -8530,21 +8690,21 @@ eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
 	 test ! -s conftest.err
        } && test -s conftest$ac_exeext &&
        $as_test_x conftest$ac_exeext; then
-  ac_cv_lib_SDL_image_main=yes
+  ac_cv_lib_SDL_image_IMG_LoadPNG_RW=yes
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-	ac_cv_lib_SDL_image_main=no
+	ac_cv_lib_SDL_image_IMG_LoadPNG_RW=no
 fi
 
 rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
       conftest$ac_exeext conftest.$ac_ext
 LIBS=$ac_check_lib_save_LIBS
 fi
-{ echo "$as_me:$LINENO: result: $ac_cv_lib_SDL_image_main" >&5
-echo "${ECHO_T}$ac_cv_lib_SDL_image_main" >&6; }
-if test $ac_cv_lib_SDL_image_main = yes; then
+{ echo "$as_me:$LINENO: result: $ac_cv_lib_SDL_image_IMG_LoadPNG_RW" >&5
+echo "${ECHO_T}$ac_cv_lib_SDL_image_IMG_LoadPNG_RW" >&6; }
+if test $ac_cv_lib_SDL_image_IMG_LoadPNG_RW = yes; then
   cat >>confdefs.h <<_ACEOF
 #define HAVE_LIBSDL_IMAGE 1
 _ACEOF
@@ -8552,15 +8712,17 @@ _ACEOF
   LIBS="-lSDL_image $LIBS"
 
 else
-  { { echo "$as_me:$LINENO: error: SDL_image is required. Please see README" >&5
-echo "$as_me: error: SDL_image is required. Please see README" >&2;}
+  { { echo "$as_me:$LINENO: error: SDL_image required. Please see README" >&5
+echo "$as_me: error: SDL_image required. Please see README" >&2;}
    { (exit 1); exit 1; }; }
 fi
 
 
-{ echo "$as_me:$LINENO: checking for main in -lpcre" >&5
-echo $ECHO_N "checking for main in -lpcre... $ECHO_C" >&6; }
-if test "${ac_cv_lib_pcre_main+set}" = set; then
+#PCRE
+
+{ echo "$as_me:$LINENO: checking for pcre_compile in -lpcre" >&5
+echo $ECHO_N "checking for pcre_compile in -lpcre... $ECHO_C" >&6; }
+if test "${ac_cv_lib_pcre_pcre_compile+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   ac_check_lib_save_LIBS=$LIBS
@@ -8572,11 +8734,17 @@ cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 
-
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char pcre_compile ();
 int
 main ()
 {
-return main ();
+return pcre_compile ();
   ;
   return 0;
 }
@@ -8599,21 +8767,21 @@ eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
 	 test ! -s conftest.err
        } && test -s conftest$ac_exeext &&
        $as_test_x conftest$ac_exeext; then
-  ac_cv_lib_pcre_main=yes
+  ac_cv_lib_pcre_pcre_compile=yes
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-	ac_cv_lib_pcre_main=no
+	ac_cv_lib_pcre_pcre_compile=no
 fi
 
 rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
       conftest$ac_exeext conftest.$ac_ext
 LIBS=$ac_check_lib_save_LIBS
 fi
-{ echo "$as_me:$LINENO: result: $ac_cv_lib_pcre_main" >&5
-echo "${ECHO_T}$ac_cv_lib_pcre_main" >&6; }
-if test $ac_cv_lib_pcre_main = yes; then
+{ echo "$as_me:$LINENO: result: $ac_cv_lib_pcre_pcre_compile" >&5
+echo "${ECHO_T}$ac_cv_lib_pcre_pcre_compile" >&6; }
+if test $ac_cv_lib_pcre_pcre_compile = yes; then
   cat >>confdefs.h <<_ACEOF
 #define HAVE_LIBPCRE 1
 _ACEOF
@@ -8621,13 +8789,13 @@ _ACEOF
   LIBS="-lpcre $LIBS"
 
 else
-  { { echo "$as_me:$LINENO: error: pcre is required. Please see README" >&5
-echo "$as_me: error: pcre is required. Please see README" >&2;}
+  { { echo "$as_me:$LINENO: error: PCRE is required. Please see README" >&5
+echo "$as_me: error: PCRE is required. Please see README" >&2;}
    { (exit 1); exit 1; }; }
 fi
 
 
-# Check for required headers
+#Check for required headers
 if test "${ac_cv_header_SDL_h+set}" = set; then
   { echo "$as_me:$LINENO: checking for SDL.h" >&5
 echo $ECHO_N "checking for SDL.h... $ECHO_C" >&6; }

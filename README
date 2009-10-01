@@ -213,6 +213,8 @@ Gource requires the following libraries to compile:
     SDL Image 1.2 (libsdl-image1.2-dev)
     PCRE3 (libpcre3-dev)
     FTGL 2.1.3~rc5-2 (libftgl-dev)
+    PNG library (libpng12-dev)
+    JPEG library (libjpeg62-dev)
 
 Building on Linux:
 
@@ -234,6 +236,7 @@ with the Code Blocks IDE (www.codeblocks.org).
  * Added --no-renames to the git log command as they don't display correctly.
  * Using sdl.m4 to get SDL configuration.
  * Using pkg-config to get FTGL configuration.
+ * Checking for JPEG and PNG libraries.
  * Caught raw exception from replace_invalid().
  * Added CXXFLAGS. You may want to override the default (eg CXXFLAGS=-O3 ./configure).
 
