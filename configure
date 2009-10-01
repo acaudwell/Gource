@@ -692,6 +692,9 @@ SDL_LIBS
 FT2_CONFIG
 FT2_CFLAGS
 FT2_LIBS
+PKG_CONFIG
+FTGL_CFLAGS
+FTGL_LIBS
 gourcefontdir
 LTLIBOBJS'
 ac_subst_files=''
@@ -707,7 +710,10 @@ CCC
 CC
 CFLAGS
 CPP
-XMKMF'
+XMKMF
+PKG_CONFIG
+FTGL_CFLAGS
+FTGL_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1314,6 +1320,9 @@ Some influential environment variables:
   CFLAGS      C compiler flags
   CPP         C preprocessor
   XMKMF       Path to xmkmf, Makefile generator for X Window System
+  PKG_CONFIG  path to pkg-config utility
+  FTGL_CFLAGS C compiler flags for FTGL, overriding pkg-config
+  FTGL_LIBS   linker flags for FTGL, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -8003,214 +8012,6 @@ CFLAGS="$CFLAGS $SDL_CFLAGS"
 CPPFLAGS="$CPPFLAGS $SDL_CFLAGS"
 LIBS="$LIBS $SDL_LIBS"
 
-
-{ echo "$as_me:$LINENO: checking for main in -lSDL_image" >&5
-echo $ECHO_N "checking for main in -lSDL_image... $ECHO_C" >&6; }
-if test "${ac_cv_lib_SDL_image_main+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lSDL_image  $LIBS"
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-
-
-int
-main ()
-{
-return main ();
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (ac_try="$ac_link"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_link") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest$ac_exeext &&
-       $as_test_x conftest$ac_exeext; then
-  ac_cv_lib_SDL_image_main=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	ac_cv_lib_SDL_image_main=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
-      conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ echo "$as_me:$LINENO: result: $ac_cv_lib_SDL_image_main" >&5
-echo "${ECHO_T}$ac_cv_lib_SDL_image_main" >&6; }
-if test $ac_cv_lib_SDL_image_main = yes; then
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBSDL_IMAGE 1
-_ACEOF
-
-  LIBS="-lSDL_image $LIBS"
-
-else
-  { { echo "$as_me:$LINENO: error: SDL_image is required. Please see README" >&5
-echo "$as_me: error: SDL_image is required. Please see README" >&2;}
-   { (exit 1); exit 1; }; }
-fi
-
-
-{ echo "$as_me:$LINENO: checking for main in -lpcre" >&5
-echo $ECHO_N "checking for main in -lpcre... $ECHO_C" >&6; }
-if test "${ac_cv_lib_pcre_main+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lpcre  $LIBS"
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-
-
-int
-main ()
-{
-return main ();
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (ac_try="$ac_link"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_link") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest$ac_exeext &&
-       $as_test_x conftest$ac_exeext; then
-  ac_cv_lib_pcre_main=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	ac_cv_lib_pcre_main=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
-      conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ echo "$as_me:$LINENO: result: $ac_cv_lib_pcre_main" >&5
-echo "${ECHO_T}$ac_cv_lib_pcre_main" >&6; }
-if test $ac_cv_lib_pcre_main = yes; then
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBPCRE 1
-_ACEOF
-
-  LIBS="-lpcre $LIBS"
-
-else
-  { { echo "$as_me:$LINENO: error: pcre is required. Please see README" >&5
-echo "$as_me: error: pcre is required. Please see README" >&2;}
-   { (exit 1); exit 1; }; }
-fi
-
-
-{ echo "$as_me:$LINENO: checking for main in -lftgl" >&5
-echo $ECHO_N "checking for main in -lftgl... $ECHO_C" >&6; }
-if test "${ac_cv_lib_ftgl_main+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lftgl  $LIBS"
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-
-
-int
-main ()
-{
-return main ();
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (ac_try="$ac_link"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_link") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest$ac_exeext &&
-       $as_test_x conftest$ac_exeext; then
-  ac_cv_lib_ftgl_main=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	ac_cv_lib_ftgl_main=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
-      conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ echo "$as_me:$LINENO: result: $ac_cv_lib_ftgl_main" >&5
-echo "${ECHO_T}$ac_cv_lib_ftgl_main" >&6; }
-if test $ac_cv_lib_ftgl_main = yes; then
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBFTGL 1
-_ACEOF
-
-  LIBS="-lftgl $LIBS"
-
-else
-  { { echo "$as_me:$LINENO: error: ftgl is required. Please see README" >&5
-echo "$as_me: error: ftgl is required. Please see README" >&2;}
-   { (exit 1); exit 1; }; }
-fi
-
-
 #Freetype2
 # Get the cflags and libraries from the freetype-config script
    #
@@ -8486,18 +8287,359 @@ echo "$as_me: error: FreeType2 is required by FTGL. Please see README" >&2;}
 CFLAGS="$CFLAGS $FT2_CFLAGS"
 CPPFLAGS="$CPPFLAGS $FT2_CFLAGS"
 
-if test "${ac_cv_header_FTGL_ftgl_h+set}" = set; then
-  { echo "$as_me:$LINENO: checking for FTGL/ftgl.h" >&5
-echo $ECHO_N "checking for FTGL/ftgl.h... $ECHO_C" >&6; }
-if test "${ac_cv_header_FTGL_ftgl_h+set}" = set; then
+#detect FTGL
+
+
+if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
+	if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}pkg-config", so it can be a program name with args.
+set dummy ${ac_tool_prefix}pkg-config; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_PKG_CONFIG+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $PKG_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_PKG_CONFIG="$PKG_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+PKG_CONFIG=$ac_cv_path_PKG_CONFIG
+if test -n "$PKG_CONFIG"; then
+  { echo "$as_me:$LINENO: result: $PKG_CONFIG" >&5
+echo "${ECHO_T}$PKG_CONFIG" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_path_PKG_CONFIG"; then
+  ac_pt_PKG_CONFIG=$PKG_CONFIG
+  # Extract the first word of "pkg-config", so it can be a program name with args.
+set dummy pkg-config; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_ac_pt_PKG_CONFIG+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $ac_pt_PKG_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ac_pt_PKG_CONFIG="$ac_pt_PKG_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_ac_pt_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ac_pt_PKG_CONFIG=$ac_cv_path_ac_pt_PKG_CONFIG
+if test -n "$ac_pt_PKG_CONFIG"; then
+  { echo "$as_me:$LINENO: result: $ac_pt_PKG_CONFIG" >&5
+echo "${ECHO_T}$ac_pt_PKG_CONFIG" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+  if test "x$ac_pt_PKG_CONFIG" = x; then
+    PKG_CONFIG=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ echo "$as_me:$LINENO: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&5
+echo "$as_me: WARNING: In the future, Autoconf will not detect cross-tools
+whose name does not start with the host triplet.  If you think this
+configuration is useful to you, please write to autoconf@gnu.org." >&2;}
+ac_tool_warned=yes ;;
+esac
+    PKG_CONFIG=$ac_pt_PKG_CONFIG
+  fi
+else
+  PKG_CONFIG="$ac_cv_path_PKG_CONFIG"
+fi
+
+fi
+if test -n "$PKG_CONFIG"; then
+	_pkg_min_version=0.9.0
+	{ echo "$as_me:$LINENO: checking pkg-config is at least version $_pkg_min_version" >&5
+echo $ECHO_N "checking pkg-config is at least version $_pkg_min_version... $ECHO_C" >&6; }
+	if $PKG_CONFIG --atleast-pkgconfig-version $_pkg_min_version; then
+		{ echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6; }
+	else
+		{ echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+		PKG_CONFIG=""
+	fi
+
+fi
+
+pkg_failed=no
+{ echo "$as_me:$LINENO: checking for FTGL" >&5
+echo $ECHO_N "checking for FTGL... $ECHO_C" >&6; }
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$FTGL_CFLAGS"; then
+        pkg_cv_FTGL_CFLAGS="$FTGL_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"ftgl >= 2.1.3\"") >&5
+  ($PKG_CONFIG --exists --print-errors "ftgl >= 2.1.3") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_FTGL_CFLAGS=`$PKG_CONFIG --cflags "ftgl >= 2.1.3" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$FTGL_LIBS"; then
+        pkg_cv_FTGL_LIBS="$FTGL_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"ftgl >= 2.1.3\"") >&5
+  ($PKG_CONFIG --exists --print-errors "ftgl >= 2.1.3") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_FTGL_LIBS=`$PKG_CONFIG --libs "ftgl >= 2.1.3" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        FTGL_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "ftgl >= 2.1.3"`
+        else
+	        FTGL_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "ftgl >= 2.1.3"`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$FTGL_PKG_ERRORS" >&5
+
+	{ echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+                { { echo "$as_me:$LINENO: error: ftgl 2.1.3 or greater is required. Please see README" >&5
+echo "$as_me: error: ftgl 2.1.3 or greater is required. Please see README" >&2;}
+   { (exit 1); exit 1; }; }
+elif test $pkg_failed = untried; then
+	{ { echo "$as_me:$LINENO: error: ftgl 2.1.3 or greater is required. Please see README" >&5
+echo "$as_me: error: ftgl 2.1.3 or greater is required. Please see README" >&2;}
+   { (exit 1); exit 1; }; }
+else
+	FTGL_CFLAGS=$pkg_cv_FTGL_CFLAGS
+	FTGL_LIBS=$pkg_cv_FTGL_LIBS
+        { echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6; }
+	:
+fi
+CFLAGS="$CFLAGS $FTGL_CFLAGS"
+CPPFLAGS="$CPPFLAGS $FTGL_CFLAGS"
+LIBS="$LIBS $FTGL_LIBS"
+
+# Check for SDL_Image and pcre libraries
+
+{ echo "$as_me:$LINENO: checking for main in -lSDL_image" >&5
+echo $ECHO_N "checking for main in -lSDL_image... $ECHO_C" >&6; }
+if test "${ac_cv_lib_SDL_image_main+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lSDL_image  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+
+int
+main ()
+{
+return main ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_link") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest$ac_exeext &&
+       $as_test_x conftest$ac_exeext; then
+  ac_cv_lib_SDL_image_main=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	ac_cv_lib_SDL_image_main=no
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
+      conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_lib_SDL_image_main" >&5
+echo "${ECHO_T}$ac_cv_lib_SDL_image_main" >&6; }
+if test $ac_cv_lib_SDL_image_main = yes; then
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBSDL_IMAGE 1
+_ACEOF
+
+  LIBS="-lSDL_image $LIBS"
+
+else
+  { { echo "$as_me:$LINENO: error: SDL_image is required. Please see README" >&5
+echo "$as_me: error: SDL_image is required. Please see README" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+
+{ echo "$as_me:$LINENO: checking for main in -lpcre" >&5
+echo $ECHO_N "checking for main in -lpcre... $ECHO_C" >&6; }
+if test "${ac_cv_lib_pcre_main+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lpcre  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+
+int
+main ()
+{
+return main ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_link") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest$ac_exeext &&
+       $as_test_x conftest$ac_exeext; then
+  ac_cv_lib_pcre_main=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	ac_cv_lib_pcre_main=no
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
+      conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_lib_pcre_main" >&5
+echo "${ECHO_T}$ac_cv_lib_pcre_main" >&6; }
+if test $ac_cv_lib_pcre_main = yes; then
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBPCRE 1
+_ACEOF
+
+  LIBS="-lpcre $LIBS"
+
+else
+  { { echo "$as_me:$LINENO: error: pcre is required. Please see README" >&5
+echo "$as_me: error: pcre is required. Please see README" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+
+# Check for required headers
+if test "${ac_cv_header_SDL_h+set}" = set; then
+  { echo "$as_me:$LINENO: checking for SDL.h" >&5
+echo $ECHO_N "checking for SDL.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_SDL_h+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 fi
-{ echo "$as_me:$LINENO: result: $ac_cv_header_FTGL_ftgl_h" >&5
-echo "${ECHO_T}$ac_cv_header_FTGL_ftgl_h" >&6; }
+{ echo "$as_me:$LINENO: result: $ac_cv_header_SDL_h" >&5
+echo "${ECHO_T}$ac_cv_header_SDL_h" >&6; }
 else
   # Is the header compilable?
-{ echo "$as_me:$LINENO: checking FTGL/ftgl.h usability" >&5
-echo $ECHO_N "checking FTGL/ftgl.h usability... $ECHO_C" >&6; }
+{ echo "$as_me:$LINENO: checking SDL.h usability" >&5
+echo $ECHO_N "checking SDL.h usability... $ECHO_C" >&6; }
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -8505,7 +8647,7 @@ cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
 $ac_includes_default
-#include <FTGL/ftgl.h>
+#include <SDL.h>
 _ACEOF
 rm -f conftest.$ac_objext
 if { (ac_try="$ac_compile"
@@ -8537,15 +8679,15 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 echo "${ECHO_T}$ac_header_compiler" >&6; }
 
 # Is the header present?
-{ echo "$as_me:$LINENO: checking FTGL/ftgl.h presence" >&5
-echo $ECHO_N "checking FTGL/ftgl.h presence... $ECHO_C" >&6; }
+{ echo "$as_me:$LINENO: checking SDL.h presence" >&5
+echo $ECHO_N "checking SDL.h presence... $ECHO_C" >&6; }
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
 cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
-#include <FTGL/ftgl.h>
+#include <SDL.h>
 _ACEOF
 if { (ac_try="$ac_cpp conftest.$ac_ext"
 case "(($ac_try" in
@@ -8578,25 +8720,25 @@ echo "${ECHO_T}$ac_header_preproc" >&6; }
 # So?  What about this header?
 case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
   yes:no: )
-    { echo "$as_me:$LINENO: WARNING: FTGL/ftgl.h: accepted by the compiler, rejected by the preprocessor!" >&5
-echo "$as_me: WARNING: FTGL/ftgl.h: accepted by the compiler, rejected by the preprocessor!" >&2;}
-    { echo "$as_me:$LINENO: WARNING: FTGL/ftgl.h: proceeding with the compiler's result" >&5
-echo "$as_me: WARNING: FTGL/ftgl.h: proceeding with the compiler's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: SDL.h: accepted by the compiler, rejected by the preprocessor!" >&5
+echo "$as_me: WARNING: SDL.h: accepted by the compiler, rejected by the preprocessor!" >&2;}
+    { echo "$as_me:$LINENO: WARNING: SDL.h: proceeding with the compiler's result" >&5
+echo "$as_me: WARNING: SDL.h: proceeding with the compiler's result" >&2;}
     ac_header_preproc=yes
     ;;
   no:yes:* )
-    { echo "$as_me:$LINENO: WARNING: FTGL/ftgl.h: present but cannot be compiled" >&5
-echo "$as_me: WARNING: FTGL/ftgl.h: present but cannot be compiled" >&2;}
-    { echo "$as_me:$LINENO: WARNING: FTGL/ftgl.h:     check for missing prerequisite headers?" >&5
-echo "$as_me: WARNING: FTGL/ftgl.h:     check for missing prerequisite headers?" >&2;}
-    { echo "$as_me:$LINENO: WARNING: FTGL/ftgl.h: see the Autoconf documentation" >&5
-echo "$as_me: WARNING: FTGL/ftgl.h: see the Autoconf documentation" >&2;}
-    { echo "$as_me:$LINENO: WARNING: FTGL/ftgl.h:     section \"Present But Cannot Be Compiled\"" >&5
-echo "$as_me: WARNING: FTGL/ftgl.h:     section \"Present But Cannot Be Compiled\"" >&2;}
-    { echo "$as_me:$LINENO: WARNING: FTGL/ftgl.h: proceeding with the preprocessor's result" >&5
-echo "$as_me: WARNING: FTGL/ftgl.h: proceeding with the preprocessor's result" >&2;}
-    { echo "$as_me:$LINENO: WARNING: FTGL/ftgl.h: in the future, the compiler will take precedence" >&5
-echo "$as_me: WARNING: FTGL/ftgl.h: in the future, the compiler will take precedence" >&2;}
+    { echo "$as_me:$LINENO: WARNING: SDL.h: present but cannot be compiled" >&5
+echo "$as_me: WARNING: SDL.h: present but cannot be compiled" >&2;}
+    { echo "$as_me:$LINENO: WARNING: SDL.h:     check for missing prerequisite headers?" >&5
+echo "$as_me: WARNING: SDL.h:     check for missing prerequisite headers?" >&2;}
+    { echo "$as_me:$LINENO: WARNING: SDL.h: see the Autoconf documentation" >&5
+echo "$as_me: WARNING: SDL.h: see the Autoconf documentation" >&2;}
+    { echo "$as_me:$LINENO: WARNING: SDL.h:     section \"Present But Cannot Be Compiled\"" >&5
+echo "$as_me: WARNING: SDL.h:     section \"Present But Cannot Be Compiled\"" >&2;}
+    { echo "$as_me:$LINENO: WARNING: SDL.h: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: SDL.h: proceeding with the preprocessor's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: SDL.h: in the future, the compiler will take precedence" >&5
+echo "$as_me: WARNING: SDL.h: in the future, the compiler will take precedence" >&2;}
     ( cat <<\_ASBOX
 ## ---------------------------------- ##
 ## Report this to acaudwell@gmail.com ##
@@ -8605,28 +8747,26 @@ _ASBOX
      ) | sed "s/^/$as_me: WARNING:     /" >&2
     ;;
 esac
-{ echo "$as_me:$LINENO: checking for FTGL/ftgl.h" >&5
-echo $ECHO_N "checking for FTGL/ftgl.h... $ECHO_C" >&6; }
-if test "${ac_cv_header_FTGL_ftgl_h+set}" = set; then
+{ echo "$as_me:$LINENO: checking for SDL.h" >&5
+echo $ECHO_N "checking for SDL.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_SDL_h+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  ac_cv_header_FTGL_ftgl_h=$ac_header_preproc
+  ac_cv_header_SDL_h=$ac_header_preproc
 fi
-{ echo "$as_me:$LINENO: result: $ac_cv_header_FTGL_ftgl_h" >&5
-echo "${ECHO_T}$ac_cv_header_FTGL_ftgl_h" >&6; }
+{ echo "$as_me:$LINENO: result: $ac_cv_header_SDL_h" >&5
+echo "${ECHO_T}$ac_cv_header_SDL_h" >&6; }
 
 fi
-if test $ac_cv_header_FTGL_ftgl_h = yes; then
+if test $ac_cv_header_SDL_h = yes; then
   :
 else
-  { { echo "$as_me:$LINENO: error: FTGL/ftgl.h is required. Please see README" >&5
-echo "$as_me: error: FTGL/ftgl.h is required. Please see README" >&2;}
+  { { echo "$as_me:$LINENO: error: SDL.h is required. Please see README" >&5
+echo "$as_me: error: SDL.h is required. Please see README" >&2;}
    { (exit 1); exit 1; }; }
 fi
 
 
-
-# Check for SDL, SDL_Image, FTGL, pcre headers
 if test "${ac_cv_header_SDL_image_h+set}" = set; then
   { echo "$as_me:$LINENO: checking for SDL_image.h" >&5
 echo $ECHO_N "checking for SDL_image.h... $ECHO_C" >&6; }
@@ -8762,6 +8902,145 @@ if test $ac_cv_header_SDL_image_h = yes; then
 else
   { { echo "$as_me:$LINENO: error: SDL_image.h is required. Please see README" >&5
 echo "$as_me: error: SDL_image.h is required. Please see README" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+
+if test "${ac_cv_header_ftgl_h+set}" = set; then
+  { echo "$as_me:$LINENO: checking for ftgl.h" >&5
+echo $ECHO_N "checking for ftgl.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_ftgl_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_header_ftgl_h" >&5
+echo "${ECHO_T}$ac_cv_header_ftgl_h" >&6; }
+else
+  # Is the header compilable?
+{ echo "$as_me:$LINENO: checking ftgl.h usability" >&5
+echo $ECHO_N "checking ftgl.h usability... $ECHO_C" >&6; }
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+$ac_includes_default
+#include <ftgl.h>
+_ACEOF
+rm -f conftest.$ac_objext
+if { (ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_compile") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest.$ac_objext; then
+  ac_header_compiler=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	ac_header_compiler=no
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+{ echo "$as_me:$LINENO: result: $ac_header_compiler" >&5
+echo "${ECHO_T}$ac_header_compiler" >&6; }
+
+# Is the header present?
+{ echo "$as_me:$LINENO: checking ftgl.h presence" >&5
+echo $ECHO_N "checking ftgl.h presence... $ECHO_C" >&6; }
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <ftgl.h>
+_ACEOF
+if { (ac_try="$ac_cpp conftest.$ac_ext"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_cpp conftest.$ac_ext") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } >/dev/null && {
+	 test -z "$ac_c_preproc_warn_flag$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       }; then
+  ac_header_preproc=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+  ac_header_preproc=no
+fi
+
+rm -f conftest.err conftest.$ac_ext
+{ echo "$as_me:$LINENO: result: $ac_header_preproc" >&5
+echo "${ECHO_T}$ac_header_preproc" >&6; }
+
+# So?  What about this header?
+case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
+  yes:no: )
+    { echo "$as_me:$LINENO: WARNING: ftgl.h: accepted by the compiler, rejected by the preprocessor!" >&5
+echo "$as_me: WARNING: ftgl.h: accepted by the compiler, rejected by the preprocessor!" >&2;}
+    { echo "$as_me:$LINENO: WARNING: ftgl.h: proceeding with the compiler's result" >&5
+echo "$as_me: WARNING: ftgl.h: proceeding with the compiler's result" >&2;}
+    ac_header_preproc=yes
+    ;;
+  no:yes:* )
+    { echo "$as_me:$LINENO: WARNING: ftgl.h: present but cannot be compiled" >&5
+echo "$as_me: WARNING: ftgl.h: present but cannot be compiled" >&2;}
+    { echo "$as_me:$LINENO: WARNING: ftgl.h:     check for missing prerequisite headers?" >&5
+echo "$as_me: WARNING: ftgl.h:     check for missing prerequisite headers?" >&2;}
+    { echo "$as_me:$LINENO: WARNING: ftgl.h: see the Autoconf documentation" >&5
+echo "$as_me: WARNING: ftgl.h: see the Autoconf documentation" >&2;}
+    { echo "$as_me:$LINENO: WARNING: ftgl.h:     section \"Present But Cannot Be Compiled\"" >&5
+echo "$as_me: WARNING: ftgl.h:     section \"Present But Cannot Be Compiled\"" >&2;}
+    { echo "$as_me:$LINENO: WARNING: ftgl.h: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: ftgl.h: proceeding with the preprocessor's result" >&2;}
+    { echo "$as_me:$LINENO: WARNING: ftgl.h: in the future, the compiler will take precedence" >&5
+echo "$as_me: WARNING: ftgl.h: in the future, the compiler will take precedence" >&2;}
+    ( cat <<\_ASBOX
+## ---------------------------------- ##
+## Report this to acaudwell@gmail.com ##
+## ---------------------------------- ##
+_ASBOX
+     ) | sed "s/^/$as_me: WARNING:     /" >&2
+    ;;
+esac
+{ echo "$as_me:$LINENO: checking for ftgl.h" >&5
+echo $ECHO_N "checking for ftgl.h... $ECHO_C" >&6; }
+if test "${ac_cv_header_ftgl_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_cv_header_ftgl_h=$ac_header_preproc
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_header_ftgl_h" >&5
+echo "${ECHO_T}$ac_cv_header_ftgl_h" >&6; }
+
+fi
+if test $ac_cv_header_ftgl_h = yes; then
+  :
+else
+  { { echo "$as_me:$LINENO: error: ftgl.h is required. Please see README" >&5
+echo "$as_me: error: ftgl.h is required. Please see README" >&2;}
    { (exit 1); exit 1; }; }
 fi
 
@@ -9623,11 +9902,14 @@ SDL_LIBS!$SDL_LIBS$ac_delim
 FT2_CONFIG!$FT2_CONFIG$ac_delim
 FT2_CFLAGS!$FT2_CFLAGS$ac_delim
 FT2_LIBS!$FT2_LIBS$ac_delim
+PKG_CONFIG!$PKG_CONFIG$ac_delim
+FTGL_CFLAGS!$FTGL_CFLAGS$ac_delim
+FTGL_LIBS!$FTGL_LIBS$ac_delim
 gourcefontdir!$gourcefontdir$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 77; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 80; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

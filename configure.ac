@@ -45,19 +45,25 @@ CFLAGS="$CFLAGS $SDL_CFLAGS"
 CPPFLAGS="$CPPFLAGS $SDL_CFLAGS"
 LIBS="$LIBS $SDL_LIBS"
 
-AC_CHECK_LIB([SDL_image], [main],, AC_MSG_ERROR(SDL_image is required. Please see README))
-AC_CHECK_LIB([pcre], [main],, AC_MSG_ERROR(pcre is required. Please see README))
-AC_CHECK_LIB([ftgl], [main],, AC_MSG_ERROR(ftgl is required. Please see README))
-
 #Freetype2
 AC_CHECK_FT2([9.0.3],[],[AC_MSG_ERROR([FreeType2 is required by FTGL. Please see README])])
 CFLAGS="$CFLAGS $FT2_CFLAGS"
 CPPFLAGS="$CPPFLAGS $FT2_CFLAGS"
 
-AC_CHECK_HEADER([FTGL/ftgl.h],, AC_MSG_ERROR(FTGL/ftgl.h is required. Please see README))
+#detect FTGL
+PKG_CHECK_MODULES(FTGL, ftgl >= 2.1.3, [], AC_MSG_ERROR(ftgl 2.1.3 or greater is required. Please see README))
+CFLAGS="$CFLAGS $FTGL_CFLAGS"
+CPPFLAGS="$CPPFLAGS $FTGL_CFLAGS"
+LIBS="$LIBS $FTGL_LIBS"
 
-# Check for SDL, SDL_Image, FTGL, pcre headers
+# Check for SDL_Image and pcre libraries
+AC_CHECK_LIB([SDL_image], [main],, AC_MSG_ERROR(SDL_image is required. Please see README))
+AC_CHECK_LIB([pcre], [main],, AC_MSG_ERROR(pcre is required. Please see README))
+
+# Check for required headers
+AC_CHECK_HEADER([SDL.h],, AC_MSG_ERROR(SDL.h is required. Please see README))
 AC_CHECK_HEADER([SDL_image.h],, AC_MSG_ERROR(SDL_image.h is required. Please see README))
+AC_CHECK_HEADER([ftgl.h],, AC_MSG_ERROR(ftgl.h is required. Please see README))
 AC_CHECK_HEADER([pcre.h],, AC_MSG_ERROR(pcre.h is required. Please see README))
 
 #see if ttf-font-dir option is enabled

@@ -35,7 +35,7 @@
 #include <string>
 #include <map>
 
-#include <FTGL/ftgl.h>
+#include <ftgl.h>
 
 class FXFont {
 
