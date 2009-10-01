@@ -234,9 +234,7 @@ with the Code Blocks IDE (www.codeblocks.org).
 
 0.15:
  * Added --no-renames to the git log command as they don't display correctly.
- * Using sdl.m4 to get SDL configuration.
- * Using pkg-config to get FTGL configuration.
- * Checking for JPEG and PNG libraries.
+ * Now builds on OSX Leopard (with the required libaries installed).
  * Caught raw exception from replace_invalid().
  * Added CXXFLAGS. You may want to override the default (eg CXXFLAGS=-O3 ./configure).
 
