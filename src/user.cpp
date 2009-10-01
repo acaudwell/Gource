@@ -18,7 +18,7 @@
 #include "user.h"
 
 float gGourceBeamDist = 100.0;
-float gGourceActionDist = 25.0;
+float gGourceActionDist = 50.0;
 float gGourceMaxUserIdle = 3.0;
 float gGourcePersonalSpaceDist = 100.0;
 float gGourceMaxCommitLag = -1.0;
