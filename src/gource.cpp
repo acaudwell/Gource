@@ -603,11 +603,11 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
         }
 
         if (e->keysym.sym == SDLK_EQUALS) {
-            gGourceDaysPerSecond *= 2.0;
+            gGourceDaysPerSecond = std::min(30.0f, floorf(gGourceDaysPerSecond) + 1.0f);
         }
 
         if (e->keysym.sym == SDLK_MINUS) {
-            if(gGourceDaysPerSecond>0.0) gGourceDaysPerSecond *= 0.5;
+            gGourceDaysPerSecond = std::max(0.0f, floorf(gGourceDaysPerSecond) - 1.0f);
         }
 
         if(e->keysym.sym == SDLK_UP) {
@@ -1156,8 +1156,6 @@ void Gource::logic(float t, float dt) {
 
     //set current time
     currtime = starttime + elapsed_time;
-    float csubsec  = elapsed_time - floorf(elapsed_time);
-
 
     // delete files
     for(std::vector<RFile*>::iterator it = gGourceRemovedFiles.begin(); it != gGourceRemovedFiles.end(); it++) {
@@ -1174,13 +1172,16 @@ void Gource::logic(float t, float dt) {
 
         if(gGourceAutoSkipSeconds>=0.0 && idle_time >= gGourceAutoSkipSeconds) {
             currtime = commit.timestamp;
-            elapsed_time = commit.timestamp - starttime;
             idle_time = 0.0;
         }
 
         if(commit.timestamp > currtime) break;
 
         processCommit(commit, t);
+
+        currtime = commit.timestamp;
+        elapsed_time = commit.timestamp - starttime;
+
         commitqueue.pop_front();
     }
 
