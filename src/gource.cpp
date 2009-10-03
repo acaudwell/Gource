@@ -603,11 +603,19 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
         }
 
         if (e->keysym.sym == SDLK_EQUALS) {
-            gGourceDaysPerSecond = std::min(30.0f, floorf(gGourceDaysPerSecond) + 1.0f);
+            if(gGourceDaysPerSecond>=1.0) {
+                gGourceDaysPerSecond = std::min(30.0f, floorf(gGourceDaysPerSecond) + 1.0f);
+            } else {
+                gGourceDaysPerSecond = std::min(1.0f, gGourceDaysPerSecond * 2.0f);
+            }
         }
 
         if (e->keysym.sym == SDLK_MINUS) {
-            gGourceDaysPerSecond = std::max(0.0f, floorf(gGourceDaysPerSecond) - 1.0f);
+            if(gGourceDaysPerSecond>1.0) {
+                gGourceDaysPerSecond = std::max(0.0f, floorf(gGourceDaysPerSecond) - 1.0f);
+            } else {
+                gGourceDaysPerSecond = std::max(0.0f, gGourceDaysPerSecond * 0.5f);
+            }
         }
 
         if(e->keysym.sym == SDLK_UP) {
@@ -698,9 +706,8 @@ void Gource::reset() {
     files.clear();
 
     idle_time=0;
-    elapsed_time=0;
     currtime=0;
-    starttime = 0;
+    subseconds=0.0;
     tag_seq = 1;
     commit_seq = 1;
 }
@@ -1136,8 +1143,6 @@ void Gource::logic(float t, float dt) {
 
     if(paused) return;
 
-    elapsed_time += dt * 86400.0 * gGourceDaysPerSecond;
-
     // get more entries
     if(commitqueue.size() == 0) {
         readLog();
@@ -1150,12 +1155,23 @@ void Gource::logic(float t, float dt) {
         readLog();
     }
 
-    if(starttime==0 && commitqueue.size()) {
-        starttime = commitqueue[0].timestamp;
+    if(currtime==0 && commitqueue.size()) {
+        currtime   = commitqueue[0].timestamp;
+        subseconds = 0.0;
     }
 
     //set current time
-    currtime = starttime + elapsed_time;
+    float time_inc = (dt * 86400.0 * gGourceDaysPerSecond);
+    int seconds    = (int) time_inc;
+
+    subseconds += time_inc - ((float) seconds);
+
+    if(subseconds >= 1.0) {
+        currtime   += (int) subseconds;
+        subseconds -= (int) subseconds;
+    }
+
+    currtime   += seconds;
 
     // delete files
     for(std::vector<RFile*>::iterator it = gGourceRemovedFiles.begin(); it != gGourceRemovedFiles.end(); it++) {
@@ -1180,7 +1196,7 @@ void Gource::logic(float t, float dt) {
         processCommit(commit, t);
 
         currtime = commit.timestamp;
-        elapsed_time = commit.timestamp - starttime;
+        subseconds = 0.0;
 
         commitqueue.pop_front();
     }

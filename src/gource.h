@@ -96,13 +96,12 @@ class Gource : public SDLApp {
     bool draw_loading;
     bool paused;
 
-    long starttime;
-    long currtime;
+    long  currtime;
+    float subseconds;
 
     float splash;
 
     float idle_time;
-    float elapsed_time;
 
     Uint32 draw_tree_time;
     Uint32 update_dir_tree_time;
