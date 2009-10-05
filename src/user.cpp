@@ -21,7 +21,9 @@ float gGourceBeamDist = 100.0;
 float gGourceActionDist = 50.0;
 float gGourceMaxUserIdle = 3.0;
 float gGourcePersonalSpaceDist = 100.0;
-float gGourceMaxCommitLag = -1.0;
+float gGourceMaxFileLagSeconds = 5.0;
+float gGourceMaxUserSpeed      = 500.0;
+float gGourceUserFriction      = 1.0;
 
 bool gGourceColourUserImages = false;
 
@@ -38,7 +40,7 @@ RUser::RUser(std::string name, vec2f pos, int tagid) : Pawn(name,pos,tagid) {
 
     this->name = name;
 
-    speed = 500.0;
+    speed = gGourceMaxUserSpeed;
     size = 20.0;
 
     shadow = true;
@@ -246,7 +248,7 @@ void RUser::logic(float t, float dt) {
         RAction* action = *it;
 
         //add all files which are too old
-        if(gGourceMaxCommitLag>=0.0 && action->addedtime < t - gGourceMaxCommitLag) {
+        if(gGourceMaxFileLagSeconds>=0.0 && action->addedtime < t - gGourceMaxFileLagSeconds) {
             it = actions.erase(it);
             action->rate = 2.0;
             activeActions.push_back(action);
@@ -296,7 +298,7 @@ void RUser::logic(float t, float dt) {
 
     pos += accel * dt;
 
-    accel = accel * std::max(0.0f, (1.0f - dt));
+    accel = accel * std::max(0.0f, (1.0f - gGourceUserFriction*dt));
 
     //ensure characters dont crawl
 //     float accel_amount = accel.length();
