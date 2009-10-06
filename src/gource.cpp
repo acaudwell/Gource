@@ -143,37 +143,40 @@ void gource_help(std::string error) {
     printf("  -e, --elasticity FLOAT           Elasticity of nodes\n");
     printf("  -b, --background FFFFFF          Background colour in hex\n\n");
 
+    printf("  --user-image-dir DIRECTORY       Dir containing images to use as avatars\n");
+    printf("  --default-user-image IMAGE       Default user image file\n");
+    printf("  --colour-images                  Colourize user images\n\n");
+
     printf("  --realtime                       Realtime playback speed\n\n");
 
-    printf("  --loop                           Loop when the end of the log is reached.\n\n");
+    printf("  --loop                   Loop when the end of the log is reached.\n\n");
 
-    printf("  --log-format FORMAT              Specify format of log (git,cvs,custom)\n");
-    printf("  --git-branch                     Get the git log of a particular branch\n");
-    printf("  --git-log-command                Show git-log command used by gource\n");
-    printf("  --cvs-exp-command                Show cvs-exp.pl log command used by gource\n\n");
+    printf("  --log-format FORMAT      Specify format of log (git,cvs,custom)\n");
+    printf("  --git-branch             Get the git log of a particular branch\n");
+    printf("  --git-log-command        Show git-log command used by gource\n");
+    printf("  --cvs-exp-command        Show cvs-exp.pl log command used by gource\n\n");
 
-    printf("  --multi-sampling                 Enable multi-sampling\n");
-    printf("  --crop AXIS                      Crop view on an axis (vertical,horizontal)\n\n");
+    printf("  --multi-sampling         Enable multi-sampling\n");
+    printf("  --crop AXIS              Crop view on an axis (vertical,horizontal)\n\n");
 
-    printf("  --disable-auto-skip              Disable auto skipping\n");
-    printf("  --disable-progress               Disable the progress bar\n\n");
+    printf("  --disable-auto-skip      Disable auto skipping\n");
+    printf("  --disable-progress       Disable the progress bar\n\n");
 
-    printf("  --hide-users                     Hide users\n");
-    printf("  --hide-usernames                 Hide usernames\n");
-    printf("  --hide-filenames                 Hide filenames\n");
-    printf("  --hide-date                      Hide the date\n\n");
+    printf("  --hide-users             Hide users\n");
+    printf("  --hide-usernames         Hide usernames\n");
+    printf("  --hide-filenames         Hide filenames\n");
+    printf("  --hide-date              Hide the date\n\n");
 
-    printf("  --user-image-dir DIRECTORY       Dir containing images to use as avatars.\n");
-    printf("  --default-user-image IMAGE       Default user image file.\n");
-    printf("  --colour-images                  Colourize user images.\n\n");
+    printf("  --max-files NUMBER       Max number of active files (default: 1000)\n");
+    printf("  --max-file-lag SECONDS   Max time files of a commit can take to appear\n\n");
 
-    printf("  --max-files NUMBER               Maximum of active files (default: 1000)\n");
-    printf("  --max-commit-lag SECONDS         Maximum user time to allow for each commit\n\n");
+    printf("  --max-user-speed UNITS   Speed users can travel per second (default: 500)\n\n");
+    printf("  --user-friction SECONDS  Time users come to a complete hault (default: 0.67)\n\n");
 
-    printf("  --follow-user USER               Camera will automatically follow this user\n");
-    printf("  --highlight-user USER            Highlight the names of a particular user\n");
-    printf("  --highlight-all-users            Highlight the names of all users\n");
-    printf("  --file-filter REGEX              Ignore files matching this regexe\n\n");
+    printf("  --follow-user USER       Camera will automatically follow this user\n");
+    printf("  --highlight-user USER    Highlight the names of a particular user\n");
+    printf("  --highlight-all-users    Highlight the names of all users\n");
+    printf("  --file-filter REGEX      Ignore files matching this regexe\n\n");
 
     printf("\nPATH may be either a git directory or a pre-generated log file.\n");
     printf("If ommited, gource will attempt to generate a git log for the current dir.\n\n");

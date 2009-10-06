@@ -105,6 +105,15 @@ options:
     --max-files
             Set the maximum number of files. Excess files will be discarded.
 
+    --max-file-lag SECONDS
+            Max time files of a commit can take to appear.
+
+    --max-user-speed UNITS
+            Max speed users can travel per second.
+
+    --user-friction SECONDS
+            Time users come to a complete hault.
+
     --hide-users
             Hide users.
 
@@ -233,7 +242,9 @@ with the Code Blocks IDE (www.codeblocks.org).
 ==========
 
 0.15:
+ * Added --max-file-lag option to limit how long after a commit file changes can take to appear.
  * Added --no-renames to the git log command as they don't display correctly.
+ * Added --max-user-speed and --user-friction as options.
  * Now builds on OSX Leopard (with the required libaries installed).
  * Caught raw exception from replace_invalid().
  * Added CXXFLAGS. You may want to override the default (eg CXXFLAGS=-O3 ./configure).

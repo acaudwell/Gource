@@ -290,16 +290,48 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        if(args == "--max-commit-lag") {
+        if(args == "--max-file-lag") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify max-commit-lag (seconds)");
+                gource_help("specify max-file-lag (seconds)");
             }
 
-            gGourceMaxCommitLag = atof(arguments[++i].c_str());
+            gGourceMaxFileLagSeconds = atof(arguments[++i].c_str());
 
-            if(gGourceMaxCommitLag==0) {
-                gource_help("invalid max-commit-lag value");
+            if(gGourceMaxFileLagSeconds==0.0) {
+                gource_help("invalid max-file-lag value");
+            }
+
+            continue;
+        }
+
+        if(args == "--user-friction") {
+
+            if((i+1)>=arguments.size()) {
+                gource_help("specify user-friction (seconds)");
+            }
+
+            gGourceUserFriction = atof(arguments[++i].c_str());
+
+            if(gGourceUserFriction<=0.0) {
+                gource_help("invalid user-friction value");
+            }
+
+            gGourceUserFriction = 1.0 / gGourceUserFriction;
+
+            continue;
+        }
+
+        if(args == "--max-user-speed") {
+
+            if((i+1)>=arguments.size()) {
+                gource_help("specify max-user-speed (units)");
+            }
+
+            gGourceMaxUserSpeed = atof(arguments[++i].c_str());
+
+            if(gGourceMaxUserSpeed<=0) {
+                gource_help("invalid max-user-speed value");
             }
 
             continue;

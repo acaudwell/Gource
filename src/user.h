@@ -86,7 +86,9 @@ public:
 
 extern float gGourceDaysPerSecond;
 extern float gGourceMaxUserIdle;
-extern float gGourceMaxCommitLag;
+extern float gGourceMaxFileLagSeconds;
+extern float gGourceMaxUserSpeed;
+extern float gGourceUserFriction;
 extern bool  gGourceHideUsers;
 
 extern std::map<std::string, std::string> gGourceUserImageMap;
