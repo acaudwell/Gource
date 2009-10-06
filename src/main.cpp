@@ -135,7 +135,10 @@ int main(int argc, char *argv[]) {
 
             gGourceLogFormat = arguments[++i];
 
-            if(gGourceLogFormat != "git" && gGourceLogFormat != "cvs" && gGourceLogFormat != "custom") {
+            if(   gGourceLogFormat != "git"
+               && gGourceLogFormat != "cvs"
+               && gGourceLogFormat != "custom"
+               && gGourceLogFormat != "apache") {
                 gource_help("unknown log-format");
             }
 
@@ -217,6 +220,12 @@ int main(int argc, char *argv[]) {
             }
 
             gGourceDaysPerSecond = 1.0 / gGourceDaysPerSecond;
+
+            continue;
+        }
+
+        if(args == "--realtime") {
+            gGourceDaysPerSecond = 1.0 / 86400.0;
 
             continue;
         }

@@ -143,6 +143,8 @@ void gource_help(std::string error) {
     printf("  -e, --elasticity FLOAT           Elasticity of nodes\n");
     printf("  -b, --background FFFFFF          Background colour in hex\n\n");
 
+    printf("  --realtime                       Realtime playback speed\n\n");
+
     printf("  --loop                           Loop when the end of the log is reached.\n\n");
 
     printf("  --log-format FORMAT              Specify format of log (git,cvs,custom)\n");
@@ -220,6 +222,12 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
             delete clog;
         }
 
+        if(gGourceLogFormat == "apache") {
+            clog = new ApacheCombinedLog(logfile);
+            if(clog->checkFormat()) return clog;
+            delete clog;
+        }
+
         return 0;
     }
 
@@ -247,6 +255,13 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
     //custom
     debugLog("trying custom...\n");
     clog = new CustomLog(logfile);
+    if(clog->checkFormat()) return clog;
+
+    delete clog;
+
+    //apache
+    debugLog("trying apache combined...\n");
+    clog = new ApacheCombinedLog(logfile);
     if(clog->checkFormat()) return clog;
 
     delete clog;

@@ -39,6 +39,7 @@
 #include "gitraw.h"
 #include "cvs-exp.h"
 #include "custom.h"
+#include "apache.h"
 
 #include "slider.h"
 
