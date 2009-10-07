@@ -102,7 +102,8 @@ bool ApacheCombinedLog::parseCommit(RCommit& commit) {
     int code      = atoi(matches[3].c_str());
     int bytes     = atol(matches[4].c_str());
 
-    commit.addFile(file, "A");
+    std::string action = "A";
+    commit.addFile(file, action);
 
     std::string refer;
     std::string agent;
