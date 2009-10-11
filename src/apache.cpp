@@ -102,6 +102,19 @@ bool ApacheCombinedLog::parseCommit(RCommit& commit) {
     int code      = atoi(matches[3].c_str());
     int bytes     = atol(matches[4].c_str());
 
+    //remove args from url
+    int argpos = file.rfind("?");
+    if(argpos != std::string::npos) {
+        file = file.substr(0,argpos);
+    }
+
+    if(file.size()==0) file = "/";
+
+   //name index pages
+    if(file[file.size()-1] == '/') {
+        file += "index.html";
+    }
+
     std::string action = "A";
     commit.addFile(file, action);
 
