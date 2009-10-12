@@ -25,6 +25,9 @@ int main(int argc, char *argv[]) {
     bool multisample=false;
     vec3f background = vec3f(0.25, 0.25, 0.25);
 
+    int video_bitrate = 6400000;
+    std::string video_file_name;
+
     std::vector<std::string> follow_users;
     std::vector<std::string> highlight_users;
     std::vector<Regex*> filters;
@@ -393,15 +396,30 @@ int main(int argc, char *argv[]) {
         }
 
 #ifdef HAVE_FFMPEG
-        if(args == "--output-movie") {
+        if(args == "--video-file") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify movie file name");
+                gource_help("specify video file name");
             }
 
-            std::string movie_file_name = arguments[++i];
+            video_file_name = arguments[++i];
 
-            initializeMovieExporter(movie_file_name);
+            continue;
+        }
+
+        if(args == "--video-bitrate") {
+
+            if((i+1)>=arguments.size()) {
+                gource_help("specify bitrate");
+            }
+
+            video_bitrate = atoi(arguments[++i].c_str());
+
+            if(video_bitrate<=0) {
+                gource_help("invalid bitrate value");
+            }
+
+
             continue;
         }
 #endif
@@ -458,6 +476,13 @@ int main(int argc, char *argv[]) {
     if(multisample) {
         display.multiSample(4);
     }
+
+#ifdef HAVE_FFMPEG
+    //init movie exporter
+    if(video_file_name.size() > 0) {
+        initializeMovieExporter(video_file_name, video_bitrate);
+    }
+#endif
 
     //enable vsync
     display.enableVsync(true);

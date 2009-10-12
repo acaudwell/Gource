@@ -21,7 +21,7 @@
 #include "gource.h"
 
 extern void initializeStdoutExporter();
-extern void initializeMovieExporter(std::string filename);
+extern void initializeMovieExporter(std::string filename, int bitrate);
 extern void dumpFrame();
 extern void cleanupFrameExporter();
 

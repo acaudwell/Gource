@@ -179,7 +179,8 @@ void gource_help(std::string error) {
     printf("  --file-filter REGEX      Ignore files matching this regexe\n\n");
 
 #ifdef HAVE_FFMPEG
-    printf("  --output-movie FILE      Record video to a file\n");
+    printf("  --video-file FILE        Record a video using FFmpeg\n");
+    printf("  --video-bitrate BITRATE  Set video bitrate (default: 6400000)\n");
 #endif
     printf("  --dump-frames            Dump frames as PPM to stdout\n\n");
 

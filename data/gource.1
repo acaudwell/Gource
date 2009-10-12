@@ -105,6 +105,15 @@ Hide filenames.
 \fB\-\-hide\-date\fR
 Hide the date.
 .TP
+\fB\-\-video\-file FILE\fR
+Record a video using FFmpeg (requires buiding gource with \-\-with\-ffmpeg option). FFmpeg will choose the format to encode based on the file extension or default to mpeg.
+.TP
+\fB\-\-video\-bitrate BITRATE\fR
+Set video bitrate.
+.TP
+\fB\-\-dump\-frames\fR
+Dump frames as PPM to stdout.
+.TP
 \fBpath\fR
 Either a Git directory, a pre-generated log file (see -\-git\-log\-command, -\-cvs\-exp\-command or the custom log format) or '-' to read STDIN. If path is ommited \fIgource\fR will attempt to read a git log from the current directory.
 .SH GIT EXAMPLES
