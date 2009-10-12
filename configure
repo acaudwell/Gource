@@ -696,6 +696,8 @@ PKG_CONFIG
 FTGL_CFLAGS
 FTGL_LIBS
 gourcefontdir
+FFMPEG_CFLAGS
+FFMPEG_LIBS
 LTLIBOBJS'
 ac_subst_files=''
       ac_precious_vars='build_alias
@@ -713,7 +715,9 @@ CPP
 XMKMF
 PKG_CONFIG
 FTGL_CFLAGS
-FTGL_LIBS'
+FTGL_LIBS
+FFMPEG_CFLAGS
+FFMPEG_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1307,7 +1311,7 @@ Optional Packages:
        --with-ft-prefix=PREFIX Prefix where FreeType is installed (optional)
        --with-ft-exec-prefix=PREFIX
                           Exec prefix where FreeType is installed (optional)
-  --with-ffmpeg=DIR       ffmpeg lib directory
+  --with-ffmpeg           ffmpeg support for creating movies
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -1324,6 +1328,9 @@ Some influential environment variables:
   PKG_CONFIG  path to pkg-config utility
   FTGL_CFLAGS C compiler flags for FTGL, overriding pkg-config
   FTGL_LIBS   linker flags for FTGL, overriding pkg-config
+  FFMPEG_CFLAGS
+              C compiler flags for FFMPEG, overriding pkg-config
+  FFMPEG_LIBS linker flags for FFMPEG, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -9364,23 +9371,94 @@ fi
 
 
 
-#see if ffmpeg support is enabled
-
-
-
+#see if FFmpeg support is enabled
 
 # Check whether --with-ffmpeg was given.
 if test "${with_ffmpeg+set}" = set; then
-  withval=$with_ffmpeg;
+  withval=$with_ffmpeg; ffmpeg_support="yes"
+else
+  ffmpeg_support=""
 fi
 
-if test ! -z "$with_ffmpeg"
+if test ! -z "$ffmpeg_support"
 then
-    FFMPEG_CFLAGS="-DHAVE_FFMPEG -I$with_ffmpeg"
-    FFMPEG_LIBS="-L$with_ffmpeg/libavutil -L$with_ffmpeg/libavdevice -L$with_ffmpeg/libavcodec -L$with_ffmpeg/libavformat -L$with_ffmpeg/libswscale -lavformat -lavdevice -lavcodec -lavutil -lswscale"
 
-    CFLAGS="$CFLAGS $FFMPEG_CFLAGS"
-    CPPFLAGS="$CPPFLAGS $FFMPEG_CFLAGS"
+pkg_failed=no
+{ echo "$as_me:$LINENO: checking for FFMPEG" >&5
+echo $ECHO_N "checking for FFMPEG... $ECHO_C" >&6; }
+
+if test -n "$PKG_CONFIG"; then
+    if test -n "$FFMPEG_CFLAGS"; then
+        pkg_cv_FFMPEG_CFLAGS="$FFMPEG_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"libavutil libavdevice libavcodec libavformat libswscale\"") >&5
+  ($PKG_CONFIG --exists --print-errors "libavutil libavdevice libavcodec libavformat libswscale") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_FFMPEG_CFLAGS=`$PKG_CONFIG --cflags "libavutil libavdevice libavcodec libavformat libswscale" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$FFMPEG_LIBS"; then
+        pkg_cv_FFMPEG_LIBS="$FFMPEG_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"libavutil libavdevice libavcodec libavformat libswscale\"") >&5
+  ($PKG_CONFIG --exists --print-errors "libavutil libavdevice libavcodec libavformat libswscale") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; then
+  pkg_cv_FFMPEG_LIBS=`$PKG_CONFIG --libs "libavutil libavdevice libavcodec libavformat libswscale" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        FFMPEG_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "libavutil libavdevice libavcodec libavformat libswscale"`
+        else
+	        FFMPEG_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "libavutil libavdevice libavcodec libavformat libswscale"`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$FFMPEG_PKG_ERRORS" >&5
+
+	{ echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+                { { echo "$as_me:$LINENO: error: FFmpeg development packages required. Please see README" >&5
+echo "$as_me: error: FFmpeg development packages required. Please see README" >&2;}
+   { (exit 1); exit 1; }; }
+elif test $pkg_failed = untried; then
+	{ { echo "$as_me:$LINENO: error: FFmpeg development packages required. Please see README" >&5
+echo "$as_me: error: FFmpeg development packages required. Please see README" >&2;}
+   { (exit 1); exit 1; }; }
+else
+	FFMPEG_CFLAGS=$pkg_cv_FFMPEG_CFLAGS
+	FFMPEG_LIBS=$pkg_cv_FFMPEG_LIBS
+        { echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6; }
+	:
+fi
+    CFLAGS="$CFLAGS -DHAVE_FFMPEG $FFMPEG_CFLAGS"
+    CPPFLAGS="$CPPFLAGS -DHAVE_FFMPEG $FFMPEG_CFLAGS"
     LIBS="$LIBS $FFMPEG_LIBS"
 fi
 
@@ -10095,10 +10173,12 @@ PKG_CONFIG!$PKG_CONFIG$ac_delim
 FTGL_CFLAGS!$FTGL_CFLAGS$ac_delim
 FTGL_LIBS!$FTGL_LIBS$ac_delim
 gourcefontdir!$gourcefontdir$ac_delim
+FFMPEG_CFLAGS!$FFMPEG_CFLAGS$ac_delim
+FFMPEG_LIBS!$FFMPEG_LIBS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 80; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 82; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

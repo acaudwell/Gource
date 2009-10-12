@@ -225,7 +225,7 @@ Gource requires the following libraries to compile:
     PNG library (libpng12-dev)
     JPEG library (libjpeg62-dev)
 
-For building with FFMpeg support:
+For building with FFmpeg support:
 
     libavutil-dev
     libavdevice-dev
