@@ -1307,6 +1307,7 @@ Optional Packages:
        --with-ft-prefix=PREFIX Prefix where FreeType is installed (optional)
        --with-ft-exec-prefix=PREFIX
                           Exec prefix where FreeType is installed (optional)
+  --with-ffmpeg=DIR       ffmpeg lib directory
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -9362,6 +9363,26 @@ else
 fi
 
 
+
+#see if ffmpeg support is enabled
+
+
+
+
+# Check whether --with-ffmpeg was given.
+if test "${with_ffmpeg+set}" = set; then
+  withval=$with_ffmpeg;
+fi
+
+if test ! -z "$with_ffmpeg"
+then
+    FFMPEG_CFLAGS="-DHAVE_FFMPEG -I$with_ffmpeg"
+    FFMPEG_LIBS="-L$with_ffmpeg/libavutil -L$with_ffmpeg/libavdevice -L$with_ffmpeg/libavcodec -L$with_ffmpeg/libavformat -L$with_ffmpeg/libswscale -lavformat -lavdevice -lavcodec -lavutil -lswscale"
+
+    CFLAGS="$CFLAGS $FFMPEG_CFLAGS"
+    CPPFLAGS="$CPPFLAGS $FFMPEG_CFLAGS"
+    LIBS="$LIBS $FFMPEG_LIBS"
+fi
 
 ac_config_files="$ac_config_files Makefile src/Makefile src/core/Makefile"
 

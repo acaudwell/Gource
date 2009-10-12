@@ -48,6 +48,7 @@
 #include "user.h"
 #include "dirnode.h"
 #include "zoomcamera.h"
+#include "ffmpeg.h"
 
 void createWindowsConsole();
 void gource_info(std::string msg);

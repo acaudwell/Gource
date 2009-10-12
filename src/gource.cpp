@@ -178,6 +178,11 @@ void gource_help(std::string error) {
     printf("  --highlight-all-users    Highlight the names of all users\n");
     printf("  --file-filter REGEX      Ignore files matching this regexe\n\n");
 
+#ifdef HAVE_FFMPEG
+    printf("  --output-movie FILE      Record video to a file\n");
+#endif
+    printf("  --dump-frames            Dump frames as PPM to stdout\n\n");
+
     printf("\nPATH may be either a git directory or a pre-generated log file.\n");
     printf("If ommited, gource will attempt to generate a git log for the current dir.\n\n");
 
@@ -1586,5 +1591,7 @@ void Gource::draw(float t, float dt) {
 
     mousemoved=false;
     mouseclicked=false;
+
+    dumpFrame();
 }
 
