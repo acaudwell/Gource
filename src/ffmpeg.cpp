@@ -281,7 +281,12 @@ void FFMPEGExporter::initialize() {
     }
 
     /* allocate the output media context */
+#ifdef HAS_AVFORMAT_ALLOC_CONTEXT
+    oc = avformat_alloc_context();
+#else
     oc = av_alloc_format_context();
+#endif
+
     if (!oc) {
         fprintf(stderr, "Memory error\n");
         exit(1);

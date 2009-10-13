@@ -352,6 +352,9 @@ void Gource::init() {
 
 void Gource::update(float t, float dt) {
 
+    //if exporting a video use a fixed tick rate rather than time based
+    if(frameExporter != 0) dt = gGourceMaxDelta;
+
     logic_time = SDL_GetTicks();
 
     logic(t, dt);
@@ -362,6 +365,7 @@ void Gource::update(float t, float dt) {
 
     draw(t, dt);
 
+    //extract frame
     if(frameExporter != 0) frameExporter->dump();
 }
 
