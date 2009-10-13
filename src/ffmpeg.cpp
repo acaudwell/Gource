@@ -17,29 +17,8 @@
 
 #include "ffmpeg.h"
 
-#ifdef HAVE_FFMPEG
-extern "C" {
-#define INT64_C(c) c##ll
-#include "libavutil/avutil.h"
-#include "libavcodec/avcodec.h"
-#include "libavformat/avformat.h"
-#include "libswscale/swscale.h"
-}
-#endif
 
-class FrameExporter {
-protected:
-    SDL_Surface *surface;
-    char *pixels;
-    size_t rowstride;
-
-public:
-    FrameExporter();
-    virtual ~FrameExporter() {}
-    virtual void initialize();
-    void dump();
-    virtual void dumpImpl();
-};
+// FrameExporter
 
 FrameExporter::FrameExporter()
     : surface(NULL), pixels(NULL), rowstride(0)
@@ -70,33 +49,8 @@ void FrameExporter::dumpImpl() {
 }
 
 #ifdef HAVE_FFMPEG
-class FFMPEGExporter : public FrameExporter {
 
-public:
-	FFMPEGExporter(std::string filename, int bitrate);
-	~FFMPEGExporter();
-	void initialize();
-	void dumpImpl();
-
-protected:
-	AVFrame *picture, *tmp_picture;
-	uint8_t *video_outbuf;
-	int frame_count, video_outbuf_size;
-    int bitrate;
-	std::string filename;
-	AVOutputFormat *fmt;
-	AVFormatContext *oc;
-	AVStream *video_st;
-	double video_pts;
-        struct SwsContext *img_convert_ctx;
-
-	AVStream *add_video_stream(AVFormatContext *oc, enum CodecID codec_id,
-			int width, int height);
-	AVFrame *alloc_picture(enum PixelFormat pix_fmt, int width, int height);
-	void open_video(AVFormatContext *oc, AVStream *st);
-	void write_video_frame(AVFormatContext *oc, AVStream *st);
-	void close_video(AVFormatContext *oc, AVStream *st);
-};
+//FFMPEGExporter
 
 AVStream *FFMPEGExporter::add_video_stream(AVFormatContext *oc,
 		enum CodecID codec_id, int width, int height)
@@ -403,25 +357,3 @@ void FFMPEGExporter::dumpImpl() {
 	write_video_frame(oc, video_st);
 }
 #endif
-
-static FrameExporter *gFrameExporter = NULL;
-
-void initializeStdoutExporter() {
-	gFrameExporter = new FrameExporter();
-}
-
-#ifdef HAVE_FFMPEG
-void initializeMovieExporter(std::string filename, int bitrate) {
-	gFrameExporter = new FFMPEGExporter(filename, bitrate);
-}
-#endif
-
-void dumpFrame() {
-    if (gFrameExporter)
-        gFrameExporter->dump();
-}
-
-void cleanupFrameExporter() {
-	if (gFrameExporter)
-		delete gFrameExporter;
-}

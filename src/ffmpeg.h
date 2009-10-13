@@ -15,15 +15,70 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DUMPTOSTDOUT_H
-#define DUMPTOSTDOUT_H
+#ifndef FFMPEG_FRAME_EXPORTER_H
+#define FFMPEG_FRAME_EXPORTER_H
 
-#include "gource.h"
+#ifdef HAVE_FFMPEG
+extern "C" {
+#define INT64_C(c) c##ll
+#include "libavutil/avutil.h"
+#include "libavcodec/avcodec.h"
+#include "libavformat/avformat.h"
+#include "libswscale/swscale.h"
+}
+#endif
+
+#include "core/display.h"
+
+class FrameExporter {
+protected:
+    SDL_Surface *surface;
+    char *pixels;
+    size_t rowstride;
+
+public:
+    FrameExporter();
+    virtual ~FrameExporter() {}
+    virtual void initialize();
+    void dump();
+    virtual void dumpImpl();
+};
+
+#ifdef HAVE_FFMPEG
+class FFMPEGExporter : public FrameExporter {
+
+public:
+	FFMPEGExporter(std::string filename, int bitrate);
+	~FFMPEGExporter();
+	void initialize();
+	void dumpImpl();
+
+protected:
+	AVFrame *picture, *tmp_picture;
+	uint8_t *video_outbuf;
+	int frame_count, video_outbuf_size;
+    int bitrate;
+	std::string filename;
+	AVOutputFormat *fmt;
+	AVFormatContext *oc;
+	AVStream *video_st;
+	double video_pts;
+        struct SwsContext *img_convert_ctx;
+
+	AVStream *add_video_stream(AVFormatContext *oc, enum CodecID codec_id,
+			int width, int height);
+	AVFrame *alloc_picture(enum PixelFormat pix_fmt, int width, int height);
+	void open_video(AVFormatContext *oc, AVStream *st);
+	void write_video_frame(AVFormatContext *oc, AVStream *st);
+	void close_video(AVFormatContext *oc, AVStream *st);
+};
 
 extern void initializeStdoutExporter();
 extern void initializeMovieExporter(std::string filename, int bitrate);
 extern void dumpFrame();
 extern void cleanupFrameExporter();
+
+#endif
 
 #endif
 

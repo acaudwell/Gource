@@ -27,6 +27,8 @@ int main(int argc, char *argv[]) {
 
     int video_bitrate = 6400000;
     std::string video_file_name;
+    FrameExporter* exporter = 0;
+    bool dumpFrames = false;
 
     std::vector<std::string> follow_users;
     std::vector<std::string> highlight_users;
@@ -391,7 +393,7 @@ int main(int argc, char *argv[]) {
 
         if(args == "--dump-frames") {
 
-            initializeStdoutExporter();
+            dumpFrames = true;
             continue;
         }
 
@@ -477,12 +479,15 @@ int main(int argc, char *argv[]) {
         display.multiSample(4);
     }
 
-#ifdef HAVE_FFMPEG
-    //init movie exporter
+    //init frame exporter
     if(video_file_name.size() > 0) {
-        initializeMovieExporter(video_file_name, video_bitrate);
-    }
+#ifdef HAVE_FFMPEG
+        exporter = new FFMPEGExporter(video_file_name, video_bitrate);
 #endif
+    }
+    else if(dumpFrames) {
+        exporter = new FrameExporter();
+    }
 
     //enable vsync
     display.enableVsync(true);
@@ -494,6 +499,8 @@ int main(int argc, char *argv[]) {
     Gource* gource = new Gource(logfile);
 
     if(start_position>0.0) gource->setStartPosition(start_position);
+
+    if(exporter!=0) gource->setFrameExporter(exporter);
 
     gource->setBackground(background);
 
@@ -513,10 +520,10 @@ int main(int argc, char *argv[]) {
 
     delete gource;
 
+    if(exporter != 0) delete exporter;
+
     //free resources
     display.quit();
-
-    cleanupFrameExporter();
 
     return 0;
 }

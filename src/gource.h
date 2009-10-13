@@ -57,6 +57,8 @@ void gource_help(std::string error);
 class Gource : public SDLApp {
     std::string logfile;
 
+    FrameExporter* frameExporter;
+
     std::vector<std::string> follow_users;
     std::vector<std::string> highlight_users;
     std::vector<Regex*> filters;
@@ -167,6 +169,7 @@ public:
     void setBackground(vec3f background);
     void setCameraMode(bool track_users);
     void setStartPosition(float percent);
+    void setFrameExporter(FrameExporter* exporter);
     void showSplash();
 
     void addFollowUser(std::string user);

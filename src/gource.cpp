@@ -310,6 +310,8 @@ Gource::Gource(std::string logfile) {
     debug = false;
     trace_debug = false;
 
+    frameExporter = 0;
+
     dirNodeTree = 0;
     userTree = 0;
 
@@ -359,6 +361,8 @@ void Gource::update(float t, float dt) {
     draw_time = SDL_GetTicks();
 
     draw(t, dt);
+
+    if(frameExporter != 0) frameExporter->dump();
 }
 
 //peek at the date under the mouse pointer on the slider
@@ -453,6 +457,10 @@ void Gource::mouseClick(SDL_MouseButtonEvent *e) {
 
 void Gource::showSplash() {
     splash = 15.0;
+}
+
+void Gource::setFrameExporter(FrameExporter* exporter) {
+    this->frameExporter = exporter;
 }
 
 void Gource::setBackground(vec3f background) {
@@ -1592,7 +1600,5 @@ void Gource::draw(float t, float dt) {
 
     mousemoved=false;
     mouseclicked=false;
-
-    dumpFrame();
 }
 
