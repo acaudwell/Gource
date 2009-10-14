@@ -42,6 +42,9 @@ options:
     -p, --start-position POSITION
             Begin at some position in the log (between 0.0 and 1.0).
 
+        --stop-position  POSITION
+            Stop at some position.
+
     -a, --auto-skip-seconds SECONDS
             Automatically skip to next entry if nothing happens for a specified number of seconds.
 
@@ -127,7 +130,7 @@ options:
             Hide the date.
 
     --video-file FILE
-            Record a video using FFmpeg (requires buiding gource with --with-ffmpeg option).
+            Record a video using FFmpeg (when configured with --with-ffmpeg option).
             FFmpeg will choose the format to encode based on the file extension or default to mpeg.
 
     --video-bitrate BITRATE
@@ -247,11 +250,11 @@ This requires the following additional FFmpeg libraries:
 
 Building on Linux:
 
-    ./configure 
+    ./configure
     make
     make install
 
-If you are unfamilar with configure try reading the INSTALL file.
+If you are unfamilar with configure see the INSTALL file.
 
 Building on Windows:
 
@@ -262,6 +265,8 @@ with the Code Blocks IDE (www.codeblocks.org).
 ==========
 
 0.15:
+ * Added --dump-frames and --video-file options (Johannes Schindelin)
+ * Added --stop-position option (useful for making videos)
  * Added --max-file-lag option to limit how long after a commit file changes can take to appear.
  * Added --no-renames to the git log command as they don't display correctly.
  * Added --max-user-speed and --user-friction as options.

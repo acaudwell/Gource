@@ -136,6 +136,7 @@ void gource_help(std::string error) {
     printf("  -WIDTHxHEIGHT                    Set window size\n");
     printf("  -f                               Fullscreen\n\n");
     printf("  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)\n");
+    printf("      --stop-position  POSITION    Stop at some position\n\n");
     printf("  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens\n");
     printf("                                   for a number of seconds (default: 3)\n");
     printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 4)\n");
@@ -297,6 +298,7 @@ Gource::Gource(std::string logfile) {
     font.roundCoordinates(true);
 
     start_position = 0.0;
+    stop_position = 0.0;
 
     paused     = false;
     first_read = true;
@@ -739,6 +741,9 @@ void Gource::reset() {
         delete it->second;
     }
 
+    last_percent = 0.0;
+    exit_on_idle = false;
+
     files.clear();
 
     idle_time=0;
@@ -810,6 +815,10 @@ void Gource::setStartPosition(float percent) {
     start_position = percent;
 }
 
+void Gource::setStopPosition(float percent) {
+    stop_position = percent;
+}
+
 bool Gource::canSeek() {
     if(gGourceDisableProgress || commitlog == 0 || !commitlog->isSeekable()) return false;
 
@@ -848,8 +857,14 @@ void Gource::readLog() {
     first_read = false;
 
     if(!commitlog->isFinished() && commitlog->isSeekable()) {
-        float percent = commitlog->getPercent();
-        slider.setPercent(percent);
+        last_percent = commitlog->getPercent();
+        slider.setPercent(last_percent);
+    }
+
+    //see if we have reached the end and should exit
+    //the next time all users are idle
+    if(stop_position > 0.0 && (commitlog->isFinished() || last_percent >= stop_position)) {
+        exit_on_idle = true;
     }
 
     // useful to figure out where we have crashes
@@ -1081,6 +1096,10 @@ void Gource::updateUsers(float t, float dt) {
     //nothing is moving so increment idle
     if(idle_users==users.size()) {
         idle_time += dt;
+
+        //exit_on_idle is set
+        if(exit_on_idle) appFinished = true;
+
     } else {
         idle_time = 0;
     }

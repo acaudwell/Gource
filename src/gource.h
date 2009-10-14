@@ -75,7 +75,9 @@ class Gource : public SDLApp {
     bool mouseclicked;
     vec2f mousepos;
 
-    float start_position;
+    float start_position, stop_position;
+    float last_percent;
+    bool exit_on_idle;
 
     int tag_seq, commit_seq;
 
@@ -168,6 +170,7 @@ public:
 
     void setBackground(vec3f background);
     void setCameraMode(bool track_users);
+    void setStopPosition(float percent);
     void setStartPosition(float percent);
     void setFrameExporter(FrameExporter* exporter);
     void showSplash();

@@ -35,6 +35,7 @@ int main(int argc, char *argv[]) {
     std::vector<Regex*> filters;
 
     float start_position = 0.0;
+    float stop_position  = 0.0;
 
     std::string logfile = ".";
 
@@ -280,6 +281,21 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
+        if(args == "--stop-position") {
+
+            if((i+1)>=arguments.size()) {
+                gource_help("specify stop-position (float)");
+            }
+
+            stop_position = atof(arguments[++i].c_str());
+
+            if(stop_position<=0.0 || stop_position>1.0) {
+                gource_help("stop-position outside of range 0.0 - 1.0 (inclusive)");
+            }
+
+            continue;
+        }
+
         if(args == "--max-files") {
 
             if((i+1)>=arguments.size()) {
@@ -499,6 +515,7 @@ int main(int argc, char *argv[]) {
     Gource* gource = new Gource(logfile);
 
     if(start_position>0.0) gource->setStartPosition(start_position);
+    if(stop_position>0.0)  gource->setStopPosition(stop_position);
 
     if(exporter!=0) gource->setFrameExporter(exporter);
 
