@@ -136,8 +136,11 @@ options:
     --video-bitrate BITRATE
             Set video bitrate.
 
-    --dump-frames
+    --video-dump-frames
             Dump frames as PPM to stdout.
+
+    --video-framerate FRAMERATE
+            Specify the video framerate.
 
     path    Either a git directory, a pre-generated log file (see --git-log-command, --cvs-exp-command or the custom
             log format) or '-' to read STDIN. If path is ommited gource will attempt to read a git log from the current directory.
@@ -265,7 +268,7 @@ with the Code Blocks IDE (www.codeblocks.org).
 ==========
 
 0.15:
- * Added --dump-frames and --video-file options (Johannes Schindelin)
+ * Added --video options (Johannes Schindelin)
  * Added --stop-position option (useful for making videos)
  * Added --max-file-lag option to limit how long after a commit file changes can take to appear.
  * Added --no-renames to the git log command as they don't display correctly.

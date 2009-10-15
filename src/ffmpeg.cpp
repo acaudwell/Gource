@@ -77,7 +77,7 @@ AVStream *FFMPEGExporter::add_video_stream(AVFormatContext *oc,
        of which frame timestamps are represented. for fixed-fps content,
        timebase should be 1/framerate and timestamp increments should be
        identically 1. */
-    c->time_base.den = 60;
+    c->time_base.den = framerate;
     c->time_base.num = 1;
     c->gop_size = 12; /* emit one intra frame every twelve frames at most */
     c->pix_fmt = PIX_FMT_YUV420P;
@@ -232,11 +232,12 @@ void FFMPEGExporter::close_video(AVFormatContext *oc, AVStream *st)
     av_free(video_outbuf);
 }
 
-FFMPEGExporter::FFMPEGExporter(std::string movie_file_name, int bitrate)
+FFMPEGExporter::FFMPEGExporter(std::string movie_file_name, int bitrate, int framerate)
     : FrameExporter(), filename(movie_file_name), img_convert_ctx(NULL)
 {
-    this->bitrate = bitrate;
-    /* initialize libavcodec, and register all codecs and formats */
+    this->bitrate   = bitrate;
+    this->framerate = framerate; 
+   /* initialize libavcodec, and register all codecs and formats */
     av_register_all();
 }
 

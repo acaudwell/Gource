@@ -25,7 +25,8 @@ int main(int argc, char *argv[]) {
     bool multisample=false;
     vec3f background = vec3f(0.25, 0.25, 0.25);
 
-    int video_bitrate = 6400000;
+    int video_bitrate   = 6400000;
+    int video_framerate = 60;
     std::string video_file_name;
     FrameExporter* exporter = 0;
     bool dumpFrames = false;
@@ -407,9 +408,26 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        if(args == "--dump-frames") {
+        if(args == "--video-dump-frames") {
 
             dumpFrames = true;
+            continue;
+        }
+
+        if(args == "--video-framerate") {
+
+            if((i+1)>=arguments.size()) {
+                gource_help("specify framerate (25,30,60)");
+            }
+
+            video_framerate = atoi(arguments[++i].c_str());
+
+            if(   video_framerate != 25 
+               && video_framerate != 30
+               && video_framerate != 60) {
+                gource_help("supported framerates are 25,30,60");
+            }
+
             continue;
         }
 
@@ -498,7 +516,7 @@ int main(int argc, char *argv[]) {
     //init frame exporter
     if(video_file_name.size() > 0) {
 #ifdef HAVE_FFMPEG
-        exporter = new FFMPEGExporter(video_file_name, video_bitrate);
+        exporter = new FFMPEGExporter(video_file_name, video_bitrate, video_framerate);
 #endif
     }
     else if(dumpFrames) {
@@ -517,7 +535,7 @@ int main(int argc, char *argv[]) {
     if(start_position>0.0) gource->setStartPosition(start_position);
     if(stop_position>0.0)  gource->setStopPosition(stop_position);
 
-    if(exporter!=0) gource->setFrameExporter(exporter);
+    if(exporter!=0) gource->setFrameExporter(exporter, video_framerate);
 
     gource->setBackground(background);
 

@@ -32,9 +32,6 @@ int gGourceMaxFiles = 1000;
 
 int gGourceUserInnerLoops = 0;
 
-//min phsyics rate 60fps (ie maximum allowed delta 1.0/60)
-float gGourceMaxDelta = 0.01667f;
-
 #ifdef _WIN32
 HWND consoleWindow = 0;
 
@@ -183,7 +180,8 @@ void gource_help(std::string error) {
     printf("  --video-file FILE        Record a video using FFmpeg\n");
     printf("  --video-bitrate BITRATE  Set video bitrate (default: 6400000)\n");
 #endif
-    printf("  --dump-frames            Dump frames as PPM to stdout\n\n");
+    printf("  --video-dump-frames      Dump frames as PPM to stdout\n\n");
+    printf("  --video-framerate FILE   Specify video framerate (25,30,60)\n");
 
     printf("\nPATH may be either a git directory or a pre-generated log file.\n");
     printf("If ommited, gource will attempt to generate a git log for the current dir.\n\n");
@@ -331,6 +329,12 @@ Gource::Gource(std::string logfile) {
 
     background_colour = vec3f(0.25, 0.25, 0.25);
 
+    //min phsyics rate 60fps (ie maximum allowed delta 1.0/60)
+    max_tick_rate = 1.0 / 60.0;
+    runtime = 0.0f;
+    frameskip = 0;
+    framecount = 0;
+
     findUserImages();
 
     reset();
@@ -354,21 +358,34 @@ void Gource::init() {
 
 void Gource::update(float t, float dt) {
 
+    dt = std::min(dt, max_tick_rate);
+
     //if exporting a video use a fixed tick rate rather than time based
-    if(frameExporter != 0) dt = gGourceMaxDelta;
+    if(frameExporter != 0) {
+        dt = max_tick_rate;
+    }
+
+    //have to manage runtime internally as we're messing with dt
+    runtime += dt;
 
     logic_time = SDL_GetTicks();
 
-    logic(t, dt);
+    logic(runtime, dt);
 
     logic_time = SDL_GetTicks() - logic_time;
 
     draw_time = SDL_GetTicks();
 
-    draw(t, dt);
+    draw(runtime, dt);
 
-    //extract frame
-    if(frameExporter != 0) frameExporter->dump();
+    //extract frames based on frameskip setting if frameExporter defined
+    if(frameExporter != 0) {
+        if(framecount % (frameskip+1) == 0) {
+            frameExporter->dump();
+        }
+    }
+
+   framecount++;
 }
 
 //peek at the date under the mouse pointer on the slider
@@ -465,7 +482,22 @@ void Gource::showSplash() {
     splash = 15.0;
 }
 
-void Gource::setFrameExporter(FrameExporter* exporter) {
+void Gource::setFrameExporter(FrameExporter* exporter, int video_framerate) {
+
+    int gource_framerate = video_framerate;
+
+
+    this->framecount = 0;
+    this->frameskip  = 0;
+
+    //calculate appropriate tick rate for video frame rate
+    while(gource_framerate<60) {
+        gource_framerate += video_framerate;
+        this->frameskip++;
+    }
+
+    this->max_tick_rate = 1.0f / ((float) gource_framerate);
+
     this->frameExporter = exporter;
 }
 
@@ -1167,7 +1199,6 @@ void Gource::updateTime() {
 }
 
 void Gource::logic(float t, float dt) {
-    dt = std::min(dt, gGourceMaxDelta);
 
     if(draw_loading) return;
 
@@ -1402,7 +1433,6 @@ void Gource::loadingScreen() {
 }
 
 void Gource::draw(float t, float dt) {
-    dt = std::min(dt, gGourceMaxDelta);
 
     display.setClearColour(background_colour);
     display.clear();

@@ -48,7 +48,7 @@ public:
 class FFMPEGExporter : public FrameExporter {
 
 public:
-	FFMPEGExporter(std::string filename, int bitrate);
+	FFMPEGExporter(std::string filename, int bitrate, int framerate);
 	~FFMPEGExporter();
 	void initialize();
 	void dumpImpl();
@@ -57,6 +57,7 @@ protected:
 	AVFrame *picture, *tmp_picture;
 	uint8_t *video_outbuf;
 	int frame_count, video_outbuf_size;
+    int framerate;
     int bitrate;
 	std::string filename;
 	AVOutputFormat *fmt;

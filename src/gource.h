@@ -102,6 +102,11 @@ class Gource : public SDLApp {
     bool draw_loading;
     bool paused;
 
+    float max_tick_rate;
+    int frameskip;
+    int framecount;
+
+    float runtime;
     long  currtime;
     float subseconds;
 
@@ -172,7 +177,7 @@ public:
     void setCameraMode(bool track_users);
     void setStopPosition(float percent);
     void setStartPosition(float percent);
-    void setFrameExporter(FrameExporter* exporter);
+    void setFrameExporter(FrameExporter* exporter, int video_framerate);
     void showSplash();
 
     void addFollowUser(std::string user);
