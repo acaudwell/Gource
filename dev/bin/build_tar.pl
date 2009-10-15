@@ -12,7 +12,7 @@ use Date::Format;
 use Getopt::Long qw(GetOptions);
 use Cwd;
 
-my $version = '0.14';
+my $version = '0.15';
 
 my @exclusions = (
     qr{^/config.status$},
