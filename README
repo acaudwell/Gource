@@ -139,7 +139,7 @@ options:
     --video-dump-frames
             Dump frames as PPM to stdout.
 
-    --video-framerate FRAMERATE
+    --video-framerate FPS
             Specify the video framerate.
 
     path    Either a git directory, a pre-generated log file (see --git-log-command, --cvs-exp-command or the custom
