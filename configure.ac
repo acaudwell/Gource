@@ -83,8 +83,7 @@ AC_ARG_WITH(ffmpeg, [AS_HELP_STRING([--with-ffmpeg],[ffmpeg support for creating
 if test ! -z "$ffmpeg_support"
 then
     PKG_CHECK_MODULES(FFMPEG, [libavutil libavdevice libavcodec libavformat libswscale], [], AC_MSG_ERROR(FFmpeg development packages required. Please see README))
-    AC_CHECK_LIB([libavformat],[avformat_alloc_context],[FFMPEG_CFLAGS="-DHAS_AVFORMAT_ALLOC_CONTEXT $FFMPEG_CFLAGS"], [])
-
+    AC_CHECK_LIB([avformat],[avformat_alloc_context],[FFMPEG_CFLAGS="-DHAS_AVFORMAT_ALLOC_CONTEXT $FFMPEG_CFLAGS"], [])
     CFLAGS="$CFLAGS -DHAVE_FFMPEG $FFMPEG_CFLAGS"
     CPPFLAGS="$CPPFLAGS -DHAVE_FFMPEG $FFMPEG_CFLAGS"
     LIBS="$LIBS $FFMPEG_LIBS"

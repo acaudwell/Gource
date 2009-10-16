@@ -9457,13 +9457,13 @@ else
 echo "${ECHO_T}yes" >&6; }
 	:
 fi
-    { echo "$as_me:$LINENO: checking for avformat_alloc_context in -llibavformat" >&5
-echo $ECHO_N "checking for avformat_alloc_context in -llibavformat... $ECHO_C" >&6; }
-if test "${ac_cv_lib_libavformat_avformat_alloc_context+set}" = set; then
+    { echo "$as_me:$LINENO: checking for avformat_alloc_context in -lavformat" >&5
+echo $ECHO_N "checking for avformat_alloc_context in -lavformat... $ECHO_C" >&6; }
+if test "${ac_cv_lib_avformat_avformat_alloc_context+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-llibavformat  $LIBS"
+LIBS="-lavformat  $LIBS"
 cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -9504,24 +9504,23 @@ eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
 	 test ! -s conftest.err
        } && test -s conftest$ac_exeext &&
        $as_test_x conftest$ac_exeext; then
-  ac_cv_lib_libavformat_avformat_alloc_context=yes
+  ac_cv_lib_avformat_avformat_alloc_context=yes
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-	ac_cv_lib_libavformat_avformat_alloc_context=no
+	ac_cv_lib_avformat_avformat_alloc_context=no
 fi
 
 rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
       conftest$ac_exeext conftest.$ac_ext
 LIBS=$ac_check_lib_save_LIBS
 fi
-{ echo "$as_me:$LINENO: result: $ac_cv_lib_libavformat_avformat_alloc_context" >&5
-echo "${ECHO_T}$ac_cv_lib_libavformat_avformat_alloc_context" >&6; }
-if test $ac_cv_lib_libavformat_avformat_alloc_context = yes; then
+{ echo "$as_me:$LINENO: result: $ac_cv_lib_avformat_avformat_alloc_context" >&5
+echo "${ECHO_T}$ac_cv_lib_avformat_avformat_alloc_context" >&6; }
+if test $ac_cv_lib_avformat_avformat_alloc_context = yes; then
   FFMPEG_CFLAGS="-DHAS_AVFORMAT_ALLOC_CONTEXT $FFMPEG_CFLAGS"
 fi
-
 
     CFLAGS="$CFLAGS -DHAVE_FFMPEG $FFMPEG_CFLAGS"
     CPPFLAGS="$CPPFLAGS -DHAVE_FFMPEG $FFMPEG_CFLAGS"
