@@ -1,12 +1,13 @@
 .TH Gource 1
 .SH NAME
-Gource -  a software version control visualization
+Gource - a software version control visualization
 .SH SYNOPSIS
 \fIgource\fR
 <options> <path>
 .SH DESCRIPTION
-\fIgource\fR
-replays a Git commit log as an animated graph of the active files.
+\fIgource\fR is an OpenGL-based 3D visualisation tool for source control repositories.
+
+The repository is displayed as a tree where the root of the repository is the centre, directories are branches and files are leaves. Contributors to the source code appear and disappear as they contribute to specific files and directories.
 .SH REQUIREMENTS
 \fIgource\fR
 requires a OpenGL capable video card to run.
@@ -93,7 +94,7 @@ Max time files of a commit can take to appear.
 \fB\-\-max\-user\-speed UNITS\fR
 Max speed users can travel per second.
 .TP
-\fB\\-\-user\-friction SECONDS\fR
+\fB\-\-user\-friction SECONDS\fR
 Time users come to a complete hault.
 .TP
 \fB\-\-hide\-users\fR
@@ -108,20 +109,14 @@ Hide filenames.
 \fB\-\-hide\-date\fR
 Hide the date.
 .TP
-\fB\-\-video\-file FILE\fR
-Record a video using FFmpeg (when configured with \-\-with\-ffmpeg option). FFmpeg will choose the format to encode based on the file extension or default to mpeg.
-.TP
-\fB\-\-video\-bitrate BITRATE\fR
-Set video bitrate.
-.TP
 \fB\-\-output\-ppm\-stream FILE\fR
-Write frames as PPM to a file ('-' for stdout).
+Write frames as PPM to a file ('\-' for STDOUT).
 .TP
 \fB\-\-output\-framerate FPS\fR
 Framerate of output (used with \-\-output\-ppm\-stream).
 .TP
 \fBpath\fR
-Either a Git directory, a pre-generated log file (see -\-git\-log\-command, -\-cvs\-exp\-command or the custom log format) or '-' to read STDIN. If path is ommited \fIgource\fR will attempt to read a git log from the current directory.
+Either a Git directory, a pre-generated log file (see -\-git\-log\-command, -\-cvs\-exp\-command or the custom log format) or '\-' to read STDIN. If path is ommited \fIgource\fR will attempt to read a git log from the current directory.
 .SH GIT EXAMPLES
 
 View the log of the Git respository in the current path:

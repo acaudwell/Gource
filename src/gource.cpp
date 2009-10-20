@@ -176,11 +176,11 @@ void gource_help(std::string error) {
     printf("  --highlight-all-users    Highlight the names of all users\n");
     printf("  --file-filter REGEX      Ignore files matching this regexe\n\n");
 
-    printf("  --output-ppm-stream FILE Write frames as PPM to a file ('-' for stdout)\n");
-    printf("  --output-framerate FPS   Framerate of output (25,30,60)\n");
+    printf("  --output-ppm-stream FILE Write frames as PPM to a file ('-' for STDOUT)\n");
+    printf("  --output-framerate FPS   Framerate of output (25,30,60)\n\n");
 
-    printf("\nPATH may be either a git directory or a pre-generated log file.\n");
-    printf("If ommited, gource will attempt to generate a git log for the current dir.\n\n");
+    printf("PATH may either be a Git directory, a supported log file or '-' to read STDIN.\n");
+    printf("If ommited, gource will attempt to generate a log from the current directory.\n\n");
 
 #ifdef _WIN32
     printf("Press Enter\n");

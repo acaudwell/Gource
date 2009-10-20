@@ -10,24 +10,33 @@
 Contents
 ========
 
-1. Requirements
-2. Installation
-3. Using Gource
-4. Building Gource
-5. Changes
-6. Copyright
+1. Description
+2. Requirements
+3. Installation
+4. Using Gource
+5. Building Gource
+6. Changes
+7. Copyright
 
-1. Requirements
+1. Description
+===============
+OpenGL-based 3D visualisation tool for source control repositories.
+
+The repository is displayed as a tree where the root of the repository is the centre, directories are branches
+and files are leaves. Contributors to the source code appear and disappear as they contribute to specific files
+and directories.
+
+2. Requirements
 ===============
 
 Gource's display is rendered using OpenGL and requires a 3D accelerated video card to run.
 
-2. Installation
+3. Installation
 ===============
 
 You can either build Gource from scratch or install a pre-compiled binary version from the homepage (recommended).
 
-3. Using Gource
+4. Using Gource
 ===============
 
 gource <options> <path>
@@ -130,7 +139,7 @@ options:
             Hide the date.
 
     --output-ppm-stream FILE
-            Write frames as PPM to a file ('-' for stdout).
+            Write frames as PPM to a file ('-' for STDOUT).
 
     --output-framerate FPS
             Framerate of output (used with --output-ppm-stream).
@@ -229,7 +238,7 @@ Interactive keyboard commands:
     (TAB) Cycle through visible users
     (ESC) Quit
 
-4. Building Gource
+5. Building Gource
 ==================
 
 The source code to Gource is available from the homepage.
@@ -256,7 +265,7 @@ Building on Windows:
 On Windows I recommend compiling the project gource.win32.cbp
 with the Code Blocks IDE (www.codeblocks.org).
 
-5. Changes
+6. Changes
 ==========
 
 0.15:
@@ -296,7 +305,7 @@ with the Code Blocks IDE (www.codeblocks.org).
 0.1:
  * First release.
 
-6. Copyright
+7. Copyright
 ============
 
 Gource - software version control visualization
