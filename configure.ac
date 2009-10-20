@@ -78,17 +78,6 @@ AC_CHECK_HEADER([pcre.h],, AC_MSG_ERROR(pcre.h is required. Please see README))
 AC_ARG_ENABLE(ttf-font-dir,[AS_HELP_STRING([--enable-ttf-font-dir=DIR],[directory containing FreeSans.ttf])],[gourcefontdir="$enableval"],[gourcefontdir=""])
 AC_SUBST(gourcefontdir)
 
-#see if FFmpeg support is enabled
-AC_ARG_WITH(ffmpeg, [AS_HELP_STRING([--with-ffmpeg],[ffmpeg support for creating movies])],[ffmpeg_support="yes"],[ffmpeg_support=""])
-if test ! -z "$ffmpeg_support"
-then
-    PKG_CHECK_MODULES(FFMPEG, [libavutil libavdevice libavcodec libavformat libswscale], [], AC_MSG_ERROR(FFmpeg development packages required. Please see README))
-    AC_CHECK_LIB([avformat],[avformat_alloc_context],[FFMPEG_CFLAGS="-DHAS_AVFORMAT_ALLOC_CONTEXT $FFMPEG_CFLAGS"], [])
-    CFLAGS="$CFLAGS -DHAVE_FFMPEG $FFMPEG_CFLAGS"
-    CPPFLAGS="$CPPFLAGS -DHAVE_FFMPEG $FFMPEG_CFLAGS"
-    LIBS="$LIBS $FFMPEG_LIBS"
-fi
-
 AC_CONFIG_FILES([Makefile
                  src/Makefile
                  src/core/Makefile])

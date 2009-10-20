@@ -129,18 +129,11 @@ options:
     --hide-date
             Hide the date.
 
-    --video-file FILE
-            Record a video using FFmpeg (when configured with --with-ffmpeg option).
-            FFmpeg will choose the format to encode based on the file extension or default to mpeg.
+    --output-ppm-stream FILE
+            Write frames as PPM to a file ('-' for stdout).
 
-    --video-bitrate BITRATE
-            Set video bitrate.
-
-    --video-dump-frames
-            Dump frames as PPM to stdout.
-
-    --video-framerate FPS
-            Specify the video framerate.
+    --output-framerate FPS
+            Framerate of output (used with --output-ppm-stream).
 
     path    Either a git directory, a pre-generated log file (see --git-log-command, --cvs-exp-command or the custom
             log format) or '-' to read STDIN. If path is ommited gource will attempt to read a git log from the current directory.
@@ -205,6 +198,15 @@ If you want to use Gource with something other than the supported systems, there
     file      - Path of the file updated.
     colour    - A colour for the file in hex (FFFFFF) format. Optional.
 
+Recording Videos:
+
+You can create a video of Gource using the --output-ppm-stream option. This creates an uncompressed sequence of
+screenshots in PPM format which can then be processed by another program (such as ffmpeg) to produce a video file:
+
+The below command line will create a video at 60fps in h264 format (assumes you have ffmpeg with h264 support):
+
+    gource --output-ppm-stream - | ffmpeg -y -b 3000K -r 60 -f image2pipe -vcodec ppm -i - gource.h264
+
 Interface:
 
 The time shown in the top left of the screen is set initially from the first log entry read and is incremented
@@ -241,16 +243,6 @@ Gource requires the following libraries to compile:
     PNG library (libpng12-dev)
     JPEG library (libjpeg62-dev)
 
-Gource can be build with FFmpeg support (./configure --with-ffmpeg) to allow export video files with the --video-file option.
-
-This requires the following additional FFmpeg libraries:
-
-    libavutil (libavutil-dev)
-    libavdevice (libavdevice-dev)
-    libavcodec (libavcodec-dev)
-    libswscale (libswscale-dev)
-    libavformat (libavformat-dev)
-
 Building on Linux:
 
     ./configure
@@ -268,7 +260,7 @@ with the Code Blocks IDE (www.codeblocks.org).
 ==========
 
 0.15:
- * Added --video options (Johannes Schindelin)
+ * Added PPM output support for creating videos (Johannes Schindelin)
  * Added --stop-position option (useful for making videos)
  * Added --max-file-lag option to limit how long after a commit file changes can take to appear.
  * Added --no-renames to the git log command as they don't display correctly.

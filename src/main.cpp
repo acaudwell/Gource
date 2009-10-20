@@ -25,11 +25,8 @@ int main(int argc, char *argv[]) {
     bool multisample=false;
     vec3f background = vec3f(0.25, 0.25, 0.25);
 
-    int video_bitrate   = 6400000;
     int video_framerate = 60;
-    std::string video_file_name;
-    FrameExporter* exporter = 0;
-    bool dumpFrames = false;
+    std::string ppm_file_name;
 
     std::vector<std::string> follow_users;
     std::vector<std::string> highlight_users;
@@ -408,13 +405,18 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        if(args == "--video-dump-frames") {
+        if(args == "--output-ppm-stream") {
 
-            dumpFrames = true;
+            if((i+1)>=arguments.size()) {
+                gource_help("specify ppm output file or '-' for stdout");
+            }
+
+            ppm_file_name = arguments[++i];
+
             continue;
         }
 
-        if(args == "--video-framerate") {
+        if(args == "--output-framerate") {
 
             if((i+1)>=arguments.size()) {
                 gource_help("specify framerate (25,30,60)");
@@ -430,35 +432,6 @@ int main(int argc, char *argv[]) {
 
             continue;
         }
-
-#ifdef HAVE_FFMPEG
-        if(args == "--video-file") {
-
-            if((i+1)>=arguments.size()) {
-                gource_help("specify video file name");
-            }
-
-            video_file_name = arguments[++i];
-
-            continue;
-        }
-
-        if(args == "--video-bitrate") {
-
-            if((i+1)>=arguments.size()) {
-                gource_help("specify bitrate");
-            }
-
-            video_bitrate = atoi(arguments[++i].c_str());
-
-            if(video_bitrate<=0) {
-                gource_help("invalid bitrate value");
-            }
-
-
-            continue;
-        }
-#endif
 
         // assume this is the log file
         if(args == "-" || args.size() >= 1 && args[0] != '-') {
@@ -514,13 +487,10 @@ int main(int argc, char *argv[]) {
     }
 
     //init frame exporter
-    if(video_file_name.size() > 0) {
-#ifdef HAVE_FFMPEG
-        exporter = new FFMPEGExporter(video_file_name, video_bitrate, video_framerate);
-#endif
-    }
-    else if(dumpFrames) {
-        exporter = new FrameExporter();
+    FrameExporter* exporter = 0;
+
+    if(ppm_file_name.size() > 0) {
+        exporter = new PPMExporter(ppm_file_name);
     }
 
     //enable vsync

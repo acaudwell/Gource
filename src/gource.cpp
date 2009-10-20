@@ -176,12 +176,8 @@ void gource_help(std::string error) {
     printf("  --highlight-all-users    Highlight the names of all users\n");
     printf("  --file-filter REGEX      Ignore files matching this regexe\n\n");
 
-#ifdef HAVE_FFMPEG
-    printf("  --video-file FILE        Record a video using FFmpeg\n");
-    printf("  --video-bitrate BITRATE  Set video bitrate (default: 6400000)\n");
-#endif
-    printf("  --video-dump-frames      Dump frames as PPM to stdout\n\n");
-    printf("  --video-framerate FPS    Specify video framerate (25,30,60)\n");
+    printf("  --output-ppm-stream FILE Write frames as PPM to a file ('-' for stdout)\n");
+    printf("  --output-framerate FPS   Framerate of output (25,30,60)\n");
 
     printf("\nPATH may be either a git directory or a pre-generated log file.\n");
     printf("If ommited, gource will attempt to generate a git log for the current dir.\n\n");

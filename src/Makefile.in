@@ -6,7 +6,7 @@ CXXFLAGS = @CXXFLAGS@
 SUBDIRS = core
 CXX = g++
 CC = gcc
-objects = zoomcamera.o slider.o spline.o dirnode.o action.o pawn.o file.o user.o gource.o commitlog.o git.o gitraw.o custom.o cvs-exp.o apache.o ffmpeg.o main.o
+objects = zoomcamera.o slider.o spline.o dirnode.o action.o pawn.o file.o user.o gource.o commitlog.o git.o gitraw.o custom.o cvs-exp.o apache.o ppm.o main.o
 
 all:	
 	for dir in ${SUBDIRS} ; do ( cd $$dir ; ${MAKE} all ); done

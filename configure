@@ -696,8 +696,6 @@ PKG_CONFIG
 FTGL_CFLAGS
 FTGL_LIBS
 gourcefontdir
-FFMPEG_CFLAGS
-FFMPEG_LIBS
 LTLIBOBJS'
 ac_subst_files=''
       ac_precious_vars='build_alias
@@ -715,9 +713,7 @@ CPP
 XMKMF
 PKG_CONFIG
 FTGL_CFLAGS
-FTGL_LIBS
-FFMPEG_CFLAGS
-FFMPEG_LIBS'
+FTGL_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1311,7 +1307,6 @@ Optional Packages:
        --with-ft-prefix=PREFIX Prefix where FreeType is installed (optional)
        --with-ft-exec-prefix=PREFIX
                           Exec prefix where FreeType is installed (optional)
-  --with-ffmpeg           ffmpeg support for creating movies
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -1328,9 +1323,6 @@ Some influential environment variables:
   PKG_CONFIG  path to pkg-config utility
   FTGL_CFLAGS C compiler flags for FTGL, overriding pkg-config
   FTGL_LIBS   linker flags for FTGL, overriding pkg-config
-  FFMPEG_CFLAGS
-              C compiler flags for FFMPEG, overriding pkg-config
-  FFMPEG_LIBS linker flags for FFMPEG, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -9371,162 +9363,6 @@ fi
 
 
 
-#see if FFmpeg support is enabled
-
-# Check whether --with-ffmpeg was given.
-if test "${with_ffmpeg+set}" = set; then
-  withval=$with_ffmpeg; ffmpeg_support="yes"
-else
-  ffmpeg_support=""
-fi
-
-if test ! -z "$ffmpeg_support"
-then
-
-pkg_failed=no
-{ echo "$as_me:$LINENO: checking for FFMPEG" >&5
-echo $ECHO_N "checking for FFMPEG... $ECHO_C" >&6; }
-
-if test -n "$PKG_CONFIG"; then
-    if test -n "$FFMPEG_CFLAGS"; then
-        pkg_cv_FFMPEG_CFLAGS="$FFMPEG_CFLAGS"
-    else
-        if test -n "$PKG_CONFIG" && \
-    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"libavutil libavdevice libavcodec libavformat libswscale\"") >&5
-  ($PKG_CONFIG --exists --print-errors "libavutil libavdevice libavcodec libavformat libswscale") 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; then
-  pkg_cv_FFMPEG_CFLAGS=`$PKG_CONFIG --cflags "libavutil libavdevice libavcodec libavformat libswscale" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
-    fi
-else
-	pkg_failed=untried
-fi
-if test -n "$PKG_CONFIG"; then
-    if test -n "$FFMPEG_LIBS"; then
-        pkg_cv_FFMPEG_LIBS="$FFMPEG_LIBS"
-    else
-        if test -n "$PKG_CONFIG" && \
-    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"libavutil libavdevice libavcodec libavformat libswscale\"") >&5
-  ($PKG_CONFIG --exists --print-errors "libavutil libavdevice libavcodec libavformat libswscale") 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; then
-  pkg_cv_FFMPEG_LIBS=`$PKG_CONFIG --libs "libavutil libavdevice libavcodec libavformat libswscale" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
-    fi
-else
-	pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        FFMPEG_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "libavutil libavdevice libavcodec libavformat libswscale"`
-        else
-	        FFMPEG_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "libavutil libavdevice libavcodec libavformat libswscale"`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$FFMPEG_PKG_ERRORS" >&5
-
-	{ echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6; }
-                { { echo "$as_me:$LINENO: error: FFmpeg development packages required. Please see README" >&5
-echo "$as_me: error: FFmpeg development packages required. Please see README" >&2;}
-   { (exit 1); exit 1; }; }
-elif test $pkg_failed = untried; then
-	{ { echo "$as_me:$LINENO: error: FFmpeg development packages required. Please see README" >&5
-echo "$as_me: error: FFmpeg development packages required. Please see README" >&2;}
-   { (exit 1); exit 1; }; }
-else
-	FFMPEG_CFLAGS=$pkg_cv_FFMPEG_CFLAGS
-	FFMPEG_LIBS=$pkg_cv_FFMPEG_LIBS
-        { echo "$as_me:$LINENO: result: yes" >&5
-echo "${ECHO_T}yes" >&6; }
-	:
-fi
-    { echo "$as_me:$LINENO: checking for avformat_alloc_context in -lavformat" >&5
-echo $ECHO_N "checking for avformat_alloc_context in -lavformat... $ECHO_C" >&6; }
-if test "${ac_cv_lib_avformat_avformat_alloc_context+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lavformat  $LIBS"
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char avformat_alloc_context ();
-int
-main ()
-{
-return avformat_alloc_context ();
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (ac_try="$ac_link"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_link") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest$ac_exeext &&
-       $as_test_x conftest$ac_exeext; then
-  ac_cv_lib_avformat_avformat_alloc_context=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	ac_cv_lib_avformat_avformat_alloc_context=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
-      conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ echo "$as_me:$LINENO: result: $ac_cv_lib_avformat_avformat_alloc_context" >&5
-echo "${ECHO_T}$ac_cv_lib_avformat_avformat_alloc_context" >&6; }
-if test $ac_cv_lib_avformat_avformat_alloc_context = yes; then
-  FFMPEG_CFLAGS="-DHAS_AVFORMAT_ALLOC_CONTEXT $FFMPEG_CFLAGS"
-fi
-
-    CFLAGS="$CFLAGS -DHAVE_FFMPEG $FFMPEG_CFLAGS"
-    CPPFLAGS="$CPPFLAGS -DHAVE_FFMPEG $FFMPEG_CFLAGS"
-    LIBS="$LIBS $FFMPEG_LIBS"
-fi
-
 ac_config_files="$ac_config_files Makefile src/Makefile src/core/Makefile"
 
 cat >confcache <<\_ACEOF
@@ -10238,12 +10074,10 @@ PKG_CONFIG!$PKG_CONFIG$ac_delim
 FTGL_CFLAGS!$FTGL_CFLAGS$ac_delim
 FTGL_LIBS!$FTGL_LIBS$ac_delim
 gourcefontdir!$gourcefontdir$ac_delim
-FFMPEG_CFLAGS!$FFMPEG_CFLAGS$ac_delim
-FFMPEG_LIBS!$FFMPEG_LIBS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 82; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 80; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

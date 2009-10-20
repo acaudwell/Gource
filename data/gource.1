@@ -114,11 +114,11 @@ Record a video using FFmpeg (when configured with \-\-with\-ffmpeg option). FFmp
 \fB\-\-video\-bitrate BITRATE\fR
 Set video bitrate.
 .TP
-\fB\-\-vidoe\-dump\-frames\fR
-Dump frames as PPM to stdout.
+\fB\-\-output\-ppm\-stream FILE\fR
+Write frames as PPM to a file ('-' for stdout).
 .TP
-\fB\-\-video\-framerate FPS\fR
-Specify the video framerate.
+\fB\-\-output\-framerate FPS\fR
+Framerate of output (used with \-\-output\-ppm\-stream).
 .TP
 \fBpath\fR
 Either a Git directory, a pre-generated log file (see -\-git\-log\-command, -\-cvs\-exp\-command or the custom log format) or '-' to read STDIN. If path is ommited \fIgource\fR will attempt to read a git log from the current directory.
@@ -194,6 +194,15 @@ type      - Single character for the update type - (A)dded, (M)odified or (D)ele
 file      - Path of the file updated.
 .ti 10
 colour    - A colour for the file in hex (FFFFFF) format. Optional.
+
+.SH RECORDING VIDEOS
+You can create a video of Gource using the \-\-output\-ppm\-stream option. This creates an uncompressed sequence of
+screenshots in PPM format which can then be processed by another program (such as ffmpeg) to produce a video file:
+
+The below command line will create a video at 60fps in h264 format (assumes you have ffmpeg with h264 support):
+
+.ti 10
+gource \-\-output-ppm-stream \- | ffmpeg \-y \-b 3000K \-r 60 \-f image2pipe \-vcodec ppm \-i \- gource.h264
 
 .SH INTERFACE
 The time shown in the top left of the screen is set initially from the first log entry read and is incremented according to the simulation speed (\-\-seconds\-per\-day).
