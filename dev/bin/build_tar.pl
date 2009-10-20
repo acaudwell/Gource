@@ -12,7 +12,14 @@ use Date::Format;
 use Getopt::Long qw(GetOptions);
 use Cwd;
 
-my $version = '0.15';
+sub gource_version {
+    my $version = `cat $FindBin::Bin/../../src/gource.h | grep GOURCE_VERSION`;
+    $version =~ /"([^"]+)"/ or die("could not determine version\n");
+    $version = $1;
+    return $version;
+}
+
+my $VERSION = gource_version();
 
 my @exclusions = (
     qr{^/config.status$},
@@ -47,7 +54,7 @@ my @inclusions = (
     qr{^/install-sh$},
 );
 
-my $tmp_path = "/var/tmp/gource-$version";
+my $tmp_path = "/var/tmp/gource-$VERSION";
 
 system("rm -r $tmp_path") if -d $tmp_path;
 mkpath($tmp_path) or die("failed to make temp folder $tmp_path");
@@ -82,9 +89,9 @@ foreach my $file (@files) {
 my $current_dir = cwd;
 chdir("/var/tmp/");
 
-my $archive = "gource-$version.tar.gz";
+my $archive = "gource-$VERSION.tar.gz";
 
-if(system("tar -czf $archive gource-$version") !=0) {
+if(system("tar -czf $archive gource-$VERSION") !=0) {
     die("failed to make archive $archive");
 }
 

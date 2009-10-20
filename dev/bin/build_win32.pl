@@ -4,8 +4,15 @@ use strict;
 use warnings;
 use FindBin;
 
+sub gource_version {
+    my $version = `cat $FindBin::Bin/../../src/gource.h | grep GOURCE_VERSION`;
+    $version =~ /"([^"]+)"/ or die("could not determine version\n");
+    $version = $1;
+    return $version;
+}
+
 my $WINBUILD = "$FindBin::Bin/../builds/win32/";
-my $VERSION  = '0.15';
+my $VERSION  = gource_version();
 
 sub doit {
     my $cmd = shift;
