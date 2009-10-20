@@ -413,6 +413,12 @@ int main(int argc, char *argv[]) {
 
             ppm_file_name = arguments[++i];
 
+#ifdef _WIN32
+            if(ppm_file_name == "-") {
+                gource_help("stdout PPM mode not supported on Windows");
+            }
+#endif
+
             continue;
         }
 
@@ -424,7 +430,7 @@ int main(int argc, char *argv[]) {
 
             video_framerate = atoi(arguments[++i].c_str());
 
-            if(   video_framerate != 25 
+            if(   video_framerate != 25
                && video_framerate != 30
                && video_framerate != 60) {
                 gource_help("supported framerates are 25,30,60");

@@ -41,11 +41,6 @@ void FrameExporter::dump() {
 PPMExporter::PPMExporter(std::string outputfile) {
 
     if(outputfile == "-") {
-#ifdef _WIN32
-        printf("stdout output mode not supported on Windows\n");
-        exit(1);
-#endif
-
         output = &std::cout;
 
     } else {

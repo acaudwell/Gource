@@ -116,7 +116,7 @@ void gource_help(std::string error) {
         RECT windowRect;
         if(GetWindowRect(consoleWindow, &windowRect)) {
             float width = windowRect.right - windowRect.left;
-            MoveWindow(consoleWindow,windowRect.left,windowRect.top,width,700,true);
+            MoveWindow(consoleWindow,windowRect.left,windowRect.top,width,800,true);
         }
     }
 #endif
