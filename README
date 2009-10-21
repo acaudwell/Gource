@@ -214,7 +214,7 @@ If you want to use Gource with something other than the supported systems, there
 Recording Videos:
 
 You can create a video of Gource using the --output-ppm-stream option. This creates an uncompressed sequence of
-screenshots in PPM format which can then be processed by another program (such as ffmpeg) to produce a video file:
+screenshots in PPM format which can then be processed by another program (such as ffmpeg) to produce a video file.
 
 The below command line will create a video at 60fps in h264 format (assumes you have ffmpeg with h264 support):
 
