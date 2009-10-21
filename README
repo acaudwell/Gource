@@ -173,8 +173,8 @@ the command line to work with an older version (changing %aN to %an for instance
 
 CVS Support:
 
-You can view CVS projects with gource using the tool cvs-exp (not provided) with the command line specified by the
---cvs-exp-command option:
+You can view a CVS project with gource using the tool cvs-exp (http://www.cs.rice.edu/~ssiyer/code/cvs-exp/) with the
+command line specified by the --cvs-exp-command option:
 
     cd my-cvs-project
     `gource --cvs-exp-command` > my-cvs-project.log
