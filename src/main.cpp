@@ -34,6 +34,7 @@ int main(int argc, char *argv[]) {
 
     float start_position = 0.0;
     float stop_position  = 0.0;
+    bool stop_on_idle = false;
 
     std::string logfile = ".";
 
@@ -294,6 +295,13 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
+        if(args == "--stop-on-idle") {
+
+            stop_on_idle = true;
+
+            continue;
+        }
+
         if(args == "--max-files") {
 
             if((i+1)>=arguments.size()) {
@@ -510,6 +518,8 @@ int main(int argc, char *argv[]) {
 
     if(start_position>0.0) gource->setStartPosition(start_position);
     if(stop_position>0.0)  gource->setStopPosition(stop_position);
+
+    gource->setStopOnIdle(stop_on_idle);
 
     if(exporter!=0) gource->setFrameExporter(exporter, video_framerate);
 

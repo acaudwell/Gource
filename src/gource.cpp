@@ -116,7 +116,7 @@ void gource_help(std::string error) {
         RECT windowRect;
         if(GetWindowRect(consoleWindow, &windowRect)) {
             float width = windowRect.right - windowRect.left;
-            MoveWindow(consoleWindow,windowRect.left,windowRect.top,width,800,true);
+            MoveWindow(consoleWindow,windowRect.left,windowRect.top,width,850,true);
         }
     }
 #endif
@@ -133,7 +133,8 @@ void gource_help(std::string error) {
     printf("  -WIDTHxHEIGHT                    Set window size\n");
     printf("  -f                               Fullscreen\n\n");
     printf("  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)\n");
-    printf("      --stop-position  POSITION    Stop at some position\n\n");
+    printf("      --stop-position  POSITION    Stop at some position\n");
+    printf("      --stop-on-idle               Stop on break in activity\n\n");
     printf("  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens\n");
     printf("                                   for a number of seconds (default: 3)\n");
     printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 4)\n");
@@ -770,7 +771,8 @@ void Gource::reset() {
     }
 
     last_percent = 0.0;
-    exit_on_idle = false;
+    stop_on_idle = false;
+    stop_position_reached = true;
 
     files.clear();
 
@@ -843,8 +845,13 @@ void Gource::setStartPosition(float percent) {
     start_position = percent;
 }
 
+void Gource::setStopOnIdle(bool stop_on_idle) {
+    this->stop_on_idle = stop_on_idle;
+}
+
 void Gource::setStopPosition(float percent) {
     stop_position = percent;
+    stop_position_reached = false;
 }
 
 bool Gource::canSeek() {
@@ -892,7 +899,10 @@ void Gource::readLog() {
     //see if we have reached the end and should exit
     //the next time all users are idle
     if(stop_position > 0.0 && (commitlog->isFinished() || last_percent >= stop_position)) {
-        exit_on_idle = true;
+        stop_position_reached = true;
+
+        //if not stopping on idle exit immediately
+        if(!stop_on_idle) appFinished = true;
     }
 
     // useful to figure out where we have crashes
@@ -1125,8 +1135,8 @@ void Gource::updateUsers(float t, float dt) {
     if(idle_users==users.size()) {
         idle_time += dt;
 
-        //exit_on_idle is set
-        if(exit_on_idle) appFinished = true;
+        //stop_on_idle is set and stop_position_reached
+        if(stop_on_idle && stop_position_reached) appFinished = true;
 
     } else {
         idle_time = 0;

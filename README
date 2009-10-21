@@ -54,6 +54,9 @@ options:
         --stop-position  POSITION
             Stop at some position.
 
+        --stop-on-idle
+            Stop on break in activity. May be combined with --stop-position.
+
     -a, --auto-skip-seconds SECONDS
             Automatically skip to next entry if nothing happens for a specified number of seconds.
 
@@ -271,7 +274,7 @@ with the Code Blocks IDE (www.codeblocks.org).
 0.15:
  * Added PPM output support for creating videos (Johannes Schindelin).
  * Added experimental Apache combined access log support (--log-format apache).
- * Added --stop-position option (useful for making videos).
+ * Added --stop-position and --stop-on-idle options (useful for making videos).
  * Added --max-file-lag option to limit how long after a commit file changes can take to appear.
  * Added --no-renames to the git log command as they don't display correctly.
  * Added --max-user-speed and --user-friction as options.
