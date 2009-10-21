@@ -47,7 +47,7 @@ PPMExporter::PPMExporter(std::string outputfile) {
         filename = outputfile;
         output   = new std::fstream(outputfile.c_str(), std::ios::out | std::ios::binary);
 
-        if(!output->fail()) {
+        if(output->fail()) {
             printf("Failed to open '%s' for writing\n", outputfile.c_str());
             exit(1);
         }
