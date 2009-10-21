@@ -20,6 +20,7 @@ Contents
 
 1. Description
 ===============
+
 OpenGL-based 3D visualisation tool for source control repositories.
 
 The repository is displayed as a tree where the root of the repository is the centre, directories are branches
