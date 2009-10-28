@@ -58,6 +58,11 @@ bool StreamLog::getNextLine(std::string& line) {
     line = std::string(buff);
 
     if(isFinished()) {
+        //clear the failbit if only failed because the line was too long
+        if(!stream->bad() && stream->gcount() >= (1024-1)) {
+            stream->clear();
+        }
+
         return false;
     }
 
@@ -156,6 +161,11 @@ bool SeekLog::getNextLine(std::string& line) {
     line = std::string(buff);
 
     if(buffstream->fail()) {
+        //clear the failbit if only failed because the line was too long
+        if(!buffstream->bad() && buffstream->gcount() >= (1024-1)) {
+            buffstream->clear();
+        }
+
         return false;
     }
 
