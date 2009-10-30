@@ -31,6 +31,8 @@ Pawn::Pawn(std::string name, vec2f pos, int tagid) {
 
     shadow = false;
 
+    this->shadowOffset = vec2f(2.0, 2.0);
+
     this->elapsed = 0.0;
     this->fadetime = 1.0;
     this->nametime = 5.0;
@@ -177,7 +179,7 @@ void Pawn::drawShadow(float dt) {
 
     float ratio = icon->h / (float) icon->w;
     float halfsize = size * 0.5f;
-    vec2f offsetpos = pos - vec2f(halfsize, halfsize) + vec2f(2.0, 2.0);
+    vec2f offsetpos = pos - vec2f(halfsize, halfsize) + shadowOffset;
 
     float alpha = getAlpha();
 

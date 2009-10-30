@@ -164,13 +164,15 @@ void gource_help(std::string error) {
     printf("  --hide-users             Hide users\n");
     printf("  --hide-usernames         Hide usernames\n");
     printf("  --hide-filenames         Hide filenames\n");
+    printf("  --hide-dirnames          Hide directory names\n");
     printf("  --hide-date              Hide the date\n\n");
 
     printf("  --max-files NUMBER       Max number of active files (default: 1000)\n");
     printf("  --max-file-lag SECONDS   Max time files of a commit can take to appear\n\n");
 
     printf("  --max-user-speed UNITS   Speed users can travel per second (default: 500)\n\n");
-    printf("  --user-friction SECONDS  Time users come to a complete hault (default: 0.67)\n\n");
+    printf("  --user-friction SECONDS  Time users come to a complete hault (default: 0.67)\n");
+    printf("  --user-scale SCALE       Change scale of users (default: 1.0)\n\n");
 
     printf("  --follow-user USER       Camera will automatically follow this user\n");
     printf("  --highlight-user USER    Highlight the names of a particular user\n");

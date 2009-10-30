@@ -105,6 +105,11 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
+        if(args == "--hide-dirnames") {
+            gGourceDrawDirName = false;
+            continue;
+        }
+
         if(args == "--multi-sampling") {
             multisample = true;
             continue;
@@ -348,6 +353,22 @@ int main(int argc, char *argv[]) {
 
             continue;
         }
+
+        if(args == "--user-scale") {
+
+            if((i+1)>=arguments.size()) {
+                gource_help("specify user-scale (scale)");
+            }
+
+            gGourceUserScale = atof(arguments[++i].c_str());
+
+            if(gGourceUserScale<=0.0 || gGourceUserScale>100.0) {
+                gource_help("invalid user-scale value");
+            }
+
+            continue;
+        }
+
 
         if(args == "--max-user-speed") {
 

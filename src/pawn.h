@@ -28,6 +28,7 @@
 class Pawn : public QuadItem {
 protected:
     vec2f pos;
+    vec2f shadowOffset;
 
     std::string name;
     float namewidth;

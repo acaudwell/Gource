@@ -24,6 +24,7 @@ float gGourcePersonalSpaceDist = 100.0;
 float gGourceMaxFileLagSeconds = 5.0;
 float gGourceMaxUserSpeed      = 500.0;
 float gGourceUserFriction      = 1.0;
+float gGourceUserScale         = 1.0;
 
 bool gGourceColourUserImages = false;
 
@@ -41,7 +42,9 @@ RUser::RUser(std::string name, vec2f pos, int tagid) : Pawn(name,pos,tagid) {
     this->name = name;
 
     speed = gGourceMaxUserSpeed;
-    size = 20.0;
+    size = 20.0 * gGourceUserScale;
+
+    shadowOffset = vec2f(2.0, 2.0) * gGourceUserScale;
 
     shadow = true;
 

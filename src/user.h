@@ -89,6 +89,7 @@ extern float gGourceMaxUserIdle;
 extern float gGourceMaxFileLagSeconds;
 extern float gGourceMaxUserSpeed;
 extern float gGourceUserFriction;
+extern float gGourceUserScale;
 extern bool  gGourceHideUsers;
 
 extern std::map<std::string, std::string> gGourceUserImageMap;

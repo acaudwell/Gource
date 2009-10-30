@@ -130,6 +130,9 @@ options:
     --user-friction SECONDS
             Time users come to a complete hault.
 
+    --user-scale SCALE
+            Change scale of users.
+
     --hide-users
             Hide users.
 
@@ -138,6 +141,9 @@ options:
 
     --hide-filenames
             Hide filenames.
+
+    --hide-dirnames
+            Hide directory names.
 
     --hide-date
             Hide the date.
@@ -271,6 +277,11 @@ with the Code Blocks IDE (www.codeblocks.org).
 
 6. Changes
 ==========
+
+0.16:
+ * Fix bug when encountering long log lines.
+ * Added --hide-dirnames option.
+ * Added --user-scale option.
 
 0.15:
  * Added PPM output support for creating videos (Johannes Schindelin).
