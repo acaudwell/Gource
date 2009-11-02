@@ -279,9 +279,10 @@ with the Code Blocks IDE (www.codeblocks.org).
 ==========
 
 0.16:
- * Fix bug when encountering long log lines.
  * Added --hide-dirnames option.
  * Added --user-scale option.
+ * Fix bug when encountering long log lines.
+ * Fixed linking problem with SDL_image on OSX Leopard.
 
 0.15:
  * Added PPM output support for creating videos (Johannes Schindelin).
