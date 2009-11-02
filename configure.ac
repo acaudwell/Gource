@@ -63,7 +63,7 @@ AC_CHECK_LIB(png, png_read_info, , AC_MSG_ERROR([PNG library required. Please se
 AC_CHECK_LIB(jpeg, jpeg_read_header, , AC_MSG_ERROR([JPEG library required. Please see README]))
 
 #SDL_image library with PNG support
-AC_CHECK_LIB(SDL_image, IMG_LoadPNG_RW, , AC_MSG_ERROR([SDL_image required. Please see README]))
+AC_CHECK_LIB(SDL_image, IMG_LoadPNG_RW, LIBS="$LIBS -lSDL_image", AC_MSG_ERROR([SDL_image required. Please see README]))
 
 #PCRE
 AC_CHECK_LIB([pcre], [pcre_compile],, AC_MSG_ERROR(PCRE is required. Please see README))

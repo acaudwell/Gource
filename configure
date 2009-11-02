@@ -8642,7 +8642,6 @@ fi
 
 
 #SDL_image library with PNG support
-
 { echo "$as_me:$LINENO: checking for IMG_LoadPNG_RW in -lSDL_image" >&5
 echo $ECHO_N "checking for IMG_LoadPNG_RW in -lSDL_image... $ECHO_C" >&6; }
 if test "${ac_cv_lib_SDL_image_IMG_LoadPNG_RW+set}" = set; then
@@ -8705,12 +8704,7 @@ fi
 { echo "$as_me:$LINENO: result: $ac_cv_lib_SDL_image_IMG_LoadPNG_RW" >&5
 echo "${ECHO_T}$ac_cv_lib_SDL_image_IMG_LoadPNG_RW" >&6; }
 if test $ac_cv_lib_SDL_image_IMG_LoadPNG_RW = yes; then
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBSDL_IMAGE 1
-_ACEOF
-
-  LIBS="-lSDL_image $LIBS"
-
+  LIBS="$LIBS -lSDL_image"
 else
   { { echo "$as_me:$LINENO: error: SDL_image required. Please see README" >&5
 echo "$as_me: error: SDL_image required. Please see README" >&2;}
