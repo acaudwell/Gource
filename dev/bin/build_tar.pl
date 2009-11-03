@@ -34,6 +34,7 @@ my @exclusions = (
     qr{\.o$},
     qr{^/todo.txt$},
     qr{^/build-stamp$},
+    qr{^/autom4te},
 );
 
 my @inclusions = (
