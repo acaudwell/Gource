@@ -132,42 +132,41 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
 
     std::string line;
 
-    //read author name
-    if(!logf->getNextLine(line)) return false;
+    commit.username = "";
 
-    //ensure username prefixed with user: otherwise the log is not in
-    //the expected format and we can try a different format
-    if(line.size() < 6 || line.find("user:") != 0) {
-        return false;
-    }
-
-    //username follows user prefix
-    commit.username = line.substr(5);
-
-    if(!logf->getNextLine(line)) return false;
-
-    //committer time - used instead of author time (most likely cronological)
-    // NOTE: ignoring timezone ...
-    commit.timestamp = atol(line.c_str());
-
-    //this isnt a commit we are parsing, abort
-    if(commit.timestamp == 0) return false;
-
-    //read files
     while(logf->getNextLine(line) && line.size()) {
+
+        if(line.find("user:") == 0) {
+
+            //username follows user prefix
+            commit.username = line.substr(5);
+
+            if(!logf->getNextLine(line)) return false;
+
+            commit.timestamp = atol(line.c_str());
+
+            //this isnt a commit we are parsing, abort
+            if(commit.timestamp == 0) return false;
+
+            continue;
+        }
+
+        //should see username before files
+        if(commit.username.size() == 0) return false;
+
         size_t tab = line.find('\t');
 
-        if(tab == std::string::npos) continue;
-
         //incorrect log format
-        if(tab == 0 || tab == line.size()-1) return false;
+        if(tab == std::string::npos || tab == 0 || tab == line.size()-1) continue;
 
         std::string status = line.substr(tab - 1, 1);
-        line = line.substr(tab + 1);
-        commit.addFile(line, status);
+        std::string file   = line.substr(tab + 1);
+
+        commit.addFile(file, status);
     }
 
-    //commit.debug();
+    //check we at least got a username
+    if(commit.username.size()==0) return false;
 
     return true;
 }

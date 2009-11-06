@@ -81,8 +81,6 @@ public:
 
     void seekTo(float percent);
 
-    void reset();
-
     bool checkFormat();
 
     std::string getLogCommand();

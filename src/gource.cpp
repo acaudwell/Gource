@@ -882,7 +882,8 @@ void Gource::readLog() {
 
         RCommit commit;
 
-        if(commitlog->nextCommit(commit)) {
+        //ignore blank commits
+        if(commitlog->nextCommit(commit) && commit.files.size() > 0) {
             commitqueue.push_back(commit);
         }
     }
