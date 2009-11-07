@@ -31,7 +31,6 @@
 #include "display.h"
 #include "logger.h"
 
-#include "SDL/SDL.h"
 #include <vector>
 
 class SDLApp {

@@ -28,9 +28,10 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include "SDL_image.h"
+
 #include "resource.h"
 #include "display.h"
-#include "SDL/SDL_image.h"
 
 class TextureResource : public Resource {
     int colourFormat(SDL_Surface* surface);
