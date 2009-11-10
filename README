@@ -283,7 +283,7 @@ with the Code Blocks IDE (www.codeblocks.org).
  * Added --user-scale option.
  * Fix bug when encountering long log lines.
  * Fixed incorrect parsing of trivial merges.
- * Fixed linking problem with SDL_image on OSX Leopard.
+ * Fixed building issues on OSX.
 
 0.15:
  * Added PPM output support for creating videos (Johannes Schindelin).
