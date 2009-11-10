@@ -6,6 +6,8 @@ AC_PREREQ(2.61)
 AC_INIT(Gource, 0.1, [acaudwell@gmail.com])
 AC_CONFIG_SRCDIR([src/main.h])
 
+AC_CANONICAL_HOST
+
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
@@ -28,6 +30,15 @@ AC_FUNC_STAT
 AC_FUNC_STRFTIME
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([atexit getcwd memset sqrt strchr])
+
+#Disable X11 on Macs unless required
+AS_IF([test "$with_x" != yes], [
+    case "$host_os" in
+    darwin*)
+        with_x="no"
+    ;;
+    esac
+], [])
 
 #GL
 AX_CHECK_GLU
