@@ -205,6 +205,7 @@ extern bool  gGourceFileLoop;
 extern int   gGourceMaxFiles;
 
 extern std::string gGourceLogFormat;
+extern std::string gGourceDateFormat;
 
 extern bool  gGourceHighlightAllUsers;
 

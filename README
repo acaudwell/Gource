@@ -58,6 +58,9 @@ options:
         --stop-on-idle
             Stop on break in activity. May be combined with --stop-position.
 
+    --date-format FORMAT
+            Specify date format string
+  
     -a, --auto-skip-seconds SECONDS
             Automatically skip to next entry if nothing happens for a specified number of seconds.
 

@@ -25,6 +25,7 @@ bool  gGourceDisableProgress = false;
 bool  gGourceQuadTreeDebug   = false;
 
 std::string gGourceLogFormat;
+std::string gGourceDateFormat("%A, %d %B, %Y %X");
 
 bool  gGourceHighlightAllUsers = false;
 
@@ -135,6 +136,7 @@ void gource_help(std::string error) {
     printf("  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
     printf("      --stop-on-idle               Stop on break in activity\n\n");
+    printf("  --date-format FORMAT             Specify date format string\n");
     printf("  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens\n");
     printf("                                   for a number of seconds (default: 3)\n");
     printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 4)\n");
@@ -1199,7 +1201,8 @@ void Gource::updateTime() {
     char datestr[256];
     char timestr[256];
     struct tm* timeinfo = localtime ( &currtime );
-    strftime(datestr, 256, "%A, %d %B, %Y %X", timeinfo);
+
+    strftime(datestr, 256, gGourceDateFormat.c_str(), timeinfo);
     displaydate = datestr;
 
     //avoid wobbling by only moving font if change is sufficient

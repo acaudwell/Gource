@@ -75,6 +75,16 @@ int main(int argc, char *argv[]) {
             }
         }
 
+        if(args == "--date-format") {
+
+            if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {
+                gource_help("specify a date format string");
+            }
+
+            gGourceDateFormat = arguments[++i];
+            continue;
+        }
+
         if(args == "--hide-date") {
             gGourceHideDate = true;
             continue;
