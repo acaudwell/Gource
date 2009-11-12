@@ -136,10 +136,10 @@ void gource_help(std::string error) {
     printf("  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
     printf("      --stop-on-idle               Stop on break in activity\n\n");
-    printf("  --date-format FORMAT             Specify date format string\n");
     printf("  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens\n");
     printf("                                   for a number of seconds (default: 3)\n");
     printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 4)\n");
+    printf("      --realtime                   Realtime playback speed\n");
     printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)\n");
     printf("  -e, --elasticity FLOAT           Elasticity of nodes\n");
     printf("  -b, --background FFFFFF          Background colour in hex\n\n");
@@ -148,9 +148,9 @@ void gource_help(std::string error) {
     printf("  --default-user-image IMAGE       Default user image file\n");
     printf("  --colour-images                  Colourize user images\n\n");
 
-    printf("  --realtime                       Realtime playback speed\n\n");
+    printf("  --loop                   Loop when the end of the log is reached\n\n");
 
-    printf("  --loop                   Loop when the end of the log is reached.\n\n");
+    printf("  --date-format FORMAT     Specify display date string (strftime format)\n\n");
 
     printf("  --log-format FORMAT      Specify format of log (git,cvs,custom)\n");
     printf("  --git-branch             Get the git log of a particular branch\n");

@@ -82,6 +82,7 @@ int main(int argc, char *argv[]) {
             }
 
             gGourceDateFormat = arguments[++i];
+
             continue;
         }
 

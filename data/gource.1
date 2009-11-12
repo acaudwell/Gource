@@ -34,6 +34,9 @@ Automatically skip to next entry if nothing happens for a specified number of se
 \fB\-s, \-\-seconds\-per\-day SECONDS\fR
 Speed of simulation in seconds per day.
 .TP
+\fB\    \-\-realtime\fR
+Realtime playback speed.
+.TP
 \fB\-i, \-\-file\-idle\-time SECONDS\fR
 Time in seconds files remain idle before they are removed.
 .TP
@@ -45,6 +48,9 @@ Background colour in hex.
 .TP
 \fB\-\-loop\fR
 Loop back to the start of the log when the end is reached.
+.TP
+\fB\-\-date\-format FORMAT\fR
+Specify display date string (strftime format).
 .TP
 \fB\-\-log\-format FORMAT\fR
 Specify format of the log being read (git,cvs,custom). Required when reading STDIN.

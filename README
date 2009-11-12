@@ -57,15 +57,15 @@ options:
 
         --stop-on-idle
             Stop on break in activity. May be combined with --stop-position.
-
-    --date-format FORMAT
-            Specify date format string
-  
+ 
     -a, --auto-skip-seconds SECONDS
             Automatically skip to next entry if nothing happens for a specified number of seconds.
 
     -s, --seconds-per-day SECONDS
             Speed of simulation in seconds per day.
+
+        --realtime
+            Realtime playback speed.
 
     -i, --file-idle-time SECONDS
             Time in seconds files remain idle before they are removed.
@@ -78,6 +78,9 @@ options:
 
     --loop
             Loop back to the start of the log when the end is reached.
+
+    --date-format FORMAT
+            Specify display date string (strftime format).
 
     --log-format FORMAT
             Specify format of the log being read (git,cvs,custom). Required when reading STDIN.
@@ -284,6 +287,7 @@ with the Code Blocks IDE (www.codeblocks.org).
 0.16:
  * Added --hide-dirnames option.
  * Added --user-scale option.
+ * Added --date-format option (Pat Notz).
  * Fix bug when encountering long log lines.
  * Fixed incorrect parsing of trivial merges.
  * Fixed building issues on OSX.
