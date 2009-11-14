@@ -166,29 +166,14 @@ cd my\-cvs\-project
 .ti 10
 \fIgource\fR my\-cvs\-project.log
 
-.SH SVN SUPPORT VIA GIT
+.SH OTHER VERSION CONTROL SYSTEMS
 
-SVN is not supported directly, however you could can import your project into a Git repository using the 'git svn' command.
-
-The below insturctions will work if your SVN repository has the standard three directories - trunk, tags and branches (Otherwise, see the 'git svn' documentation):
+Visit the Gource homepage for guides and examples of using Gource with other version control systems:
 
 .ti 10
-git svn init \-\-stdlayout https://myrepo.example.org/svn my\-repo.git
+SVN       - http://code.google.com/p/gource/wiki/SVN
 .ti 10
-cd my\-repo.git
-.ti 10
-git svn fetch
-
-Note that the last command (git svn fetch) can take hours if your repository is large.
-
-You can pull new changes into the Git copy of your SVN repository at any time using the following command:
-
-.ti 10
-git svn rebase
-
-.SH SUPPORT FOR OTHER SYSTEMS
-
-Please check the Gource homepage to see guides for other systems that can be used with Gource, or try using the custom log format.
+Mercurial - http://code.google.com/p/gource/wiki/Mercurial
 
 .SH CUSTOM LOG FORMAT
 

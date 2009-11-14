@@ -192,26 +192,12 @@ command line specified by the --cvs-exp-command option:
     `gource --cvs-exp-command` > my-cvs-project.log
     gource my-cvs-project.log
 
-SVN Support via Git:
+Other Version Control Systems:
 
-SVN is not supported directly, however you could can import your project into a Git repository using the 'git svn' command.
+Visit the Gource homepage for guides and examples of using Gource with other version control systems:
 
-The below insturctions will work if your SVN repository has the standard three directories - trunk, tags and branches
-(Otherwise, see the 'git svn' documentation):
-
-    git svn init --stdlayout https://myrepo.example.org/svn my-repo.git
-    cd my-repo.git
-    git svn fetch
-
-Note that the last command (git svn fetch) can take hours if your repository is large.
-
-You can pull new changes into the Git copy of your SVN repository at any time using the following command:
-
-    git svn rebase
-
-Support for Other Systems:
-
-Please check the Gource homepage to see guides for other systems that can be used with Gource, or try using the custom log format.
+    SVN       - http://code.google.com/p/gource/wiki/SVN
+    Mercurial - http://code.google.com/p/gource/wiki/Mercurial
 
 Custom Log Format:
 
