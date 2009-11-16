@@ -708,20 +708,25 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
         }
 
         if(e->keysym.sym == SDLK_PERIOD) {
-            time_scale += 0.5f;
-            time_scale = std::min<float>(5.0f, time_scale); // above this value this start to break
-            debugLog("time_scale=%f", time_scale);
+
+            if(time_scale>=1.0) {
+                time_scale = std::min(4.0f, floorf(time_scale) + 1.0f);
+            } else {
+                time_scale = std::min(1.0f, time_scale * 2.0f);
+            }
         }
 
         if(e->keysym.sym == SDLK_COMMA) {
-            time_scale -= 0.5f;
-            time_scale = std::max<float>(0.0f, time_scale); // don't go negative
-            debugLog("time_scale=%f", time_scale);
+
+            if(time_scale>1.0) {
+                time_scale = std::max(0.0f, floorf(time_scale) - 1.0f);
+            } else {
+                time_scale = std::max(0.25f, time_scale * 0.5f);
+            }
         }
 
         if(e->keysym.sym == SDLK_SLASH) {
             time_scale = 1.0f;
-            debugLog("time_scale=%f", time_scale);
         }
     }
 }
@@ -1650,6 +1655,7 @@ void Gource::draw(float t, float dt) {
 
     if(debug) {
         font.print(0,20, "FPS: %.2f", fps);
+        font.print(0,40,"Time Scale: %.2f", time_scale);
         font.print(0,60,"Users: %d", users.size());
         font.print(0,80,"Files: %d", files.size());
         font.print(0,100,"Dirs: %d",  gGourceDirMap.size());
