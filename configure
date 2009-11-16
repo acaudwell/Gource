@@ -7711,7 +7711,7 @@ CPPFLAGS="$CPPFLAGS $GLU_CFLAGS"
 LIBS="$LIBS $GLU_LIBS"
 
 #SDL
-SDL_VERSION=1.2.0
+SDL_VERSION=1.2.10
 
 # Check whether --with-sdl-prefix was given.
 if test "${with_sdl_prefix+set}" = set; then
