@@ -71,7 +71,7 @@ bool CVSEXPCommitLog::parseCommit(RCommit& commit) {
     struct tm time_str;
 
     time_str.tm_year = atoi(entries[0].c_str()) - 1900;
-    time_str.tm_mon  = atoi(entries[1].c_str());
+    time_str.tm_mon  = atoi(entries[1].c_str()) - 1;
     time_str.tm_mday = atoi(entries[2].c_str());
     time_str.tm_hour = atoi(entries[3].c_str());
     time_str.tm_min  = atoi(entries[4].c_str());
