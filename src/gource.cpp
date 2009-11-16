@@ -366,6 +366,8 @@ void Gource::update(float t, float dt) {
         dt = max_tick_rate;
     }
 
+    dt *= time_scale;
+
     //have to manage runtime internally as we're messing with dt
     runtime += dt;
 
@@ -705,6 +707,22 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             gGourceForceGravity *= 1.1;
         }
 
+        if(e->keysym.sym == SDLK_PERIOD) {
+            time_scale += 0.5f;
+            time_scale = std::min<float>(5.0f, time_scale); // above this value this start to break
+            debugLog("time_scale=%f", time_scale);
+        }
+
+        if(e->keysym.sym == SDLK_COMMA) {
+            time_scale -= 0.5f;
+            time_scale = std::max<float>(0.0f, time_scale); // don't go negative
+            debugLog("time_scale=%f", time_scale);
+        }
+
+        if(e->keysym.sym == SDLK_SLASH) {
+            time_scale = 1.0f;
+            debugLog("time_scale=%f", time_scale);
+        }
     }
 }
 
@@ -780,6 +798,7 @@ void Gource::reset() {
 
     files.clear();
 
+    time_scale = 1.0f;
     idle_time=0;
     currtime=0;
     subseconds=0.0;
