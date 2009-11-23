@@ -77,6 +77,7 @@ class Gource : public SDLApp {
 
     float start_position, stop_position;
     float last_percent;
+    float time_scale;
 
     bool stop_on_idle;
     bool stop_position_reached;

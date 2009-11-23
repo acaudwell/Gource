@@ -235,8 +235,8 @@ Interactive keyboard commands:
     (V)   Toggle camera mode
     (C)   Displays Gource logo
     (N)   Jump forward in time to next log entry.
-    (+)   Increase simulation speed.
-    (-)   Decrease simulation speed.
+    (+-)  Adjust simulation speed.
+    (<>)  Adjust time scale.
     (TAB) Cycle through visible users
     (ESC) Quit
 
@@ -272,6 +272,7 @@ with the Code Blocks IDE (www.codeblocks.org).
 
 0.17:
  * Show correct month for CVS logs.
+ * Added time scaling (Bitshifter).
 
 0.16:
  * Added --hide-dirnames option.

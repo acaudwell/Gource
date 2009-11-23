@@ -366,6 +366,8 @@ void Gource::update(float t, float dt) {
         dt = max_tick_rate;
     }
 
+    dt *= time_scale;
+
     //have to manage runtime internally as we're messing with dt
     runtime += dt;
 
@@ -705,6 +707,27 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             gGourceForceGravity *= 1.1;
         }
 
+        if(e->keysym.sym == SDLK_PERIOD) {
+
+            if(time_scale>=1.0) {
+                time_scale = std::min(4.0f, floorf(time_scale) + 1.0f);
+            } else {
+                time_scale = std::min(1.0f, time_scale * 2.0f);
+            }
+        }
+
+        if(e->keysym.sym == SDLK_COMMA) {
+
+            if(time_scale>1.0) {
+                time_scale = std::max(0.0f, floorf(time_scale) - 1.0f);
+            } else {
+                time_scale = std::max(0.25f, time_scale * 0.5f);
+            }
+        }
+
+        if(e->keysym.sym == SDLK_SLASH) {
+            time_scale = 1.0f;
+        }
     }
 }
 
@@ -780,6 +803,7 @@ void Gource::reset() {
 
     files.clear();
 
+    time_scale = 1.0f;
     idle_time=0;
     currtime=0;
     subseconds=0.0;
@@ -1636,6 +1660,7 @@ void Gource::draw(float t, float dt) {
 
     if(debug) {
         font.print(0,20, "FPS: %.2f", fps);
+        font.print(0,40,"Time Scale: %.2f", time_scale);
         font.print(0,60,"Users: %d", users.size());
         font.print(0,80,"Files: %d", files.size());
         font.print(0,100,"Dirs: %d",  gGourceDirMap.size());
