@@ -160,6 +160,7 @@ class Gource : public SDLApp {
     void interactDirs();
     void updateUsers(float t, float dt);
     void updateDirs(float dt);
+    void updateCamera(float dt);
 
     void updateTime();
 

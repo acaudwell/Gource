@@ -1210,6 +1210,26 @@ void Gource::updateTime() {
     if(abs(date_x_offset - date_offset) > 5) date_x_offset = date_offset;
 }
 
+void Gource::updateCamera(float dt) {
+
+    //camera tracking
+    if(track_users && (selectedFile !=0 || selectedUser !=0)) {
+        Bounds2D focusbounds;
+
+        vec3f camerapos = camera.getPos();
+
+        if(selectedUser !=0) focusbounds.update(selectedUser->getPos());
+        if(selectedFile !=0) focusbounds.update(selectedFile->getAbsolutePos());
+
+        camera.adjust(focusbounds);
+    } else {
+        if(track_users && idle_time==0) camera.adjust(user_bounds);
+        else camera.adjust(dir_bounds);
+    }
+
+    camera.logic(dt);
+}
+
 void Gource::logic(float t, float dt) {
 
     if(draw_loading) return;
@@ -1309,6 +1329,8 @@ void Gource::logic(float t, float dt) {
 
     updateUsers(t, dt);
     updateDirs(dt);
+
+    updateCamera(dt);
 
     updateTime();
 }
@@ -1454,23 +1476,6 @@ void Gource::draw(float t, float dt) {
         draw_loading = false;
         return;
     }
-
-    //camera tracking
-    if(track_users && (selectedFile !=0 || selectedUser !=0)) {
-        Bounds2D focusbounds;
-
-        vec3f camerapos = camera.getPos();
-
-        if(selectedUser !=0) focusbounds.update(selectedUser->getPos());
-        if(selectedFile !=0) focusbounds.update(selectedFile->getAbsolutePos());
-
-        camera.adjust(focusbounds);
-    } else {
-        if(track_users && idle_time==0) camera.adjust(user_bounds);
-        else camera.adjust(dir_bounds);
-    }
-
-    camera.logic(dt);
 
     Frustum frustum(camera);
 
