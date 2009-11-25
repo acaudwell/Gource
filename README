@@ -183,19 +183,11 @@ options you should use:
 NOTE: --git-log-command assumes you have a recent version git of that supports all the options. You may need to modify
 the command line to work with an older version (changing %aN to %an for instance).
 
-CVS Support:
-
-You can view a CVS project with gource using the tool cvs-exp (http://www.cs.rice.edu/~ssiyer/code/cvs-exp/) with the
-command line specified by the --cvs-exp-command option:
-
-    cd my-cvs-project
-    `gource --cvs-exp-command` > my-cvs-project.log
-    gource my-cvs-project.log
-
 Other Version Control Systems:
 
 Visit the Gource homepage for guides and examples of using Gource with other version control systems:
 
+    CVS       - http://code.google.com/p/gource/wiki/CVS
     SVN       - http://code.google.com/p/gource/wiki/SVN
     Mercurial - http://code.google.com/p/gource/wiki/Mercurial
 
