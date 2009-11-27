@@ -18,7 +18,7 @@
 #ifndef GOURCE_H
 #define GOURCE_H
 
-#define GOURCE_VERSION "0.17"
+#define GOURCE_VERSION "0.18"
 
 #ifdef _WIN32
 #include "windows.h"

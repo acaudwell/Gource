@@ -1283,7 +1283,11 @@ void Gource::logic(float t, float dt) {
 
     slider.logic(dt);
 
-    if(paused) return;
+    //still want to update camera while paused
+    if(paused) {
+        updateCamera(dt);
+        return;
+    }
 
     // get more entries
     if(commitqueue.size() == 0) {

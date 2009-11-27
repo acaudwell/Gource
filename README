@@ -262,6 +262,9 @@ with the Code Blocks IDE (www.codeblocks.org).
 6. Changes
 ==========
 
+0.18:
+ * Fixed camera movement while the simulation is paused.
+
 0.17:
  * Show correct month for CVS logs.
  * Added time scaling (Bitshifter).
