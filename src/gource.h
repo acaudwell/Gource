@@ -18,7 +18,7 @@
 #ifndef GOURCE_H
 #define GOURCE_H
 
-#define GOURCE_VERSION "0.18"
+#define GOURCE_VERSION "0.19"
 
 #ifdef _WIN32
 #include "windows.h"
@@ -109,8 +109,8 @@ class Gource : public SDLApp {
     int frameskip;
     int framecount;
 
+    time_t currtime;
     float runtime;
-    long  currtime;
     float subseconds;
 
     float splash;

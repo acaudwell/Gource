@@ -1317,7 +1317,7 @@ void Gource::logic(float t, float dt) {
         subseconds -= (int) subseconds;
     }
 
-    currtime   += seconds;
+    currtime += seconds;
 
     // delete files
     for(std::vector<RFile*>::iterator it = gGourceRemovedFiles.begin(); it != gGourceRemovedFiles.end(); it++) {
