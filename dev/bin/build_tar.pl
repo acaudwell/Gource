@@ -22,6 +22,7 @@ sub gource_version {
 my $VERSION = gource_version();
 
 my @exclusions = (
+    qr{^/contrib/},
     qr{^/config.status$},
     qr{^/config.log$},
     qr{^/debian/},
