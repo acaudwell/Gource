@@ -99,6 +99,8 @@ class Gource : public SDLApp {
     std::string displaydate;
     int date_x_offset;
 
+    TextureResource* blurtex;
+
     FXFont font, fontlarge, fontmedium;
 
     bool first_read;
@@ -173,6 +175,7 @@ class Gource : public SDLApp {
     void zoom(bool zoomin);
 
     void loadingScreen();
+    void drawBackground(float dt);
 public:
     Gource(std::string logfile);
     ~Gource();

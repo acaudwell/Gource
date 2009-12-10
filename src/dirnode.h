@@ -175,6 +175,8 @@ public:
     void drawEdges(float dt);
     void drawEdgeShadows(float dt);
 
+    void gourceianBlur(Frustum& frustum, float dt);
+
     void drawShadows(Frustum& frustum, float dt);
     void drawFiles(Frustum& frustum, float dt);
     void drawSimple(Frustum& frustum, float dt);

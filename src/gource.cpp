@@ -296,6 +296,8 @@ Gource::Gource(std::string logfile) {
     font.dropShadow(true);
     font.roundCoordinates(true);
 
+    blurtex = texturemanager.grab("gourceian.tga");
+
     start_position = 0.0;
     stop_position = 0.0;
 
@@ -328,7 +330,7 @@ Gource::Gource(std::string logfile) {
 
     root = 0;
 
-    background_colour = vec3f(0.25, 0.25, 0.25);
+    background_colour = vec3f(0.0, 0.0, 0.0);
 
     //min phsyics rate 60fps (ie maximum allowed delta 1.0/60)
     max_tick_rate = 1.0 / 60.0;
@@ -1494,10 +1496,58 @@ void Gource::loadingScreen() {
     font.print(display.width/2 - width/2, display.height/2 - 10, "%s", loading_message.c_str());
 }
 
-void Gource::draw(float t, float dt) {
-
+void Gource::drawBackground(float dt) {
     display.setClearColour(background_colour);
     display.clear();
+
+    display.mode2D();
+/*
+    float blur_radius = display.width * 2.0;
+
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+
+    glBindTexture(GL_TEXTURE_2D, blurtex->textureid);
+
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    glColor4f(background_colour.x,background_colour.y, background_colour.z, 1.0);
+
+    glPushMatrix();
+
+    glTranslatef(display.width * 0.25f, display.height * 0.5f, 0.0f);
+
+    glBegin(GL_QUADS);
+        glTexCoord2f(1.0, 1.0);
+        glVertex2f(blur_radius,blur_radius);
+        glTexCoord2f(1.0, 0.0);
+        glVertex2f(blur_radius,-blur_radius);
+        glTexCoord2f(0.0, 0.0);
+        glVertex2f(-blur_radius,-blur_radius);
+        glTexCoord2f(0.0, 1.0);
+        glVertex2f(-blur_radius,blur_radius);
+    glEnd();
+
+    glTranslatef(display.width * 0.5f, 0.0f, 0.0f);
+
+    glBegin(GL_QUADS);
+        glTexCoord2f(1.0, 1.0);
+        glVertex2f(blur_radius,blur_radius);
+        glTexCoord2f(1.0, 0.0);
+        glVertex2f(blur_radius,-blur_radius);
+        glTexCoord2f(0.0, 0.0);
+        glVertex2f(-blur_radius,-blur_radius);
+        glTexCoord2f(0.0, 1.0);
+        glVertex2f(-blur_radius,blur_radius);
+    glEnd();
+
+    glPopMatrix();
+*/
+}
+
+void Gource::draw(float t, float dt) {
+
+    drawBackground(dt);
 
     if(draw_loading) {
         loadingScreen();
@@ -1535,11 +1585,11 @@ void Gource::draw(float t, float dt) {
     glPushMatrix();
     glLoadIdentity();
 
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
 
-    //draw edges
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     root->drawEdgeShadows(dt);
     root->drawEdges(dt);
 
@@ -1552,6 +1602,13 @@ void Gource::draw(float t, float dt) {
 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
+
+    //draw 'gourceian blur' around dirnodes
+    glBindTexture(GL_TEXTURE_2D, blurtex->textureid);
+    glBlendFunc (GL_ONE, GL_ONE);
+    root->gourceianBlur(frustum, dt);
+
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     //draw shadows
 

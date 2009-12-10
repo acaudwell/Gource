@@ -1034,6 +1034,36 @@ void RDirNode::drawEdges(float dt) {
     }
 }
 
+void RDirNode::gourceianBlur(Frustum& frustum, float dt) {
+
+    if(isVisible() && frustum.boundsInFrustum(quadItemBounds)) {
+
+        float blur_radius = dir_radius * 2.0;
+
+        glColor4f(col.x, col.y, col.z, 1.0);
+        glPushMatrix();
+            glTranslatef(pos.x, pos.y, 0.0);
+
+            glBegin(GL_QUADS);
+            glTexCoord2f(1.0, 1.0);
+                glVertex2f(blur_radius,blur_radius);
+                glTexCoord2f(1.0, 0.0);
+                glVertex2f(blur_radius,-blur_radius);
+                glTexCoord2f(0.0, 0.0);
+                glVertex2f(-blur_radius,-blur_radius);
+                glTexCoord2f(0.0, 1.0);
+                glVertex2f(-blur_radius,blur_radius);
+            glEnd();
+        glPopMatrix();
+
+    }
+
+    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+        RDirNode* node = (*it);
+        node->gourceianBlur(frustum,dt);
+    }
+}
+
 void RDirNode::drawSimple(Frustum& frustum, float dt) {
 
     glDisable(GL_TEXTURE_2D);

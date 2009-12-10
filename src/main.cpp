@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     int height = 768;
     bool fullscreen=false;
     bool multisample=false;
-    vec3f background = vec3f(0.25, 0.25, 0.25);
+    vec3f background = vec3f(0.0, 0.0, 0.0);
 
     int video_framerate = 60;
     std::string ppm_file_name;
