@@ -15,6 +15,7 @@ install: all
 	mkdir -p -m 755 $(DESTDIR)/$(bindir)
 	mkdir -p -m 755 ${DESTDIR}/$(gourcedatadir)
 	mkdir -p -m 755 ${DESTDIR}/$(mandir)/man1
+	cp data/*.tga ${DESTDIR}/$(gourcedatadir)/
 	cp data/*.png ${DESTDIR}/$(gourcedatadir)/
 	cp gource ${DESTDIR}/$(bindir)/
 	sed 's|GOURCE_DATADIR|$(gourcedatadir)|g' data/gource.1 > ${DESTDIR}/$(mandir)/man1/gource.1
