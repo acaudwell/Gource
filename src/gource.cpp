@@ -19,8 +19,11 @@
 
 float gGourceAutoSkipSeconds = 3.0;
 bool  gGourceFileLoop        = false;
+bool  gGourceHideTree        = false;
+bool  gGourceHideFiles       = false;
 bool  gGourceHideUsernames   = false;
 bool  gGourceHideDate        = false;
+bool  gGourceNoBloom         = false;
 bool  gGourceDisableProgress = false;
 bool  gGourceQuadTreeDebug   = false;
 
@@ -163,7 +166,12 @@ void gource_help(std::string error) {
     printf("  --disable-auto-skip      Disable auto skipping\n");
     printf("  --disable-progress       Disable the progress bar\n\n");
 
+    printf("  --bloom-multiplier       Adjust amount of bloom (default: 1.0)\n");
+    printf("  --no-bloom               Turn off bloom effect\n\n");
+
     printf("  --hide-users             Hide users\n");
+    printf("  --hide-tree              Hide the tree\n");
+    printf("  --hide-files             Hide files\n");
     printf("  --hide-usernames         Hide usernames\n");
     printf("  --hide-filenames         Hide filenames\n");
     printf("  --hide-dirnames          Hide directory names\n");
@@ -296,7 +304,7 @@ Gource::Gource(std::string logfile) {
     font.dropShadow(true);
     font.roundCoordinates(true);
 
-    blurtex = texturemanager.grab("gourceian.tga");
+    bloomtex = texturemanager.grab("bloom.tga");
 
     start_position = 0.0;
     stop_position = 0.0;
@@ -1499,53 +1507,90 @@ void Gource::loadingScreen() {
 void Gource::drawBackground(float dt) {
     display.setClearColour(background_colour);
     display.clear();
+}
 
-    display.mode2D();
-/*
-    float blur_radius = display.width * 2.0;
+void Gource::drawTree(Frustum& frustum, float dt) {
+    draw_tree_time = SDL_GetTicks();
+
+    root->calcEdges();
+
+    //switch to 2d
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, display.width, display.height, 0, -1.0, 1.0);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glEnable(GL_BLEND);
+    glEnable(GL_TEXTURE_2D);
+
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    if(!gGourceHideTree) {
+        root->drawEdgeShadows(dt);
+        root->drawEdges(dt);
+    }
+
+    //switch back
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
 
-    glBindTexture(GL_TEXTURE_2D, blurtex->textureid);
+    //draw shadows
 
-    glBlendFunc(GL_ONE, GL_ONE);
+    if(!gGourceHideUsers) {
+        for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
+            it->second->drawShadow(dt);
+        }
+    }
 
-    glColor4f(background_colour.x,background_colour.y, background_colour.z, 1.0);
+    if(!gGourceHideFiles) {
+        root->drawShadows(frustum, dt);
+    }
 
-    glPushMatrix();
+    //draw actions
+    for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
+        it->second->drawActions(dt);
+    }
 
-    glTranslatef(display.width * 0.25f, display.height * 0.5f, 0.0f);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glBegin(GL_QUADS);
-        glTexCoord2f(1.0, 1.0);
-        glVertex2f(blur_radius,blur_radius);
-        glTexCoord2f(1.0, 0.0);
-        glVertex2f(blur_radius,-blur_radius);
-        glTexCoord2f(0.0, 0.0);
-        glVertex2f(-blur_radius,-blur_radius);
-        glTexCoord2f(0.0, 1.0);
-        glVertex2f(-blur_radius,blur_radius);
-    glEnd();
+    if(!trace_debug) {
+        if(!gGourceHideFiles) {
+            root->drawFiles(frustum,dt);
+        }
+    } else {
+        root->drawSimple(frustum,dt);
+    }
 
-    glTranslatef(display.width * 0.5f, 0.0f, 0.0f);
+    draw_tree_time = SDL_GetTicks() - draw_tree_time;
+}
 
-    glBegin(GL_QUADS);
-        glTexCoord2f(1.0, 1.0);
-        glVertex2f(blur_radius,blur_radius);
-        glTexCoord2f(1.0, 0.0);
-        glVertex2f(blur_radius,-blur_radius);
-        glTexCoord2f(0.0, 0.0);
-        glVertex2f(-blur_radius,-blur_radius);
-        glTexCoord2f(0.0, 1.0);
-        glVertex2f(-blur_radius,blur_radius);
-    glEnd();
+void Gource::drawBloom(Frustum &frustum, float dt) {
+    if(gGourceNoBloom) return;
 
-    glPopMatrix();
-*/
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+
+    //draw 'gourceian blur' around dirnodes
+    glBindTexture(GL_TEXTURE_2D, bloomtex->textureid);
+    glBlendFunc (GL_ONE, GL_ONE);
+    root->drawBloom(frustum, dt);
+
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Gource::draw(float t, float dt) {
+
+    display.mode2D();
 
     drawBackground(dt);
 
@@ -1571,79 +1616,25 @@ void Gource::draw(float t, float dt) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    draw_tree_time = SDL_GetTicks();
+    //draw tree
+    drawTree(frustum, dt);
 
-    root->calcEdges();
-
-    //switch to 2d
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    glOrtho(0, display.width, display.height, 0, -1.0, 1.0);
-
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-    glLoadIdentity();
-
-    glEnable(GL_BLEND);
-    glEnable(GL_TEXTURE_2D);
-
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    root->drawEdgeShadows(dt);
-    root->drawEdges(dt);
-
-    //switch back
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-
-    glMatrixMode(GL_MODELVIEW);
-    glPopMatrix();
-
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
-
-    //draw 'gourceian blur' around dirnodes
-    glBindTexture(GL_TEXTURE_2D, blurtex->textureid);
-    glBlendFunc (GL_ONE, GL_ONE);
-    root->gourceianBlur(frustum, dt);
-
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    //draw shadows
-
-    if(!gGourceHideUsers) {
-        for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
-            it->second->drawShadow(dt);
-        }
-    }
-
-    root->drawShadows(frustum, dt);
-
-    //draw actions
-    for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
-        it->second->drawActions(dt);
-    }
-
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glColor4f(0.0, 1.0, 0.0, 1.0);
-    trace_debug ? root->drawSimple(frustum,dt) : root->drawFiles(frustum,dt);
-
-    draw_tree_time = SDL_GetTicks() - draw_tree_time;
+    //draw bloom
+    drawBloom(frustum, dt);
 
     glColor4f(1.0, 1.0, 0.0, 1.0);
     for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
         trace_debug ? it->second->drawSimple(dt) : it->second->draw(dt);
     }
 
-
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
 
-    root->drawNames(font,frustum);
+    if(!(gGourceHideFiles || gGourceHideFilenames)) {
+        root->drawNames(font,frustum);
+    }
 
-    if(!gGourceHideUsernames) {
+    if(!(gGourceHideUsernames || gGourceHideUsers)) {
         for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
             it->second->drawName();
         }

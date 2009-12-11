@@ -1034,7 +1034,7 @@ void RDirNode::drawEdges(float dt) {
     }
 }
 
-void RDirNode::gourceianBlur(Frustum& frustum, float dt) {
+void RDirNode::drawBloom(Frustum& frustum, float dt) {
 
     if(isVisible() && frustum.boundsInFrustum(quadItemBounds)) {
 
@@ -1060,7 +1060,7 @@ void RDirNode::gourceianBlur(Frustum& frustum, float dt) {
 
     for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
-        node->gourceianBlur(frustum,dt);
+        node->drawBloom(frustum,dt);
     }
 }
 

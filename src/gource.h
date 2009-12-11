@@ -99,7 +99,7 @@ class Gource : public SDLApp {
     std::string displaydate;
     int date_x_offset;
 
-    TextureResource* blurtex;
+    TextureResource* bloomtex;
 
     FXFont font, fontlarge, fontmedium;
 
@@ -176,6 +176,8 @@ class Gource : public SDLApp {
 
     void loadingScreen();
     void drawBackground(float dt);
+    void drawTree(Frustum &frustum, float dt);
+    void drawBloom(Frustum &frustum, float dt);
 public:
     Gource(std::string logfile);
     ~Gource();
@@ -204,7 +206,10 @@ public:
 
 extern float gGourceAutoSkipSeconds;
 extern bool  gGourceHideUsernames;
+extern bool  gGourceNoBloom;
 extern bool  gGourceHideDate;
+extern bool  gGourceHideFiles;
+extern bool  gGourceHideTree;
 extern bool  gGourceDisableProgress;
 extern bool  gGourceFileLoop;
 extern int   gGourceMaxFiles;
