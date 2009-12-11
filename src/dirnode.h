@@ -194,6 +194,7 @@ extern bool  gGourceGravity;
 extern float gGourceForceGravity;
 extern bool  gGourceDrawDirName;
 
+extern float gGourceBloomMultiplier;
 extern float gGourceElasticity;
 
 extern std::map<std::string, RDirNode*> gGourceDirMap;

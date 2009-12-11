@@ -18,7 +18,7 @@
 #ifndef GOURCE_H
 #define GOURCE_H
 
-#define GOURCE_VERSION "0.19"
+#define GOURCE_VERSION "0.20"
 
 #ifdef _WIN32
 #include "windows.h"
@@ -100,6 +100,7 @@ class Gource : public SDLApp {
     int date_x_offset;
 
     TextureResource* bloomtex;
+    TextureResource* beamtex;
 
     FXFont font, fontlarge, fontmedium;
 
@@ -176,6 +177,7 @@ class Gource : public SDLApp {
 
     void loadingScreen();
     void drawBackground(float dt);
+    void drawActions(float dt);
     void drawTree(Frustum &frustum, float dt);
     void drawBloom(Frustum &frustum, float dt);
 public:
@@ -206,7 +208,7 @@ public:
 
 extern float gGourceAutoSkipSeconds;
 extern bool  gGourceHideUsernames;
-extern bool  gGourceNoBloom;
+extern bool  gGourceDisableBloom;
 extern bool  gGourceHideDate;
 extern bool  gGourceHideFiles;
 extern bool  gGourceHideTree;

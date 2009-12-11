@@ -25,6 +25,8 @@ float gGourceDirPadding   = 1.5;
 
 float gGourceElasticity   = 0.0;
 
+float gGourceBloomMultiplier = 1.0;
+
 bool  gGourceNodeDebug    = false;
 bool  gGourceGravity      = true;
 bool  gGourceDrawDirName  = true;
@@ -34,8 +36,6 @@ int  gGourceDirNodeInnerLoops = 0;
 int  gGourceFileInnerLoops = 0;
 
 std::map<std::string, RDirNode*> gGourceDirMap;
-
-TextureResource* beamtex = 0;
 
 RDirNode::RDirNode(RDirNode* parent, std::string abspath) {
 
@@ -54,10 +54,6 @@ RDirNode::RDirNode(RDirNode* parent, std::string abspath) {
         pos = parentPos;
     } else {
         pos = vec2f(0.0f, 0.0f);
-    }
-
-    if(beamtex==0) {
-        beamtex = texturemanager.grab("beam.png");
     }
 
     float padded_file_radius  = gGourceFileDiameter * 0.5;
@@ -1004,8 +1000,6 @@ void RDirNode::calcProjectedPos() {
 
 void RDirNode::drawEdgeShadows(float dt) {
 
-    if(parent==0) glBindTexture(GL_TEXTURE_2D, beamtex->textureid);
-
     for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
 
@@ -1019,8 +1013,6 @@ void RDirNode::drawEdgeShadows(float dt) {
 }
 
 void RDirNode::drawEdges(float dt) {
-
-    if(parent==0) glBindTexture(GL_TEXTURE_2D, beamtex->textureid);
 
     for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
@@ -1038,7 +1030,7 @@ void RDirNode::drawBloom(Frustum& frustum, float dt) {
 
     if(isVisible() && frustum.boundsInFrustum(quadItemBounds)) {
 
-        float blur_radius = dir_radius * 2.0;
+        float blur_radius = dir_radius * 2.0 * gGourceBloomMultiplier;
 
         glColor4f(col.x, col.y, col.z, 1.0);
         glPushMatrix();

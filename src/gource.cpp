@@ -23,7 +23,7 @@ bool  gGourceHideTree        = false;
 bool  gGourceHideFiles       = false;
 bool  gGourceHideUsernames   = false;
 bool  gGourceHideDate        = false;
-bool  gGourceNoBloom         = false;
+bool  gGourceDisableBloom    = false;
 bool  gGourceDisableProgress = false;
 bool  gGourceQuadTreeDebug   = false;
 
@@ -120,7 +120,7 @@ void gource_help(std::string error) {
         RECT windowRect;
         if(GetWindowRect(consoleWindow, &windowRect)) {
             float width = windowRect.right - windowRect.left;
-            MoveWindow(consoleWindow,windowRect.left,windowRect.top,width,850,true);
+            MoveWindow(consoleWindow,windowRect.left,windowRect.top,width,900,true);
         }
     }
 #endif
@@ -163,11 +163,11 @@ void gource_help(std::string error) {
     printf("  --multi-sampling         Enable multi-sampling\n");
     printf("  --crop AXIS              Crop view on an axis (vertical,horizontal)\n\n");
 
-    printf("  --disable-auto-skip      Disable auto skipping\n");
-    printf("  --disable-progress       Disable the progress bar\n\n");
+    printf("  --bloom-multiplier       Adjust the amount of bloom (default: 1.0)\n\n");
 
-    printf("  --bloom-multiplier       Adjust amount of bloom (default: 1.0)\n");
-    printf("  --no-bloom               Turn off bloom effect\n\n");
+    printf("  --disable-auto-skip      Disable auto skipping\n");
+    printf("  --disable-progress       Disable the progress bar\n");
+    printf("  --disable-bloom          Disable bloom effect\n\n");
 
     printf("  --hide-users             Hide users\n");
     printf("  --hide-tree              Hide the tree\n");
@@ -305,6 +305,7 @@ Gource::Gource(std::string logfile) {
     font.roundCoordinates(true);
 
     bloomtex = texturemanager.grab("bloom.tga");
+    beamtex  = texturemanager.grab("beam.png");
 
     start_position = 0.0;
     stop_position = 0.0;
@@ -1530,6 +1531,8 @@ void Gource::drawTree(Frustum& frustum, float dt) {
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     if(!gGourceHideTree) {
+        glBindTexture(GL_TEXTURE_2D, beamtex->textureid);
+
         root->drawEdgeShadows(dt);
         root->drawEdges(dt);
     }
@@ -1544,6 +1547,8 @@ void Gource::drawTree(Frustum& frustum, float dt) {
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
 
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     //draw shadows
 
     if(!gGourceHideUsers) {
@@ -1556,10 +1561,7 @@ void Gource::drawTree(Frustum& frustum, float dt) {
         root->drawShadows(frustum, dt);
     }
 
-    //draw actions
-    for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
-        it->second->drawActions(dt);
-    }
+    drawActions(dt);
 
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -1574,8 +1576,23 @@ void Gource::drawTree(Frustum& frustum, float dt) {
     draw_tree_time = SDL_GetTicks() - draw_tree_time;
 }
 
+void Gource::drawActions(float dt) {
+    if(gGourceHideUsers) return;
+
+    glBindTexture(GL_TEXTURE_2D, beamtex->textureid);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    //draw actions
+    for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
+        it->second->drawActions(dt);
+    }
+}
+
 void Gource::drawBloom(Frustum &frustum, float dt) {
-    if(gGourceNoBloom) return;
+    if(gGourceDisableBloom) return;
 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
