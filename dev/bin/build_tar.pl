@@ -40,6 +40,7 @@ my @exclusions = (
 
 my @inclusions = (
     qr{^/gource\.win32\.cbp$},
+    qr{^/ChangeLog$},
     qr{^/THANKS$},
     qr{^/COPYING$},
     qr{^/INSTALL$},
@@ -49,7 +50,7 @@ my @inclusions = (
     qr{^/m4/.+\.m4$},
     qr{^/configure(?:\.ac)?$},
     qr{^/src/.+\.(?:cpp|h)$},
-    qr{^/data/.+\.(?:png|ttf|1)$},
+    qr{^/data/.+\.(?:png|tga|ttf|1)$},
     qr{^/data/fonts/README$},
     qr{^/config\.guess$},
     qr{^/config\.sub$},
@@ -64,6 +65,16 @@ mkpath($tmp_path) or die("failed to make temp folder $tmp_path");
 chdir("$FindBin::Bin/../../");
 
 my @files = `find .`;
+
+#check configure.ac has been updated
+unless(`cat configure.ac` =~ /AC_INIT\(Gource, $VERSION,/) {
+    die("configure.ac does not mention current version number\n");
+}
+
+#check ChangeLog has been updated
+unless(`cat ChangeLog` =~ /^$VERSION:/) {
+    die("ChangeLog does not mention current version number\n");
+}
 
 foreach my $file (@files) {
     $file =~ s/[\r\n]+//;
@@ -96,8 +107,6 @@ my $archive = "gource-$VERSION.tar.gz";
 if(system("tar -czf $archive gource-$VERSION") !=0) {
     die("failed to make archive $archive");
 }
-
-
 
 unlink("$FindBin::Bin/../builds/$archive");
 
