@@ -902,7 +902,7 @@ bool Gource::canSeek() {
 void Gource::seekTo(float percent) {
     debugLog("seekTo(%.2f)\n", percent);
 
-    if(!canSeek()) return;
+    if(commitlog == 0 || !commitlog->isSeekable()) return;
 
     // end pause
     if(paused) paused = false;
@@ -1636,9 +1636,6 @@ void Gource::draw(float t, float dt) {
     //draw tree
     drawTree(frustum, dt);
 
-    //draw bloom
-    drawBloom(frustum, dt);
-
     glColor4f(1.0, 1.0, 0.0, 1.0);
     for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
         trace_debug ? it->second->drawSimple(dt) : it->second->draw(dt);
@@ -1646,6 +1643,9 @@ void Gource::draw(float t, float dt) {
 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
+
+    //draw bloom
+    drawBloom(frustum, dt);
 
     if(!(gGourceHideFiles || gGourceHideFilenames)) {
         root->drawNames(font,frustum);
