@@ -101,8 +101,8 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        if(args == "--no-bloom") {
-            gGourceNoBloom = true;
+        if(args == "--disable-bloom") {
+            gGourceDisableBloom = true;
             continue;
         }
 
@@ -204,6 +204,21 @@ int main(int argc, char *argv[]) {
             //append slash
             if(gGourceUserImageDir[gGourceUserImageDir.size()-1] != '/') {
                 gGourceUserImageDir += std::string("/");
+            }
+
+            continue;
+        }
+
+        if(args == "--bloom-multiplier") {
+
+            if((i+1)>=arguments.size()) {
+                gource_help("specify bloom-multiplier (float)");
+            }
+
+            gGourceBloomMultiplier = atof(arguments[++i].c_str());
+
+            if(gGourceBloomMultiplier<=0.0) {
+                gource_help("invalid bloom-multiplier value");
             }
 
             continue;
