@@ -1,0 +1,57 @@
+0.20:
+ * Added bloom effect (turn off with --disable-bloom).
+
+0.19:
+ * Use time_t instead of long for timestamps.
+
+0.18:
+ * Fixed camera movement while the simulation is paused.
+
+0.17:
+ * Show correct month for CVS logs.
+ * Added time scaling (Bitshifter).
+
+0.16:
+ * Added --hide-dirnames option.
+ * Added --user-scale option.
+ * Added --date-format option (Pat Notz).
+ * Fix bug when encountering long log lines.
+ * Fixed incorrect parsing of trivial merges.
+ * Fixed building issues on OSX.
+
+0.15:
+ * Added PPM output support for creating videos (Johannes Schindelin).
+ * Added experimental Apache combined access log support (--log-format apache).
+ * Added --stop-position and --stop-on-idle options (useful for making videos).
+ * Added --max-file-lag option to limit how long after a commit file changes can take to appear.
+ * Added --no-renames to the git log command as they don't display correctly.
+ * Added --max-user-speed and --user-friction as options.
+ * Now builds on OSX Leopard (with the required libaries installed).
+ * Caught raw exception from replace_invalid().
+ * Added CXXFLAGS. You may want to override the default (eg CXXFLAGS=-O3 ./configure).
+
+0.14:
+ * Updated SVN instructions.
+
+0.13:
+ * Removed single quotes from log command (fixes running gource --git-log-command in back ticks)
+ * Added SVN instructions.
+ * Fixed manpage hyphens.
+
+0.12:
+ * Added --enable-ttf-font-dir=DIR option to configure (to specify the ttf-freefont directory).
+ * UTF-8 support using UTF8-CPP (http://utfcpp.sourceforge.net/).
+ * Changed the git log command (see --git-log-command) to require less work to parse.
+   Log files generated with the previous git-log command used by gource should continue to work.
+ * Allow --seconds-per-day value less than 1.0.
+ * Added --git-branch command.
+ * Added --loop command.
+ * Added --crop command.
+
+0.11:
+ * Made N key skip to next entry.
+ * Documented --user-image-dir flag.
+ * temp file name now uses uid instead of time
+
+0.1:
+ * First release.
