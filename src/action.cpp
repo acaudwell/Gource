@@ -46,10 +46,6 @@ void RAction::logic(float dt) {
 void RAction::draw(float dt) {
     if(isFinished()) return;
 
-    glDisable(GL_TEXTURE_2D);
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-
     vec2f src  = source->getPos();
     vec2f dest = target->getAbsolutePos();
 
@@ -68,15 +64,33 @@ void RAction::draw(float dt) {
 
     glBegin(GL_QUADS);
         glColor4fv(col2);
-
+        glTexCoord2f(0.0,0.0);
         glVertex2f(src.x - offset_src.x, src.y - offset_src.y);
+        glTexCoord2f(0.0,1.0);
         glVertex2f(src.x + offset_src.x, src.y + offset_src.y);
 
         glColor4fv(col1);
-
+        glTexCoord2f(1.0,1.0);
         glVertex2f(dest.x + offset.x, dest.y + offset.y);
-        glVertex2f(dest.x - offset.x, dest.y - offset.y);
+        glTexCoord2f(1.0,0.0);
+       glVertex2f(dest.x - offset.x, dest.y - offset.y);
     glEnd();
+
+/*
+    glBegin(GL_QUADS);
+        glColor4fv(col2);
+        glTexCoord2f(0.0,0.0);
+        glVertex2f(src.x - offset_src.x, src.y - offset_src.y);
+        glTexCoord2f(1.0,0.0);
+        glVertex2f(src.x + offset_src.x, src.y + offset_src.y);
+
+        glColor4fv(col1);
+        glTexCoord2f(0.0,0.0);
+        glVertex2f(dest.x + offset.x, dest.y + offset.y);
+        glTexCoord2f(1.0,0.0);
+       glVertex2f(dest.x - offset.x, dest.y - offset.y);
+    glEnd();
+*/
 }
 
 CreateAction::CreateAction(RUser* source, RFile* target, float addedtime) : RAction(source, target, addedtime) {
