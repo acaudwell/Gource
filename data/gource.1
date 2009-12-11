@@ -91,8 +91,14 @@ Crop view on an axis (vertical,horizontal).
 \fB\-\-multi\-sampling\fR
 Enable multi-sampling.
 .TP
+\fB\-\-bloom\-multiplier FLOAT\fR
+Adjust the amount of bloom.
+.TP
 \fB\-\-disable\-progress\fR
 Disable progress bar.
+.TP
+\fB\-\-disable\-bloom\fR
+Disable bloom effect.
 .TP
 \fB\-\-max\-files\fR
 Set the maximum number of files. Excess files will be discarded.
@@ -111,6 +117,12 @@ Change scale of users.
 .TP
 \fB\-\-hide\-users\fR
 Hide users.
+.TP
+\fB\-\-hide\-tree\fR
+Hide tree.
+.TP
+\fB\-\-hide\-files\fR
+Hide files.
 .TP
 \fB\-\-hide\-usernames\fR
 Hide usernames.
@@ -185,10 +197,10 @@ colour    - A colour for the file in hex (FFFFFF) format. Optional.
 You can create a video of Gource using the \-\-output\-ppm\-stream option. This creates an uncompressed sequence of
 screenshots in PPM format which can then be processed by another program (such as ffmpeg) to produce a video file.
 
-The below command line will create a video at 60fps in h264 format (assumes you have ffmpeg with h264 support):
+The below command line will create a video at 60fps in x264 format (assumes you have ffmpeg with x264 support):
 
 .ti 10
-gource \-\-output-ppm-stream \- | ffmpeg \-y \-b 3000K \-r 60 \-f image2pipe \-vcodec ppm \-i \- gource.h264
+gource \-\-output-ppm-stream \- | ffmpeg \-y \-b 3000K \-r 60 \-f image2pipe \-vcodec ppm \-i \- \-vcodec libx264 gource.mp4
 
 .SH INTERFACE
 The time shown in the top left of the screen is set initially from the first log entry read and is incremented according to the simulation speed (\-\-seconds\-per\-day).
