@@ -36,6 +36,7 @@
 #include "core/regex.h"
 
 #include "git.h"
+#include "hg.h"
 #include "gitraw.h"
 #include "cvs-exp.h"
 #include "custom.h"

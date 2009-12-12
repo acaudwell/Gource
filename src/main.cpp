@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 
     std::vector<std::string> arguments;
 
-    display.displayArgs(argc, argv, &width, &height, &fullscreen, &arguments);
+    SDLAppParseArgs(argc, argv, &width, &height, &fullscreen, &arguments);
 
     for(int i=0;i<arguments.size();i++) {
         std::string args = arguments[i];
@@ -66,14 +66,20 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        if(args == "--git-log-command" || args == "--cvs-exp-command") {
-
-            if(args == "--git-log-command") {
+        if(args == "--git-log-command") {
                 gource_info(gGourceGitLogCommand);
-            } else {
-                gource_info(gGourceCvsExpLogCommand);
-            }
         }
+
+        if(args == "--cvs-exp-command") {
+                gource_info(gGourceCvsExpLogCommand);
+        }
+
+        if(args == "--hg-log-command") {
+                std::string command = gGourceMercurialCommand();
+
+                gource_info(command);
+        }
+
 
         if(args == "--date-format") {
 

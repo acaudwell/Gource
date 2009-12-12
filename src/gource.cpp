@@ -157,7 +157,8 @@ void gource_help(std::string error) {
 
     printf("  --log-format FORMAT      Specify format of log (git,cvs,custom)\n");
     printf("  --git-branch             Get the git log of a particular branch\n");
-    printf("  --git-log-command        Show git-log command used by gource\n");
+    printf("  --git-log-command        Show git log command used by gource\n");
+    printf("  --hg-log-command         Show hg log (Mercurial) command used by gource\n");
     printf("  --cvs-exp-command        Show cvs-exp.pl log command used by gource\n\n");
 
     printf("  --multi-sampling         Enable multi-sampling\n");
@@ -227,6 +228,12 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
             delete clog;
         }
 
+        if(gGourceLogFormat == "hg") {
+            clog = new MercurialLog(logfile);
+            if(clog->checkFormat()) return clog;
+            delete clog;
+        }
+
         if(gGourceLogFormat == "cvs") {
             clog = new CVSEXPCommitLog(logfile);
             if(clog->checkFormat()) return clog;
@@ -251,6 +258,13 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
     //git
     debugLog("trying git...\n");
     clog = new GitCommitLog(logfile);
+    if(clog->checkFormat()) return clog;
+
+    delete clog;
+
+    //mercurial
+    debugLog("trying mercurial...\n");
+    clog = new MercurialLog(logfile);
     if(clog->checkFormat()) return clog;
 
     delete clog;
@@ -1280,7 +1294,7 @@ void Gource::logic(float t, float dt) {
             if(logfile.size() == 0 || logfile == ".") {
                 SDL_Quit();
                 gource_help("");
-            } else if(display.dirExists(logfile)) {
+            } else if(SDLAppDirExists(logfile)) {
                 gource_quit("Directory not supported.");
             } else {
                 gource_quit("Unsupported log format.  You may need to regenerate your log file.");
