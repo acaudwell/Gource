@@ -1,3 +1,6 @@
+0.22:
+ * Fixed Mercurial log order.
+
 0.21b:
  * Fixed windows build.
 
