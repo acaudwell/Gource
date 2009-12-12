@@ -192,6 +192,36 @@ bool RCommitLog::isFinished() {
     return false;
 }
 
+std::string RCommitLog::createTempLog() {
+    //create temp file
+    char logfile_buff[1024];
+
+#ifdef _WIN32
+    DWORD tmplen = GetTempPath(0, "");
+
+    if(tmplen == 0) return 0;
+
+    std::vector<TCHAR> temp(tmplen+1);
+
+    tmplen = GetTempPath(static_cast<DWORD>(temp.size()), &temp[0]);
+
+    if(tmplen == 0 || tmplen >= temp.size()) return 0;
+
+    std::string temp_file_path(temp.begin(),
+                               temp.begin() + static_cast<std::size_t>(tmplen));
+
+    temp_file_path += "gource.tmp";
+
+    sprintf(logfile_buff, "%s", temp_file_path.c_str());
+#else
+    uid_t myuid = getuid();
+    sprintf(logfile_buff, "/tmp/gource-%d.tmp", myuid);
+#endif
+    temp_file = std::string(logfile_buff);
+
+    return temp_file;
+}
+
 // RCommitFile
 
 RCommitFile::RCommitFile(std::string filename, std::string action, vec3f colour) {
@@ -235,7 +265,6 @@ bool RCommit::isValid() {
 
     return true;
 }
-
 
 void RCommit::debug() {
     debugLog("files:\n");

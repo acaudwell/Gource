@@ -63,47 +63,25 @@ BaseLog* GitCommitLog::generateLog(std::string dir) {
     std::string command = getLogCommand();
 
     //create temp file
-    char cmd_buff[2048];
-    char logfile_buff[1024];
-
-#ifdef _WIN32
-    DWORD tmplen = GetTempPath(0, "");
-
-    if(tmplen == 0) return 0;
-
-    std::vector<TCHAR> temp(tmplen+1);
-
-    tmplen = GetTempPath(static_cast<DWORD>(temp.size()), &temp[0]);
-
-    if(tmplen == 0 || tmplen >= temp.size()) return 0;
-
-    std::string temp_file_path(temp.begin(),
-                               temp.begin() + static_cast<std::size_t>(tmplen));
-
-    temp_file_path += "gource.tmp";
-
-    sprintf(logfile_buff, "%s", temp_file_path.c_str());
-#else
-    uid_t myuid = getuid();
-    sprintf(logfile_buff, "/tmp/gource-%d.tmp", myuid);
-#endif
-
-    sprintf(cmd_buff, "%s > %s", command.c_str(), logfile_buff);
-    temp_file = std::string(logfile_buff);
+    createTempLog();
 
     if(chdir(dir.c_str()) != 0) {
         return 0;
     }
 
+    char cmd_buff[2048];
+    sprintf(cmd_buff, "%s > %s", command.c_str(), temp_file.c_str());
+
     int command_rc = system(cmd_buff);
 
     if(command_rc != 0) {
+        chdir(cwd_buff);
         return 0;
     }
 
     // check for new-enough Git version
     // if %aN does not appear to be supported try %an
-    std::ifstream in(logfile_buff);
+    std::ifstream in(temp_file.c_str());
     char firstBytes[9];
     in.read(firstBytes, 8);
     in.close();

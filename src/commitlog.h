@@ -74,6 +74,8 @@ protected:
 
     bool checkFirstChar(int firstChar, std::istream& stream);
 
+    std::string createTempLog();
+
     virtual bool parseCommit(RCommit& commit) { return false; };
 public:
     RCommitLog(std::string logfile, int firstChar = -1);
