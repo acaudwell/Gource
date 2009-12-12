@@ -17,7 +17,7 @@
 
 #include "custom.h"
 
-Regex custom_regex("^([0-9]+)\\|([^|]+)\\|([ADM]?)\\|([^|]+)(?:\\|#?([A-F0-9]{6}))?");
+Regex custom_regex("^([0-9]+)\\|([^|]*)\\|([ADM]?)\\|([^|]+)(?:\\|#?([A-F0-9]{6}))?");
 
 CustomLog::CustomLog(std::string logfile) : RCommitLog(logfile) {
 }
@@ -53,6 +53,10 @@ bool CustomLog::parseCommit(RCommit& commit) {
     commit.timestamp = atol(entries[0].c_str());
 
     commit.username = entries[1];
+
+    if(commit.username.size()==0) {
+        commit.username = "Unknown";
+    }
 
     std::string action = "A";
 
