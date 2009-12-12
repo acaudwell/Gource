@@ -1,0 +1,5 @@
+changeset = '{file_adds}{file_copies}{file_mods}{file_dels}'
+file_mod  = "{date|hgdate}|{author|person}|M|{file_mod}\n"
+file_add  = "{date|hgdate}|{author|person}|A|{file_add}\n"
+file_del  = "{date|hgdate}|{author|person}|D|{file_del}\n"
+file_copy = "{date|hgdate}|{author|person}|A|{name}\n"
