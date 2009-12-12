@@ -68,8 +68,8 @@ bool CustomLog::parseCommit(RCommit& commit) {
         colour = parseColour(entries[4]);
     }
 
-    debugLog("file = %s, timestamp=%d, username=%s, action=%s\n",  entries[3].c_str(), 
-        commit.timestamp, commit.username.c_str(), action.c_str());
+//    debugLog("file = %s, timestamp=%d, username=%s, action=%s\n",  entries[3].c_str(), 
+//        commit.timestamp, commit.username.c_str(), action.c_str());
 
     if(has_colour) {
         commit.addFile(entries[3], action, colour);
@@ -77,7 +77,7 @@ bool CustomLog::parseCommit(RCommit& commit) {
         commit.addFile(entries[3], action);
     }
 
-    commit.debug();
+    //commit.debug();
 
     return true;
 }
