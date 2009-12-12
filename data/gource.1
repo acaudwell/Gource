@@ -59,7 +59,10 @@ Specify format of the log being read (git,cvs,custom). Required when reading STD
 Get the git log of a branch other than the current one.
 .TP
 \fB\-\-git\-log\-command\fR
-Print the git-log command used by \fIgource\fR.
+Print the git log command used by \fIgource\fR.
+.TP
+\fB\-\-hg\-log\-command\fR
+Print the hg log command (Mercurial) used by \fIgource\fR.
 .TP
 \fB\-\-cvs\-exp\-command\fR
 Print the cvs-exp.pl log command used by \fIgource\fR.
@@ -144,19 +147,19 @@ Framerate of output (used with \-\-output\-ppm\-stream).
 .TP
 \fBpath\fR
 Either a Git directory, a pre-generated log file (see -\-git\-log\-command, -\-cvs\-exp\-command or the custom log format) or '\-' to read STDIN. If path is ommited \fIgource\fR will attempt to read a git log from the current directory.
-.SH GIT EXAMPLES
+.SH GIT AND MERCURIAL EXAMPLES
 
-View the log of the Git respository in the current path:
+View the log of the respository in the current path:
 
 .ti 10
 \fIgource\fR
 
-View the log of a Git project in the specified directory:
+View the log of a project in the specified directory:
 
 .ti 10
 \fIgource\fR my\-project\-dir
 
-Save a copy of the log using in a special git-log format and play it back. Use \-\-git-log-command to get the git-log options you should use:
+Save a copy of the log using in a special log format and play it back (example is for Git, Mercurial users see \-\-hg\-log-command):
 
 .ti 10
 cd my\-git\-project
@@ -175,12 +178,10 @@ The Gource homepage has guides and examples for using Gource with other version 
 CVS       - http://code.google.com/p/gource/wiki/CVS
 .ti 10
 SVN       - http://code.google.com/p/gource/wiki/SVN
-.ti 10
-Mercurial - http://code.google.com/p/gource/wiki/Mercurial
 
 .SH CUSTOM LOG FORMAT
 
-If you want to use Gource with something other than the supported systems, there is a pipe delimited custom log format:
+If you want to use Gource with something other than the supported systems, there is a pipe ('|') delimited custom log format:
 
 .ti 10
 timestamp - A unix timestamp of when the update occured.

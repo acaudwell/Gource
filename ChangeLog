@@ -1,6 +1,7 @@
 0.20:
  * Added bloom effect (turn off with --disable-bloom).
- * --start-position now works in combination with --disable-progress.
+ * Added support for Mercurial (thanks to Justin Love for gource.style).
+ * --start-position option now works in combination with --disable-progress.
 
 0.19:
  * Use time_t instead of long for timestamps.

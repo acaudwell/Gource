@@ -88,7 +88,10 @@ options:
             Get the git log of a branch other than the current one.
 
     --git-log-command
-            Print the git-log command used by gource.
+            Print the git log command used by gource.
+
+    --hg-log-command
+            Print the hg log (Mercurial) command used by gource.
 
     --cvs-exp-command
             Print the cvs-exp.pl log command used by gource.
@@ -174,18 +177,17 @@ options:
     path    Either a git directory, a pre-generated log file (see --git-log-command, --cvs-exp-command or the custom
             log format) or '-' to read STDIN. If path is ommited gource will attempt to read a git log from the current directory.
 
-Git Examples:
+Git and Mercurial Examples:
 
-View the log of the Git respository in the current path:
+View the log of the respository in the current path:
 
     gource
 
-View the log of a Git project in the specified directory:
+View the log of a project in the specified directory:
 
     gource my-project-dir
 
-Save a copy of the log using in a special git-log format and play it back. Use --git-log-command to get the git-log
-options you should use:
+Save a copy of the log using in a special log format and play it back (example is for Git, Mercurial users see --hg-log-command):
 
     cd my-git-project
     `gource --git-log-command` > my-git-project.log
@@ -204,7 +206,7 @@ Visit the Gource homepage for guides and examples of using Gource with other ver
 
 Custom Log Format:
 
-If you want to use Gource with something other than the supported systems, there is a pipe delimited custom log format:
+If you want to use Gource with something other than the supported systems, there is a pipe ('|') delimited custom log format:
 
     timestamp - A unix timestamp of when the update occured.
     username  - The name of the user who made the update.
