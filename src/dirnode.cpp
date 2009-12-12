@@ -26,6 +26,7 @@ float gGourceDirPadding   = 1.5;
 float gGourceElasticity   = 0.0;
 
 float gGourceBloomMultiplier = 1.0;
+float gGourceBloomIntensity  = 0.75;
 
 bool  gGourceNodeDebug    = false;
 bool  gGourceGravity      = true;
@@ -1030,21 +1031,24 @@ void RDirNode::drawBloom(Frustum& frustum, float dt) {
 
     if(isVisible() && frustum.boundsInFrustum(quadItemBounds)) {
 
-        float blur_radius = dir_radius * 2.0 * gGourceBloomMultiplier;
+        float bloom_radius = dir_radius * 2.0 * gGourceBloomMultiplier;
 
-        glColor4f(col.x, col.y, col.z, 1.0);
+        vec4f bloom_col = col * gGourceBloomIntensity;
+
+        glColor4f(bloom_col.x, bloom_col.y, bloom_col.z, 1.0);
+
         glPushMatrix();
             glTranslatef(pos.x, pos.y, 0.0);
 
             glBegin(GL_QUADS);
             glTexCoord2f(1.0, 1.0);
-                glVertex2f(blur_radius,blur_radius);
+                glVertex2f(bloom_radius,bloom_radius);
                 glTexCoord2f(1.0, 0.0);
-                glVertex2f(blur_radius,-blur_radius);
+                glVertex2f(bloom_radius,-bloom_radius);
                 glTexCoord2f(0.0, 0.0);
-                glVertex2f(-blur_radius,-blur_radius);
+                glVertex2f(-bloom_radius,-bloom_radius);
                 glTexCoord2f(0.0, 1.0);
-                glVertex2f(-blur_radius,blur_radius);
+                glVertex2f(-bloom_radius,bloom_radius);
             glEnd();
         glPopMatrix();
 

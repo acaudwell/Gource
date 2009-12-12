@@ -120,7 +120,7 @@ void gource_help(std::string error) {
         RECT windowRect;
         if(GetWindowRect(consoleWindow, &windowRect)) {
             float width = windowRect.right - windowRect.left;
-            MoveWindow(consoleWindow,windowRect.left,windowRect.top,width,900,true);
+            MoveWindow(consoleWindow,windowRect.left,windowRect.top,width,1000,true);
         }
     }
 #endif
@@ -158,13 +158,14 @@ void gource_help(std::string error) {
     printf("  --log-format FORMAT      Specify format of log (git,cvs,custom)\n");
     printf("  --git-branch             Get the git log of a particular branch\n");
     printf("  --git-log-command        Show git log command used by gource\n");
-    printf("  --hg-log-command         Show hg log (Mercurial) command used by gource\n");
-    printf("  --cvs-exp-command        Show cvs-exp.pl log command used by gource\n\n");
+    printf("  --cvs-exp-command        Show cvs-exp.pl log command used by gource\n");
+    printf("  --hg-log-command         Show hg log (Mercurial) command used by gource\n\n");
 
     printf("  --multi-sampling         Enable multi-sampling\n");
     printf("  --crop AXIS              Crop view on an axis (vertical,horizontal)\n\n");
 
-    printf("  --bloom-multiplier       Adjust the amount of bloom (default: 1.0)\n\n");
+    printf("  --bloom-multiplier       Adjust the amount of bloom (default: 1.0)\n");
+    printf("  --bloom-intensity        Adjust the intensity of the bloom (default: 0.75)\n\n");
 
     printf("  --disable-auto-skip      Disable auto skipping\n");
     printf("  --disable-progress       Disable the progress bar\n");

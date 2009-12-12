@@ -215,6 +215,20 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
+        if(args == "--bloom-intensity") {
+            if((i+1)>=arguments.size()) {
+                gource_help("specify bloom-intensity (float)");
+            }
+
+            gGourceBloomIntensity = atof(arguments[++i].c_str());
+
+            if(gGourceBloomIntensity<=0.0) {
+                gource_help("invalid bloom-intensity value");
+            }
+
+            continue;
+        }
+
         if(args == "--bloom-multiplier") {
 
             if((i+1)>=arguments.size()) {

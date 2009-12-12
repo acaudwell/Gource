@@ -126,6 +126,9 @@ options:
     --bloom-multiplier FLOAT
             Adjust the amount of bloom.
 
+    --bloom-intensity FLOAT
+            Adjust the intensity of the bloom.
+
     --disable-progress
             Disable progress bar.
 
