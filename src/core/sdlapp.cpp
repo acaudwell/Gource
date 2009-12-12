@@ -54,7 +54,7 @@ void SDLAppInit() {
 
     int pos = exepath.rfind("\\");
 
-    path = exepath.substr(0, pos+1);
+    std::string path = exepath.substr(0, pos+1);
     resource_dir = path + std::string("\\data\\");
     fonts_dir    = path + std::string("\\data\\fonts\\");
 #else
