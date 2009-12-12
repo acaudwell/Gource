@@ -25,7 +25,7 @@ std::string gGourceMercurialCommand() {
 
     std::string gource_style_path = gSDLAppResourceDir + std::string("gource.style");
 
-    return std::string("hg log --style ") + gource_style_path;
+    return std::string("hg log -r 0:tip --style ") + gource_style_path;
 }
 
 MercurialLog::MercurialLog(std::string logfile) : RCommitLog(logfile) {
