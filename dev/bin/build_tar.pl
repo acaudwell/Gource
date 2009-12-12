@@ -51,6 +51,7 @@ my @inclusions = (
     qr{^/configure(?:\.ac)?$},
     qr{^/src/.+\.(?:cpp|h)$},
     qr{^/data/.+\.(?:png|tga|ttf|1)$},
+    qr{^/data/gource.style$},
     qr{^/data/fonts/README$},
     qr{^/config\.guess$},
     qr{^/config\.sub$},
