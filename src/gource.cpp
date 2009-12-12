@@ -194,7 +194,7 @@ void gource_help(std::string error) {
     printf("  --output-ppm-stream FILE Write frames as PPM to a file ('-' for STDOUT)\n");
     printf("  --output-framerate FPS   Framerate of output (25,30,60)\n\n");
 
-    printf("PATH may either be a Git directory, a supported log file or '-' to read STDIN.\n");
+    printf("PATH may be a Git or Mercurial directory, a log file or '-' to read STDIN.\n");
     printf("If ommited, gource will attempt to generate a log from the current directory.\n\n");
 
 #ifdef _WIN32

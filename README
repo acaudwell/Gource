@@ -177,8 +177,8 @@ options:
     --output-framerate FPS
             Framerate of output (used with --output-ppm-stream).
 
-    path    Either a git directory, a pre-generated log file (see --git-log-command, --cvs-exp-command or the custom
-            log format) or '-' to read STDIN. If path is ommited gource will attempt to read a git log from the current directory.
+    path    Either a Git or Mercurial directory, a pre-generated log file (see --git-log-command, --hg-log-command or the custom
+            log format) or '-' to read STDIN. If path is ommited gource will attempt to read a log from the current directory.
 
 Git and Mercurial Examples:
 
@@ -205,7 +205,6 @@ Visit the Gource homepage for guides and examples of using Gource with other ver
 
     CVS       - http://code.google.com/p/gource/wiki/CVS
     SVN       - http://code.google.com/p/gource/wiki/SVN
-    Mercurial - http://code.google.com/p/gource/wiki/Mercurial
 
 Custom Log Format:
 

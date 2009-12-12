@@ -1,3 +1,6 @@
+0.21: 
+ * Some documentation fixes.
+
 0.20:
  * Added bloom effect (turn off with --disable-bloom).
  * Added support for Mercurial (thanks to Justin Love for gource.style).
