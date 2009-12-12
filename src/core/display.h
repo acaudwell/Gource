@@ -47,8 +47,6 @@
 class SDLAppDisplay {
     SDL_Surface *surface;
 
-    std::string path;
-
     bool enable_shaders;
     bool enable_alpha;
     bool vsync;
@@ -63,8 +61,6 @@ public:
 
     SDLAppDisplay();
     ~SDLAppDisplay();
-
-    void   displayArgs(int argc, char *argv[], int* xres, int* yres, bool* fullscreen, std::vector<std::string>* otherargs = 0);
 
     void   init(std::string window_title, int xres, int yres, bool fullscreen);
 
@@ -84,11 +80,6 @@ public:
 
     void   mode3D(float fov, float znear, float zfar);
     void   mode2D();
-
-    std::string getPath();
-
-    bool   dirExists(std::string path);
-    void   detectPath();
 
     vec4f  currentColour();
 

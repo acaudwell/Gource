@@ -33,6 +33,13 @@
 
 #include <vector>
 
+extern std::string gSDLAppResourceDir;
+extern std::string gSDLAppPathSeparator;
+
+void SDLAppInit();
+bool SDLAppDirExists(std::string dir);
+void SDLAppParseArgs(int argc, char *argv[], int* xres, int* yres, bool* fullscreen, std::vector<std::string>* otherargs = 0);
+
 class SDLApp {
     int frame_count;
     int fps_updater;
