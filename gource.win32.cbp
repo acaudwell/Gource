@@ -87,10 +87,14 @@
 		<Unit filename="src\gitraw.h" />
 		<Unit filename="src\gource.cpp" />
 		<Unit filename="src\gource.h" />
+		<Unit filename="src\hg.cpp" />
+		<Unit filename="src\hg.h" />
 		<Unit filename="src\main.cpp" />
 		<Unit filename="src\main.h" />
 		<Unit filename="src\pawn.cpp" />
 		<Unit filename="src\pawn.h" />
+		<Unit filename="src\ppm.cpp" />
+		<Unit filename="src\ppm.h" />
 		<Unit filename="src\slider.cpp" />
 		<Unit filename="src\slider.h" />
 		<Unit filename="src\spline.cpp" />
@@ -99,8 +103,6 @@
 		<Unit filename="src\user.h" />
 		<Unit filename="src\zoomcamera.cpp" />
 		<Unit filename="src\zoomcamera.h" />
-		<Unit filename="src\ppm.cpp" />
-		<Unit filename="src\ppm.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
