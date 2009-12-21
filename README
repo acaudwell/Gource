@@ -52,11 +52,17 @@ options:
             Begin at some position in the log (between 0.0 and 1.0).
 
         --stop-position  POSITION
-            Stop at some position. Use 1.0 to stop at the end of the log.
+            Stop (exit) at some position in the log (does not work with STDIN).
 
         --stop-on-idle
             Stop on break in activity. May be combined with --stop-position.
- 
+
+        --stop-at-end
+            Stop (exit) at the end of the log / stream.
+
+        --loop
+            Loop back to the start of the log when the end is reached.
+
     -a, --auto-skip-seconds SECONDS
             Automatically skip to next entry if nothing happens for a specified number of seconds.
 
@@ -74,9 +80,6 @@ options:
 
     -b, --background FFFFFF
             Background colour in hex.
-
-    --loop
-            Loop back to the start of the log when the end is reached.
 
     --date-format FORMAT
             Specify display date string (strftime format).
@@ -221,9 +224,9 @@ Recording Videos:
 You can create a video of Gource using the --output-ppm-stream option. This creates an uncompressed sequence of
 screenshots in PPM format which can then be processed by another program (such as ffmpeg) to produce a video file.
 
-The below command line will create a video at 60fps in x264 format (assumes you have ffmpeg with x264 support):
+The below command line will create a video at 60fps in x264 format, stopping at the end of the log (assumes you have ffmpeg with x264 support):
 
-    gource --output-ppm-stream - | ffmpeg -y -b 3000K -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 gource.mp4
+    gource --stop-at-end --output-ppm-stream - | ffmpeg -y -b 3000K -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 gource.mp4
 
 Interface:
 

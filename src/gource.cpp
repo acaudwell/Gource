@@ -137,7 +137,10 @@ void gource_help(std::string error) {
     printf("  -f                               Fullscreen\n\n");
     printf("  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
-    printf("      --stop-on-idle               Stop on break in activity\n\n");
+    printf("      --stop-on-idle               Stop on break in activity\n");
+    printf("      --stop-at-end                Stop at end of the log\n");
+    printf("      --loop                       Loop at the end of the log\n\n");
+
     printf("  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens\n");
     printf("                                   for a number of seconds (default: 3)\n");
     printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 4)\n");
@@ -150,11 +153,8 @@ void gource_help(std::string error) {
     printf("  --default-user-image IMAGE       Default user image file\n");
     printf("  --colour-images                  Colourize user images\n\n");
 
-    printf("  --loop                   Loop when the end of the log is reached\n\n");
-
-    printf("  --date-format FORMAT     Specify display date string (strftime format)\n\n");
-
-    printf("  --log-format FORMAT      Specify format of log (git,cvs,custom)\n");
+    printf("  --date-format FORMAT     Specify display date string (strftime format)\n");
+    printf("  --log-format  FORMAT     Specify format of log (git,cvs,custom)\n");
     printf("  --git-branch             Get the git log of a particular branch\n");
     printf("  --git-log-command        Show git log command used by gource\n");
     printf("  --cvs-exp-command        Show cvs-exp.pl log command used by gource\n");
@@ -326,6 +326,7 @@ Gource::Gource(std::string logfile) {
 
     stop_on_idle=false;
     stop_position_reached=false;
+    stop_at_end=false;
 
     paused     = false;
     first_read = true;
@@ -899,6 +900,10 @@ void Gource::setStartPosition(float percent) {
     start_position = percent;
 }
 
+void Gource::setStopAtEnd(bool stop_at_end) {
+    this->stop_at_end = stop_at_end;
+}
+
 void Gource::setStopOnIdle(bool stop_on_idle) {
     this->stop_on_idle = stop_on_idle;
 }
@@ -950,9 +955,13 @@ void Gource::readLog() {
         slider.setPercent(last_percent);
     }
 
+    bool is_finished = commitlog->isFinished();
+
     //see if we have reached the end and should exit
     //the next time all users are idle
-    if(stop_position > 0.0 && commitlog->isSeekable() && (commitlog->isFinished() || last_percent >= stop_position)) {
+    if(   stop_at_end && is_finished
+       || stop_position > 0.0 && commitlog->isSeekable() && (is_finished || last_percent >= stop_position)) {
+
         stop_position_reached = true;
 
         //if not stopping on idle exit immediately
@@ -1189,8 +1198,8 @@ void Gource::updateUsers(float t, float dt) {
     if(idle_users==users.size()) {
         idle_time += dt;
 
-        //stop_on_idle is set and stop_position_reached
-        if(stop_on_idle && (stop_position == 0.0f || stop_position_reached)) appFinished = true;
+        //if stop_on_idle is set and either no stop condition is set or the condition has been reached, exit
+        if(stop_on_idle && (stop_position == 0.0f && !stop_at_end || stop_position_reached)) appFinished = true;
 
     } else {
         idle_time = 0;

@@ -1,6 +1,7 @@
 0.23:
  * Hiding filenames no longer hides directory names.
  * Fixed --stop-on-idle option.
+ * Added --stop-at-end option (more intuitive than --stop-position 1.0).
 
 0.22:
  * Fixed Mercurial log order.
