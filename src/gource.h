@@ -18,7 +18,7 @@
 #ifndef GOURCE_H
 #define GOURCE_H
 
-#define GOURCE_VERSION "0.22"
+#define GOURCE_VERSION "0.23"
 
 #ifdef _WIN32
 #include "windows.h"
@@ -211,7 +211,6 @@ extern float gGourceAutoSkipSeconds;
 extern bool  gGourceHideUsernames;
 extern bool  gGourceDisableBloom;
 extern bool  gGourceHideDate;
-extern bool  gGourceHideFiles;
 extern bool  gGourceHideTree;
 extern bool  gGourceDisableProgress;
 extern bool  gGourceFileLoop;

@@ -898,7 +898,7 @@ void RDirNode::drawNames(FXFont& dirfont, Frustum& frustum) {
         drawDirName(dirfont);
     }
 
-    if(frustum.boundsInFrustum(quadItemBounds)) {
+    if(!(gGourceHideFilenames||gGourceHideFiles) && frustum.boundsInFrustum(quadItemBounds)) {
         for(std::list<RFile*>::iterator it = files.begin(); it!=files.end(); it++) {
             RFile* f = *it;
             f->drawName();

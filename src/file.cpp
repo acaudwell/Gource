@@ -17,8 +17,9 @@
 
 #include "file.h"
 
-float gGourceFileDiameter = 8.0;
-float gGourceMaxFileIdle  = 60.0;
+float gGourceFileDiameter  = 8.0;
+float gGourceMaxFileIdle   = 60.0;
+bool  gGourceHideFiles     = false;
 bool  gGourceHideFilenames = false;
 
 std::vector<RFile*> gGourceRemovedFiles;

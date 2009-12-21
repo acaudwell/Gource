@@ -20,7 +20,6 @@
 float gGourceAutoSkipSeconds = 3.0;
 bool  gGourceFileLoop        = false;
 bool  gGourceHideTree        = false;
-bool  gGourceHideFiles       = false;
 bool  gGourceHideUsernames   = false;
 bool  gGourceHideDate        = false;
 bool  gGourceDisableBloom    = false;
@@ -1662,9 +1661,7 @@ void Gource::draw(float t, float dt) {
     //draw bloom
     drawBloom(frustum, dt);
 
-    if(!(gGourceHideFiles || gGourceHideFilenames)) {
-        root->drawNames(font,frustum);
-    }
+    root->drawNames(font,frustum);
 
     if(!(gGourceHideUsernames || gGourceHideUsers)) {
         for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {

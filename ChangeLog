@@ -1,3 +1,6 @@
+0.23:
+ * Hiding filenames no longer hides directory names.
+
 0.22:
  * Fixed Mercurial log order.
 
