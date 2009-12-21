@@ -52,7 +52,7 @@ options:
             Begin at some position in the log (between 0.0 and 1.0).
 
         --stop-position  POSITION
-            Stop at some position.
+            Stop at some position. Use 1.0 to stop at the end of the log.
 
         --stop-on-idle
             Stop on break in activity. May be combined with --stop-position.
