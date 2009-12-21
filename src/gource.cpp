@@ -324,6 +324,9 @@ Gource::Gource(std::string logfile) {
     start_position = 0.0;
     stop_position = 0.0;
 
+    stop_on_idle=false;
+    stop_position_reached=false;
+
     paused     = false;
     first_read = true;
     draw_loading = true;
@@ -823,8 +826,6 @@ void Gource::reset() {
     }
 
     last_percent = 0.0;
-    stop_on_idle = false;
-    stop_position_reached = true;
 
     files.clear();
 
@@ -904,7 +905,6 @@ void Gource::setStopOnIdle(bool stop_on_idle) {
 
 void Gource::setStopPosition(float percent) {
     stop_position = percent;
-    stop_position_reached = false;
 }
 
 bool Gource::canSeek() {
@@ -952,7 +952,7 @@ void Gource::readLog() {
 
     //see if we have reached the end and should exit
     //the next time all users are idle
-    if(stop_position > 0.0 && (commitlog->isFinished() || last_percent >= stop_position)) {
+    if(stop_position > 0.0 && commitlog->isSeekable() && (commitlog->isFinished() || last_percent >= stop_position)) {
         stop_position_reached = true;
 
         //if not stopping on idle exit immediately
@@ -1190,7 +1190,7 @@ void Gource::updateUsers(float t, float dt) {
         idle_time += dt;
 
         //stop_on_idle is set and stop_position_reached
-        if(stop_on_idle && stop_position_reached) appFinished = true;
+        if(stop_on_idle && (stop_position == 0.0f || stop_position_reached)) appFinished = true;
 
     } else {
         idle_time = 0;
