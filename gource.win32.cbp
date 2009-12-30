@@ -24,7 +24,6 @@
 			<Add directory="C:\source\git\gource\src" />
 		</Compiler>
 		<Linker>
-			<Add option="pcre.dll" />
 			<Add option="ftgl.dll" />
 			<Add library="mingw32" />
 			<Add library="pcre" />

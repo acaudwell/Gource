@@ -55,7 +55,7 @@ dosify('THANKS',    "$WINBUILD/THANKS.txt");
 
 doit("cp dev/win32/SDL.dll $WINBUILD");
 doit("cp dev/win32/SDL_image.dll $WINBUILD");
-doit("cp dev/win32/pcre.dll $WINBUILD");
+doit("cp dev/win32/pcre3.dll $WINBUILD");
 doit("cp dev/win32/ftgl.dll $WINBUILD");
 doit("cp dev/win32/jpeg.dll $WINBUILD");
 doit("cp dev/win32/libpng12-0.dll $WINBUILD");
