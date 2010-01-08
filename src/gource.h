@@ -210,6 +210,7 @@ public:
 };
 
 extern float gGourceAutoSkipSeconds;
+extern bool  gGourceDrawBackground;
 extern bool  gGourceHideUsernames;
 extern bool  gGourceDisableBloom;
 extern bool  gGourceHideDate;

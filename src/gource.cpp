@@ -18,6 +18,7 @@
 #include "gource.h"
 
 float gGourceAutoSkipSeconds = 3.0;
+bool  gGourceDrawBackground  = false;
 bool  gGourceFileLoop        = false;
 bool  gGourceHideTree        = false;
 bool  gGourceHideUsernames   = false;
@@ -1514,6 +1515,7 @@ void Gource::mousetrace(Frustum& frustum, float dt) {
 }
 
 void Gource::loadingScreen() {
+    if(!gGourceDrawBackground) return;
     display.mode2D();
 
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -1529,6 +1531,8 @@ void Gource::loadingScreen() {
 }
 
 void Gource::drawBackground(float dt) {
+    if(!gGourceDrawBackground) return;
+
     display.setClearColour(background_colour);
     display.clear();
 }
