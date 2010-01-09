@@ -18,7 +18,7 @@
 #include "gource.h"
 
 float gGourceAutoSkipSeconds = 3.0;
-bool  gGourceDrawBackground  = false;
+bool  gGourceDrawBackground  = true;
 bool  gGourceFileLoop        = false;
 bool  gGourceHideTree        = false;
 bool  gGourceHideUsernames   = false;
