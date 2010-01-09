@@ -27,12 +27,12 @@
 class FrameExporter {
 protected:
     SDL_Surface *surface;
-    char *pixels;
+    char *surfacepixels, *pixels;
+
     size_t rowstride;
 public:
     FrameExporter();
-    virtual ~FrameExporter() {};
-    virtual void initialize() {};
+    virtual ~FrameExporter();
     void dump();
     virtual void dumpImpl() {};
 };
@@ -41,6 +41,7 @@ class PPMExporter : public FrameExporter {
 protected:
     std::ostream* output;
     std::string filename;
+    char ppmheader[1024];
 public:
 	PPMExporter(std::string outputfile);
 	virtual ~PPMExporter();

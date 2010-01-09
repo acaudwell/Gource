@@ -590,17 +590,17 @@ int main(int argc, char *argv[]) {
         display.multiSample(4);
     }
 
+    //enable vsync
+    display.enableVsync(true);
+
+    display.init("Gource", width, height, fullscreen);
+
     //init frame exporter
     FrameExporter* exporter = 0;
 
     if(ppm_file_name.size() > 0) {
         exporter = new PPMExporter(ppm_file_name);
     }
-
-    //enable vsync
-    display.enableVsync(true);
-
-    display.init("Gource", width, height, fullscreen);
 
     if(multisample) glEnable(GL_MULTISAMPLE_ARB);
 
