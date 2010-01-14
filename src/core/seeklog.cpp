@@ -44,6 +44,9 @@ StreamLog::StreamLog() {
 #endif
 }
 
+StreamLog::~StreamLog() {
+}
+
 StreamLog::StreamLog(std::istream* stream) {
     this->stream = stream;
 }
@@ -115,6 +118,8 @@ bool SeekLog::readFully() {
     file.close();
 
     buffstream = new std::istringstream(std::string(filebuffer));
+
+    delete[] filebuffer;
 
     return true;
 }

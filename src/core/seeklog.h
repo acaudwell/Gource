@@ -38,6 +38,7 @@
 
 class BaseLog {
 public:
+    virtual ~BaseLog() {};
     virtual bool getNextLine(std::string& line) {};
     virtual bool isFinished() {};
 };
