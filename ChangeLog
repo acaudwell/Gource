@@ -1,3 +1,6 @@
+0.24:
+ * Added proper exception handling.
+
 0.23:
  * Hiding filenames no longer hides directory names.
  * Fixed --stop-on-idle option.

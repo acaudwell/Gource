@@ -946,7 +946,7 @@ void Gource::readLog() {
     }
 
     if(first_read && commitqueue.size()==0) {
-        gource_quit("No commits found");
+        throw GourceException("No commits found");
     }
 
     first_read = false;
@@ -1303,11 +1303,11 @@ void Gource::logic(float t, float dt) {
             //if not in a git dir and no log file, show help
             if(logfile.size() == 0 || logfile == ".") {
                 SDL_Quit();
-                gource_help("");
+                throw GourceException("", true);
             } else if(SDLAppDirExists(logfile)) {
-                gource_quit("Directory not supported.");
+                throw GourceException("Directory not supported");
             } else {
-                gource_quit("Unsupported log format.  You may need to regenerate your log file.");
+                throw GourceException("Unsupported log format.  You may need to regenerate your log file");
             }
         }
 

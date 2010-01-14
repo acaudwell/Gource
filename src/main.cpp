@@ -604,33 +604,53 @@ int main(int argc, char *argv[]) {
 
     if(multisample) glEnable(GL_MULTISAMPLE_ARB);
 
-    Gource* gource = new Gource(logfile);
+    Gource* gource = 0;
 
-    if(start_position>0.0) gource->setStartPosition(start_position);
-    if(stop_position>0.0)  gource->setStopPosition(stop_position);
+    try {
+        gource = new Gource(logfile);
 
-    gource->setStopAtEnd(stop_at_end);
-    gource->setStopOnIdle(stop_on_idle);
+        if(start_position>0.0) gource->setStartPosition(start_position);
+        if(stop_position>0.0)  gource->setStopPosition(stop_position);
 
-    if(exporter!=0) gource->setFrameExporter(exporter, video_framerate);
+        gource->setStopAtEnd(stop_at_end);
+        gource->setStopOnIdle(stop_on_idle);
 
-    gource->setBackground(background);
+        if(exporter!=0) gource->setFrameExporter(exporter, video_framerate);
 
-    for(std::vector<std::string>::iterator it = follow_users.begin(); it != follow_users.end(); it++) {
-        gource->addFollowUser(*it);
+        gource->setBackground(background);
+
+        for(std::vector<std::string>::iterator it = follow_users.begin(); it != follow_users.end(); it++) {
+            gource->addFollowUser(*it);
+        }
+
+        for(std::vector<std::string>::iterator it = highlight_users.begin(); it != highlight_users.end(); it++) {
+            gource->addHighlightUser(*it);
+        }
+
+        for(std::vector<Regex*>::iterator it = filters.begin(); it != filters.end(); it++) {
+            gource->addFilter(*it);
+        }
+
+        gource->run();
+
+    } catch(ResourceException& exception) {
+
+        char errormsg[1024];
+        snprintf(errormsg, 1024, "Failed to load resource '%s'", exception.what());
+
+        gource_quit(errormsg);
+
+    } catch(GourceException& exception) {
+
+        if(exception.showHelp()) {
+            gource_help(exception.what());
+        } else {
+            gource_quit(exception.what());
+        }
+
     }
 
-    for(std::vector<std::string>::iterator it = highlight_users.begin(); it != highlight_users.end(); it++) {
-        gource->addHighlightUser(*it);
-    }
-
-    for(std::vector<Regex*>::iterator it = filters.begin(); it != filters.end(); it++) {
-        gource->addFilter(*it);
-    }
-
-    gource->run();
-
-    delete gource;
+    if(gource!=0) delete gource;
 
     if(exporter != 0) delete exporter;
 

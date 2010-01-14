@@ -40,7 +40,9 @@ TextureResource* TextureManager::grab(std::string name, int mipmaps, int clamp, 
 
     if(r==0) {
         //debugLog("%s not found. creating resource...\n", name.c_str());
+
         r = new TextureResource(name, mipmaps, clamp, trilinear, external_file);
+
         resources[name] = r;
     }
     r->addref();
@@ -60,10 +62,7 @@ TextureResource::TextureResource(std::string file, int mipmaps, int clamp, int t
 
     SDL_Surface *surface = IMG_Load(file.c_str());
 
-    if(surface==0) {
-        printf("failed to load image %s\n", file.c_str());
-        exit(1);
-    }
+    if(surface==0) throw TextureException(file);
 
     w = surface->w;
     h = surface->h;
@@ -71,10 +70,7 @@ TextureResource::TextureResource(std::string file, int mipmaps, int clamp, int t
     //figure out image colour order
     int format = colourFormat(surface);
 
-    if(format==0) {
-        printf("image %s has unsupported colour format\n", file.c_str());
-        exit(1);
-    }
+    if(format==0) throw TextureException(file);
 
     textureid = display.createTexture(w, h, mipmaps, clamp, trilinear, format, (unsigned int*) surface->pixels);
 }

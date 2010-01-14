@@ -33,6 +33,11 @@
 #include "resource.h"
 #include "display.h"
 
+class TextureException : public ResourceException {
+public:
+    TextureException(std::string& texture_file) : ResourceException(texture_file) {}
+};
+
 class TextureResource : public Resource {
     int colourFormat(SDL_Surface* surface);
     void loadTexture(std::string file, int mipmaps, int clamp, int trilinear, bool external_file);

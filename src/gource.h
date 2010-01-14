@@ -26,6 +26,7 @@
 
 #include <deque>
 #include <dirent.h>
+#include <stdexcept>
 
 #include "core/display.h"
 #include "core/sdlapp.h"
@@ -54,6 +55,20 @@
 void createWindowsConsole();
 void gource_info(std::string msg);
 void gource_help(std::string error);
+void gource_quit(std::string error);
+
+class GourceException : public std::exception {
+protected:
+    std::string message;
+    bool showhelp;
+public:
+    GourceException(std::string message, bool showhelp = false) : showhelp(showhelp), message(message) {}
+    ~GourceException() throw () {};
+
+    bool showHelp() { return showhelp; }
+
+    virtual const char* what() const throw() { return message.c_str(); }
+};
 
 class Gource : public SDLApp {
     std::string logfile;
