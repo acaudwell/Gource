@@ -6,30 +6,13 @@ AC_PREREQ(2.61)
 AC_INIT(Gource, 0.23, [acaudwell@gmail.com])
 AC_CONFIG_SRCDIR([src/main.h])
 
+AM_INIT_AUTOMAKE([dist-bzip2 foreign subdir-objects])
+
 AC_CANONICAL_HOST
 
 # Checks for programs.
 AC_PROG_CXX
-AC_PROG_CC
-
-# Checks for header files.
-AC_HEADER_DIRENT
-AC_HEADER_STDC
-AC_CHECK_HEADERS([fcntl.h stdlib.h])
-
-# Checks for typedefs, structures, and compiler characteristics.
-AC_HEADER_STDBOOL
-AC_C_CONST
-AC_TYPE_SIZE_T
-AC_STRUCT_TM
-
-#check functions
-AC_FUNC_CLOSEDIR_VOID
-AC_FUNC_MKTIME
-AC_FUNC_STAT
-AC_FUNC_STRFTIME
-AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([atexit getcwd memset sqrt strchr])
+AC_LANG(C++)
 
 #Disable X11 on Macs unless required
 AS_IF([test "$with_x" != yes], [
@@ -42,7 +25,7 @@ AS_IF([test "$with_x" != yes], [
 
 #GL
 AX_CHECK_GLU
-CFLAGS="$CFLAGS $GLU_CFLAGS"
+CXXFLAGS="$CXXFLAGS $GLU_CFLAGS"
 CPPFLAGS="$CPPFLAGS $GLU_CFLAGS"
 LIBS="$LIBS $GLU_LIBS"
 
@@ -52,18 +35,18 @@ AM_PATH_SDL($SDL_VERSION,
             :,
             AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
 )
-CFLAGS="$CFLAGS $SDL_CFLAGS"
+CXXFLAGS="$CXXFLAGS $SDL_CFLAGS"
 CPPFLAGS="$CPPFLAGS $SDL_CFLAGS"
 LIBS="$LIBS $SDL_LIBS"
 
 #Freetype2
 AC_CHECK_FT2([9.0.3],[],[AC_MSG_ERROR([FreeType2 is required by FTGL. Please see README])])
-CFLAGS="$CFLAGS $FT2_CFLAGS"
+CXXFLAGS="$CXXFLAGS $FT2_CFLAGS"
 CPPFLAGS="$CPPFLAGS $FT2_CFLAGS"
 
 #FTGL
 PKG_CHECK_MODULES(FTGL, ftgl >= 2.1.3, [], AC_MSG_ERROR(ftgl 2.1.3 or greater is required. Please see README))
-CFLAGS="$CFLAGS $FTGL_CFLAGS"
+CXXFLAGS="$CXXFLAGS $FTGL_CFLAGS"
 CPPFLAGS="$CPPFLAGS $FTGL_CFLAGS"
 LIBS="$LIBS $FTGL_LIBS"
 
@@ -87,9 +70,8 @@ AC_CHECK_HEADER([pcre.h],, AC_MSG_ERROR(pcre.h is required. Please see README))
 
 #see if ttf-font-dir option is enabled
 AC_ARG_ENABLE(ttf-font-dir,[AS_HELP_STRING([--enable-ttf-font-dir=DIR],[directory containing FreeSans.ttf])],[gourcefontdir="$enableval"],[gourcefontdir=""])
+AM_CONDITIONAL([FONTDIR], [test "x$gourcefontdir" != "x"])
 AC_SUBST(gourcefontdir)
 
-AC_CONFIG_FILES([Makefile
-                 src/Makefile
-                 src/core/Makefile])
+AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
