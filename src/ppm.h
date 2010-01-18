@@ -21,6 +21,7 @@
 #include <iostream>
 #include <fstream>
 #include <ostream>
+#include <pthread.h>
 
 #include "core/display.h"
 
@@ -42,10 +43,15 @@ protected:
     std::ostream* output;
     std::string filename;
     char ppmheader[1024];
+    pthread_mutex_t mutex;
+    pthread_cond_t cond;
+    pthread_t tid;
+    int state;
 public:
 	PPMExporter(std::string outputfile);
 	virtual ~PPMExporter();
 	virtual void dumpImpl();
+    void dumpThr();
 };
 
 
