@@ -21,20 +21,31 @@
 #include <iostream>
 #include <fstream>
 #include <ostream>
-#include <pthread.h>
+
+#include "SDL_thread.h"
 
 #include "core/display.h"
+
+enum { FRAME_EXPORTER_WAIT,
+       FRAME_EXPORTER_DUMP,
+       FRAME_EXPORTER_EXIT };
 
 class FrameExporter {
 protected:
     SDL_Surface *surface;
     char *surfacepixels, *pixels;
-
     size_t rowstride;
+
+    SDL_Thread* thread;
+    SDL_mutex* mutex;
+    SDL_cond* cond;
+    int dumper_thread_state;
+
 public:
     FrameExporter();
     virtual ~FrameExporter();
     void dump();
+    void dumpThr();
     virtual void dumpImpl() {};
 };
 
@@ -43,15 +54,11 @@ protected:
     std::ostream* output;
     std::string filename;
     char ppmheader[1024];
-    pthread_mutex_t mutex;
-    pthread_cond_t cond;
-    pthread_t tid;
-    int state;
+
 public:
 	PPMExporter(std::string outputfile);
 	virtual ~PPMExporter();
 	virtual void dumpImpl();
-    void dumpThr();
 };
 
 
