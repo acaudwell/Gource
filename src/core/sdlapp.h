@@ -33,11 +33,14 @@
 
 #include <vector>
 
+extern std::string gSDLAppConfDir;
 extern std::string gSDLAppResourceDir;
 extern std::string gSDLAppPathSeparator;
 
 void SDLAppInit();
 bool SDLAppDirExists(std::string dir);
+std::string SDLAppAddSlash(std::string path);
+
 void SDLAppParseArgs(int argc, char *argv[], int* xres, int* yres, bool* fullscreen, std::vector<std::string>* otherargs = 0);
 
 class SDLApp {

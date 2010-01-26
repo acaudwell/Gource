@@ -50,7 +50,7 @@ dist_man_MANS = data/gource.1
 dist_pkgdata_DATA = data/beam.png data/bloom.tga data/file.png data/no_photo.png data/gource.style
 
 if FONTDIR
-CPPFLAGS += -DSDLAPP_FONT_DIR=\"$(gourcefontdir)/\"
+CPPFLAGS += -DSDLAPP_FONT_DIR=\"$(gourcefontdir)\"
 else
 fontsdir = $(pkgdatadir)/fonts
 dist_fonts_DATA = data/fonts/README data/fonts/FreeSans.ttf
