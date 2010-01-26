@@ -57,4 +57,4 @@ dist_fonts_DATA = data/fonts/README data/fonts/FreeSans.ttf
 endif
 
 contribdir = $(docdir)/contrib
-dist_contrib_DATA = contrib
+dist_contrib_DATA = contrib/svn-gource.py

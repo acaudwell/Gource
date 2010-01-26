@@ -22,7 +22,6 @@ sub gource_version {
 my $VERSION = gource_version();
 
 my @exclusions = (
-    qr{^/contrib/},
     qr{^/config.status$},
     qr{^/config.log$},
     qr{^/debian/},
@@ -39,12 +38,14 @@ my @exclusions = (
 );
 
 my @inclusions = (
+    qr{^/contrib/svn-gource.py$},
     qr{^/gource\.win32\.cbp$},
     qr{^/ChangeLog$},
     qr{^/THANKS$},
     qr{^/COPYING$},
     qr{^/INSTALL$},
     qr{^/README$},
+    qr{/Makefile\.am$},
     qr{/Makefile\.in$},
     qr{^/aclocal\.m4$},
     qr{^/m4/.+\.m4$},
@@ -56,6 +57,8 @@ my @inclusions = (
     qr{^/config\.guess$},
     qr{^/config\.sub$},
     qr{^/install-sh$},
+    qr{^/missing$},
+    qr{^/depcomp$},
 );
 
 my $tmp_path = "/var/tmp/gource-$VERSION";
@@ -75,6 +78,18 @@ unless(`cat configure.ac` =~ /AC_INIT\(Gource, $VERSION,/) {
 #check ChangeLog has been updated
 unless(`cat ChangeLog` =~ /^$VERSION:/) {
     die("ChangeLog does not mention current version number\n");
+}
+
+#if Makefile exists, do distclean
+if(-e 'Makefile') {
+    if(system("make distclean") != 0) {
+        die("make distclean failed: $!\n");
+    }
+}
+
+#reconfigure
+if(system("autoreconf -f -i -v") != 0) {
+    die("autoreconf failed: $!\n");
 }
 
 foreach my $file (@files) {
