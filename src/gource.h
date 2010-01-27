@@ -53,8 +53,9 @@
 #include "ppm.h"
 
 void createWindowsConsole();
+
+void gource_help();
 void gource_info(std::string msg);
-void gource_help(std::string error);
 void gource_quit(std::string error);
 
 class GourceException : public std::exception {

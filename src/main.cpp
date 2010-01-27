@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
         std::string args = arguments[i];
 
         if(args == "-h" || args == "-?" || args == "--help") {
-            gource_help("");
+            gource_help();
         }
 
         if(args == "--loop") {
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
         if(args == "--git-branch") {
 
             if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {
-                gource_help("specify a git branch");
+                gource_quit("specify a git branch");
             }
 
             gGourceGitLogCommand += " ";
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
         if(args == "--date-format") {
 
             if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {
-                gource_help("specify a date format string");
+                gource_quit("specify a date format string");
             }
 
             gGourceDateFormat = arguments[++i];
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
 
         if(args == "--crop") {
             if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {
-                gource_help("specify crop (vertical,horizontal)");
+                gource_quit("specify crop (vertical,horizontal)");
             }
 
             std::string crop = arguments[++i];
@@ -165,7 +165,7 @@ int main(int argc, char *argv[]) {
             } else if (crop == "horizontal") {
                 gGourceHorizontalCrop = true;
             } else {
-                gource_help("invalid crop value");
+                gource_quit("invalid crop value");
             }
 
             continue;
@@ -173,7 +173,7 @@ int main(int argc, char *argv[]) {
 
         if(args == "--log-format") {
             if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {
-                gource_help("specify log-format (format)");
+                gource_quit("specify log-format (format)");
             }
 
             gGourceLogFormat = arguments[++i];
@@ -182,7 +182,7 @@ int main(int argc, char *argv[]) {
                && gGourceLogFormat != "cvs"
                && gGourceLogFormat != "custom"
                && gGourceLogFormat != "apache") {
-                gource_help("unknown log-format");
+                gource_quit("unknown log-format");
             }
 
             continue;
@@ -192,7 +192,7 @@ int main(int argc, char *argv[]) {
         if(args == "--default-user-image") {
 
             if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {
-                gource_help("specify default-user-image (image path)");
+                gource_quit("specify default-user-image (image path)");
             }
 
             gGourceDefaultUserImage = arguments[++i];
@@ -203,7 +203,7 @@ int main(int argc, char *argv[]) {
         if(args == "--user-image-dir") {
 
             if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {
-                gource_help("specify user-image-dir (directory)");
+                gource_quit("specify user-image-dir (directory)");
             }
 
             gGourceUserImageDir = arguments[++i];
@@ -218,13 +218,13 @@ int main(int argc, char *argv[]) {
 
         if(args == "--bloom-intensity") {
             if((i+1)>=arguments.size()) {
-                gource_help("specify bloom-intensity (float)");
+                gource_quit("specify bloom-intensity (float)");
             }
 
             gGourceBloomIntensity = atof(arguments[++i].c_str());
 
             if(gGourceBloomIntensity<=0.0) {
-                gource_help("invalid bloom-intensity value");
+                gource_quit("invalid bloom-intensity value");
             }
 
             continue;
@@ -233,13 +233,13 @@ int main(int argc, char *argv[]) {
         if(args == "--bloom-multiplier") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify bloom-multiplier (float)");
+                gource_quit("specify bloom-multiplier (float)");
             }
 
             gGourceBloomMultiplier = atof(arguments[++i].c_str());
 
             if(gGourceBloomMultiplier<=0.0) {
-                gource_help("invalid bloom-multiplier value");
+                gource_quit("invalid bloom-multiplier value");
             }
 
             continue;
@@ -248,13 +248,13 @@ int main(int argc, char *argv[]) {
         if(args == "-e" || args == "--elasticity") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify elasticity (float)");
+                gource_quit("specify elasticity (float)");
             }
 
             gGourceElasticity = atof(arguments[++i].c_str());
 
             if(gGourceElasticity<=0.0) {
-                gource_help("invalid elasticity value");
+                gource_quit("invalid elasticity value");
             }
 
             continue;
@@ -263,7 +263,7 @@ int main(int argc, char *argv[]) {
         if(args == "-b" || args == "--background") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify background colour (#FFFFFF)");
+                gource_quit("specify background colour (#FFFFFF)");
             }
 
             int r,g,b;
@@ -273,7 +273,7 @@ int main(int argc, char *argv[]) {
                 background = vec3f(r,g,b);
                 background /= 255.0f;
             } else {
-                gource_help("invalid colour string");
+                gource_quit("invalid colour string");
             }
 
             continue;
@@ -282,13 +282,13 @@ int main(int argc, char *argv[]) {
         if(args == "-s" || args == "--seconds-per-day") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify seconds-per-day (seconds)");
+                gource_quit("specify seconds-per-day (seconds)");
             }
 
             gGourceDaysPerSecond = atof(arguments[++i].c_str());
 
             if(gGourceDaysPerSecond<=0.0) {
-                gource_help("invalid seconds-per-day value");
+                gource_quit("invalid seconds-per-day value");
             }
 
             gGourceDaysPerSecond = 1.0 / gGourceDaysPerSecond;
@@ -305,13 +305,13 @@ int main(int argc, char *argv[]) {
         if(args == "-a" || args == "--auto-skip-seconds") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify auto-skip-seconds");
+                gource_quit("specify auto-skip-seconds");
             }
 
             gGourceAutoSkipSeconds = (float) atof(arguments[++i].c_str());
 
             if(gGourceAutoSkipSeconds <= 0.0) {
-                gource_help("invalid auto-skip-seconds value");
+                gource_quit("invalid auto-skip-seconds value");
             }
 
             continue;
@@ -320,13 +320,13 @@ int main(int argc, char *argv[]) {
         if(args == "-i" || args == "--file-idle-time") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify file-idle-time (seconds)");
+                gource_quit("specify file-idle-time (seconds)");
             }
 
             gGourceMaxFileIdle = (float) atoi(arguments[++i].c_str());
 
             if(gGourceMaxFileIdle<1.0) {
-                gource_help("invalid file-idle-time value");
+                gource_quit("invalid file-idle-time value");
             }
 
             continue;
@@ -335,13 +335,13 @@ int main(int argc, char *argv[]) {
         if(args == "-p" || args == "--start-position") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify start-position (float)");
+                gource_quit("specify start-position (float)");
             }
 
             start_position = atof(arguments[++i].c_str());
 
             if(start_position<=0.0 || start_position>=1.0) {
-                gource_help("start-position outside of range 0.0 - 1.0 (non-inclusive)");
+                gource_quit("start-position outside of range 0.0 - 1.0 (non-inclusive)");
             }
 
             continue;
@@ -350,13 +350,13 @@ int main(int argc, char *argv[]) {
         if(args == "--stop-position") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify stop-position (float)");
+                gource_quit("specify stop-position (float)");
             }
 
             stop_position = atof(arguments[++i].c_str());
 
             if(stop_position<=0.0 || stop_position>1.0) {
-                gource_help("stop-position outside of range 0.0 - 1.0 (inclusive)");
+                gource_quit("stop-position outside of range 0.0 - 1.0 (inclusive)");
             }
 
             continue;
@@ -379,13 +379,13 @@ int main(int argc, char *argv[]) {
         if(args == "--max-files") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify max-files (number)");
+                gource_quit("specify max-files (number)");
             }
 
             gGourceMaxFiles = atoi(arguments[++i].c_str());
 
             if(gGourceMaxFiles<1) {
-                gource_help("invalid max-files value");
+                gource_quit("invalid max-files value");
             }
 
             continue;
@@ -394,13 +394,13 @@ int main(int argc, char *argv[]) {
         if(args == "--max-file-lag") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify max-file-lag (seconds)");
+                gource_quit("specify max-file-lag (seconds)");
             }
 
             gGourceMaxFileLagSeconds = atof(arguments[++i].c_str());
 
             if(gGourceMaxFileLagSeconds==0.0) {
-                gource_help("invalid max-file-lag value");
+                gource_quit("invalid max-file-lag value");
             }
 
             continue;
@@ -409,13 +409,13 @@ int main(int argc, char *argv[]) {
         if(args == "--user-friction") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify user-friction (seconds)");
+                gource_quit("specify user-friction (seconds)");
             }
 
             gGourceUserFriction = atof(arguments[++i].c_str());
 
             if(gGourceUserFriction<=0.0) {
-                gource_help("invalid user-friction value");
+                gource_quit("invalid user-friction value");
             }
 
             gGourceUserFriction = 1.0 / gGourceUserFriction;
@@ -426,13 +426,13 @@ int main(int argc, char *argv[]) {
         if(args == "--user-scale") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify user-scale (scale)");
+                gource_quit("specify user-scale (scale)");
             }
 
             gGourceUserScale = atof(arguments[++i].c_str());
 
             if(gGourceUserScale<=0.0 || gGourceUserScale>100.0) {
-                gource_help("invalid user-scale value");
+                gource_quit("invalid user-scale value");
             }
 
             continue;
@@ -442,13 +442,13 @@ int main(int argc, char *argv[]) {
         if(args == "--max-user-speed") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify max-user-speed (units)");
+                gource_quit("specify max-user-speed (units)");
             }
 
             gGourceMaxUserSpeed = atof(arguments[++i].c_str());
 
             if(gGourceMaxUserSpeed<=0) {
-                gource_help("invalid max-user-speed value");
+                gource_quit("invalid max-user-speed value");
             }
 
             continue;
@@ -464,7 +464,7 @@ int main(int argc, char *argv[]) {
         if(args == "--highlight-user") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify highlight-user (user)");
+                gource_quit("specify highlight-user (user)");
             }
 
             highlight_users.push_back(arguments[++i]);
@@ -475,7 +475,7 @@ int main(int argc, char *argv[]) {
         if(args == "--follow-user") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify follow-user (user)");
+                gource_quit("specify follow-user (user)");
             }
 
             follow_users.push_back(arguments[++i]);
@@ -486,7 +486,7 @@ int main(int argc, char *argv[]) {
         if(args == "--file-filter") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify file-filter (regex)");
+                gource_quit("specify file-filter (regex)");
             }
 
             std::string filter_string = arguments[++i];
@@ -495,7 +495,7 @@ int main(int argc, char *argv[]) {
 
             if(!r->isValid()) {
                 delete r;
-                gource_help("invalid filt-filter regular expression");
+                gource_quit("invalid filt-filter regular expression");
             }
 
             filters.push_back(r);
@@ -506,14 +506,14 @@ int main(int argc, char *argv[]) {
         if(args == "--output-ppm-stream") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify ppm output file or '-' for stdout");
+                gource_quit("specify ppm output file or '-' for stdout");
             }
 
             ppm_file_name = arguments[++i];
 
 #ifdef _WIN32
             if(ppm_file_name == "-") {
-                gource_help("stdout PPM mode not supported on Windows");
+                gource_quit("stdout PPM mode not supported on Windows");
             }
 #endif
 
@@ -523,7 +523,7 @@ int main(int argc, char *argv[]) {
         if(args == "--output-framerate") {
 
             if((i+1)>=arguments.size()) {
-                gource_help("specify framerate (25,30,60)");
+                gource_quit("specify framerate (25,30,60)");
             }
 
             video_framerate = atoi(arguments[++i].c_str());
@@ -531,7 +531,7 @@ int main(int argc, char *argv[]) {
             if(   video_framerate != 25
                && video_framerate != 30
                && video_framerate != 60) {
-                gource_help("supported framerates are 25,30,60");
+                gource_quit("supported framerates are 25,30,60");
             }
 
             continue;
@@ -546,14 +546,14 @@ int main(int argc, char *argv[]) {
         // unknown argument
         std::string arg_error = std::string("unknown option ") + std::string(args);
 
-        gource_help(arg_error);
+        gource_quit(arg_error);
     }
 
     // wait for a character on the file handle if reading stdin
     if(logfile == "-") {
 
         if(gGourceLogFormat.size() == 0) {
-            gource_help("--log-format required when reading from STDIN");
+            gource_quit("--log-format required when reading from STDIN");
         }
 
         while(std::cin.peek() == EOF && !std::cin.fail()) SDL_Delay(100);
@@ -643,7 +643,7 @@ int main(int argc, char *argv[]) {
     } catch(GourceException& exception) {
 
         if(exception.showHelp()) {
-            gource_help(exception.what());
+            gource_help();
         } else {
             gource_quit(exception.what());
         }

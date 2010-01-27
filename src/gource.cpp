@@ -99,18 +99,19 @@ void gource_quit(std::string error) {
     createWindowsConsole();
 #endif
 
-    printf("Error: %s\n\n", error.c_str());
+    fprintf(stderr, "gource: %s\n", error.c_str());
+    fprintf(stderr, "Try 'gource --help' for more information.\n\n");
 
 #ifdef _WIN32
-    printf("Press Enter\n");
+    fprintf(stderr, "Press Enter\n");
     getchar();
 #endif
 
     exit(1);
 }
 
-//display help message + error (optional)
-void gource_help(std::string error) {
+//display help message
+void gource_help() {
 
 #ifdef _WIN32
     createWindowsConsole();
@@ -126,10 +127,6 @@ void gource_help(std::string error) {
 #endif
 
     printf("Gource v%s\n", GOURCE_VERSION);
-
-    if(error.size()) {
-        printf("Error: %s\n\n", error.c_str());
-    }
 
     printf("Usage: gource [OPTIONS] [PATH]\n");
     printf("\nOptions:\n");
@@ -202,12 +199,7 @@ void gource_help(std::string error) {
     getchar();
 #endif
 
-    //check if we should use an error code
-    if(error.size()) {
-        exit(1);
-    } else {
-        exit(0);
-    }
+    exit(0);
 }
 
 RCommitLog* Gource::determineFormat(std::string logfile) {
