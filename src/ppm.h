@@ -36,6 +36,8 @@ protected:
     char *surfacepixels, *pixels;
     size_t rowstride;
 
+    GLuint screentex;
+
     SDL_Thread* thread;
     SDL_mutex* mutex;
     SDL_cond* cond;

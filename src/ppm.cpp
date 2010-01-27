@@ -41,6 +41,8 @@ FrameExporter::FrameExporter()
     surfacepixels = new char[(surface->h) * rowstride];
     pixels        = new char[(surface->h) * rowstride];
 
+    screentex = display.emptyTexture(display.width, display.height);
+
     cond   = SDL_CreateCond();
     mutex  = SDL_CreateMutex();
     thread = SDL_CreateThread( dumper_thread, this );
@@ -68,7 +70,35 @@ FrameExporter::~FrameExporter() {
 
 void FrameExporter::dump() {
 
+    //render view to texture
+    display.renderToTexture(screentex, display.width, display.height, GL_RGBA);
+
+    //draw view texture flipped
+
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f,0.0f);
+        glVertex2f(0, 0);
+
+        glTexCoord2f(1.0f,0.0f);
+        glVertex2i(display.width, 0);
+
+        glTexCoord2f(1.0f,1.0f);
+        glVertex2i(display.width, display.height);
+
+        glTexCoord2f(0.0f,1.0f);
+        glVertex2i(0, display.height);
+    glEnd();
+
+    // wait for lock
+
     SDL_mutexP(mutex);
+
+    display.mode2D();
+
+    glEnable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
+
+    // draw pixels (already flipped so we dont have to invert them)
 
     glReadPixels(0, 0, surface->w, surface->h,
         GL_RGB, GL_UNSIGNED_BYTE, surfacepixels);
@@ -77,6 +107,23 @@ void FrameExporter::dump() {
 
     SDL_CondSignal(cond);
     SDL_mutexV(mutex);
+
+    // redraw view the right way up
+
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f,1.0f);
+        glVertex2f(0, 0);
+
+        glTexCoord2f(1.0f,1.0f);
+        glVertex2i(display.width, 0);
+
+        glTexCoord2f(1.0f,0.0f);
+        glVertex2i(display.width, display.height);
+
+        glTexCoord2f(0.0f,0.0f);
+        glVertex2i(0, display.height);
+    glEnd();
+
 }
 
 void FrameExporter::dumpThr() {
@@ -84,17 +131,17 @@ void FrameExporter::dumpThr() {
     SDL_mutexP(mutex);
 
     for (;;) {
-    	while (dumper_thread_state == FRAME_EXPORTER_WAIT)
+        while (dumper_thread_state == FRAME_EXPORTER_WAIT)
             SDL_CondWait(cond, mutex);
 
         if (dumper_thread_state == FRAME_EXPORTER_EXIT) break;
 
         //invert
-        for(int y=0;y<surface->h;y++) {
-            for(int x=0;x<rowstride;x++) {
-                pixels[x + y * rowstride] = surfacepixels[x + (surface->h - y - 1) *rowstride];
-            }
-        }
+//         for(int y=0;y<surface->h;y++) {
+//             for(int x=0;x<rowstride;x++) {
+//                 pixels[x + y * rowstride] = surfacepixels[x + (surface->h - y - 1) *rowstride];
+//             }
+//         }
 
         dumpImpl();
 
