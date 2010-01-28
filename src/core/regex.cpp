@@ -41,7 +41,6 @@ Regex::Regex(std::string regex, bool test) {
         valid = false;
 
         if(!test) {
-            delete re;
             throw RegexCompilationException(regex);
         }
 
