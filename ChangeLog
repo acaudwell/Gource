@@ -1,5 +1,6 @@
 0.24:
  * Now using standard autotools (Flameeyes).
+ * PPM output performance improvements, including using a second thread (HighlandSun).
  * Added proper exception handling.
  * Print errors to stderr.
 
