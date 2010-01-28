@@ -35,7 +35,6 @@ FrameExporter::FrameExporter() {
     //before the frame exporter is created
     //(which seems reasonable)
 
-<<<<<<< HEAD:src/ppm.cpp
     rowstride     = display.width * 3;
 
     pixels1 = new char[display.height * rowstride];
@@ -44,11 +43,6 @@ FrameExporter::FrameExporter() {
     pixels_shared_ptr = 0;
 
     screentex = display.emptyTexture(display.width, display.height, GL_RGBA);
-=======
-    rowstride     = surface->w * 3;
-    surfacepixels = new char[(surface->h) * rowstride];
-    pixels        = new char[(surface->h) * rowstride];
->>>>>>> 2db8ad70799d3cd3d2ca1a7176eb78478da9081c:src/ppm.cpp
 
     cond   = SDL_CreateCond();
     mutex  = SDL_CreateMutex();
@@ -71,17 +65,12 @@ FrameExporter::~FrameExporter() {
     SDL_DestroyCond(cond);
     SDL_DestroyMutex(mutex);
 
-<<<<<<< HEAD:src/ppm.cpp
     if(screentex!=0) glDeleteTextures(1, &screentex);
 
     pixels_shared_ptr = 0;
 
     delete[] pixels1;
     delete[] pixels2;
-=======
-    delete[] surfacepixels;
-    delete[] pixels;
->>>>>>> 2db8ad70799d3cd3d2ca1a7176eb78478da9081c:src/ppm.cpp
 }
 
 void FrameExporter::dump() {
