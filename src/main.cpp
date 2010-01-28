@@ -41,6 +41,8 @@ int main(int argc, char *argv[]) {
 
     std::vector<std::string> arguments;
 
+    SDLAppInit("Gource", "gource");
+
     SDLAppParseArgs(argc, argv, &width, &height, &fullscreen, &arguments);
 
     for(int i=0;i<arguments.size();i++) {
@@ -663,7 +665,7 @@ int main(int argc, char *argv[]) {
 
         gource_quit(errormsg);
 
-    } catch(GourceException& exception) {
+    } catch(SDLAppException& exception) {
 
         if(exception.showHelp()) {
             gource_help();

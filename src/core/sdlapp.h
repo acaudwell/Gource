@@ -31,17 +31,42 @@
 #include "display.h"
 #include "logger.h"
 
+#include <stdexcept>
 #include <vector>
 
 extern std::string gSDLAppConfDir;
 extern std::string gSDLAppResourceDir;
 extern std::string gSDLAppPathSeparator;
 
-void SDLAppInit();
+extern std::string gSDLAppTitle;
+extern std::string gSDLAppExec;
+
+#ifdef _WIN32
+void SDLAppCreateWindowsConsole();
+void SDLAppResizeWindowsConsole(int height);
+#endif
+
+void SDLAppInfo(std::string msg);
+void SDLAppQuit(std::string error);
+
+void SDLAppInit(std::string apptitle, std::string execname);
 bool SDLAppDirExists(std::string dir);
 std::string SDLAppAddSlash(std::string path);
 
 void SDLAppParseArgs(int argc, char *argv[], int* xres, int* yres, bool* fullscreen, std::vector<std::string>* otherargs = 0);
+
+class SDLAppException : public std::exception {
+protected:
+    std::string message;
+    bool showhelp;
+public:
+    SDLAppException(std::string message, bool showhelp = false) : showhelp(showhelp), message(message) {}
+    ~SDLAppException() throw () {};
+
+    bool showHelp() { return showhelp; }
+
+    virtual const char* what() const throw() { return message.c_str(); }
+};
 
 class SDLApp {
     int frame_count;

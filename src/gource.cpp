@@ -36,94 +36,22 @@ int gGourceMaxFiles = 1000;
 
 int gGourceUserInnerLoops = 0;
 
-#ifdef _WIN32
-HWND consoleWindow = 0;
-
-void createWindowsConsole() {
-    if(consoleWindow !=0) return;
-
-    //create a console on Windows so users can see messages
-
-    //find an available name for our window
-    int console_suffix = 0;
-    char consoleTitle[512];
-    sprintf(consoleTitle, "%s", "Gource Console");
-
-    while(FindWindow(0, consoleTitle)) {
-        sprintf(consoleTitle, "Gource Console %d", ++console_suffix);
-    }
-
-    AllocConsole();
-    SetConsoleTitle(consoleTitle);
-
-    //redirect streams to console
-    freopen("conin$", "r", stdin);
-    freopen("conout$","w", stdout);
-    freopen("conout$","w", stderr);
-
-    consoleWindow = 0;
-
-    //wait for our console window
-    while(consoleWindow==0) {
-        consoleWindow = FindWindow(0, consoleTitle);
-        SDL_Delay(100);
-    }
-
-    //disable the close button so the user cant crash gource
-    HMENU hm = GetSystemMenu(consoleWindow, false);
-    DeleteMenu(hm, SC_CLOSE, MF_BYCOMMAND);
-}
-#endif
-
-//info message
 void gource_info(std::string msg) {
-#ifdef _WIN32
-    createWindowsConsole();
-#endif
-
-    printf("%s\n", msg.c_str());
-
-#ifdef _WIN32
-    printf("\nPress Enter\n");
-    getchar();
-#endif
-
-    exit(0);
+    SDLAppInfo(msg);
 }
 
-//display error only
 void gource_quit(std::string error) {
-    SDL_Quit();
-
-#ifdef _WIN32
-    createWindowsConsole();
-#endif
-
-    fprintf(stderr, "gource: %s\n", error.c_str());
-    fprintf(stderr, "Try 'gource --help' for more information.\n\n");
-
-#ifdef _WIN32
-    fprintf(stderr, "Press Enter\n");
-    getchar();
-#endif
-
-    exit(1);
+    SDLAppQuit(error);
 }
 
 //display help message
 void gource_help() {
 
 #ifdef _WIN32
-    createWindowsConsole();
+    SDLAppCreateWindowsConsole();
 
     //resize window to fit help message
-    if(consoleWindow !=0) {
-        RECT windowRect;
-        if(GetWindowRect(consoleWindow, &windowRect)) {
-            float width = windowRect.right - windowRect.left;
-            MoveWindow(consoleWindow,windowRect.left,windowRect.top,width,950,true);
-        }
-    }
+    SDLAppResizeWindowsConsole(950);
 #endif
 
     printf("Gource v%s\n", GOURCE_VERSION);
@@ -938,7 +866,7 @@ void Gource::readLog() {
     }
 
     if(first_read && commitqueue.size()==0) {
-        throw GourceException("No commits found");
+        throw SDLAppException("No commits found");
     }
 
     first_read = false;
@@ -1295,11 +1223,11 @@ void Gource::logic(float t, float dt) {
             //if not in a git dir and no log file, show help
             if(logfile.size() == 0 || logfile == ".") {
                 SDL_Quit();
-                throw GourceException("", true);
+                throw SDLAppException("", true);
             } else if(SDLAppDirExists(logfile)) {
-                throw GourceException("Directory not supported");
+                throw SDLAppException("Directory not supported");
             } else {
-                throw GourceException("Unsupported log format.  You may need to regenerate your log file");
+                throw SDLAppException("Unsupported log format.  You may need to regenerate your log file");
             }
         }
 

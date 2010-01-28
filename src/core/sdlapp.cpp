@@ -36,6 +36,59 @@ std::string gSDLAppPathSeparator = "\\";
 std::string gSDLAppPathSeparator = "/";
 #endif
 
+std::string gSDLAppTitle = "SDL App";
+std::string gSDLAppExec  = "sdlapp";
+
+#ifdef _WIN32
+HWND gSDLAppConsoleWindow = 0;
+
+void SDLAppCreateWindowsConsole() {
+    if(gSDLAppConsoleWindow !=0) return;
+
+    //create a console on Windows so users can see messages
+
+    //find an available name for our window
+    int console_suffix = 0;
+    char consoleTitle[512];
+    sprintf(consoleTitle, "%s Console", gSDLAppTitle.c_str());
+
+    while(FindWindow(0, consoleTitle)) {
+        sprintf(consoleTitle, "%s Console %d", gSDLAppTitle.c_str(), ++console_suffix);
+    }
+
+    AllocConsole();
+    SetConsoleTitle(consoleTitle);
+
+    //redirect streams to console
+    freopen("conin$", "r", stdin);
+    freopen("conout$","w", stdout);
+    freopen("conout$","w", stderr);
+
+    gSDLAppConsoleWindow = 0;
+
+    //wait for our console window
+    while(gSDLAppConsoleWindow==0) {
+        gSDLAppConsoleWindow = FindWindow(0, consoleTitle);
+        SDL_Delay(100);
+    }
+
+    //disable the close button so the user cant crash gource
+    HMENU hm = GetSystemMenu(gSDLAppConsoleWindow, false);
+    DeleteMenu(hm, SC_CLOSE, MF_BYCOMMAND);
+}
+
+void SDLAppResizeWindowsConsole(int height) {
+    if(consoleWindow !=0) {
+        RECT windowRect;
+        if(GetWindowRect(consoleWindow, &windowRect)) {
+            float width = windowRect.right - windowRect.left;
+            MoveWindow(consoleWindow,windowRect.left,windowRect.top,width,height,true);
+        }
+    }
+
+
+#endif
+
 bool SDLAppDirExists(std::string dir) {
     struct stat st;
     return !stat(dir.c_str(), &st) && S_ISDIR(st.st_mode);
@@ -51,8 +104,44 @@ std::string SDLAppAddSlash(std::string path) {
     return path;
 }
 
-void SDLAppInit() {
-    if(gSDLAppResourceDir.size()>0) return;
+//info message
+void SDLAppInfo(std::string msg) {
+#ifdef _WIN32
+    SDLAppCreateWindowsConsole();
+#endif
+
+    printf("%s\n", msg.c_str());
+
+#ifdef _WIN32
+    printf("\nPress Enter\n");
+    getchar();
+#endif
+
+    exit(0);
+}
+
+//display error only
+void SDLAppQuit(std::string error) {
+    SDL_Quit();
+
+#ifdef _WIN32
+    SDLAppCreateWindowsConsole();
+#endif
+
+    fprintf(stderr, "%s: %s\n", gSDLAppExec.c_str(), error.c_str());
+    fprintf(stderr, "Try '%s --help' for more information.\n\n", gSDLAppExec.c_str());
+
+#ifdef _WIN32
+    fprintf(stderr, "Press Enter\n");
+    getchar();
+#endif
+
+    exit(1);
+}
+
+void SDLAppInit(std::string apptitle, std::string execname) {
+    gSDLAppTitle = apptitle;
+    gSDLAppExec  = execname;
 
     std::string conf_dir     = "";
     std::string resource_dir = "data/";
@@ -113,7 +202,6 @@ void SDLAppInit() {
 }
 
 void SDLAppParseArgs(int argc, char *argv[], int* xres, int* yres, bool* fullscreen, std::vector<std::string>* otherargs) {
-    SDLAppInit();
 
     for (int i=1; i<argc; i++) {
         debugLog("argv[%d] = %s\n", i, argv[i]);
