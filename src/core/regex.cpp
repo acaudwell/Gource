@@ -39,10 +39,12 @@ Regex::Regex(std::string regex, bool test) {
 
     if(!re) {
         valid = false;
+
         if(!test) {
-            printf("could not compile pattern %s\n", regex.c_str());
-            exit(1);
+            delete re;
+            throw RegexCompilationException(regex);
         }
+
     } else {
         valid = true;
     }

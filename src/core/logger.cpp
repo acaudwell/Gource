@@ -41,7 +41,7 @@ void debugLog(const char *str, ...) {
         log = fopen(SDLAPP_DEBUG_LOG, "w");
 
         if(log==0) {
-            printf("could not create %s\n", SDLAPP_DEBUG_LOG);
+            fprintf(stderr, "could not create %s\n", SDLAPP_DEBUG_LOG);
             exit(1);
         }
 
@@ -51,7 +51,7 @@ void debugLog(const char *str, ...) {
         log = fopen(SDLAPP_DEBUG_LOG, "a");
 
         if(log==0) {
-            printf("could not append to %s\n", SDLAPP_DEBUG_LOG);
+            fprintf(stderr, "could not append to %s\n", SDLAPP_DEBUG_LOG);
             exit(1);
         }
     }

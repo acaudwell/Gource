@@ -32,10 +32,17 @@
 #include "vectors.h"
 #include "logger.h"
 
+#include "resource.h"
+
 #include <string>
 #include <map>
 
 #include <FTGL/ftgl.h>
+
+class FXFontException : public ResourceException {
+public:
+    FXFontException(std::string& font_file) : ResourceException(font_file) {}
+};
 
 class FXFont {
 

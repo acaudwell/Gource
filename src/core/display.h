@@ -44,6 +44,16 @@
 #include <vector>
 #include <string>
 
+class SDLInitException : public std::exception {
+protected:
+    std::string error;
+public:
+    SDLInitException(std::string& error) : error(error) {}
+    virtual ~SDLInitException() throw () {};
+
+    virtual const char* what() const throw() { return error.c_str(); }
+};
+
 class SDLAppDisplay {
     SDL_Surface *surface;
 

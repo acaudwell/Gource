@@ -36,6 +36,16 @@
 #include <string>
 #include <vector>
 
+class RegexCompilationException : public std::exception {
+protected:
+    std::string regex;
+public:
+    RegexCompilationException(std::string& regex) : regex(regex) {}
+    virtual ~RegexCompilationException() throw () {};
+
+    virtual const char* what() const throw() { return regex.c_str(); }
+};
+
 class Regex {
 
     const char *error;

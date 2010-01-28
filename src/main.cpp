@@ -593,7 +593,17 @@ int main(int argc, char *argv[]) {
     //enable vsync
     display.enableVsync(true);
 
-    display.init("Gource", width, height, fullscreen);
+    try {
+
+        display.init("Gource", width, height, fullscreen);
+
+    } catch(SDLInitException& exception) {
+
+        char errormsg[1024];
+        snprintf(errormsg, 1024, "SDL initialization failed - %s", exception.what());
+
+        gource_quit(errormsg);
+    }
 
     //init frame exporter
     FrameExporter* exporter = 0;
@@ -602,7 +612,17 @@ int main(int argc, char *argv[]) {
         //recording a video kind of implies you want this
         stop_at_end = true;
 
-        exporter = new PPMExporter(ppm_file_name);
+        try {
+
+            exporter = new PPMExporter(ppm_file_name);
+
+        } catch(PPMExporterException& exception) {
+
+            char errormsg[1024];
+            snprintf(errormsg, 1024, "could not write to '%s'", exception.what());
+
+            gource_quit(errormsg);
+        }
     }
 
     if(multisample) glEnable(GL_MULTISAMPLE_ARB);
@@ -639,7 +659,7 @@ int main(int argc, char *argv[]) {
     } catch(ResourceException& exception) {
 
         char errormsg[1024];
-        snprintf(errormsg, 1024, "Failed to load resource '%s'", exception.what());
+        snprintf(errormsg, 1024, "failed to load resource '%s'", exception.what());
 
         gource_quit(errormsg);
 

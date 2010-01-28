@@ -109,8 +109,8 @@ void SDLAppDisplay::init(std::string window_title, int width, int height, bool f
 #endif
 
     if (!surface) {
-        printf("SDL initalization failed: %s\n", SDL_GetError());
-        exit(1);
+        std::string sdlerr(SDL_GetError());
+        throw SDLInitException(sdlerr);
     }
 
 

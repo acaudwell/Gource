@@ -37,6 +37,16 @@ public:
     virtual void dumpImpl() {};
 };
 
+class PPMExporterException : public std::exception {
+protected:
+    std::string filename;
+public:
+    PPMExporterException(std::string& filename) : filename(filename) {}
+    virtual ~PPMExporterException() throw () {};
+
+    virtual const char* what() const throw() { return filename.c_str(); }
+};
+
 class PPMExporter : public FrameExporter {
 protected:
     std::ostream* output;

@@ -174,11 +174,6 @@ FXFont FXFontManager::grab(std::string font_file, int size) {
     if(ft==0) {
         ft = create(font_file, size);
 
-        if(ft==0) {
-            printf("could not open font %s\n", font_file.c_str());
-            exit(1);
-        }
-
         fonts[font_key] = ft;
     }
 
@@ -189,18 +184,9 @@ FTFont* FXFontManager::create(std::string font_file, int size) {
 
     FTFont* ft = new  FTTextureFont(font_file.c_str());
 
-    if(ft->Error()) {
+    if(ft->Error() || !ft->FaceSize(size)) {
         delete ft;
-        debugLog("failed to load font %s\n", font_file.c_str());
-
-        return 0;
-    }
-
-    if(!ft->FaceSize(size)) {
-        delete ft;
-        debugLog("Failed to set font %s size %i", font_file.c_str(), size);
-
-        return 0;
+        throw FXFontException(font_file);
     }
 
     return ft;
