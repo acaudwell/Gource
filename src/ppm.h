@@ -22,7 +22,6 @@
 #include <fstream>
 #include <ostream>
 
-
 #include "SDL_thread.h"
 
 #include "core/display.h"
@@ -62,11 +61,10 @@ protected:
     char ppmheader[1024];
 
 public:
-	PPMExporter(std::string outputfile);
-	virtual ~PPMExporter();
-	virtual void dumpImpl();
+    PPMExporter(std::string outputfile);
+    virtual ~PPMExporter();
+    virtual void dumpImpl();
 };
 
 
 #endif
-
