@@ -1,4 +1,5 @@
 0.24:
+ * Gource will stop at the end of the log by default when recording a video.
  * Now using standard autotools (Flameeyes).
  * Added proper exception handling.
  * Print errors to stderr.

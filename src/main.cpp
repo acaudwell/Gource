@@ -599,6 +599,9 @@ int main(int argc, char *argv[]) {
     FrameExporter* exporter = 0;
 
     if(ppm_file_name.size() > 0) {
+        //recording a video kind of implies you want this
+        stop_at_end = true;
+
         exporter = new PPMExporter(ppm_file_name);
     }
 
