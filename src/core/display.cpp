@@ -163,31 +163,47 @@ void SDLAppDisplay::checkGLErrors() {
 //TODO
 }
 
-void SDLAppDisplay::renderToTexture(GLuint target, int width, int height, GLenum internalFormat) {
-	glBindTexture(GL_TEXTURE_2D, target);
-	glCopyTexImage2D(GL_TEXTURE_2D, 0, internalFormat, 0, 0, width, height, 0);
+void SDLAppDisplay::fullScreenQuad(bool coord_flip) {
+
+    int y1 = coord_flip ? 0 : 1;
+    int y2 = coord_flip ? 1 : 0;
+
+    glBegin(GL_QUADS);
+        glTexCoord2i(0,y1);
+        glVertex2f(0, 0);
+
+        glTexCoord2i(1,y1);
+        glVertex2i(display.width, 0);
+
+        glTexCoord2i(1,y2);
+        glVertex2i(display.width, display.height);
+
+        glTexCoord2i(0,y2);
+        glVertex2i(0, display.height);
+    glEnd();
 }
 
-GLuint SDLAppDisplay::emptyTexture(int width, int height) {
-	GLuint txtnumber;   // Texture ID
-	unsigned int* data;	// Stored Data
-
-    //blank source
-	data = (unsigned int*)new GLuint[((width * height)* 4 * sizeof(unsigned int))];
-    memset(data,0,((width * height)* 4 * sizeof(unsigned int)));
-
-    glGenTextures(1, &txtnumber);					// Create 1 Texture
-	glBindTexture(GL_TEXTURE_2D, txtnumber);			// Bind The Texture
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0,
-		GL_RGBA, GL_UNSIGNED_BYTE, data);			// Build Texture Using Information In data
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-
-	delete [] data;
-	return txtnumber;
+void SDLAppDisplay::renderToTexture(GLuint target, int width, int height, GLenum format) {
+    glBindTexture(GL_TEXTURE_2D, target);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, format, 0, 0, width, height, 0);
 }
 
-GLuint SDLAppDisplay::createTexture(int width, int height, int mipmaps, int clamp, int trilinear, int format, unsigned int* data) {
+GLuint SDLAppDisplay::emptyTexture(int width, int height, GLenum format) {
+    GLuint textureid;
+
+    glGenTextures(1, &textureid);
+    glBindTexture(GL_TEXTURE_2D, textureid);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+    return textureid;
+}
+
+GLuint SDLAppDisplay::createTexture(int width, int height, bool mipmaps, bool clamp, bool trilinear, GLenum format, unsigned int* data) {
 
     GLuint textureid;
 
