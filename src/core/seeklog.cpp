@@ -180,6 +180,21 @@ bool SeekLog::getNextLine(std::string& line) {
     return true;
 }
 
+// temporarily move the file pointer to get a line somewhere else in the file
+bool SeekLog::getNextLineAt(std::string& line, float percent) {
+
+    long currpointer = getPointer();
+
+    seekTo(percent);
+
+    bool success = getNextLine(line);
+
+    //set the pointer back
+    setPointer(currpointer);
+
+    return success;
+}
+
 bool SeekLog::isFinished() {
     bool finished = false;
 

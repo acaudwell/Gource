@@ -73,6 +73,7 @@ public:
 
     void seekTo(float percent);
     bool getNextLine(std::string& line);
+    bool getNextLineAt(std::string& line, float percent);
     float getPercent();
 
     bool isFinished();
