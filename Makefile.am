@@ -45,7 +45,13 @@ gource_SOURCES = \
 
 CPPFLAGS = -DSDLAPP_RESOURCE_DIR=\"$(pkgdatadir)\"
 
-dist_man_MANS = data/gource.1
+dist_man_MANS = data/gource.1.gz
+
+data/gource.1.gz: data/gource.1
+	gzip -f9 --stdout $< > $@
+
+clean-local:
+	-rm -rf data/gource.1.gz
 
 dist_pkgdata_DATA = data/beam.png data/bloom.tga data/file.png data/no_photo.png data/gource.style
 
