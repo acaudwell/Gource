@@ -583,7 +583,7 @@ int main(int argc, char *argv[]) {
     }
 
     if(logfile.size()==0 || isdir) {
-        createWindowsConsole();
+        SDLAppCreateWindowsConsole();
     }
 #endif
 

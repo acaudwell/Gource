@@ -78,14 +78,14 @@ void SDLAppCreateWindowsConsole() {
 }
 
 void SDLAppResizeWindowsConsole(int height) {
-    if(consoleWindow !=0) {
+    if(gSDLAppConsoleWindow !=0) {
         RECT windowRect;
-        if(GetWindowRect(consoleWindow, &windowRect)) {
+        if(GetWindowRect(gSDLAppConsoleWindow, &windowRect)) {
             float width = windowRect.right - windowRect.left;
-            MoveWindow(consoleWindow,windowRect.left,windowRect.top,width,height,true);
+            MoveWindow(gSDLAppConsoleWindow,windowRect.left,windowRect.top,width,height,true);
         }
     }
-
+}
 
 #endif
 
