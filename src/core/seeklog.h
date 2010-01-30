@@ -57,6 +57,16 @@ public:
     bool isFinished();
 };
 
+class SeekLogException : public std::exception {
+protected:
+    std::string filename;
+public:
+    SeekLogException(std::string& filename) : filename(filename) {}
+    virtual ~SeekLogException() throw () {};
+
+    virtual const char* what() const throw() { return filename.c_str(); }
+};
+
 class SeekLog : public BaseLog {
 
     std::string logfile;

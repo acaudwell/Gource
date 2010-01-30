@@ -294,8 +294,8 @@ Gource::Gource(std::string logfile) {
 Gource::~Gource() {
     reset();
 
-    delete commitlog;
-    delete root;
+    if(commitlog!=0) delete commitlog;
+    if(root!=0) delete root;
 
     //delete filters
     for(std::vector<Regex*>::iterator it = filters.begin(); it != filters.end(); it++) {
@@ -1217,7 +1217,14 @@ void Gource::logic(float t, float dt) {
 
     //init log file
     if(commitlog == 0) {
-        commitlog = determineFormat(logfile);
+
+        try {
+
+            commitlog = determineFormat(logfile);
+
+        } catch(SeekLogException& exception) {
+            throw SDLAppException("Unable to read log file");
+        }
 
         if(commitlog == 0) {
             //if not in a git dir and no log file, show help

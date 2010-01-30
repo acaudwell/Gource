@@ -91,8 +91,7 @@ SeekLog::SeekLog(std::string logfile) {
     this->stream = 0;
 
     if(!readFully()) {
-        printf("failed to read %s\r\n", logfile.c_str());
-        exit(1);
+        throw SeekLogException(logfile);
     }
 }
 
