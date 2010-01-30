@@ -47,7 +47,7 @@ CPPFLAGS = -DSDLAPP_RESOURCE_DIR=\"$(pkgdatadir)\"
 
 dist_pkgdata_DATA = data/beam.png data/bloom.tga data/file.png data/no_photo.png data/gource.style
 
-dist_pkgdata_MANS = data/gource.1
+dist_man_MANS = data/gource.1
 
 if FONTDIR
 CPPFLAGS += -DSDLAPP_FONT_DIR=\"$(gourcefontdir)\"
