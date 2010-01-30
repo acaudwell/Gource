@@ -47,11 +47,7 @@ CPPFLAGS = -DSDLAPP_RESOURCE_DIR=\"$(pkgdatadir)\"
 
 dist_pkgdata_DATA = data/beam.png data/bloom.tga data/file.png data/no_photo.png data/gource.style
 
-install-data-hook:
-	gzip -cf9 data/gource.1 > $(DESTDIR)$(mandir)/man1/gource.1.gz
-
-uninstall-hook:
-	rm -f $(DESTDIR)$(mandir)/man1/gource.1.gz
+dist_pkgdata_MANS = data/gource.1
 
 if FONTDIR
 CPPFLAGS += -DSDLAPP_FONT_DIR=\"$(gourcefontdir)\"
@@ -60,5 +56,3 @@ fontsdir = $(pkgdatadir)/fonts
 dist_fonts_DATA = data/fonts/README data/fonts/FreeSans.ttf
 endif
 
-contribdir = $(docdir)/contrib
-dist_contrib_DATA = contrib/svn-gource.py
