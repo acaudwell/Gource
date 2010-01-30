@@ -1,6 +1,7 @@
 0.24:
  * Gource will stop at the end of the log by default when recording a video.
  * Now using standard autotools (Flameeyes).
+ * PPM output speed improvements, including using a second thread (HighlandSun).
  * Added proper exception handling.
  * Print errors to stderr.
 
