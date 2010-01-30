@@ -65,6 +65,8 @@ protected:
     std::string temp_file;
     std::string log_command;
 
+    std::string lastline;
+
     bool is_dir;
     bool success;
     bool seekable;
@@ -75,6 +77,8 @@ protected:
     bool checkFirstChar(int firstChar, std::istream& stream);
 
     std::string createTempLog();
+
+    bool getNextLine(std::string& line);
 
     virtual bool parseCommit(RCommit& commit) { return false; };
 public:

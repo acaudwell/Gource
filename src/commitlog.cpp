@@ -132,21 +132,35 @@ bool RCommitLog::getCommitAt(float percent, RCommit& commit) {
 
     SeekLog* seeklog = ((SeekLog*)logf);
 
-    //get the current pointer
+    //save settings
     long currpointer = seeklog->getPointer();
+    std::string currlastline = lastline;
 
     seekTo(percent);
-
     bool success = findNextCommit(commit,500);
 
-    //set the pointer back
+    //restore settings
     seeklog->setPointer(currpointer);
+    lastline = currlastline;
 
     return success;
 }
 
+bool RCommitLog::getNextLine(std::string& line) {
+    if(lastline.size()>0) {
+        line = lastline;
+        lastline = std::string("");
+        return true;
+    }
+
+    return logf->getNextLine(line);
+}
+
+
 void RCommitLog::seekTo(float percent) {
     if(!seekable) return;
+
+    lastline = "";
 
     ((SeekLog*)logf)->seekTo(percent);
 }
@@ -236,6 +250,7 @@ RCommitFile::RCommitFile(std::string filename, std::string action, vec3f colour)
 }
 
 RCommit::RCommit() {
+    timestamp = 0;
 }
 
 vec3f RCommit::fileColour(std::string filename) {

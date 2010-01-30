@@ -42,20 +42,26 @@ vec3f CustomLog::parseColour(std::string cstr) {
 
 bool CustomLog::parseCommit(RCommit& commit) {
 
+    while(readCustomCommit(commit));
+
+    return commit.files.size() > 0;
+}
+
+bool CustomLog::readCustomCommit(RCommit& commit) {
+
     std::string line;
     std::vector<std::string> entries;
 
-    if(!logf->getNextLine(line)) return false;
+    if(!getNextLine(line)) return false;
 
     //custom line
     if(!custom_regex.match(line, &entries)) return false;
 
-    commit.timestamp = atol(entries[0].c_str());
+    long timestamp       = atol(entries[0].c_str());
+    std::string username = entries[1];
 
-    commit.username = entries[1];
-
-    if(commit.username.size()==0) {
-        commit.username = "Unknown";
+    if(username.size()==0) {
+        username = "Unknown";
     }
 
     std::string action = "A";
@@ -72,16 +78,26 @@ bool CustomLog::parseCommit(RCommit& commit) {
         colour = parseColour(entries[4]);
     }
 
-//    debugLog("file = %s, timestamp=%d, username=%s, action=%s\n",  entries[3].c_str(), 
-//        commit.timestamp, commit.username.c_str(), action.c_str());
+    //if this file is for the same person and timestamp
+    //we add to the commit, else we save the lastline
+    //and return false
+    if(commit.files.size() > 0
+       && (commit.timestamp != timestamp
+           || commit.username  != username)) {
+        lastline = line;
+        return false;
+    }
+
+    if(commit.files.size() == 0) {
+        commit.timestamp = timestamp;
+        commit.username  = username;
+    }
 
     if(has_colour) {
         commit.addFile(entries[3], action, colour);
     } else {
         commit.addFile(entries[3], action);
     }
-
-    //commit.debug();
 
     return true;
 }
