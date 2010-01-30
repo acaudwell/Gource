@@ -48,11 +48,11 @@ CPPFLAGS = -DSDLAPP_RESOURCE_DIR=\"$(pkgdatadir)\"
 dist_pkgdata_DATA = data/beam.png data/bloom.tga data/file.png data/no_photo.png data/gource.style
 
 install-data-hook:
-       mkdir -p -m 755 ${DESTDIR}/$(mandir)/man1
-       gzip -cf9 data/gource.1 > $(DESTDIR)$(mandir)/man1/gource.1.gz
+	mkdir -p -m 755 ${DESTDIR}/$(mandir)/man1
+	gzip -cf9 data/gource.1 > $(DESTDIR)$(mandir)/man1/gource.1.gz
 
 uninstall-hook:
-       rm -f $(DESTDIR)$(mandir)/man1/gource.1.gz
+	rm -f $(DESTDIR)$(mandir)/man1/gource.1.gz
 
 if FONTDIR
 CPPFLAGS += -DSDLAPP_FONT_DIR=\"$(gourcefontdir)\"
