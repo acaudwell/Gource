@@ -37,6 +37,9 @@
 #include <fcntl.h>
 
 class BaseLog {
+
+protected:
+    std::istream* stream;
 public:
     virtual ~BaseLog() {};
     virtual bool getNextLine(std::string& line) {};
@@ -45,7 +48,6 @@ public:
 
 class StreamLog : public BaseLog {
 
-    std::istream* stream;
     bool fcntl_fail;
 public:
     StreamLog();
@@ -59,7 +61,6 @@ class SeekLog : public BaseLog {
 
     std::string logfile;
 
-    std::istringstream* buffstream;
     long file_size;
     float current_percent;
 
@@ -78,5 +79,7 @@ public:
 
     bool isFinished();
 };
+
+extern long gSeekLogMaxBufferSize;
 
 #endif
