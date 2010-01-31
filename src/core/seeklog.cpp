@@ -55,7 +55,8 @@ StreamLog::StreamLog(std::istream* stream) {
 
 bool StreamLog::getNextLine(std::string& line) {
 
-    if(isFinished()) return false;
+    //try and fix the stream
+    if(isFinished()) stream->clear();
 
     char buff[1024];
 
@@ -77,6 +78,7 @@ bool StreamLog::getNextLine(std::string& line) {
 bool StreamLog::isFinished() {
 
     if(fcntl_fail || stream->fail() || stream->eof()) {
+//        debugLog("stream is finished. fcntl_fail = %d, stream fail = %d, eof = %d, bad = %d\n", fcntl_fail, stream->fail(), stream->eof(), stream->bad() );
         return true;
     }
 

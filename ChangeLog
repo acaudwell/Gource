@@ -1,8 +1,9 @@
 0.24:
+ * PPM output speed improvements, including using a second thread (HighlandSun).
+ * Now using standard autotools (Flameeyes).
  * Fixed --max-file-lag not working with some custom log files.
  * Gource will stop at the end of the log by default when recording a video.
- * Now using standard autotools (Flameeyes).
- * PPM output speed improvements, including using a second thread (HighlandSun).
+ * Fixed STDIN stopping working after the first lot of records with tail -f.
  * Added proper exception handling.
  * Print errors to stderr.
 

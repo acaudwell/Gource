@@ -201,7 +201,7 @@ bool RCommitLog::nextCommit(RCommit& commit) {
 }
 
 bool RCommitLog::isFinished() {
-    if(logf->isFinished()) return true;
+    if(seekable && logf->isFinished()) return true;
 
     return false;
 }
