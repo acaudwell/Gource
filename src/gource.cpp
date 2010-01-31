@@ -866,7 +866,7 @@ void Gource::readLog() {
     }
 
     if(first_read && commitqueue.size()==0) {
-        throw SDLAppException("No commits found");
+        throw SDLAppException("no commits found");
     }
 
     first_read = false;
@@ -1223,7 +1223,7 @@ void Gource::logic(float t, float dt) {
             commitlog = determineFormat(logfile);
 
         } catch(SeekLogException& exception) {
-            throw SDLAppException("Unable to read log file");
+            throw SDLAppException("unable to read log file");
         }
 
         if(commitlog == 0) {
@@ -1232,9 +1232,9 @@ void Gource::logic(float t, float dt) {
                 SDL_Quit();
                 throw SDLAppException("", true);
             } else if(SDLAppDirExists(logfile)) {
-                throw SDLAppException("Directory not supported");
+                throw SDLAppException("directory not supported");
             } else {
-                throw SDLAppException("Unsupported log format.  You may need to regenerate your log file");
+                throw SDLAppException("unsupported log format (you may need to regenerate your log file)");
             }
         }
 
