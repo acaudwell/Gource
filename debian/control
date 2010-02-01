@@ -11,7 +11,7 @@ Vcs-Git: git://github.com/acaudwell/gource.git
 Package: gource
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Gource
+Description:  graphical source control visualisation
  OpenGL-based 3D visualisation tool for source control repositories.
  .
  The repository is displayed as a tree where the root of the repository is the
