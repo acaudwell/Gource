@@ -1,3 +1,6 @@
+0.25:
+ * Fixed various gdb and compiler warnings.
+
 0.24:
  * PPM output speed improvements, including using a second thread (HighlandSun).
  * Now using standard autotools (Flameeyes).
