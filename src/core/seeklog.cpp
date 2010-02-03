@@ -115,13 +115,14 @@ bool SeekLog::readFully() {
     }
 
     //buffer entire file into memory
-    char* filebuffer = new char[file_size];
+    char* filebuffer = new char[file_size+1];
 
     if(!file->read(filebuffer, file_size)) {
         file->close();
         delete file;
         return false;
     }
+    filebuffer[file_size] = '\0';
 
     file->close();
     delete file;
