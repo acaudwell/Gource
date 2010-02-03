@@ -42,8 +42,10 @@ protected:
     std::istream* stream;
 public:
     virtual ~BaseLog() {};
-    virtual bool getNextLine(std::string& line) {};
-    virtual bool isFinished() {};
+    virtual bool getNextLine(std::string& line) { return false; };
+    virtual bool isFinished() { return false; };
+
+    void consume();
 };
 
 class StreamLog : public BaseLog {
