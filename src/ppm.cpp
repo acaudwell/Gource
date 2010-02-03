@@ -44,6 +44,8 @@ FrameExporter::FrameExporter() {
 
     screentex = display.emptyTexture(display.width, display.height, GL_RGBA);
 
+	dumper_thread_state = FRAME_EXPORTER_WAIT;
+
     cond   = SDL_CreateCond();
     mutex  = SDL_CreateMutex();
     thread = SDL_CreateThread( dumper_thread, this );
@@ -135,7 +137,7 @@ PPMExporter::PPMExporter(std::string outputfile) {
 
     } else {
         filename = outputfile;
-        output   = new std::fstream(outputfile.c_str(), std::ios::out | std::ios::binary);
+        output   = new std::ofstream(outputfile.c_str(), std::ios::out | std::ios::binary);
 
         if(output->fail()) {
             delete output;
@@ -148,7 +150,6 @@ PPMExporter::PPMExporter(std::string outputfile) {
         display.width, display.height
     );
 
-	dumper_thread_state = FRAME_EXPORTER_WAIT;
 }
 
 PPMExporter::~PPMExporter() {
