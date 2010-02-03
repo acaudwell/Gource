@@ -63,15 +63,15 @@ RDirNode::RDirNode(RDirNode* parent, std::string abspath) {
 
     visible_count = 0;
 
-    calcRadius();
-    calcColour();
-
     visible = false;
     position_initialized = false;
 
     since_node_visible = 0.0;
     since_last_file_change = 0.0;
     since_last_node_change = 0.0;
+
+    calcRadius();
+    calcColour();
 }
 
 void RDirNode::changePath(std::string abspath) {
