@@ -72,6 +72,11 @@ bool StreamLog::getNextLine(std::string& line) {
     stream->getline(buff, 1024);
     line = std::string(buff);
 
+    //remove carriage returns
+    if (line.size() > 0 && line[line.size()-1] == '\r') {
+        line.resize(line.size() - 1);
+    }
+
     if(isFinished()) {
         //clear the failbit if only failed because the line was too long
         if(!stream->bad() && stream->gcount() >= (1024-1)) {
@@ -87,7 +92,6 @@ bool StreamLog::getNextLine(std::string& line) {
 bool StreamLog::isFinished() {
 
     if(fcntl_fail || stream->fail() || stream->eof()) {
-//        debugLog("stream is finished. fcntl_fail = %d, stream fail = %d, eof = %d, bad = %d\n", fcntl_fail, stream->fail(), stream->eof(), stream->bad() );
         return true;
     }
 
@@ -183,6 +187,11 @@ bool SeekLog::getNextLine(std::string& line) {
 
     stream->getline(buff, 1024);
     line = std::string(buff);
+
+    //remove carriage returns
+    if (line.size() > 0 && line[line.size()-1] == '\r') {
+        line.resize(line.size() - 1);
+    }
 
     if(stream->fail()) {
         //clear the failbit if only failed because the line was too long
