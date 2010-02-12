@@ -37,6 +37,7 @@
 
 #include "git.h"
 #include "hg.h"
+#include "bzr.h"
 #include "gitraw.h"
 #include "cvs-exp.h"
 #include "custom.h"

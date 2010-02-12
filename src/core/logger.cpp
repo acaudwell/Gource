@@ -25,7 +25,7 @@
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-//#define SDLAPP_DEBUG_LOG "debug.log"
+#define SDLAPP_DEBUG_LOG "debug.log"
 
 #include "logger.h"
 

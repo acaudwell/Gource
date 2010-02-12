@@ -85,6 +85,7 @@ void gource_help() {
     printf("  --git-log-command        Show git log command used by gource\n");
     printf("  --cvs-exp-command        Show cvs-exp.pl log command used by gource\n");
     printf("  --hg-log-command         Show hg log (Mercurial) command used by gource\n\n");
+    printf("  --bzr-log-command        Show bzr log (Bazaar) command used by gource\n\n");
 
     printf("  --multi-sampling         Enable multi-sampling\n");
     printf("  --crop AXIS              Crop view on an axis (vertical,horizontal)\n\n");
@@ -119,7 +120,7 @@ void gource_help() {
     printf("  --output-ppm-stream FILE Write frames as PPM to a file ('-' for STDOUT)\n");
     printf("  --output-framerate FPS   Framerate of output (25,30,60)\n\n");
 
-    printf("PATH may be a Git or Mercurial directory, a log file or '-' to read STDIN.\n");
+    printf("PATH may be a Git, Bazaar, or Mercurial directory, a log file or '-' to read STDIN.\n");
     printf("If ommited, gource will attempt to generate a log from the current directory.\n\n");
 
 #ifdef _WIN32
@@ -151,6 +152,11 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
 
         if(gGourceLogFormat == "hg") {
             clog = new MercurialLog(logfile);
+            if(clog->checkFormat()) return clog;
+            delete clog;
+        }
+        if(gGourceLogFormat == "bzr") {
+            clog = new BazaarLog(logfile);
             if(clog->checkFormat()) return clog;
             delete clog;
         }
@@ -186,6 +192,13 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
     //mercurial
     debugLog("trying mercurial...\n");
     clog = new MercurialLog(logfile);
+    if(clog->checkFormat()) return clog;
+
+    delete clog;
+
+    //bzr
+    debugLog("trying bzr...\n");
+    clog = new BazaarLog(logfile);
     if(clog->checkFormat()) return clog;
 
     delete clog;
