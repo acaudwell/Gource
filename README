@@ -12,13 +12,11 @@ Contents
 
 1. Description
 2. Requirements
-3. Installation
-4. Using Gource
-5. Building Gource
-6. Copyright
+3. Using Gource
+4. Copyright
 
 1. Description
-===============
+==============
 
 OpenGL-based 3D visualisation tool for source control repositories.
 
@@ -31,12 +29,7 @@ and directories.
 
 Gource's display is rendered using OpenGL and requires a 3D accelerated video card to run.
 
-3. Installation
-===============
-
-You can either build Gource from scratch or install a pre-compiled binary version from the homepage (recommended).
-
-4. Using Gource
+3. Using Gource
 ===============
 
 gource <options> <path>
@@ -247,34 +240,7 @@ Interactive keyboard commands:
     (TAB) Cycle through visible users
     (ESC) Quit
 
-5. Building Gource
-==================
-
-The source code to Gource is available from the homepage.
-
-Gource requires the following libraries to compile:
-
-    SDL 1.2 (libsdl1.2-dev)
-    SDL Image 1.2 (libsdl-image1.2-dev)
-    PCRE3 (libpcre3-dev)
-    FTGL 2.1.3~rc5-2 (libftgl-dev)
-    PNG library (libpng12-dev)
-    JPEG library (libjpeg62-dev)
-
-Building on Linux:
-
-    ./configure
-    make
-    make install
-
-If you are unfamilar with configure see the INSTALL file.
-
-Building on Windows:
-
-On Windows I recommend compiling the project gource.win32.cbp
-with the Code Blocks IDE (www.codeblocks.org).
-
-6. Copyright
+4. Copyright
 ============
 
 Gource - software version control visualization
