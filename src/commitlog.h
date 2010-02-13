@@ -25,6 +25,7 @@
 #include "core/stringhash.h"
 #include "core/utf8/utf8.h"
 
+#include <time.h>
 #include <string>
 #include <list>
 
