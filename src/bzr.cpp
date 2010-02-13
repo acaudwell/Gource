@@ -17,7 +17,7 @@
 
 #include "bzr.h"
 
-Regex bzr_commit_regex("^ *([0-9]+) (.*)([0-9][0-9][0-9][0-9])-([0-9]+)-([0-9]+).*$");
+Regex bzr_commit_regex("^ *([0-9]+) (.*)\t([0-9][0-9][0-9][0-9])-([0-9]+)-([0-9]+).*$");
 Regex bzr_file_regex(" *([AMDR])  (.*)$");
 
 // parse Bazaar log entries (using the gource.style template)
