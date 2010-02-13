@@ -17,13 +17,13 @@
 
 #include "bzr.h"
 
-Regex bzr_commit_regex("^ *([0-9]+) (.*)\t([0-9][0-9][0-9][0-9])-([0-9]+)-([0-9]+).*$");
-Regex bzr_file_regex(" *([AMDR])  (.*)$");
+Regex bzr_commit_regex("^ *(\\d+) (.+)\t(\\d{4})-(\\d+)-(\\d+)");
+Regex bzr_file_regex("^ *([AMDR])  (.*[^/])$");
 
 // parse Bazaar log entries (using the gource.style template)
 
 std::string gGourceBzrLogCommand() {
-    return std::string("bzr log -r 1..-1 --short -n0 --forward");
+    return std::string("bzr log --verbose -r 1..-1 --short -n0 --forward");
 }
 
 BazaarLog::BazaarLog(std::string logfile) : RCommitLog(logfile) {
@@ -69,8 +69,6 @@ BaseLog* BazaarLog::generateLog(std::string dir) {
     return seeklog;
 }
 
-static const char *_separator = "------------------------------------------------------------";
-
 bool BazaarLog::parseCommit(RCommit& commit) {
 
     std::string line;
@@ -85,14 +83,27 @@ bool BazaarLog::parseCommit(RCommit& commit) {
         return false;
     }
     commit.username = entries[1];
-    year = atol(entries[2].c_str());
-    month = atol(entries[3].c_str());
-    day = atol(entries[3].c_str());
-    // Bad approximation, but should work for now
-    commit.timestamp = (((year - 1970) * 365) + (month * 30) + day) * 24*3600;
+
+    year  = atoi(entries[2].c_str());
+    month = atoi(entries[3].c_str());
+    day   = atoi(entries[4].c_str());
+
+    struct tm time_str;
+
+    time_str.tm_year  = year - 1900;
+    time_str.tm_mon   = month - 1;
+    time_str.tm_mday  = day;
+    time_str.tm_hour  = 0;
+    time_str.tm_min   = 0;
+    time_str.tm_sec   = 0;
+    time_str.tm_isdst = -1;
+
+    commit.timestamp = mktime(&time_str);
+
     while(logf->getNextLine(line) && line.size()) {
         if (!bzr_file_regex.match(line, &entries)) continue;
         commit.addFile(entries[1], entries[0]);
     }
+
     return true;
 }
