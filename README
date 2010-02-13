@@ -20,14 +20,16 @@ Contents
 
 OpenGL-based 3D visualisation tool for source control repositories.
 
-The repository is displayed as a tree where the root of the repository is the centre, directories are branches
-and files are leaves. Contributors to the source code appear and disappear as they contribute to specific files
-and directories.
+The repository is displayed as a tree where the root of the repository is the
+centre, directories are branches and files are leaves. Contributors to the
+source code appear and disappear as they contribute to specific files and
+directories.
 
 2. Requirements
 ===============
 
-Gource's display is rendered using OpenGL and requires a 3D accelerated video card to run.
+Gource's display is rendered using OpenGL and requires a 3D accelerated video
+card to run.
 
 3. Using Gource
 ===============
@@ -39,7 +41,8 @@ options:
     -f      Fullscreen
 
     -WIDTHxHEIGHT
-            Set the window size. If -f is also supplied, will attempt to set the video mode to this also.
+            Set the window size. If -f is also supplied, will attempt to set
+            the video mode to this also.
 
     -p, --start-position POSITION
             Begin at some position in the log (between 0.0 and 1.0).
@@ -57,7 +60,7 @@ options:
             Loop back to the start of the log when the end is reached.
 
     -a, --auto-skip-seconds SECONDS
-            Automatically skip to next entry if nothing happens for a specified number of seconds.
+            Skip to next entry if nothing happens for a number of seconds.
 
     -s, --seconds-per-day SECONDS
             Speed of simulation in seconds per day.
@@ -78,7 +81,8 @@ options:
             Specify display date string (strftime format).
 
     --log-format FORMAT
-            Specify format of the log being read (git,cvs,custom). Required when reading STDIN.
+            Specify format of the log being read (git,cvs,hg,bzr,custom).
+            Required when reading STDIN.
 
     --git-branch
             Get the git log of a branch other than the current one.
@@ -88,6 +92,9 @@ options:
 
     --hg-log-command
             Print the hg log (Mercurial) command used by gource.
+
+    --bzr-log-command
+            Print the bzr log (Bazaar) command used by gource.
 
     --cvs-exp-command
             Print the cvs-exp.pl log command used by gource.
@@ -105,7 +112,8 @@ options:
             Filter out any files matching a specified regular expression.
 
     --user-image-dir DIRECTORY
-            Directory containing .jpg or .png images of users (eg 'Full Name.png') to use as avatars.
+            Directory containing .jpg or .png images of users 
+            (eg 'Full Name.png') to use as avatars.
 
     --default-user-image IMAGE
             Path of .jpg or .png to use as the default user image.
@@ -173,10 +181,12 @@ options:
     --output-framerate FPS
             Framerate of output (used with --output-ppm-stream).
 
-    path    Either a Git or Mercurial directory, a pre-generated log file (see --git-log-command, --hg-log-command or the custom
-            log format) or '-' to read STDIN. If path is ommited gource will attempt to read a log from the current directory.
+    path    Either a Git, Bazaar or Mercurial directory, a pre-generated log
+            file (see log commands or the custom log format) or '-' to read
+            STDIN. If path is ommited gource will attempt to read a log from
+            the current directory.
 
-Git and Mercurial Examples:
+Git, Bazaar and Mercurial Examples:
 
 View the log of the respository in the current path:
 
@@ -186,29 +196,33 @@ View the log of a project in the specified directory:
 
     gource my-project-dir
 
-Save a copy of the log using in a special log format and play it back (example is for Git, Mercurial users see --hg-log-command):
+Save a copy of the log using in a special log format and play it back
+(example is for Git):
 
     cd my-git-project
     `gource --git-log-command` > my-git-project.log
     gource my-git-project.log
 
-NOTE: --git-log-command assumes you have a recent version git of that supports all the options. You may need to modify
-the command line to work with an older version (changing %aN to %an for instance).
+NOTE: --git-log-command assumes you have a recent version git of that supports
+      all the options. You may need to modify the command line to work with an
+      older version (changing %aN to %an for instance).
 
 Other Version Control Systems:
 
-Visit the Gource homepage for guides and examples of using Gource with other version control systems:
+Visit the Gource homepage for guides and examples of using Gource with other
+version control systems:
 
     CVS       - http://code.google.com/p/gource/wiki/CVS
     SVN       - http://code.google.com/p/gource/wiki/SVN
 
 Custom Log Format:
 
-If you want to use Gource with something other than the supported systems, there is a pipe ('|') delimited custom log format:
+If you want to use Gource with something other than the supported systems,
+there is a pipe ('|') delimited custom log format:
 
     timestamp - A unix timestamp of when the update occured.
     username  - The name of the user who made the update.
-    type      - Single character for the update type - (A)dded, (M)odified or (D)eleted.
+    type      - initial for the update type - (A)dded, (M)odified or (D)eleted.
     file      - Path of the file updated.
     colour    - A colour for the file in hex (FFFFFF) format. Optional.
 
@@ -220,15 +234,17 @@ See the guide on the homepage for examples of recording videos with Gource:
 
 Interface:
 
-The time shown in the top left of the screen is set initially from the first log entry read and is incremented
-according to the simulation speed (--seconds-per-day).
+The time shown in the top left of the screen is set initially from the first
+log entry read and is incremented according to the simulation speed 
+(--seconds-per-day).
 
-Pressing SPACE at any time will pause/unpause the simulation. While paused you may use the mouse to inspect the
-detail of individual files and users.
+Pressing SPACE at any time will pause/unpause the simulation. While paused you
+may use the mouse to inspect the detail of individual files and users.
 
 TAB cycles through selecting the current visible users.
 
-The camera mode, either tracking activity, or showing the entire code tree, can be toggled using the V key.
+The camera mode, either tracking activity, or showing the entire code tree, can
+be toggled using the V key.
 
 Interactive keyboard commands:
 

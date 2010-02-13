@@ -56,7 +56,7 @@ Background colour in hex.
 Specify display date string (strftime format).
 .TP
 \fB\-\-log\-format FORMAT\fR
-Specify format of the log being read (git,cvs,custom). Required when reading STDIN.
+Specify format of the log being read (git,cvs,hg,bzr,custom). Required when reading STDIN.
 .TP
 \fB\-\-git\-branch\fR
 Get the git log of a branch other than the current one.
@@ -66,6 +66,9 @@ Print the git log command used by \fIgource\fR.
 .TP
 \fB\-\-hg\-log\-command\fR
 Print the hg log command (Mercurial) used by \fIgource\fR.
+.TP
+\fB\-\-bzr\-log\-command\fR
+Print the bzr log command (Bazaar) used by \fIgource\fR.
 .TP
 \fB\-\-cvs\-exp\-command\fR
 Print the cvs-exp.pl log command used by \fIgource\fR.
@@ -152,8 +155,8 @@ Write frames as PPM to a file ('\-' for STDOUT).
 Framerate of output (used with \-\-output\-ppm\-stream).
 .TP
 \fBpath\fR
-Either a Git or Mercurial directory, a pre-generated log file (see -\-git\-log\-command, -\-hg\-log\-command or the custom log format) or '\-' to read STDIN. If path is ommited \fIgource\fR will attempt to read a log from the current directory.
-.SH GIT AND MERCURIAL EXAMPLES
+Either a Git, Bazaar or Mercurial directory, a pre-generated log file (see log commands or the custom log format) or '\-' to read STDIN. If path is ommited \fIgource\fR will attempt to read a log from the current directory.
+.SH GIT, BAZAAR AND MERCURIAL EXAMPLES
 
 View the log of the respository in the current path:
 
@@ -165,7 +168,7 @@ View the log of a project in the specified directory:
 .ti 10
 \fIgource\fR my\-project\-dir
 
-Save a copy of the log using in a special log format and play it back (example is for Git, Mercurial users see \-\-hg\-log-command):
+Save a copy of the log using in a special log format and play it back (example is for Git):
 
 .ti 10
 cd my\-git\-project

@@ -37,6 +37,8 @@
 		<Unit filename="src\action.h" />
 		<Unit filename="src\apache.cpp" />
 		<Unit filename="src\apache.h" />
+		<Unit filename="src\bzr.cpp" />
+		<Unit filename="src\bzr.h" />
 		<Unit filename="src\commitlog.cpp" />
 		<Unit filename="src\commitlog.h" />
 		<Unit filename="src\core\bounds.h" />

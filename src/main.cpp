@@ -83,6 +83,13 @@ int main(int argc, char *argv[]) {
                 gource_info(command);
         }
 
+        if(args == "--bzr-log-command") {
+                std::string command = gGourceBzrLogCommand();
+
+                gource_info(command);
+        }
+
+
 
         if(args == "--date-format") {
 

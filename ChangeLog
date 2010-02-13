@@ -1,4 +1,5 @@
 0.25:
+ * Initial Bazaar support (John Arbash Meinel).
  * Support DOS line endings in logs.
  * Fixed various gdb and compiler warnings.
 
