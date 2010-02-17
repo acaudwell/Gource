@@ -37,6 +37,8 @@ int main(int argc, char *argv[]) {
     bool stop_on_idle = false;
     bool stop_at_end = false;
 
+    std::string camera_mode = "overview";
+
     std::string logfile = ".";
 
     std::vector<std::string> arguments;
@@ -482,6 +484,22 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
+        if(args == "--camera-mode") {
+
+            if((i+1)>=arguments.size()) {
+                gource_quit("specify camera-mode (overview,track)");
+            }
+
+            camera_mode = arguments[++i];
+
+            if(camera_mode != "overview" && camera_mode != "track") {
+                gource_quit("invalid camera-mode");
+            }
+
+            continue;
+        }
+
+
         if(args == "--follow-user") {
 
             if((i+1)>=arguments.size()) {
@@ -641,6 +659,10 @@ int main(int argc, char *argv[]) {
 
     try {
         gource = new Gource(logfile);
+
+        if(camera_mode == "track") {
+            gource->setCameraMode(true);
+        }
 
         if(start_position>0.0) gource->setStartPosition(start_position);
         if(stop_position>0.0)  gource->setStopPosition(stop_position);

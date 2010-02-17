@@ -112,6 +112,8 @@ void gource_help() {
     printf("  --user-friction SECONDS  Time users come to a complete hault (default: 0.67)\n");
     printf("  --user-scale SCALE       Change scale of users (default: 1.0)\n\n");
 
+    printf("  --camera-mode MODE       Camera mode (overview,track)\n\n");
+
     printf("  --follow-user USER       Camera will automatically follow this user\n");
     printf("  --highlight-user USER    Highlight the names of a particular user\n");
     printf("  --highlight-all-users    Highlight the names of all users\n");
@@ -287,6 +289,7 @@ Gource::Gource(std::string logfile) {
     date_x_offset = 0;
 
     camera = ZoomCamera(vec3f(0,0, -300), vec3f(0.0, 0.0, 0.0), 250.0, 5000.0);
+
     setCameraMode(false);
 
     root = 0;
@@ -390,7 +393,6 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
 }
 
 void Gource::zoom(bool zoomin) {
-//    if(selectedFile == 0 && selectedUser == 0) return;
 
     float min_distance = camera.getMinDistance();
     float max_distance = camera.getMaxDistance();
@@ -474,16 +476,42 @@ void Gource::setBackground(vec3f background) {
 void Gource::setCameraMode(bool track_users) {
     this->track_users = track_users;
     if(selectedUser!=0) camera.lockOn(track_users);
+    backgroundSelected=false;
 }
 
 void Gource::toggleCameraMode() {
     setCameraMode(!track_users);
 }
 
+//trace click of mouse on background
+void Gource::selectBackground() {
+    selectUser(0);
+
+    backgroundSelected = true;
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    gluPickMatrix((GLdouble) mousepos.x, (GLdouble) (viewport[3]-mousepos.y), 1.0f, 1.0f, viewport);
+
+    gluPerspective(90.0f, (GLfloat)display.width/(GLfloat)display.height, 0.1f, -camera.getPos().z);
+    camera.look();
+
+    backgroundPos = display.unproject(mousepos).truncate();
+}
+
 //select a user, deselect current file/user
 void Gource::selectUser(RUser* user) {
     //already selected do nothing
     if(user!=0 && selectedUser==user) return;
+
+    backgroundSelected=false;
 
     if(selectedFile != 0) {
         selectedFile->setSelected(false);
@@ -515,6 +543,8 @@ void Gource::selectFile(RFile* file) {
 
     //already selected do nothing
     if(file!=0 && selectedFile==file) return;
+
+    backgroundSelected=false;
 
     if(selectedUser != 0) {
         selectedUser->setSelected(false);
@@ -744,6 +774,7 @@ void Gource::reset() {
 
     selectedUser = 0;
     hoverUser = 0;
+    backgroundSelected=false;
 
     if(root!=0) delete root;
     root = new RDirNode(0, "/");
@@ -1205,7 +1236,14 @@ void Gource::updateTime() {
 void Gource::updateCamera(float dt) {
 
     //camera tracking
-    if(track_users && (selectedFile !=0 || selectedUser !=0)) {
+
+    if(backgroundSelected) {
+        Bounds2D mousebounds;
+        mousebounds.update(backgroundPos);
+
+        camera.adjust(mousebounds);
+
+    } else if(track_users && (selectedFile !=0 || selectedUser !=0)) {
         Bounds2D focusbounds;
 
         vec3f camerapos = camera.getPos();
@@ -1348,12 +1386,12 @@ void Gource::mousetrace(Frustum& frustum, float dt) {
     glDepthFunc(GL_LEQUAL);
     glEnable(GL_DEPTH_TEST);
 
-	(void) glRenderMode(GL_SELECT);
+    (void) glRenderMode(GL_SELECT);
 
-	glInitNames();
-	glPushName(0);
+    glInitNames();
+    glPushName(0);
 
-	glMatrixMode(GL_PROJECTION);
+    glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
     gluPickMatrix((GLdouble) mousepos.x, (GLdouble) (viewport[3]-mousepos.y), 1.0f, 1.0f, viewport);
@@ -1450,7 +1488,9 @@ void Gource::mousetrace(Frustum& frustum, float dt) {
     if(mouseclicked) {
         if(hoverUser!=0) selectUser(hoverUser);
         else if(hoverFile!=0) selectFile(hoverFile);
-        else selectUser(0);
+        else {
+            selectBackground();
+        }
     }
 }
 

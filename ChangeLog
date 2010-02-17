@@ -1,5 +1,7 @@
 0.25:
- * Initial Bazaar support (John Arbash Meinel).
+ * Bazaar support (John Arbash Meinel).
+ * Clicking the background moves the camera over where you clicked.
+ * Added --camera-mode option (track,overview).
  * Support DOS line endings in logs.
  * Fixed various gdb and compiler warnings.
 

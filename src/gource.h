@@ -79,6 +79,9 @@ class Gource : public SDLApp {
     bool mouseclicked;
     vec2f mousepos;
 
+    vec2f backgroundPos;
+    bool backgroundSelected;
+
     float start_position, stop_position;
     float last_percent;
     float time_scale;
@@ -152,6 +155,7 @@ class Gource : public SDLApp {
     void deleteUser(RUser* user);
     void deleteFile(RFile* file);
 
+    void selectBackground();
     void selectUser(RUser* user);
     void selectFile(RFile* file);
     void selectNextUser();
