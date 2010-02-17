@@ -19,7 +19,7 @@
 
 Regex cvsexp_commitno_regex("^([0-9]{6}):");
 Regex cvsexp_branch_regex("^BRANCH \\[(.+)\\]$");
-Regex cvsexp_date_regex("^\\(date: ([0-9]{4})[-/]([0-9]{2})[-/]([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})(?: \\+[0-9]{4})?;(.+)$");
+Regex cvsexp_date_regex("^\\(date: ([0-9]{4})[-/]([0-9]{2})[-/]([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})(?: [+-][0-9]{4})?;(.+)$");
 Regex cvsexp_detail_regex("author: ([a-zA-Z0-9_-]+);  state: ([a-zA-Z]+);(.+)$");
 Regex cvsexp_lines_regex("lines: \\+([0-9]+) -([0-9]+)");
 Regex cvsexp_entry_regex("\\| (.+),v:([0-9.]+),?");
