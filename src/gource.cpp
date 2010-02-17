@@ -776,6 +776,9 @@ void Gource::reset() {
     hoverUser = 0;
     backgroundSelected=false;
 
+    mouseclicked=false;
+    mousemoved=false;
+
     if(root!=0) delete root;
     root = new RDirNode(0, "/");
 
