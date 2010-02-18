@@ -192,6 +192,7 @@ int main(int argc, char *argv[]) {
             if(   gGourceLogFormat != "git"
                && gGourceLogFormat != "cvs"
                && gGourceLogFormat != "custom"
+               && gGourceLogFormat != "hg"
                && gGourceLogFormat != "bzr"
                && gGourceLogFormat != "apache") {
                 gource_quit("unknown log-format");
