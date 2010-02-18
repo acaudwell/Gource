@@ -58,7 +58,7 @@ BaseLog* MercurialLog::generateLog(std::string dir) {
     createTempLog();
 
     char cmd_buff[2048];
-    sprintf(cmd_buff, "%s %s > %s", command.c_str(), dir.c_str(), temp_file.c_str());
+    sprintf(cmd_buff, "%s -R %s > %s", command.c_str(), dir.c_str(), temp_file.c_str());
 
     int command_rc = system(cmd_buff);
 
