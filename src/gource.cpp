@@ -80,7 +80,7 @@ void gource_help() {
     printf("  --colour-images                  Colourize user images\n\n");
 
     printf("  --date-format FORMAT     Specify display date string (strftime format)\n");
-    printf("  --log-format  FORMAT     Specify format of log (git,cvs,custom)\n");
+    printf("  --log-format  FORMAT     Specify format of log (git,cvs,hg,bzr,custom)\n");
     printf("  --git-branch             Get the git log of a particular branch\n");
     printf("  --git-log-command        Show git log command used by gource\n");
     printf("  --cvs-exp-command        Show cvs-exp.pl log command used by gource\n");
