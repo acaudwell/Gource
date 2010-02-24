@@ -269,6 +269,7 @@ Gource::Gource(std::string logfile) {
     draw_loading = true;
 
     mousemoved = false;
+    mousedragged = false;
     mouseclicked = false;
 
     splash = -1.0;
@@ -380,6 +381,16 @@ std::string Gource::dateAtPosition(float percent) {
 void Gource::mouseMove(SDL_MouseMotionEvent *e) {
     if(commitlog==0) return;
 
+    //move camera in direction the user dragged the mouse
+    if(mousedragged) {
+        backgroundPos += vec2f( e->xrel, e->yrel );
+
+        return;
+    }
+
+    mouse_inactivity = 0.0;
+    SDL_ShowCursor(true);
+
     mousepos = vec2f(e->x, e->y);
     mousemoved=true;
 
@@ -413,7 +424,27 @@ void Gource::zoom(bool zoomin) {
 }
 
 void Gource::mouseClick(SDL_MouseButtonEvent *e) {
-    if(e->type != SDL_MOUSEBUTTONDOWN || commitlog==0) return;
+    if(commitlog==0) return;
+
+    if(e->type == SDL_MOUSEBUTTONUP) {
+
+        if(e->button == SDL_BUTTON_LEFT) {
+
+            mouse_inactivity=0.0;
+            SDL_ShowCursor(true);
+
+            SDL_WM_GrabInput(SDL_GRAB_OFF);
+
+            //stop dragging mouse, return the mouse to where
+            //the user started dragging.
+            if(mousedragged) {
+                SDL_WarpMouse(mousepos.x, mousepos.y);
+                mousedragged=false;
+            }
+        }
+    }
+
+    if(e->type != SDL_MOUSEBUTTONDOWN) return;
 
     //wheel up
     if(e->button == SDL_BUTTON_WHEELUP) {
@@ -498,12 +529,17 @@ void Gource::selectBackground() {
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
 
-    gluPickMatrix((GLdouble) mousepos.x, (GLdouble) (viewport[3]-mousepos.y), 1.0f, 1.0f, viewport);
-
     gluPerspective(90.0f, (GLfloat)display.width/(GLfloat)display.height, 0.1f, -camera.getPos().z);
     camera.look();
 
-    backgroundPos = display.unproject(mousepos).truncate();
+    vec2f screen_centre(display.width*0.5,display.height*0.5);
+
+    backgroundPos = display.unproject(screen_centre).truncate();
+
+    SDL_ShowCursor(false);
+    SDL_WM_GrabInput(SDL_GRAB_ON);
+
+    mousedragged=true;
 }
 
 //select a user, deselect current file/user
@@ -778,6 +814,9 @@ void Gource::reset() {
 
     mouseclicked=false;
     mousemoved=false;
+    mousedragged = false;
+
+    mouse_inactivity = 0.0;
 
     if(root!=0) delete root;
     root = new RDirNode(0, "/");
@@ -1298,6 +1337,16 @@ void Gource::logic(float t, float dt) {
     }
 
     slider.logic(dt);
+
+    //check if mouse has been inactive for 3 seconds
+    //and if so hide it.
+    if(!mouseclicked && mouse_inactivity<3.0) {
+        mouse_inactivity += dt;
+
+        if(mouse_inactivity>=3.0) {
+            SDL_ShowCursor(false);
+        }
+    }
 
     //still want to update camera while paused
     if(paused) {
