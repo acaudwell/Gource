@@ -35,6 +35,8 @@ protected:
 
     char* pixels1;
     char* pixels2;
+    char* pixels_out;
+
     char* pixels_shared_ptr;
 
     size_t rowstride;

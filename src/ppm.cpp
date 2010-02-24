@@ -37,8 +37,9 @@ FrameExporter::FrameExporter() {
 
     rowstride     = display.width * 3;
 
-    pixels1 = new char[display.height * rowstride];
-    pixels2 = new char[display.height * rowstride];
+    pixels1        = new char[display.height * rowstride];
+    pixels2        = new char[display.height * rowstride];
+    pixels_out     = new char[display.height * rowstride];
 
     pixels_shared_ptr = 0;
 
@@ -73,6 +74,7 @@ FrameExporter::~FrameExporter() {
 
     delete[] pixels1;
     delete[] pixels2;
+    delete[] pixels_out;
 }
 
 void FrameExporter::dump() {
@@ -81,12 +83,6 @@ void FrameExporter::dump() {
 
     glEnable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
-
-    //render view to texture
-    display.renderToTexture(screentex, display.width, display.height, GL_RGBA);
-
-    //draw view screen flipped
-    display.fullScreenQuad(true);
 
     char* next_pixel_ptr = (pixels_shared_ptr == pixels1) ? pixels2 : pixels1;
 
@@ -103,10 +99,6 @@ void FrameExporter::dump() {
 
     SDL_CondSignal(cond);
     SDL_mutexV(mutex);
-
-    // redraw view the right way up for the user
-    display.fullScreenQuad(false);
-
 }
 
 void FrameExporter::dumpThr() {
@@ -119,7 +111,17 @@ void FrameExporter::dumpThr() {
 
         if (dumper_thread_state == FRAME_EXPORTER_EXIT) break;
 
-        dumpImpl();
+        if (pixels_shared_ptr != 0) {
+
+            //invert image
+            for(int y=0;y<display.height;y++) {
+                for(int x=0;x<rowstride;x++) {
+                    pixels_out[x + y * rowstride] = pixels_shared_ptr[x + (display.height - y - 1) * rowstride];
+                }
+            }
+
+            dumpImpl();
+        }
 
         dumper_thread_state = FRAME_EXPORTER_WAIT;
     }
@@ -166,9 +168,6 @@ PPMExporter::~PPMExporter() {
 }
 
 void PPMExporter::dumpImpl() {
-    if(pixels_shared_ptr==0) return;
-
     *output << ppmheader;
-
-    output->write(pixels_shared_ptr, rowstride * display.height);
+    output->write(pixels_out, rowstride * display.height);
 }
