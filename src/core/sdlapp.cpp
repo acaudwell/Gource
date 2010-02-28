@@ -206,29 +206,36 @@ void SDLAppParseArgs(int argc, char *argv[], int* xres, int* yres, bool* fullscr
     for (int i=1; i<argc; i++) {
         debugLog("argv[%d] = %s\n", i, argv[i]);
 
-        if (!strcmp(argv[i],"-f")) {
-            *fullscreen = 1;
+        std::string args(argv[i]);
+
+        if (args == "-f") {
+            *fullscreen = true;
             continue;
         }
-        else if (!strcmp(argv[i],"-w")) {
-            *fullscreen = 0;
+        else if (args == "-w") {
+            *fullscreen = false;
             continue;
         }
 
         //get video mode
-        if(strchr(argv[i], '-') != 0 && strlen(argv[i])>1) {
-            std::string argstr(argv[i], 1, strlen(argv[i])-1);
-            debugLog("%s\n", argstr.c_str());
-            size_t x = argstr.rfind("x");
+        if(args.size()>1 && args[0] == '-' && args.rfind("x") != std::string::npos) {
+
+            std::string displayarg = args;
+
+            while(displayarg.size()>1 && displayarg[0] == '-') {
+                displayarg = displayarg.substr(1, displayarg.size()-1);
+            }
+
+            size_t x = displayarg.rfind("x");
 
             if(x != std::string::npos) {
-                std::string widthstr  = argstr.substr(0, x);
-                std::string heightstr = argstr.substr(x+1);
+                std::string widthstr  = displayarg.substr(0, x);
+                std::string heightstr = displayarg.substr(x+1);
 
                 int width = atoi(widthstr.c_str());
                 int height = atoi(heightstr.c_str());
 
-                if(width!=0 && height!=0) {
+                if(width>0 && height>0) {
                     debugLog("w=%d, h=%d\n",width,height);
 
                     *xres = width;
@@ -240,7 +247,7 @@ void SDLAppParseArgs(int argc, char *argv[], int* xres, int* yres, bool* fullscr
 
         // non display argument
         if(otherargs != 0) {
-            otherargs->push_back(std::string(argv[i]));
+            otherargs->push_back(args);
         }
     }
 }
