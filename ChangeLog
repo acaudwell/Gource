@@ -1,7 +1,6 @@
 0.25:
  * Bazaar support (John Arbash Meinel).
  * Dragging the mouse on the background moves the camera.
- * Mouse automatically hides after 3 seconds of inactivity.
  * Added --camera-mode option (track,overview).
  * Support DOS line endings in logs.
  * Improved compatibility of hg log command (Brendan Cully).

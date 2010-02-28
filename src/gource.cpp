@@ -388,9 +388,6 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
         return;
     }
 
-    mouse_inactivity = 0.0;
-    SDL_ShowCursor(true);
-
     mousepos = vec2f(e->x, e->y);
     mousemoved=true;
 
@@ -430,14 +427,12 @@ void Gource::mouseClick(SDL_MouseButtonEvent *e) {
 
         if(e->button == SDL_BUTTON_LEFT) {
 
-            mouse_inactivity=0.0;
-            SDL_ShowCursor(true);
-
             SDL_WM_GrabInput(SDL_GRAB_OFF);
 
             //stop dragging mouse, return the mouse to where
             //the user started dragging.
             if(mousedragged) {
+                SDL_ShowCursor(true);
                 SDL_WarpMouse(mousepos.x, mousepos.y);
                 mousedragged=false;
             }
@@ -815,8 +810,6 @@ void Gource::reset() {
     mouseclicked=false;
     mousemoved=false;
     mousedragged = false;
-
-    mouse_inactivity = 0.0;
 
     if(root!=0) delete root;
     root = new RDirNode(0, "/");
@@ -1337,16 +1330,6 @@ void Gource::logic(float t, float dt) {
     }
 
     slider.logic(dt);
-
-    //check if mouse has been inactive for 3 seconds
-    //and if so hide it.
-    if(!mouseclicked && mouse_inactivity<3.0) {
-        mouse_inactivity += dt;
-
-        if(mouse_inactivity>=3.0) {
-            SDL_ShowCursor(false);
-        }
-    }
 
     //still want to update camera while paused
     if(paused) {
