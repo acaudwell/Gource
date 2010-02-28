@@ -427,11 +427,10 @@ void Gource::mouseClick(SDL_MouseButtonEvent *e) {
 
         if(e->button == SDL_BUTTON_LEFT) {
 
-            SDL_WM_GrabInput(SDL_GRAB_OFF);
-
             //stop dragging mouse, return the mouse to where
             //the user started dragging.
             if(mousedragged) {
+                SDL_WM_GrabInput(SDL_GRAB_OFF);
                 SDL_ShowCursor(true);
                 SDL_WarpMouse(mousepos.x, mousepos.y);
                 mousedragged=false;
@@ -511,25 +510,17 @@ void Gource::toggleCameraMode() {
 
 //trace click of mouse on background
 void Gource::selectBackground() {
+    //is the left mouse button down?
+
+    Uint8 ms = SDL_GetMouseState(0,0);
+
+    if(!(ms & SDL_BUTTON(SDL_BUTTON_LEFT))) return;
+
     selectUser(0);
 
     backgroundSelected = true;
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-
-    gluPerspective(90.0f, (GLfloat)display.width/(GLfloat)display.height, 0.1f, -camera.getPos().z);
-    camera.look();
-
-    vec2f screen_centre(display.width*0.5,display.height*0.5);
-
-    backgroundPos = display.unproject(screen_centre).truncate();
+    backgroundPos = camera.getPos().truncate();
 
     SDL_ShowCursor(false);
     SDL_WM_GrabInput(SDL_GRAB_ON);
