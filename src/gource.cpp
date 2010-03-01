@@ -336,7 +336,7 @@ void Gource::update(float t, float dt) {
     dt *= time_scale;
 
     //have to manage runtime internally as we're messing with dt
-    runtime += dt;
+    if(!paused) runtime += dt;
 
     logic_time = SDL_GetTicks();
 
@@ -648,6 +648,20 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
 
         if (e->keysym.sym == SDLK_w) {
             trace_debug = !trace_debug;
+        }
+
+        if (e->keysym.sym == SDLK_m) {
+
+            Uint8 ms = SDL_GetMouseState(0,0);
+
+            //toggle mouse visiblity unless mouse clicked/pressed/dragged
+            if(!(mousedragged || mouseclicked || ms & SDL_BUTTON(SDL_BUTTON_LEFT))) {
+                if(SDL_ShowCursor(SDL_QUERY) == SDL_ENABLE) {
+                    SDL_ShowCursor(false);
+                } else {
+                    SDL_ShowCursor(true);
+                }
+            }
         }
 
         if (e->keysym.sym == SDLK_n) {

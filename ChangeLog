@@ -1,6 +1,8 @@
 0.26:
  * Improved mouse dragging.
- 
+ * Simulation time no longer incremented while paused, counting towards file time lag.
+ * M key now toggles mouse visibility.
+
 0.25:
  * Bazaar support (John Arbash Meinel).
  * Dragging the mouse on the background moves the camera.

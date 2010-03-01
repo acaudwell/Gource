@@ -254,6 +254,7 @@ Interactive keyboard commands:
 
     (V)   Toggle camera mode
     (C)   Displays Gource logo
+    (M)   Toggle mouse visibility
     (N)   Jump forward in time to next log entry.
     (+-)  Adjust simulation speed.
     (<>)  Adjust time scale.
