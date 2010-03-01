@@ -18,7 +18,7 @@
 #include "apache.h"
 
 const char* months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug" , "Sep", "Oct", "Nov", "Dec" };
-Regex apache_entry_start("^([^ ]+) +[^ ]+ +([^ ]+) +\\[(.*?)\\] +(.*)$");
+Regex apache_entry_start("^(?:[^ ]+ )?([^ ]+) +[^ ]+ +([^ ]+) +\\[(.*?)\\] +(.*)$");
 Regex apache_entry_date("(\\d+)/([A-Za-z]+)/(\\d+):(\\d+):(\\d+):(\\d+) ([+-])(\\d+)");
 Regex apache_entry_request("\"([^ ]+) +([^ ]+) +([^ ]+)\" +([^ ]+) +([^\\s+]+)(.*)");
 Regex apache_entry_agent(" +\"([^\"]+)\" +\"([^\"]+)\" +\"([^\"]+)\"");
