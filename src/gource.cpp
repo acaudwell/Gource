@@ -383,7 +383,11 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
 
     //move camera in direction the user dragged the mouse
     if(mousedragged) {
-        backgroundPos += vec2f( e->xrel, e->yrel );
+        vec2f mag( e->xrel, e->yrel );
+
+        if(mag.length()>100.0) return;
+
+        backgroundPos += mag;
 
         return;
     }
