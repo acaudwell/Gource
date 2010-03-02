@@ -1,5 +1,6 @@
 0.26:
  * Improved mouse dragging.
+ * Username positions now scale correctly.
  * Simulation time no longer incremented while paused, counting towards file time lag.
  * M key now toggles mouse visibility.
 

@@ -148,7 +148,7 @@ void Pawn::drawSimple(float dt) {
 
     float ratio = icon->h / (float) icon->w;
     float halfsize = size * 0.5f;
-    vec2f offsetpos = pos - vec2f(halfsize, halfsize);
+    vec2f offsetpos = pos - vec2f(halfsize, halfsize*ratio);
 
     float alpha = getAlpha();
     vec3f col = getColour();
@@ -179,7 +179,7 @@ void Pawn::drawShadow(float dt) {
 
     float ratio = icon->h / (float) icon->w;
     float halfsize = size * 0.5f;
-    vec2f offsetpos = pos - vec2f(halfsize, halfsize) + shadowOffset;
+    vec2f offsetpos = pos - vec2f(halfsize, halfsize*ratio) + shadowOffset;
 
     float alpha = getAlpha();
 
@@ -216,7 +216,7 @@ void Pawn::draw(float dt) {
 
     float ratio = icon->h / (float) icon->w;
     float halfsize = size * 0.5f;
-    vec2f offsetpos = pos - vec2f(halfsize, halfsize);
+    vec2f offsetpos = pos - vec2f(halfsize, halfsize*ratio);
 
     float alpha = getAlpha();
 

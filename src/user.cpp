@@ -321,6 +321,8 @@ void RUser::updateFont() {
         font.dropShadow(true);
     }
 
+    font.alignTop(false);
+
     namewidth = font.getWidth(name);
 }
 
@@ -389,10 +391,9 @@ void RUser::drawNameText(float alpha) {
 
         vec3f drawpos = vec3f(pos.x, pos.y, 0.0);
 
-        vec3f screenpos = display.project(drawpos);
-
+        vec3f screenpos = display.project(drawpos - vec3f(0.0, 0.5 * size * (icon->h / (float) icon->w), 0.0f ));
         screenpos.x -= namewidth * 0.5;
-        screenpos.y -= size * 2.0;
+        screenpos.y -= font.getHeight();
 
         glColor4f(nameCol.x, nameCol.y, nameCol.z, (selected||highlighted) ? user_alpha : alpha);
 
