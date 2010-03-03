@@ -97,13 +97,7 @@ void gource_help() {
     printf("  --disable-progress       Disable the progress bar\n");
     printf("  --disable-bloom          Disable bloom effect\n\n");
 
-    printf("  --hide-users             Hide users\n");
-    printf("  --hide-tree              Hide the tree\n");
-    printf("  --hide-files             Hide files\n");
-    printf("  --hide-usernames         Hide usernames\n");
-    printf("  --hide-filenames         Hide filenames\n");
-    printf("  --hide-dirnames          Hide directory names\n");
-    printf("  --hide-date              Hide the date\n\n");
+    printf("  --hide DISPLAY_ELEMENT   date,users,files,tree,usernames,filenames,dirnames\n\n");
 
     printf("  --max-files NUMBER       Max number of active files (default: 1000)\n");
     printf("  --max-file-lag SECONDS   Max time files of a commit can take to appear\n\n");

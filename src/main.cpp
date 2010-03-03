@@ -104,11 +104,6 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        if(args == "--hide-date") {
-            gGourceHideDate = true;
-            continue;
-        }
-
         if(args == "--disable-auto-skip") {
             gGourceAutoSkipSeconds = -1.0;
             continue;
@@ -124,33 +119,51 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        if(args == "--hide-users") {
-            gGourceHideUsers = true;
-            continue;
+        std::vector<std::string> hide_fields;
+
+        if(args.find("--hide-") == 0 && args.size()>7) {
+
+            std::string hide = args.substr(7,args.size()-7);
+
+            hide_fields.push_back(hide);
         }
 
-        if(args == "--hide-tree") {
-            gGourceHideTree = true;
-            continue;
+        if(args == "--hide") {
+            if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {
+                gource_quit("specify element(s) to hide");
+            }
+
+            std::string hidestr = arguments[++i];
+
+            size_t sep;
+            while((sep = hidestr.find(",")) != std::string::npos) {
+                if(sep!=0) hide_fields.push_back(hidestr.substr(0, sep));
+                if(sep == hidestr.size()-1) break;
+
+                hidestr = hidestr.substr(sep+1, hidestr.size()-1);
+            }
+
+            if(hidestr.size() && hidestr != ",") hide_fields.push_back(hidestr);
         }
 
-        if(args == "--hide-files") {
-            gGourceHideFiles = true;
-            continue;
-        }
+        if(hide_fields.size()>0) {
 
-        if(args == "--hide-usernames") {
-            gGourceHideUsernames = true;
-            continue;
-        }
+            for(std::vector<std::string>::iterator it = hide_fields.begin(); it != hide_fields.end(); it++) {
+                std::string hidestr = (*it);
 
-        if(args == "--hide-filenames") {
-            gGourceHideFilenames = true;
-            continue;
-        }
+                    if(hidestr == "date")      gGourceHideDate = true;
+                else if(hidestr == "users")     gGourceHideUsers = true;
+                else if(hidestr == "tree")      gGourceHideTree  = true;
+                else if(hidestr == "files")     gGourceHideFiles = true;
+                else if(hidestr == "usernames") gGourceHideUsernames = true;
+                else if(hidestr == "filenames") gGourceHideFilenames = true;
+                else if(hidestr == "dirnames")  gGourceDrawDirName = false;
+                else {
+                    std::string arg_error = std::string("unknown option --hide ") + hidestr;
+                    gource_quit(arg_error);
+                }
+            }
 
-        if(args == "--hide-dirnames") {
-            gGourceDrawDirName = false;
             continue;
         }
 

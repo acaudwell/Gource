@@ -157,26 +157,10 @@ options:
     --camera-mode MODE
             Camera mode (overview,track).
 
-    --hide-users
-            Hide users.
+    --hide DISPLAY_ELEMENT
+            Hide display element (date,users,files,tree,usernames,filenames,dirnames).
 
-    --hide-tree
-            Hide tree.
-
-    --hide-files
-            Hide files.
-
-    --hide-usernames
-            Hide usernames.
-
-    --hide-filenames
-            Hide filenames.
-
-    --hide-dirnames
-            Hide directory names.
-
-    --hide-date
-            Hide the date.
+            Separate multiple elements with commas.
 
     --output-ppm-stream FILE
             Write frames as PPM to a file ('-' for STDOUT).
