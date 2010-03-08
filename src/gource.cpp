@@ -443,10 +443,13 @@ void Gource::mouseClick(SDL_MouseButtonEvent *e) {
 
         Uint8 ms = SDL_GetMouseState(0,0);
 
-        if(!(ms & SDL_BUTTON(SDL_BUTTON_RIGHT) || ms & SDL_BUTTON(SDL_BUTTON_LEFT))) {
-            SDL_WM_GrabInput(SDL_GRAB_OFF);
-            SDL_ShowCursor(true);
-            SDL_WarpMouse(mousepos.x, mousepos.y);
+
+        if(e->button == SDL_BUTTON_LEFT || e->button == SDL_BUTTON_RIGHT) {
+            if(!(ms & SDL_BUTTON(SDL_BUTTON_RIGHT) || ms & SDL_BUTTON(SDL_BUTTON_LEFT))) {
+                SDL_WM_GrabInput(SDL_GRAB_OFF);
+                SDL_ShowCursor(true);
+                SDL_WarpMouse(mousepos.x, mousepos.y);
+            }
         }
     }
 
