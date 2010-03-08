@@ -79,6 +79,8 @@ class Gource : public SDLApp {
     bool mouseclicked;
     bool mousedragged;
 
+    float rotate_angle;
+
     vec2f mousepos;
 
     vec2f backgroundPos;

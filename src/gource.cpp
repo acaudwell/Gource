@@ -375,11 +375,23 @@ std::string Gource::dateAtPosition(float percent) {
 void Gource::mouseMove(SDL_MouseMotionEvent *e) {
     if(commitlog==0) return;
 
+    Uint8 ms = SDL_GetMouseState(0,0);
+    bool rightmouse = ms & SDL_BUTTON(SDL_BUTTON_RIGHT);
+
     //move camera in direction the user dragged the mouse
-    if(mousedragged) {
+    if(mousedragged || rightmouse) {
         vec2f mag( e->xrel, e->yrel );
 
         if(mag.length()>100.0) return;
+
+        //if right mouse button is held while dragging, rotate tree instead of
+        //moving camera
+
+        if(rightmouse) {
+            rotate_angle = std::min(1.0f, (float) fabs(mag.x) / 10.0f) * 5.0f * DEGREES_TO_RADIANS;
+            if(mag.x < 0.0) rotate_angle = -rotate_angle;
+            return;
+        }
 
         backgroundPos += mag;
 
@@ -424,15 +436,17 @@ void Gource::mouseClick(SDL_MouseButtonEvent *e) {
     if(e->type == SDL_MOUSEBUTTONUP) {
 
         if(e->button == SDL_BUTTON_LEFT) {
-
             //stop dragging mouse, return the mouse to where
             //the user started dragging.
-            if(mousedragged) {
-                SDL_WM_GrabInput(SDL_GRAB_OFF);
-                SDL_ShowCursor(true);
-                SDL_WarpMouse(mousepos.x, mousepos.y);
-                mousedragged=false;
-            }
+            mousedragged=false;
+        }
+
+        Uint8 ms = SDL_GetMouseState(0,0);
+
+        if(!(ms & SDL_BUTTON(SDL_BUTTON_RIGHT) || ms & SDL_BUTTON(SDL_BUTTON_LEFT))) {
+            SDL_WM_GrabInput(SDL_GRAB_OFF);
+            SDL_ShowCursor(true);
+            SDL_WarpMouse(mousepos.x, mousepos.y);
         }
     }
 
@@ -451,13 +465,16 @@ void Gource::mouseClick(SDL_MouseButtonEvent *e) {
     }
 
     if(e->button == SDL_BUTTON_RIGHT) {
-        toggleCameraMode();
+
+        SDL_WM_GrabInput(SDL_GRAB_ON);
+        SDL_ShowCursor(false);
+
         return;
     }
 
     if(e->button == SDL_BUTTON_LEFT) {
 
-        mousepos = vec2f(e->x, e->y);
+        //mousepos = vec2f(e->x, e->y);
         mouseclicked=true;
 
         if(canSeek()) {
@@ -813,6 +830,8 @@ void Gource::reset() {
     mouseclicked=false;
     mousemoved=false;
     mousedragged = false;
+
+    rotate_angle = 0.0f;
 
     if(root!=0) delete root;
     root = new RDirNode(0, "/");
@@ -1333,6 +1352,12 @@ void Gource::logic(float t, float dt) {
     }
 
     slider.logic(dt);
+
+    //apply rotation
+    if(rotate_angle != 0.0f) {
+        root->rotate(rotate_angle);
+        rotate_angle = 0.0f;
+    }
 
     //still want to update camera while paused
     if(paused) {

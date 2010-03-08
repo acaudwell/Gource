@@ -158,6 +158,8 @@ public:
 
     void setPos(vec2f pos);
 
+    void rotate(float angle_radians);
+
     void setParent(RDirNode* parent);
 
     float distanceTo(RDirNode* node);

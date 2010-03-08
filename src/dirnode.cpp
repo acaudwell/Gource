@@ -118,6 +118,22 @@ void RDirNode::nodeUpdated(bool userInitiated) {
     if(parent !=0) parent->nodeUpdated(true);
 }
 
+void RDirNode::rotate(float angle_radians) {
+
+    float s = sinf(angle_radians);
+    float c = cosf(angle_radians);
+
+    if(parent != 0) {
+        pos  = vec2f( pos.x * c - pos.y * s, pos.x * s + pos.y * c );
+        spos = vec2f( spos.x * c - spos.y * s, spos.x * s + spos.y * c );
+    }
+
+    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+        RDirNode* child = (*it);
+        child->rotate(angle_radians);
+    }
+}
+
 void RDirNode::setPos(vec2f pos) {
     this->pos = pos;
 }
