@@ -469,6 +469,12 @@ void Gource::mouseClick(SDL_MouseButtonEvent *e) {
         return;
     }
 
+    if(e->button == SDL_BUTTON_MIDDLE) {
+        toggleCameraMode();
+        return;
+    }
+
+
     if(e->button == SDL_BUTTON_RIGHT) {
 
         SDL_WM_GrabInput(SDL_GRAB_ON);
