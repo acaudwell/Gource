@@ -107,6 +107,38 @@ public:
         return v;
     }
 
+    vec2<T> rotate(float angle) const {
+
+        float s = sinf(angle);
+        float c = cosf(angle);
+
+        return vec2<T>( x * c - y * s, x * s + y * c );
+    }
+
+    vec2<T> rotate(float s, float c) const {
+        return vec2<T>( x * c - y * s, x * s + y * c );
+    }
+
+    vec2<T> rotate(const vec2<T> &centre, float angle) const {
+        vec2<T> v = *this - centre;
+
+        float s = sinf(angle);
+        float c = cosf(angle);
+
+        v = vec2<T>( v.x * c - v.y * s, v.x * s + v.y * c );
+
+        return v + centre;
+    }
+
+    vec2<T> rotate(const vec2<T> &centre, float s, float c) const {
+        vec2<T> v = *this - centre;
+
+        v = vec2<T>( v.x * c - v.y * s, v.x * s + v.y * c );
+
+        return v + centre;
+    }
+
+
     operator T*() const {
         return (T*) &x;
     }

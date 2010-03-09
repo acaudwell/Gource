@@ -158,7 +158,7 @@ public:
 
     void setPos(vec2f pos);
 
-    void rotate(float angle_radians);
+    void rotate(float s, float c);
 
     void setParent(RDirNode* parent);
 
@@ -172,7 +172,7 @@ public:
 
     void applyForces(QuadTree &quadtree);
 
-    void logic(float dt, Bounds2D& bounds);
+    void logic(float dt);
 
     void drawEdges(float dt);
     void drawEdgeShadows(float dt);

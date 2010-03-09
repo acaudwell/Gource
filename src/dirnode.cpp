@@ -118,19 +118,16 @@ void RDirNode::nodeUpdated(bool userInitiated) {
     if(parent !=0) parent->nodeUpdated(true);
 }
 
-void RDirNode::rotate(float angle_radians) {
-
-    float s = sinf(angle_radians);
-    float c = cosf(angle_radians);
+void RDirNode::rotate(float s, float c) {
 
     if(parent != 0) {
-        pos  = vec2f( pos.x * c - pos.y * s, pos.x * s + pos.y * c );
-        spos = vec2f( spos.x * c - spos.y * s, spos.x * s + spos.y * c );
+        pos  = pos.rotate(s, c);
+        spos = spos.rotate(s, c);
     }
 
     for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
-        child->rotate(angle_radians);
+        child->rotate(s, c);
     }
 }
 
@@ -839,7 +836,7 @@ void RDirNode::calcEdges() {
     }
 }
 
-void RDirNode::logic(float dt, Bounds2D& bounds) {
+void RDirNode::logic(float dt) {
 
     //move
     move(dt);
@@ -849,8 +846,6 @@ void RDirNode::logic(float dt, Bounds2D& bounds) {
     if(parent != 0) {
         node_normal = (pos - parent->getPos()).normal();
     }
-
-    bounds.update(pos);
 
     //update files
      for(std::list<RFile*>::iterator it = files.begin(); it!=files.end(); it++) {
@@ -863,7 +858,7 @@ void RDirNode::logic(float dt, Bounds2D& bounds) {
     for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
 
-        node->logic(dt, bounds);
+        node->logic(dt);
     }
 
     //update colour

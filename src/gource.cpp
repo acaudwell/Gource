@@ -27,6 +27,8 @@ bool  gGourceDisableBloom    = false;
 bool  gGourceDisableProgress = false;
 bool  gGourceQuadTreeDebug   = false;
 
+int   gGourceMaxQuadTreeDepth = 6;
+
 std::string gGourceLogFormat;
 std::string gGourceDateFormat("%A, %d %B, %Y %X");
 
@@ -1131,7 +1133,7 @@ void Gource::interactUsers() {
 
     //dont use deep quad tree initially when all the nodes are in one place
     if(dir_bounds.area() > 10000.0) {
-        max_depth = 6;
+        max_depth = gGourceMaxQuadTreeDepth;
     }
 
     userTree = new QuadTree(quadtreebounds, max_depth, 1);
@@ -1177,6 +1179,29 @@ void Gource::interactUsers() {
     update_user_tree_time = SDL_GetTicks() - update_user_tree_time;
 }
 
+void Gource::updateBounds() {
+
+    user_bounds.reset();
+
+    for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
+        RUser* u = it->second;
+
+        if(!u->isIdle()) {
+            user_bounds.update(u->getPos());
+        }
+    }
+
+    dir_bounds.reset();
+
+    for(std::map<std::string,RDirNode*>::iterator it = gGourceDirMap.begin(); it!=gGourceDirMap.end(); it++) {
+        RDirNode* node = it->second;
+
+        if(node->isVisible()) {
+            dir_bounds.update(node->getPos());
+        }
+    }
+}
+
 
 void Gource::updateUsers(float t, float dt) {
     std::vector<RUser*> inactiveUsers;
@@ -1204,8 +1229,6 @@ void Gource::updateUsers(float t, float dt) {
         if(u->isIdle()) {
             idle_users++;
         } else {
-            user_bounds.update(u->getPos());
-
             //if nothing is selected, and this user is active and this user is the specified user to follow, select them
             if(selectedUser == 0 && selectedFile == 0) {
                 for(std::vector<std::string>::iterator ui = follow_users.begin(); ui != follow_users.end(); ui++) {
@@ -1236,7 +1259,7 @@ void Gource::updateUsers(float t, float dt) {
     }
 }
 
-void Gource::interactDirs() {
+void Gource::updateQuadTree() {
 
     // update quad tree
     Bounds2D quadtreebounds = dir_bounds;
@@ -1252,7 +1275,7 @@ void Gource::interactDirs() {
 
     //dont use deep quad tree initially when all the nodes are in one place
     if(dir_bounds.area() > 10000.0) {
-        max_depth = 6;
+        max_depth = gGourceMaxQuadTreeDepth;
     }
 
     dirNodeTree = new QuadTree(quadtreebounds, max_depth, 1);
@@ -1268,15 +1291,11 @@ void Gource::interactDirs() {
     }
 
     update_dir_tree_time = SDL_GetTicks() - update_dir_tree_time;
-
-    root->applyForces(*dirNodeTree);
 }
 
 void Gource::updateDirs(float dt) {
-    //recalc the directory bounds
-    dir_bounds.reset();
-
-    root->logic(dt, dir_bounds);
+    root->applyForces(*dirNodeTree);
+    root->logic(dt);
 }
 
 void Gource::updateTime() {
@@ -1358,12 +1377,26 @@ void Gource::logic(float t, float dt) {
 
     //apply rotation
     if(rotate_angle != 0.0f) {
-        root->rotate(rotate_angle);
+        float s = sinf(rotate_angle);
+        float c = cosf(rotate_angle);
+
+        root->rotate(s, c);
+
+        for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
+            RUser* user = it->second;
+
+            vec2f userpos = user->getPos();
+
+            user->setPos(userpos.rotate(s, c));
+        }
+
         rotate_angle = 0.0f;
     }
 
     //still want to update camera while paused
     if(paused) {
+        updateBounds();
+        updateQuadTree();
         updateCamera(dt);
         return;
     }
@@ -1432,9 +1465,10 @@ void Gource::logic(float t, float dt) {
     gGourceFileInnerLoops = 0;
 
     interactUsers();
-    interactDirs();
-
     updateUsers(t, dt);
+
+    updateQuadTree();
+    updateBounds();
     updateDirs(dt);
 
     updateCamera(dt);
