@@ -34,8 +34,11 @@ int main(int argc, char *argv[]) {
 
     float start_position = 0.0;
     float stop_position  = 0.0;
+    float stop_after     = -1.0;
+
     bool stop_on_idle = false;
-    bool stop_at_end = false;
+    bool stop_at_end  = false;
+    bool dont_stop    = false;
 
     std::string camera_mode = "overview";
 
@@ -71,26 +74,42 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        if(args == "--git-log-command") {
+
+        std::string log_command;
+
+        if(args == "--log-command") {
+
+            if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {
+                gource_quit("specify log-command");
+            }
+
+            log_command = arguments[++i];
+        }
+
+        if(args == "--git-log-command" || log_command == "git") {
                 gource_info(gGourceGitLogCommand);
         }
 
-        if(args == "--cvs-exp-command") {
+        if(args == "--cvs-exp-command" || log_command == "cvs") {
                 gource_info(gGourceCvsExpLogCommand);
         }
 
-        if(args == "--hg-log-command") {
+        if(args == "--hg-log-command" || log_command == "hg") {
                 std::string command = gGourceMercurialCommand();
 
                 gource_info(command);
         }
 
-        if(args == "--bzr-log-command") {
+        if(args == "--bzr-log-command" || log_command == "bzr") {
                 std::string command = gGourceBzrLogCommand();
 
                 gource_info(command);
         }
 
+        //didn't match any log commands
+        if(log_command.size() > 0) {
+            gource_quit("invalid log-command");
+        }
 
 
         if(args == "--date-format") {
@@ -388,6 +407,28 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
+        if(args == "--stop-after") {
+
+            if((i+1)>=arguments.size()) {
+                gource_quit("specify stop-after (seconds)");
+            }
+
+            stop_after = (float) atof(arguments[++i].c_str());
+
+            if(stop_after <= 0.0) {
+                gource_quit("invalid stop-after value");
+            }
+
+            continue;
+        }
+
+        if(args == "--dont-stop") {
+
+            dont_stop = true;
+
+            continue;
+        }
+
         if(args == "--stop-at-end") {
 
             stop_at_end = true;
@@ -681,8 +722,12 @@ int main(int argc, char *argv[]) {
         if(start_position>0.0) gource->setStartPosition(start_position);
         if(stop_position>0.0)  gource->setStopPosition(stop_position);
 
-        gource->setStopAtEnd(stop_at_end);
+        if(!dont_stop) {
+            gource->setStopAtEnd(stop_at_end);
+        }
+
         gource->setStopOnIdle(stop_on_idle);
+        gource->setStopAfter(stop_after);
 
         if(exporter!=0) gource->setFrameExporter(exporter, video_framerate);
 

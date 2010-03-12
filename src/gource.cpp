@@ -65,8 +65,10 @@ void gource_help() {
     printf("  -f                               Fullscreen\n\n");
     printf("  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
+    printf("      --stop-after SECONDS         Stop after the specified number of seconds\n");
     printf("      --stop-on-idle               Stop on break in activity\n");
     printf("      --stop-at-end                Stop at end of the log\n");
+    printf("      --dont-stop                  Keep running after the end of the log\n");
     printf("      --loop                       Loop at the end of the log\n\n");
 
     printf("  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens\n");
@@ -81,13 +83,11 @@ void gource_help() {
     printf("  --default-user-image IMAGE       Default user image file\n");
     printf("  --colour-images                  Colourize user images\n\n");
 
-    printf("  --date-format FORMAT     Specify display date string (strftime format)\n");
-    printf("  --log-format  FORMAT     Specify format of log (git,cvs,hg,bzr,custom)\n");
-    printf("  --git-branch             Get the git log of a particular branch\n");
-    printf("  --git-log-command        Show git log command used by gource\n");
-    printf("  --cvs-exp-command        Show cvs-exp.pl log command used by gource\n");
-    printf("  --hg-log-command         Show hg log (Mercurial) command used by gource\n");
-    printf("  --bzr-log-command        Show bzr log (Bazaar) command used by gource\n\n");
+    printf("  --date-format FORMAT     Specify display date string (strftime format)\n\n");
+
+    printf("  --log-command VCS        Show the log command used by gource (git,cvs,hg,bzr)\n");
+    printf("  --log-format  VCS        Specify format of the log (git,cvs,hg,bzr,custom)\n");
+    printf("  --git-branch             Get the git log of a particular branch\n\n");
 
     printf("  --multi-sampling         Enable multi-sampling\n");
     printf("  --crop AXIS              Crop view on an axis (vertical,horizontal)\n\n");
@@ -256,6 +256,8 @@ Gource::Gource(std::string logfile) {
     start_position = 0.0;
     stop_position = 0.0;
 
+    stop_after = -1.0;
+
     stop_on_idle=false;
     stop_position_reached=false;
     stop_at_end=false;
@@ -334,6 +336,8 @@ void Gource::update(float t, float dt) {
     //have to manage runtime internally as we're messing with dt
     if(!paused) runtime += dt;
 
+    if(stop_after > 0.0 && runtime > stop_after) appFinished = true;
+
     logic_time = SDL_GetTicks();
 
     logic(runtime, dt);
@@ -351,7 +355,7 @@ void Gource::update(float t, float dt) {
         }
     }
 
-   framecount++;
+    framecount++;
 }
 
 //peek at the date under the mouse pointer on the slider
@@ -943,6 +947,10 @@ void Gource::setStopOnIdle(bool stop_on_idle) {
 
 void Gource::setStopPosition(float percent) {
     stop_position = percent;
+}
+
+void Gource::setStopAfter(float stop_after) {
+    this->stop_after = stop_after;
 }
 
 bool Gource::canSeek() {

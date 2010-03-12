@@ -18,7 +18,7 @@
 #ifndef GOURCE_H
 #define GOURCE_H
 
-#define GOURCE_VERSION "0.26"
+#define GOURCE_VERSION "0.27"
 
 #ifdef _WIN32
 #include "windows.h"
@@ -93,6 +93,7 @@ class Gource : public SDLApp {
     bool stop_at_end;
     bool stop_on_idle;
     bool stop_position_reached;
+    float stop_after;
 
     int tag_seq, commit_seq;
 
@@ -205,6 +206,8 @@ public:
     void setStartPosition(float percent);
     void setStopAtEnd(bool stop_at_end);
     void setStopOnIdle(bool stop_on_idle);
+    void setStopAfter(float stop_after);
+
     void setFrameExporter(FrameExporter* exporter, int video_framerate);
     void showSplash();
 

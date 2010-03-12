@@ -3,7 +3,7 @@
 
 AC_PREREQ(2.61)
 
-AC_INIT(Gource, 0.26, [acaudwell@gmail.com])
+AC_INIT(Gource, 0.27, [acaudwell@gmail.com])
 AC_CONFIG_SRCDIR([src/main.h])
 
 AM_INIT_AUTOMAKE([dist-bzip2 foreign subdir-objects])
