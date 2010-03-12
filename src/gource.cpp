@@ -65,7 +65,7 @@ void gource_help() {
     printf("  -f                               Fullscreen\n\n");
     printf("  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
-    printf("      --stop-after SECONDS         Stop after the specified number of seconds\n");
+    printf("      --stop-at-time SECONDS       Stop after a specified number of seconds\n");
     printf("      --stop-on-idle               Stop on break in activity\n");
     printf("      --stop-at-end                Stop at end of the log\n");
     printf("      --dont-stop                  Keep running after the end of the log\n");
@@ -256,7 +256,7 @@ Gource::Gource(std::string logfile) {
     start_position = 0.0;
     stop_position = 0.0;
 
-    stop_after = -1.0;
+    stop_at_time = -1.0;
 
     stop_on_idle=false;
     stop_position_reached=false;
@@ -336,7 +336,7 @@ void Gource::update(float t, float dt) {
     //have to manage runtime internally as we're messing with dt
     if(!paused) runtime += dt;
 
-    if(stop_after > 0.0 && runtime > stop_after) appFinished = true;
+    if(stop_at_time > 0.0 && runtime >= stop_at_time) appFinished = true;
 
     logic_time = SDL_GetTicks();
 
@@ -949,8 +949,8 @@ void Gource::setStopPosition(float percent) {
     stop_position = percent;
 }
 
-void Gource::setStopAfter(float stop_after) {
-    this->stop_after = stop_after;
+void Gource::setStopAtTime(float stop_at_time) {
+    this->stop_at_time = stop_at_time;
 }
 
 bool Gource::canSeek() {

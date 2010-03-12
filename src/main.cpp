@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 
     float start_position = 0.0;
     float stop_position  = 0.0;
-    float stop_after     = -1.0;
+    float stop_at_time   = -1.0;
 
     bool stop_on_idle = false;
     bool stop_at_end  = false;
@@ -409,16 +409,16 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        if(args == "--stop-after") {
+        if(args == "--stop-at-time") {
 
             if((i+1)>=arguments.size()) {
-                gource_quit("specify stop-after (seconds)");
+                gource_quit("specify stop-at-time (seconds)");
             }
 
-            stop_after = (float) atof(arguments[++i].c_str());
+            stop_at_time = (float) atof(arguments[++i].c_str());
 
-            if(stop_after <= 0.0) {
-                gource_quit("invalid stop-after value");
+            if(stop_at_time <= 0.0) {
+                gource_quit("invalid stop-at-time value");
             }
 
             continue;
@@ -729,7 +729,7 @@ int main(int argc, char *argv[]) {
         }
 
         gource->setStopOnIdle(stop_on_idle);
-        gource->setStopAfter(stop_after);
+        gource->setStopAtTime(stop_at_time);
 
         if(exporter!=0) gource->setFrameExporter(exporter, video_framerate);
 

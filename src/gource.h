@@ -93,7 +93,7 @@ class Gource : public SDLApp {
     bool stop_at_end;
     bool stop_on_idle;
     bool stop_position_reached;
-    float stop_after;
+    float stop_at_time;
 
     int tag_seq, commit_seq;
 
@@ -205,8 +205,8 @@ public:
     void setStopPosition(float percent);
     void setStartPosition(float percent);
     void setStopAtEnd(bool stop_at_end);
+    void setStopAtTime(float stop_at_time);
     void setStopOnIdle(bool stop_on_idle);
-    void setStopAfter(float stop_after);
 
     void setFrameExporter(FrameExporter* exporter, int video_framerate);
     void showSplash();
