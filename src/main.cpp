@@ -364,13 +364,15 @@ int main(int argc, char *argv[]) {
 
         if(args == "-i" || args == "--file-idle-time") {
 
-            if((i+1)>=arguments.size()) {
+            if((i+1)>=arguments.size() || arguments[i+1].size() == 0) {
                 gource_quit("specify file-idle-time (seconds)");
             }
 
-            gGourceMaxFileIdle = (float) atoi(arguments[++i].c_str());
+            std::string file_idle_str = arguments[++i];
 
-            if(gGourceMaxFileIdle<1.0) {
+            gGourceMaxFileIdle = (float) atoi(file_idle_str.c_str());
+
+            if(gGourceMaxFileIdle<0.0f || gGourceMaxFileIdle == 0.0f && file_idle_str[0] != '0' ) {
                 gource_quit("invalid file-idle-time value");
             }
 

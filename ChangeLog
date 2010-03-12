@@ -1,6 +1,7 @@
 0.27:
  * Added --dont-stop and --stop-after options.
  * Added --log-command option to use instead of multiple --log-command-VCS options.
+ * Allow --file-idle-time 0 (files will never expire).
 
 0.26:
  * Improved mouse dragging.

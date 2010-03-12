@@ -148,7 +148,7 @@ float RFile::getAlpha() {
     float alpha = Pawn::getAlpha();
 
     //user fades out if not doing anything
-    if(elapsed - last_action > gGourceMaxFileIdle) {
+    if(gGourceMaxFileIdle > 0.0f && elapsed - last_action > gGourceMaxFileIdle) {
         alpha = 1.0 - std::min(elapsed - last_action - gGourceMaxFileIdle, 1.0f);
     }
 
@@ -192,7 +192,7 @@ void RFile::logic(float dt) {
     accel = vec2f(0.0f, 0.0f);
 
     // has completely faded out
-    if(!removing && elapsed - last_action >= gGourceMaxFileIdle + 1.0) {
+    if(!removing && gGourceMaxFileIdle > 0.0f && elapsed - last_action >= gGourceMaxFileIdle + 1.0) {
         removing=true;
 
         bool found = false;
