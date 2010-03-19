@@ -305,12 +305,14 @@ void Gource::zoom(bool zoomin) {
 
     if(zoomin) {
         min_distance /= zoom_multi;
-        if(min_distance < 100.0) min_distance = 100.0;
+        if(min_distance < 100.0f)
+            min_distance = 100.0f;
 
         camera.setMinDistance(min_distance);
     } else {
         min_distance *= zoom_multi;
-        if(min_distance > 1000.0) min_distance = 1000.0;
+        if(min_distance > 4999.0f)
+            min_distance = 4999.0f;
 
         camera.setMinDistance(min_distance);
     }
