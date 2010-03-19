@@ -18,6 +18,8 @@
 #ifndef GITLOG_H
 #define GITLOG_H
 
+#include "gource_settings.h"
+
 #include "commitlog.h"
 
 #include <unistd.h>

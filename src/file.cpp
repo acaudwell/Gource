@@ -18,9 +18,6 @@
 #include "file.h"
 
 float gGourceFileDiameter  = 8.0;
-float gGourceMaxFileIdle   = 60.0;
-bool  gGourceHideFiles     = false;
-bool  gGourceHideFilenames = false;
 
 std::vector<RFile*> gGourceRemovedFiles;
 
@@ -64,7 +61,7 @@ RFile::~RFile() {
 }
 
 void RFile::remove() {
-    last_action = elapsed - gGourceMaxFileIdle;
+    last_action = elapsed - gGourceSettings.file_idle_time;
 }
 
 void RFile::setDir(RDirNode* dir) {
@@ -148,8 +145,8 @@ float RFile::getAlpha() {
     float alpha = Pawn::getAlpha();
 
     //user fades out if not doing anything
-    if(gGourceMaxFileIdle > 0.0f && elapsed - last_action > gGourceMaxFileIdle) {
-        alpha = 1.0 - std::min(elapsed - last_action - gGourceMaxFileIdle, 1.0f);
+    if(gGourceSettings.file_idle_time > 0.0f && elapsed - last_action > gGourceSettings.file_idle_time) {
+        alpha = 1.0 - std::min(elapsed - last_action - gGourceSettings.file_idle_time, 1.0f);
     }
 
     return alpha;
@@ -192,7 +189,7 @@ void RFile::logic(float dt) {
     accel = vec2f(0.0f, 0.0f);
 
     // has completely faded out
-    if(!removing && gGourceMaxFileIdle > 0.0f && elapsed - last_action >= gGourceMaxFileIdle + 1.0) {
+    if(!removing && gGourceSettings.file_idle_time > 0.0f && elapsed - last_action >= gGourceSettings.file_idle_time + 1.0) {
         removing=true;
 
         bool found = false;
@@ -242,7 +239,7 @@ void RFile::drawNameText(float alpha) {
 
     vec3f nameCol = getNameColour();
 
-    if(gGourceHideFilenames) alpha = 0.0;
+    if(gGourceSettings.hide_filenames) alpha = 0.0;
 
     if(selected || alpha > 0.01) {
 

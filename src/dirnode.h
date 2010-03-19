@@ -23,6 +23,8 @@
 #include "core/quadtree.h"
 #include "core/pi.h"
 
+#include "gource_settings.h"
+
 #include "spline.h"
 #include "file.h"
 
@@ -194,11 +196,6 @@ extern float gGourcePointSize;
 extern bool  gGourceNodeDebug;
 extern bool  gGourceGravity;
 extern float gGourceForceGravity;
-extern bool  gGourceDrawDirName;
-
-extern float gGourceBloomMultiplier;
-extern float gGourceBloomIntensity;
-extern float gGourceElasticity;
 
 extern std::map<std::string, RDirNode*> gGourceDirMap;
 

@@ -9,6 +9,7 @@ gource_SOURCES = \
 	src/commitlog.cpp src/commitlog.h \
 	src/core/bounds.h \
 	src/core/camera.cpp src/core/camera.h \
+	src/core/conffile.cpp src/core/conffile.h \
 	src/core/display.cpp src/core/display.h \
 	src/core/extensions.cpp src/core/extensions.h \
 	src/core/frustum.cpp src/core/frustum.h \
@@ -21,6 +22,7 @@ gource_SOURCES = \
 	src/core/resource.cpp src/core/resource.h \
 	src/core/sdlapp.cpp src/core/sdlapp.h \
 	src/core/seeklog.cpp src/core/seeklog.h \
+	src/core/settings.cpp src/core/settings.h \
 	src/core/stringhash.cpp src/core/stringhash.h \
 	src/core/texture.cpp src/core/texture.h \
 	src/core/utf8/checked.h \
@@ -32,6 +34,7 @@ gource_SOURCES = \
 	src/cvs-exp.cpp src/cvs-exp.h \
 	src/dirnode.cpp src/dirnode.h \
 	src/file.cpp src/file.h \
+	src/gource_settings.cpp src/gource_settings.h \
 	src/git.cpp src/git.h \
 	src/gitraw.cpp src/gitraw.h \
 	src/gource.cpp src/gource.h \

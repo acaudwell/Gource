@@ -17,116 +17,73 @@
 
 #include "gource.h"
 
-float gGourceAutoSkipSeconds = 3.0;
 bool  gGourceDrawBackground  = true;
-bool  gGourceFileLoop        = false;
-bool  gGourceHideTree        = false;
-bool  gGourceHideUsernames   = false;
-bool  gGourceHideDate        = false;
-bool  gGourceDisableBloom    = false;
-bool  gGourceDisableProgress = false;
 bool  gGourceQuadTreeDebug   = false;
-
 int   gGourceMaxQuadTreeDepth = 6;
-
-std::string gGourceLogFormat;
-std::string gGourceDateFormat("%A, %d %B, %Y %X");
-
-bool  gGourceHighlightAllUsers = false;
-
-int gGourceMaxFiles = 1000;
 
 int gGourceUserInnerLoops = 0;
 
-void gource_info(std::string msg) {
-    SDLAppInfo(msg);
-}
+Gource::Gource(std::string logfile) {
 
-void gource_quit(std::string error) {
-    SDLAppQuit(error);
-}
+    this->logfile = logfile;
 
-//display help message
-void gource_help() {
+    commitlog = 0;
 
-#ifdef _WIN32
-    SDLAppCreateWindowsConsole();
+    fontlarge = fontmanager.grab("FreeSans.ttf", 42);
+    fontlarge.dropShadow(true);
+    fontlarge.roundCoordinates(true);
 
-    //resize window to fit help message
-    SDLAppResizeWindowsConsole(950);
-#endif
+    fontmedium = fontmanager.grab("FreeSans.ttf", 16);
+    fontmedium.dropShadow(true);
+    fontmedium.roundCoordinates(false);
 
-    printf("Gource v%s\n", GOURCE_VERSION);
+    font = fontmanager.grab("FreeSans.ttf", 14);
+    font.dropShadow(true);
+    font.roundCoordinates(true);
 
-    printf("Usage: gource [OPTIONS] [PATH]\n");
-    printf("\nOptions:\n");
-    printf("  -h, --help                       Help\n\n");
-    printf("  -WIDTHxHEIGHT                    Set window size\n");
-    printf("  -f                               Fullscreen\n\n");
-    printf("  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)\n");
-    printf("      --stop-position  POSITION    Stop at some position\n");
-    printf("      --stop-at-time SECONDS       Stop after a specified number of seconds\n");
-    printf("      --stop-on-idle               Stop on break in activity\n");
-    printf("      --stop-at-end                Stop at end of the log\n");
-    printf("      --dont-stop                  Keep running after the end of the log\n");
-    printf("      --loop                       Loop at the end of the log\n\n");
+    bloomtex = texturemanager.grab("bloom.tga");
+    beamtex  = texturemanager.grab("beam.png");
 
-    printf("  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens\n");
-    printf("                                   for a number of seconds (default: 3)\n");
-    printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 4)\n");
-    printf("      --realtime                   Realtime playback speed\n");
-    printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)\n");
-    printf("  -e, --elasticity FLOAT           Elasticity of nodes\n");
-    printf("  -b, --background FFFFFF          Background colour in hex\n\n");
+    stop_position_reached=false;
 
-    printf("  --user-image-dir DIRECTORY       Dir containing images to use as avatars\n");
-    printf("  --default-user-image IMAGE       Default user image file\n");
-    printf("  --colour-images                  Colourize user images\n\n");
+    paused       = false;
+    first_read   = true;
+    draw_loading = true;
 
-    printf("  --date-format FORMAT     Specify display date string (strftime format)\n\n");
+    mousemoved   = false;
+    mousedragged = false;
+    mouseclicked = false;
 
-    printf("  --log-command VCS        Show the log command used by gource (git,cvs,hg,bzr)\n");
-    printf("  --log-format  VCS        Specify format of the log (git,cvs,hg,bzr,custom)\n");
-    printf("  --git-branch             Get the git log of a particular branch\n\n");
+    splash = -1.0;
 
-    printf("  --multi-sampling         Enable multi-sampling\n");
-    printf("  --crop AXIS              Crop view on an axis (vertical,horizontal)\n\n");
+    debug = false;
+    trace_debug = false;
 
-    printf("  --bloom-multiplier       Adjust the amount of bloom (default: 1.0)\n");
-    printf("  --bloom-intensity        Adjust the intensity of the bloom (default: 0.75)\n\n");
+    frameExporter = 0;
 
-    printf("  --disable-auto-skip      Disable auto skipping\n");
-    printf("  --disable-progress       Disable the progress bar\n");
-    printf("  --disable-bloom          Disable bloom effect\n\n");
+    dirNodeTree = 0;
+    userTree = 0;
 
-    printf("  --hide DISPLAY_ELEMENT   date,users,files,tree,usernames,filenames,dirnames\n\n");
+    selectedFile = 0;
+    hoverFile = 0;
+    selectedUser = 0;
+    hoverUser = 0;
 
-    printf("  --max-files NUMBER       Max number of active files (default: 1000)\n");
-    printf("  --max-file-lag SECONDS   Max time files of a commit can take to appear\n\n");
+    date_x_offset = 0;
 
-    printf("  --max-user-speed UNITS   Speed users can travel per second (default: 500)\n\n");
-    printf("  --user-friction SECONDS  Time users come to a complete hault (default: 0.67)\n");
-    printf("  --user-scale SCALE       Change scale of users (default: 1.0)\n\n");
+    camera = ZoomCamera(vec3f(0,0, -300), vec3f(0.0, 0.0, 0.0), 250.0, 5000.0);
 
-    printf("  --camera-mode MODE       Camera mode (overview,track)\n\n");
+    setCameraMode(gGourceSettings.camera_mode);
 
-    printf("  --follow-user USER       Camera will automatically follow this user\n");
-    printf("  --highlight-user USER    Highlight the names of a particular user\n");
-    printf("  --highlight-all-users    Highlight the names of all users\n");
-    printf("  --file-filter REGEX      Ignore files matching this regexe\n\n");
+    root = 0;
 
-    printf("  --output-ppm-stream FILE Write frames as PPM to a file ('-' for STDOUT)\n");
-    printf("  --output-framerate FPS   Framerate of output (25,30,60)\n\n");
+    //min phsyics rate 60fps (ie maximum allowed delta 1.0/60)
+    max_tick_rate = 1.0 / 60.0;
+    runtime = 0.0f;
+    frameskip = 0;
+    framecount = 0;
 
-    printf("PATH may be a Git, Bazaar or Mercurial dir, a log file or '-' to read STDIN.\n");
-    printf("If ommited, gource will attempt to generate a log from the current directory.\n\n");
-
-#ifdef _WIN32
-    printf("Press Enter\n");
-    getchar();
-#endif
-
-    exit(0);
+    reset();
 }
 
 RCommitLog* Gource::determineFormat(std::string logfile) {
@@ -135,10 +92,10 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
     RCommitLog* clog = 0;
 
     //we've been told what format to use
-    if(gGourceLogFormat.size() > 0) {
-        debugLog("--log-format = %s\n", gGourceLogFormat.c_str());
+    if(gGourceSettings.log_format.size() > 0) {
+        debugLog("--log-format = %s\n", gGourceSettings.log_format.c_str());
 
-        if(gGourceLogFormat == "git") {
+        if(gGourceSettings.log_format == "git") {
             clog = new GitCommitLog(logfile);
             if(clog->checkFormat()) return clog;
             delete clog;
@@ -148,30 +105,30 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
             delete clog;
         }
 
-        if(gGourceLogFormat == "hg") {
+        if(gGourceSettings.log_format == "hg") {
             clog = new MercurialLog(logfile);
             if(clog->checkFormat()) return clog;
             delete clog;
         }
-        if(gGourceLogFormat == "bzr") {
+        if(gGourceSettings.log_format == "bzr") {
             clog = new BazaarLog(logfile);
             if(clog->checkFormat()) return clog;
             delete clog;
         }
 
-        if(gGourceLogFormat == "cvs") {
+        if(gGourceSettings.log_format == "cvs") {
             clog = new CVSEXPCommitLog(logfile);
             if(clog->checkFormat()) return clog;
             delete clog;
         }
 
-        if(gGourceLogFormat == "custom") {
+        if(gGourceSettings.log_format == "custom") {
             clog = new CustomLog(logfile);
             if(clog->checkFormat()) return clog;
             delete clog;
         }
 
-        if(gGourceLogFormat == "apache") {
+        if(gGourceSettings.log_format == "apache") {
             clog = new ApacheCombinedLog(logfile);
             if(clog->checkFormat()) return clog;
             delete clog;
@@ -232,91 +189,14 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
     return 0;
 }
 
-Gource::Gource(std::string logfile) {
-
-    this->logfile = logfile;
-
-    commitlog = 0;
-
-    fontlarge = fontmanager.grab("FreeSans.ttf", 42);
-    fontlarge.dropShadow(true);
-    fontlarge.roundCoordinates(true);
-
-    fontmedium = fontmanager.grab("FreeSans.ttf", 16);
-    fontmedium.dropShadow(true);
-    fontmedium.roundCoordinates(false);
-
-    font = fontmanager.grab("FreeSans.ttf", 14);
-    font.dropShadow(true);
-    font.roundCoordinates(true);
-
-    bloomtex = texturemanager.grab("bloom.tga");
-    beamtex  = texturemanager.grab("beam.png");
-
-    start_position = 0.0;
-    stop_position = 0.0;
-
-    stop_at_time = -1.0;
-
-    stop_on_idle=false;
-    stop_position_reached=false;
-    stop_at_end=false;
-
-    paused     = false;
-    first_read = true;
-    draw_loading = true;
-
-    mousemoved = false;
-    mousedragged = false;
-    mouseclicked = false;
-
-    splash = -1.0;
-
-    debug = false;
-    trace_debug = false;
-
-    frameExporter = 0;
-
-    dirNodeTree = 0;
-    userTree = 0;
-
-    selectedFile = 0;
-    hoverFile = 0;
-    selectedUser = 0;
-    hoverUser = 0;
-
-    date_x_offset = 0;
-
-    camera = ZoomCamera(vec3f(0,0, -300), vec3f(0.0, 0.0, 0.0), 250.0, 5000.0);
-
-    setCameraMode(false);
-
-    root = 0;
-
-    background_colour = vec3f(0.0, 0.0, 0.0);
-
-    //min phsyics rate 60fps (ie maximum allowed delta 1.0/60)
-    max_tick_rate = 1.0 / 60.0;
-    runtime = 0.0f;
-    frameskip = 0;
-    framecount = 0;
-
-    findUserImages();
-
-    reset();
-}
-
 Gource::~Gource() {
     reset();
 
     if(commitlog!=0) delete commitlog;
     if(root!=0) delete root;
 
-    //delete filters
-    for(std::vector<Regex*>::iterator it = filters.begin(); it != filters.end(); it++) {
-        delete (*it);
-    }
-    filters.clear();
+    //reset settings
+    gGourceSettings.setGourceDefaults();
 }
 
 void Gource::init() {
@@ -336,7 +216,7 @@ void Gource::update(float t, float dt) {
     //have to manage runtime internally as we're messing with dt
     if(!paused) runtime += dt;
 
-    if(stop_at_time > 0.0 && runtime >= stop_at_time) appFinished = true;
+    if(gGourceSettings.stop_at_time > 0.0 && runtime >= gGourceSettings.stop_at_time) appFinished = true;
 
     logic_time = SDL_GetTicks();
 
@@ -409,7 +289,7 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
 
     float pos;
 
-    if(!gGourceDisableProgress && slider.mouseOver(mousepos, &pos)) {
+    if(!gGourceSettings.disable_progress && slider.mouseOver(mousepos, &pos)) {
         std::string date = dateAtPosition(pos);
         slider.setCaption(date);
     }
@@ -524,14 +404,16 @@ void Gource::setFrameExporter(FrameExporter* exporter, int video_framerate) {
     this->frameExporter = exporter;
 }
 
-void Gource::setBackground(vec3f background) {
-    background_colour = background;
+void Gource::setCameraMode(const std::string& mode) {
+    setCameraMode(mode == "track");
 }
 
 void Gource::setCameraMode(bool track_users) {
     this->track_users = track_users;
     if(selectedUser!=0) camera.lockOn(track_users);
     backgroundSelected=false;
+
+    gGourceSettings.camera_mode = track_users ? "track" : "overview";
 }
 
 void Gource::toggleCameraMode() {
@@ -691,7 +573,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
         }
 
         if (e->keysym.sym == SDLK_n) {
-            idle_time = gGourceAutoSkipSeconds;
+            idle_time = gGourceSettings.auto_skip_seconds;
         }
 
         if (e->keysym.sym == SDLK_t) {
@@ -699,19 +581,19 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
         }
 
         if (e->keysym.sym == SDLK_g) {
-            gGourceHideUsers = !gGourceHideUsers;
+            gGourceSettings.hide_users = !gGourceSettings.hide_users;
         }
 
         if (e->keysym.sym == SDLK_u) {
-            gGourceHideUsernames = !gGourceHideUsernames;
+            gGourceSettings.hide_usernames = !gGourceSettings.hide_usernames;
         }
 
         if (e->keysym.sym == SDLK_d) {
-            gGourceDrawDirName = !gGourceDrawDirName;
+            gGourceSettings.hide_dirnames = ! gGourceSettings.hide_dirnames;
         }
 
         if (e->keysym.sym == SDLK_f) {
-            gGourceHideFilenames = !gGourceHideFilenames;
+            gGourceSettings.hide_filenames = !gGourceSettings.hide_filenames;
         }
 
         if(e->keysym.sym == SDLK_c) {
@@ -735,18 +617,18 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
         }
 
         if (e->keysym.sym == SDLK_EQUALS) {
-            if(gGourceDaysPerSecond>=1.0) {
-                gGourceDaysPerSecond = std::min(30.0f, floorf(gGourceDaysPerSecond) + 1.0f);
+            if(gGourceSettings.days_per_second>=1.0) {
+                gGourceSettings.days_per_second = std::min(30.0f, floorf(gGourceSettings.days_per_second) + 1.0f);
             } else {
-                gGourceDaysPerSecond = std::min(1.0f, gGourceDaysPerSecond * 2.0f);
+                gGourceSettings.days_per_second = std::min(1.0f, gGourceSettings.days_per_second * 2.0f);
             }
         }
 
         if (e->keysym.sym == SDLK_MINUS) {
-            if(gGourceDaysPerSecond>1.0) {
-                gGourceDaysPerSecond = std::max(0.0f, floorf(gGourceDaysPerSecond) - 1.0f);
+            if(gGourceSettings.days_per_second>1.0) {
+                gGourceSettings.days_per_second = std::max(0.0f, floorf(gGourceSettings.days_per_second) - 1.0f);
             } else {
-                gGourceDaysPerSecond = std::max(0.0f, gGourceDaysPerSecond * 0.5f);
+                gGourceSettings.days_per_second = std::max(0.0f, gGourceSettings.days_per_second * 0.5f);
             }
         }
 
@@ -791,13 +673,13 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
 }
 
 void Gource::findUserImages() {
-    if(!gGourceUserImageDir.size()) return;
+    if(!gGourceSettings.user_image_dir.size()) return;
 
     //get jpg and png images in dir
     DIR *dp;
     struct dirent *dirp;
 
-    if((dp = opendir(gGourceUserImageDir.c_str())) == 0) return;
+    if((dp = opendir(gGourceSettings.user_image_dir.c_str())) == 0) return;
 
     while ((dirp = readdir(dp)) != 0) {
         std::string dirfile = std::string(dirp->d_name);
@@ -809,7 +691,7 @@ void Gource::findUserImages() {
            && (extpos=dirfile.rfind(".png"))  == std::string::npos) continue;
 
 
-        std::string image_path = gGourceUserImageDir + dirfile;
+        std::string image_path = gGourceSettings.user_image_dir + dirfile;
         std::string name       = dirfile.substr(0,extpos);
 
         debugLog("%s => %s\n", name.c_str(), image_path.c_str());
@@ -921,40 +803,8 @@ void Gource::deleteUser(RUser* user) {
     delete user;
 }
 
-void Gource::addFollowUser(std::string user) {
-    follow_users.push_back(user);
-}
-
-void Gource::addHighlightUser(std::string user) {
-    highlight_users.push_back(user);
-}
-
-void Gource::addFilter(Regex* filter) {
-    filters.push_back(filter);
-}
-
-void Gource::setStartPosition(float percent) {
-    start_position = percent;
-}
-
-void Gource::setStopAtEnd(bool stop_at_end) {
-    this->stop_at_end = stop_at_end;
-}
-
-void Gource::setStopOnIdle(bool stop_on_idle) {
-    this->stop_on_idle = stop_on_idle;
-}
-
-void Gource::setStopPosition(float percent) {
-    stop_position = percent;
-}
-
-void Gource::setStopAtTime(float stop_at_time) {
-    this->stop_at_time = stop_at_time;
-}
-
 bool Gource::canSeek() {
-    if(gGourceDisableProgress || commitlog == 0 || !commitlog->isSeekable()) return false;
+    if(gGourceSettings.disable_progress || commitlog == 0 || !commitlog->isSeekable()) return false;
 
     return true;
 }
@@ -1000,13 +850,13 @@ void Gource::readLog() {
 
     //see if we have reached the end and should exit
     //the next time all users are idle
-    if(   stop_at_end && is_finished
-       || stop_position > 0.0 && commitlog->isSeekable() && (is_finished || last_percent >= stop_position)) {
+    if(   gGourceSettings.stop_at_end && is_finished
+       || gGourceSettings.stop_position > 0.0 && commitlog->isSeekable() && (is_finished || last_percent >= gGourceSettings.stop_position)) {
 
         stop_position_reached = true;
 
         //if not stopping on idle exit immediately
-        if(!stop_on_idle) appFinished = true;
+        if(!gGourceSettings.stop_on_idle) appFinished = true;
     }
 
     // useful to figure out where we have crashes
@@ -1031,7 +881,7 @@ void Gource::processCommit(RCommit& commit, float t) {
         bool filtered_filename = false;
 
         //check filename against filters
-        for(std::vector<Regex*>::iterator ri = filters.begin(); ri != filters.end(); ri++) {
+        for(std::vector<Regex*>::iterator ri = gGourceSettings.file_filters.begin(); ri != gGourceSettings.file_filters.end(); ri++) {
             Regex* r = *ri;
 
             if(r->match(cf.filename)) {
@@ -1056,7 +906,7 @@ void Gource::processCommit(RCommit& commit, float t) {
 
             //if we already have max files in circulation
             //we cant add any more
-            if(files.size() >= gGourceMaxFiles) continue;
+            if(files.size() >= gGourceSettings.max_files) continue;
 
             int tagid = tag_seq++;
 
@@ -1074,7 +924,7 @@ void Gource::processCommit(RCommit& commit, float t) {
         }
 
         //create user if havent yet. do it here to ensure at least one of there files
-        //was added (incase we hit gGourceMaxFiles!)
+        //was added (incase we hit gGourceSettings.max_files)
 
         if(user == 0) {
             vec2f pos;
@@ -1092,12 +942,12 @@ void Gource::processCommit(RCommit& commit, float t) {
             users[commit.username] = user;
             tagusermap[tagid]     = user;
 
-            if(gGourceHighlightAllUsers) {
+            if(gGourceSettings.highlight_all_users) {
                 user->setHighlighted(true);
             } else {
 
                 // set the highlighted flag if name matches a highlighted user
-                for(std::vector<std::string>::iterator hi = highlight_users.begin(); hi != highlight_users.end(); hi++) {
+                for(std::vector<std::string>::iterator hi = gGourceSettings.highlight_users.begin(); hi != gGourceSettings.highlight_users.end(); hi++) {
                     std::string highlight = *hi;
 
                     if(highlight.size() && user->getName() == highlight) {
@@ -1245,7 +1095,7 @@ void Gource::updateUsers(float t, float dt) {
         } else {
             //if nothing is selected, and this user is active and this user is the specified user to follow, select them
             if(selectedUser == 0 && selectedFile == 0) {
-                for(std::vector<std::string>::iterator ui = follow_users.begin(); ui != follow_users.end(); ui++) {
+                for(std::vector<std::string>::iterator ui = gGourceSettings.follow_users.begin(); ui != gGourceSettings.follow_users.end(); ui++) {
                     std::string follow = *ui;
 
                     if(follow.size() && u->getName() == follow) {
@@ -1261,7 +1111,7 @@ void Gource::updateUsers(float t, float dt) {
         idle_time += dt;
 
         //if stop_on_idle is set and either no stop condition is set or the condition has been reached, exit
-        if(stop_on_idle && (stop_position == 0.0f && !stop_at_end || stop_position_reached)) appFinished = true;
+        if(gGourceSettings.stop_on_idle && (gGourceSettings.stop_position == 0.0f && !gGourceSettings.stop_at_end || stop_position_reached)) appFinished = true;
 
     } else {
         idle_time = 0;
@@ -1318,7 +1168,7 @@ void Gource::updateTime() {
     char timestr[256];
     struct tm* timeinfo = localtime ( &currtime );
 
-    strftime(datestr, 256, gGourceDateFormat.c_str(), timeinfo);
+    strftime(datestr, 256, gGourceSettings.date_format.c_str(), timeinfo);
     displaydate = datestr;
 
     //avoid wobbling by only moving font if change is sufficient
@@ -1382,8 +1232,8 @@ void Gource::logic(float t, float dt) {
             }
         }
 
-        if(start_position>0.0) {
-            seekTo(start_position);
+        if(gGourceSettings.start_position>0.0) {
+            seekTo(gGourceSettings.start_position);
         }
     }
 
@@ -1421,7 +1271,7 @@ void Gource::logic(float t, float dt) {
     }
 
     //loop in attempt to find commits
-    if(commitqueue.size()==0 && commitlog->isSeekable() && gGourceFileLoop) {
+    if(commitqueue.size()==0 && commitlog->isSeekable() && gGourceSettings.loop) {
         first_read=true;
         seekTo(0.0);
         readLog();
@@ -1433,7 +1283,7 @@ void Gource::logic(float t, float dt) {
     }
 
     //set current time
-    float time_inc = (dt * 86400.0 * gGourceDaysPerSecond);
+    float time_inc = (dt * 86400.0 * gGourceSettings.days_per_second);
     int seconds    = (int) time_inc;
 
     subseconds += time_inc - ((float) seconds);
@@ -1458,7 +1308,7 @@ void Gource::logic(float t, float dt) {
 
         RCommit commit = commitqueue[0];
 
-        if(gGourceAutoSkipSeconds>=0.0 && idle_time >= gGourceAutoSkipSeconds) {
+        if(gGourceSettings.auto_skip_seconds>=0.0 && idle_time >= gGourceSettings.auto_skip_seconds) {
             currtime = commit.timestamp;
             idle_time = 0.0;
         }
@@ -1627,7 +1477,7 @@ void Gource::loadingScreen() {
 void Gource::drawBackground(float dt) {
     if(!gGourceDrawBackground) return;
 
-    display.setClearColour(background_colour);
+    display.setClearColour(gGourceSettings.background_colour);
     display.clear();
 }
 
@@ -1651,7 +1501,7 @@ void Gource::drawTree(Frustum& frustum, float dt) {
 
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    if(!gGourceHideTree) {
+    if(!gGourceSettings.hide_tree) {
         glBindTexture(GL_TEXTURE_2D, beamtex->textureid);
 
         root->drawEdgeShadows(dt);
@@ -1672,13 +1522,13 @@ void Gource::drawTree(Frustum& frustum, float dt) {
 
     //draw shadows
 
-    if(!gGourceHideUsers) {
+    if(!gGourceSettings.hide_users) {
         for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
             it->second->drawShadow(dt);
         }
     }
 
-    if(!gGourceHideFiles) {
+    if(!gGourceSettings.hide_files) {
         root->drawShadows(frustum, dt);
     }
 
@@ -1687,7 +1537,7 @@ void Gource::drawTree(Frustum& frustum, float dt) {
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     if(!trace_debug) {
-        if(!gGourceHideFiles) {
+        if(!gGourceSettings.hide_files) {
             root->drawFiles(frustum,dt);
         }
     } else {
@@ -1698,7 +1548,7 @@ void Gource::drawTree(Frustum& frustum, float dt) {
 }
 
 void Gource::drawActions(float dt) {
-    if(gGourceHideUsers) return;
+    if(gGourceSettings.hide_users) return;
 
     glBindTexture(GL_TEXTURE_2D, beamtex->textureid);
     glEnable(GL_TEXTURE_2D);
@@ -1713,7 +1563,7 @@ void Gource::drawActions(float dt) {
 }
 
 void Gource::drawBloom(Frustum &frustum, float dt) {
-    if(gGourceDisableBloom) return;
+    if(gGourceSettings.disable_bloom) return;
 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
@@ -1770,7 +1620,7 @@ void Gource::draw(float t, float dt) {
 
     root->drawNames(font,frustum);
 
-    if(!(gGourceHideUsernames || gGourceHideUsers)) {
+    if(!(gGourceSettings.hide_usernames || gGourceSettings.hide_users)) {
         for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
             it->second->drawName();
         }
@@ -1817,7 +1667,7 @@ void Gource::draw(float t, float dt) {
 
     vec3f campos = camera.getPos();
 
-    if(!gGourceHideDate) {
+    if(!gGourceSettings.hide_date) {
         fontmedium.draw(display.width/2 - date_x_offset, 20, displaydate);
     }
 
@@ -1884,4 +1734,3 @@ void Gource::draw(float t, float dt) {
     mousemoved=false;
     mouseclicked=false;
 }
-

@@ -18,8 +18,6 @@
 #ifndef GOURCE_H
 #define GOURCE_H
 
-#define GOURCE_VERSION "0.27"
-
 #ifdef _WIN32
 #include "windows.h"
 #endif
@@ -34,6 +32,8 @@
 #include "core/seeklog.h"
 #include "core/frustum.h"
 #include "core/regex.h"
+
+#include "gource_settings.h"
 
 #include "git.h"
 #include "hg.h"
@@ -52,26 +52,14 @@
 #include "zoomcamera.h"
 #include "ppm.h"
 
-void createWindowsConsole();
-
-void gource_help();
-void gource_info(std::string msg);
-void gource_quit(std::string error);
-
 class Gource : public SDLApp {
     std::string logfile;
 
     FrameExporter* frameExporter;
 
-    std::vector<std::string> follow_users;
-    std::vector<std::string> highlight_users;
-    std::vector<Regex*> filters;
-
     RCommitLog* commitlog;
     PositionSlider slider;
     ZoomCamera camera;
-
-    vec3f background_colour;
 
     bool debug, trace_debug;
 
@@ -86,14 +74,10 @@ class Gource : public SDLApp {
     vec2f backgroundPos;
     bool backgroundSelected;
 
-    float start_position, stop_position;
     float last_percent;
     float time_scale;
 
-    bool stop_at_end;
-    bool stop_on_idle;
     bool stop_position_reached;
-    float stop_at_time;
 
     int tag_seq, commit_seq;
 
@@ -200,20 +184,11 @@ public:
     Gource(std::string logfile);
     ~Gource();
 
-    void setBackground(vec3f background);
+    void setCameraMode(const std::string& mode);
     void setCameraMode(bool track_users);
-    void setStopPosition(float percent);
-    void setStartPosition(float percent);
-    void setStopAtEnd(bool stop_at_end);
-    void setStopAtTime(float stop_at_time);
-    void setStopOnIdle(bool stop_on_idle);
-
     void setFrameExporter(FrameExporter* exporter, int video_framerate);
-    void showSplash();
 
-    void addFollowUser(std::string user);
-    void addHighlightUser(std::string user);
-    void addFilter(Regex* filter);
+    void showSplash();
 
     void logic(float t, float dt);
     void draw(float t, float dt);
@@ -224,20 +199,5 @@ public:
     void mouseMove(SDL_MouseMotionEvent *e);
     void mouseClick(SDL_MouseButtonEvent *e);
 };
-
-extern float gGourceAutoSkipSeconds;
-extern bool  gGourceDrawBackground;
-extern bool  gGourceHideUsernames;
-extern bool  gGourceDisableBloom;
-extern bool  gGourceHideDate;
-extern bool  gGourceHideTree;
-extern bool  gGourceDisableProgress;
-extern bool  gGourceFileLoop;
-extern int   gGourceMaxFiles;
-
-extern std::string gGourceLogFormat;
-extern std::string gGourceDateFormat;
-
-extern bool  gGourceHighlightAllUsers;
 
 #endif

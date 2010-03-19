@@ -82,10 +82,7 @@ public:
     int getPathHash();
 };
 
-extern float gGourceMaxFileIdle;
 extern float gGourceFileDiameter;
-extern bool gGourceHideFilenames;
-extern bool gGourceHideFiles;
 
 extern std::vector<RFile*> gGourceRemovedFiles;
 

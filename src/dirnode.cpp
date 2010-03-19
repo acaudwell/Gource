@@ -18,19 +18,12 @@
 #include "dirnode.h"
 
 float gGourceMinDirSize   = 15.0;
-float gGourceMaxSpeed     = 1000.0f;
 
 float gGourceForceGravity = 10.0;
 float gGourceDirPadding   = 1.5;
 
-float gGourceElasticity   = 0.0;
-
-float gGourceBloomMultiplier = 1.0;
-float gGourceBloomIntensity  = 0.75;
-
 bool  gGourceNodeDebug    = false;
 bool  gGourceGravity      = true;
-bool  gGourceDrawDirName  = true;
 
 //debugging
 int  gGourceDirNodeInnerLoops = 0;
@@ -751,10 +744,10 @@ void RDirNode::move(float dt) {
 
     pos += accel * dt;
 
-    if(gGourceElasticity>0.0) {
+    if(gGourceSettings.elasticity>0.0) {
         vec2f diff = (accel - prev_accel);
 
-        float m = dt * gGourceElasticity;
+        float m = dt * gGourceSettings.elasticity;
 
         vec2f accel3 = prev_accel * (1.0-m) + diff * m;
         pos += accel3;
@@ -872,7 +865,7 @@ void RDirNode::logic(float dt) {
 }
 
 void RDirNode::drawDirName(FXFont& dirfont) {
-    if(!gGourceDrawDirName) return;
+    if(gGourceSettings.hide_dirnames) return;
 
     if(since_last_node_change > 5.0) return;
 
@@ -909,7 +902,7 @@ void RDirNode::drawNames(FXFont& dirfont, Frustum& frustum) {
         drawDirName(dirfont);
     }
 
-    if(!(gGourceHideFilenames||gGourceHideFiles) && frustum.boundsInFrustum(quadItemBounds)) {
+    if(!(gGourceSettings.hide_filenames || gGourceSettings.hide_files) && frustum.boundsInFrustum(quadItemBounds)) {
         for(std::list<RFile*>::iterator it = files.begin(); it!=files.end(); it++) {
             RFile* f = *it;
             f->drawName();
@@ -1042,9 +1035,9 @@ void RDirNode::drawBloom(Frustum& frustum, float dt) {
 
     if(isVisible() && frustum.boundsInFrustum(quadItemBounds)) {
 
-        float bloom_radius = dir_radius * 2.0 * gGourceBloomMultiplier;
+        float bloom_radius = dir_radius * 2.0 * gGourceSettings.bloom_multiplier;
 
-        vec4f bloom_col = col * gGourceBloomIntensity;
+        vec4f bloom_col = col * gGourceSettings.bloom_intensity;
 
         glColor4f(bloom_col.x, bloom_col.y, bloom_col.z, 1.0);
 

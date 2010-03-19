@@ -22,6 +22,8 @@
 #include "core/bounds.h"
 #include "core/frustum.h"
 
+#include "gource_settings.h"
+
 class ZoomCamera : public Camera {
     vec3f dest;
     bool lockon;

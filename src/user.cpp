@@ -17,34 +17,20 @@
 
 #include "user.h"
 
-float gGourceBeamDist = 100.0;
-float gGourceActionDist = 50.0;
-float gGourceMaxUserIdle = 3.0;
+float gGourceBeamDist          = 100.0;
+float gGourceActionDist        = 50.0;
 float gGourcePersonalSpaceDist = 100.0;
-float gGourceMaxFileLagSeconds = 5.0;
-float gGourceMaxUserSpeed      = 500.0;
-float gGourceUserFriction      = 1.0;
-float gGourceUserScale         = 1.0;
-
-bool gGourceColourUserImages = false;
 
 std::map<std::string, std::string> gGourceUserImageMap;
-std::string gGourceUserImageDir;
-std::string gGourceDefaultUserImage;
-
-//fractions of days per second
-float gGourceDaysPerSecond = 0.1;
-
-bool gGourceHideUsers = false;
 
 RUser::RUser(std::string name, vec2f pos, int tagid) : Pawn(name,pos,tagid) {
 
     this->name = name;
 
-    speed = gGourceMaxUserSpeed;
-    size = 20.0 * gGourceUserScale;
+    speed = gGourceSettings.max_user_speed;
+    size = 20.0 * gGourceSettings.user_scale;
 
-    shadowOffset = vec2f(2.0, 2.0) * gGourceUserScale;
+    shadowOffset = vec2f(2.0, 2.0) * gGourceSettings.user_scale;
 
     shadow = true;
 
@@ -189,11 +175,11 @@ void RUser::assignIcon() {
 
     bool image_assigned = false;
 
-    if(gGourceUserImageDir.size() > 0) {
+    if(gGourceSettings.user_image_dir.size() > 0) {
 
         //try thier username
         // TODO: replace with map of name -> image of all pngs and jpgs in directory
-        //gGourceUserImageDir + name + std::string(".jpg");
+        //gGourceSettings.user_image_dir + name + std::string(".jpg");
 
         std::map<std::string, std::string>::iterator findimage;
 
@@ -203,7 +189,7 @@ void RUser::assignIcon() {
         if(findimage != gGourceUserImageMap.end()) {
             std::string imagefile = findimage->second;
 
-            if(!gGourceColourUserImages) usercol = vec3f(1.0, 1.0, 1.0);
+            if(!gGourceSettings.colour_user_images) usercol = vec3f(1.0, 1.0, 1.0);
 
             icon = texturemanager.grab(imagefile, 1, 1, 0, true);
 
@@ -215,9 +201,9 @@ void RUser::assignIcon() {
 
     //nope
     if(!image_assigned) {
-        if(gGourceDefaultUserImage.size() > 0) {
-            if(!gGourceColourUserImages) usercol = vec3f(1.0, 1.0, 1.0);
-            icon = texturemanager.grab(gGourceDefaultUserImage, 1, 1, 0, true);
+        if(gGourceSettings.default_user_image.size() > 0) {
+            if(!gGourceSettings.colour_user_images) usercol = vec3f(1.0, 1.0, 1.0);
+            icon = texturemanager.grab(gGourceSettings.default_user_image, 1, 1, 0, true);
         } else {
             icon = texturemanager.grab("no_photo.png");
         }
@@ -251,7 +237,7 @@ void RUser::logic(float t, float dt) {
         RAction* action = *it;
 
         //add all files which are too old
-        if(gGourceMaxFileLagSeconds>=0.0 && action->addedtime < t - gGourceMaxFileLagSeconds) {
+        if(gGourceSettings.max_file_lag>=0.0 && action->addedtime < t - gGourceSettings.max_file_lag) {
             it = actions.erase(it);
             action->rate = 2.0;
             activeActions.push_back(action);
@@ -301,7 +287,7 @@ void RUser::logic(float t, float dt) {
 
     pos += accel * dt;
 
-    accel = accel * std::max(0.0f, (1.0f - gGourceUserFriction*dt));
+    accel = accel * std::max(0.0f, (1.0f - gGourceSettings.user_friction*dt));
 
     //ensure characters dont crawl
 //     float accel_amount = accel.length();
@@ -355,8 +341,8 @@ float RUser::getAlpha() {
 
     float alpha = Pawn::getAlpha();
     //user fades out if not doing anything
-    if(elapsed - last_action > gGourceMaxUserIdle) {
-        alpha = 1.0 - std::min(elapsed - last_action - gGourceMaxUserIdle, 1.0f);
+    if(elapsed - last_action > gGourceSettings.user_idle_time) {
+        alpha = 1.0 - std::min(elapsed - last_action - gGourceSettings.user_idle_time, 1.0f);
     }
 
     return alpha;
@@ -367,7 +353,7 @@ bool RUser::isIdle() {
 }
 
 bool RUser::isFading() {
-    return isIdle() && (elapsed - last_action) > gGourceMaxUserIdle;
+    return isIdle() && (elapsed - last_action) > gGourceSettings.user_idle_time;
 }
 
 bool RUser::isInactive() {
@@ -379,7 +365,7 @@ bool RUser::nameVisible() {
 }
 
 void RUser::drawNameText(float alpha) {
-    if(gGourceHideUsers) return;
+    if(gGourceSettings.hide_users) return;
 
     float user_alpha = getAlpha();
 
@@ -419,7 +405,7 @@ void RUser::drawNameText(float alpha) {
 }
 
 void RUser::drawActions(float dt) {
-    if(gGourceHideUsers) return;
+    if(gGourceSettings.hide_users) return;
 
     for(std::list<RAction*>::iterator it = activeActions.begin(); it != activeActions.end(); it++) {
         RAction* action = *it;
@@ -428,7 +414,7 @@ void RUser::drawActions(float dt) {
 }
 
 void RUser::draw(float dt) {
-    if(gGourceHideUsers) return;
+    if(gGourceSettings.hide_users) return;
 
     Pawn::draw(dt);
 }

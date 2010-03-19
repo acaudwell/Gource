@@ -17,9 +17,6 @@
 
 #include "zoomcamera.h"
 
-bool gGourceVerticalCrop   = false;
-bool gGourceHorizontalCrop = false;
-
 ZoomCamera::ZoomCamera() {
 }
 
@@ -93,10 +90,10 @@ void ZoomCamera::adjust(Bounds2D& bounds) {
     //use the larger side of the box
 
     //cropping: vertical, horizontal or none
-    if(gGourceVerticalCrop) {
+    if(gGourceSettings.crop_vertical) {
         distance =  width / toa ;
 
-    } else if (gGourceHorizontalCrop) {
+    } else if (gGourceSettings.crop_horizontal) {
         distance =  height / toa ;
 
     } else {
