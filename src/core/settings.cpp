@@ -225,7 +225,7 @@ void SDLAppSettings::setDisplaySettings(ConfFile& conffile) {
         output_ppm_filename = entry->getString();
 
 #ifdef _WIN32
-        if(ppm_file_name == "-") {
+        if(output_ppm_filename == "-") {
             conffile.entryException(entry, "stdout PPM mode not supported on Windows");
         }
 #endif
