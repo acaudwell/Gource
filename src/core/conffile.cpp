@@ -24,9 +24,9 @@ Regex ConfFile_section("^\\s*\\[([^\\]]+)\\]\\s*$");
 Regex ConfFile_key_value("^\\s*([^=\\s]+)\\s*=\\s*([^\\s].*)?$");
 
 // vec2f, vec3f, or vec4f with liberal allowance for whitespace
-Regex ConfFile_vec2_value("^\\s*vec2\\(\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*\\)\\s*$");
-Regex ConfFile_vec3_value("^\\s*vec3\\(\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*\\)\\s*$");
-Regex ConfFile_vec4_value("^\\s*vec4\\(\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*\\)\\s*$");
+Regex ConfFile_vec2_value("^\\s*vec2\\(\\s*(-?[0-9.]+)\\s*,\\s*(-?[0-9.]+)\\s*\\)\\s*$");
+Regex ConfFile_vec3_value("^\\s*vec3\\(\\s*(-?[0-9.]+)\\s*,\\s*(-?[0-9.]+)\\s*,\\s*(-?[0-9.]+)\\s*\\)\\s*$");
+Regex ConfFile_vec4_value("^\\s*vec4\\(\\s*(-?[0-9.]+)\\s*,\\s*(-?[0-9.]+)\\s*,\\s*(-?[0-9.]+)\\s*,\\s*(-?[0-9.]+)\\s*\\)\\s*$");
 
 
 //ConfEntry
@@ -39,6 +39,36 @@ ConfEntry::ConfEntry(const std::string& name, const std::string& value, int line
     this->name  = name;
     this->value = value;
     this->lineno = lineno;
+}
+
+ConfEntry::ConfEntry(const std::string& name, bool value) {
+    this->name  = name;
+    setBool(value);
+}
+
+ConfEntry::ConfEntry(const std::string& name, int value) {
+    this->name  = name;
+    setInt(value);
+}
+
+ConfEntry::ConfEntry(const std::string& name, float value) {
+    this->name  = name;
+    setFloat(value);
+}
+
+ConfEntry::ConfEntry(const std::string& name, vec2f value) {
+    this->name  = name;
+    setVec2(value);
+}
+
+ConfEntry::ConfEntry(const std::string& name, vec3f value) {
+    this->name  = name;
+    setVec3(value);
+}
+
+ConfEntry::ConfEntry(const std::string& name, vec4f value) {
+    this->name  = name;
+    setVec4(value);
 }
 
 void ConfEntry::setName(const std::string& name) {
@@ -63,6 +93,10 @@ void ConfEntry::setInt(int value) {
     this->value = std::string(inttostr);
 }
 
+void ConfEntry::setBool(bool value) {
+    this->value = std::string(value ? "yes" : "no");
+}
+
 void ConfEntry::setVec2(vec2f value) {
     char vectostr[256];
     sprintf(vectostr, "vec2(%.5f, %.5f)", value.x, value.y);
@@ -72,7 +106,7 @@ void ConfEntry::setVec2(vec2f value) {
 
 void ConfEntry::setVec3(vec3f value) {
     char vectostr[256];
-    sprintf(vectostr, "vec3(%.5f, %.5f)", value.x, value.y, value.z);
+    sprintf(vectostr, "vec3(%.5f, %.5f, %.5f)", value.x, value.y, value.z);
 
     this->value = std::string(vectostr);
 }
@@ -189,14 +223,6 @@ ConfEntry* ConfSection::getEntry(const std::string& key) {
     return entryList->front();
 }
 
-bool ConfSection::getBool(const std::string& key) {
-    ConfEntry* entry = getEntry(key);
-
-    if(entry==0) return false;
-
-    return entry->getBool();
-}
-
 void ConfSection::addEntry(ConfEntry* entry) {
 
     ConfEntryList* entrylist = entrymap[entry->getName()];
@@ -261,6 +287,79 @@ void ConfSection::clear() {
     entrymap.clear();
 }
 
+bool ConfSection::hasValue(const std::string& key) {
+    std::string value = getString(key);
+
+    if(value.size()>0) return true;
+
+    return false;
+}
+
+std::string ConfSection::getString(const std::string& key) {
+    ConfEntry* entry = getEntry(key);
+
+    if(entry==0) return std::string("");
+
+    return entry->getString();
+}
+
+int ConfSection::getInt(const std::string& key) {
+    ConfEntry* entry = getEntry(key);
+
+    if(entry) return entry->getInt();
+
+    return 0;
+}
+
+float ConfSection::getFloat(const std::string& key) {
+    ConfEntry* entry = getEntry(key);
+
+    if(entry) return entry->getFloat();
+
+    return 0.0f;
+}
+
+bool ConfSection::getBool(const std::string& key) {
+    ConfEntry* entry = getEntry(key);
+
+    if(entry) return entry->getBool();
+
+    return false;
+}
+
+vec3f ConfSection::getVec3(const std::string& key) {
+    ConfEntry* entry = getEntry(key);
+
+    if(entry) return entry->getVec3();
+
+    return vec3f(0.0, 0.0, 0.0);
+}
+
+vec4f ConfSection::getVec4(const std::string& key) {
+    ConfEntry* entry = getEntry(key);
+
+    if(entry) return entry->getVec4();
+
+    return vec4f(0.0, 0.0, 0.0, 0.0);
+}
+
+void ConfSection::print(std::ostream& out) {
+
+    out << "[" << getName() << "]" << std::endl;
+
+    for(std::map<std::string, ConfEntryList*>::iterator it = entrymap.begin();
+        it!= entrymap.end(); it++) {
+
+        ConfEntryList* entrylist = it->second;
+
+        for(std::list<ConfEntry*>::iterator eit = entrylist->begin();
+            eit != entrylist->end(); eit++) {
+            ConfEntry* e = *eit;
+            out << e->getName() << "=" << e->getString() << std::endl;
+        }
+   }
+   out << std::endl;
+}
 
 //ConfFile
 
@@ -293,13 +392,48 @@ void ConfFile::clear() {
     sectionmap.clear();
 }
 
+void ConfFile::setFilename(const std::string& filename) {
+    this->conffile = filename;
+}
+
+std::string ConfFile::getFilename() {
+    return conffile;
+}
+
 void ConfFile::save(const std::string& conffile) {
     this->conffile = conffile;
     save();
 }
 
 void ConfFile::save() {
+    if(conffile.size()==0) {
+        ConfFileException("filename not set", conffile.c_str(), 0);
+    }
 
+    //save conf file
+    std::ofstream out;
+    out.open(conffile.c_str());
+
+    if(!out.is_open()) {
+        ConfFileException("failed to write conf file", conffile.c_str(), 0);
+    }
+
+
+    for(std::map<std::string, ConfSectionList*>::iterator it = sectionmap.begin();
+        it!= sectionmap.end(); it++) {
+
+        ConfSectionList* sectionlist = it->second;
+
+        for(ConfSectionList::iterator sit = sectionlist->begin();
+            sit != sectionlist->end(); sit++) {
+
+            ConfSection* s = *sit;
+
+            s->print(out);
+        }
+    }
+
+    out.close();
 }
 
 void ConfFile::load(const std::string& conffile) {
@@ -336,7 +470,7 @@ void ConfFile::load() {
         std::vector<std::string> matches;
 
         // blank line or commented out lines
-        if(line.size() == 0 || line.size() > 0 && line[0] == '#') {
+        if(line.size() == 0 || (line.size() > 0 && line[0] == '#')) {
 
             continue;
 

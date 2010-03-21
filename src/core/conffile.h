@@ -49,7 +49,13 @@ public:
     ConfEntry();
     ConfEntry(const std::string& name);
     ConfEntry(const std::string& name, const std::string& value, int lineno = 0);
- 
+    ConfEntry(const std::string& name, int value);
+    ConfEntry(const std::string& name, float value);
+    ConfEntry(const std::string& name, bool value);
+    ConfEntry(const std::string& name, vec2f value);
+    ConfEntry(const std::string& name, vec3f value);
+    ConfEntry(const std::string& name, vec4f value);
+
     void setName(const std::string& name);
 
     void setString(const std::string& value);
@@ -91,8 +97,16 @@ public:
 
     std::string getName();
 
-    bool getBool(const std::string& key);
+    bool        hasValue(const std::string& key);
 
+    std::string getString(const std::string& key);
+    int         getInt(const std::string& key);
+    float       getFloat(const std::string& key);
+    bool        getBool(const std::string& key);
+    vec3f       getVec3(const std::string& key);
+    vec4f       getVec4(const std::string& key);
+
+    void print(std::ostream& out);
 
     void setEntry(ConfEntry* entry);
     void addEntry(ConfEntry* entry);
@@ -113,6 +127,7 @@ public:
     ~ConfFile();
     void clear();
 
+    void setFilename(const std::string& filename);
     std::string getFilename();
 
     void load(const std::string& conffile);
