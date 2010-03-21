@@ -44,6 +44,8 @@
 		<Unit filename="src\core\bounds.h" />
 		<Unit filename="src\core\camera.cpp" />
 		<Unit filename="src\core\camera.h" />
+		<Unit filename="src\core\conffile.cpp" />
+		<Unit filename="src\core\conffile.h" />
 		<Unit filename="src\core\display.cpp" />
 		<Unit filename="src\core\display.h" />
 		<Unit filename="src\core\extensions.cpp" />
@@ -68,6 +70,8 @@
 		<Unit filename="src\core\sdlapp.h" />
 		<Unit filename="src\core\seeklog.cpp" />
 		<Unit filename="src\core\seeklog.h" />
+		<Unit filename="src\core\settings.cpp" />
+		<Unit filename="src\core\settings.h" />
 		<Unit filename="src\core\shader.h" />
 		<Unit filename="src\core\stringhash.cpp" />
 		<Unit filename="src\core\stringhash.h" />
@@ -88,6 +92,8 @@
 		<Unit filename="src\gitraw.h" />
 		<Unit filename="src\gource.cpp" />
 		<Unit filename="src\gource.h" />
+		<Unit filename="src\gource_settings.cpp" />
+		<Unit filename="src\gource_settings.h" />
 		<Unit filename="src\hg.cpp" />
 		<Unit filename="src\hg.h" />
 		<Unit filename="src\main.cpp" />
