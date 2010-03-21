@@ -43,8 +43,6 @@ FrameExporter::FrameExporter() {
 
     pixels_shared_ptr = 0;
 
-    screentex = display.emptyTexture(display.width, display.height, GL_RGBA);
-
 	dumper_thread_state = FRAME_EXPORTER_WAIT;
 
     cond   = SDL_CreateCond();
@@ -67,8 +65,6 @@ FrameExporter::~FrameExporter() {
     SDL_KillThread(thread);
     SDL_DestroyCond(cond);
     SDL_DestroyMutex(mutex);
-
-    if(screentex!=0) glDeleteTextures(1, &screentex);
 
     pixels_shared_ptr = 0;
 
