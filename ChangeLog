@@ -1,4 +1,6 @@
 0.27:
+ * --background-colour can now be used to set the alpha channel (eg FFFFFF00).
+ * Added take screenshot button (F12). Screenshots respect the alpha channel.
  * Added ini style config file support.
  * Added demo mode for showing multiple projects in a loop.
  * Added --logo and --background-image options.

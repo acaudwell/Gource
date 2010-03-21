@@ -573,6 +573,10 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
 
         if(commitlog==0) return;
 
+        if(e->keysym.sym == SDLK_F12) {
+            screenshot();
+        }
+
         if (e->keysym.sym == SDLK_q) {
             debug = !debug;
         }
@@ -1626,9 +1630,43 @@ void Gource::drawBloom(Frustum &frustum, float dt) {
     //draw 'gourceian blur' around dirnodes
     glBindTexture(GL_TEXTURE_2D, bloomtex->textureid);
     glBlendFunc (GL_ONE, GL_ONE);
+
     root->drawBloom(frustum, dt);
 
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void Gource::screenshot() {
+
+    char* screenbuff = new char[display.width * display.height * 4];
+
+    glReadPixels(0, 0, display.width, display.height,
+                 GL_RGBA, GL_UNSIGNED_BYTE, screenbuff);
+
+    const char tga_header[12] = { 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    short width           = display.width;
+    short height          = display.height;
+    char  bitsperpixel    = 32;
+    char  imagedescriptor = 8;
+
+    //write tga
+    std::string filename("gource-screenshot.tga");
+
+    std::ofstream tga;
+    tga.open(filename.c_str(), std::ios::out | std::ios::binary );
+
+    if(!tga.is_open()) return;
+
+    tga.write(tga_header, 12);
+    tga.write((char*)&width, sizeof(short));
+    tga.write((char*)&height, sizeof(short));
+    tga.write(&bitsperpixel, 1);
+    tga.write(&imagedescriptor, 1);
+
+    tga.write(screenbuff, display.width * display.height * 4);
+    tga.close();
+
+    delete[] screenbuff;
 }
 
 void Gource::draw(float t, float dt) {

@@ -32,7 +32,7 @@
 SDLAppDisplay display;
 
 SDLAppDisplay::SDLAppDisplay() {
-    clearColour = vec3f(0.0f,0.0f,0.0f);
+    clearColour = vec4f(0.0f,0.0f,0.0f,1.0f);
     enable_shaders=false;
     enable_alpha=false;
     vsync=false;
@@ -43,6 +43,10 @@ SDLAppDisplay::~SDLAppDisplay() {
 }
 
 void SDLAppDisplay::setClearColour(vec3f colour) {
+    //setClearColour(vec4f(colour,1.0f));
+}
+
+void SDLAppDisplay::setClearColour(vec4f colour) {
     clearColour = colour;
 }
 
@@ -133,7 +137,7 @@ void SDLAppDisplay::update() {
 }
 
 void SDLAppDisplay::clear() {
-    glClearColor(clearColour.x, clearColour.y, clearColour.z, 1.0f);
+    glClearColor(clearColour.x, clearColour.y, clearColour.z, clearColour.w);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

@@ -81,8 +81,8 @@ options:
     -e, --elasticity FLOAT
             Elasticity of nodes.
 
-    -b, --background-colour FFFFFF
-            Background colour in hex.
+    -b, --background-colour FFFFFF[FF]
+            Background colour in hex. Alpha channel optional. 
 
     --background-image IMAGE
         Set a background image.

@@ -75,6 +75,11 @@ int main(int argc, char *argv[]) {
         display.multiSample(4);
     }
 
+    //background needs alpha channel
+    if(gGourceSettings.background_colour.w < 1.0f) {
+        display.enableAlpha(true);
+    }
+
     //enable vsync
     display.enableVsync(true);
 

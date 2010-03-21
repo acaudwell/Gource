@@ -24,6 +24,7 @@
 
 #include <deque>
 #include <dirent.h>
+#include <fstream>
 
 #include "core/display.h"
 #include "core/sdlapp.h"
@@ -182,6 +183,8 @@ class Gource : public SDLApp {
     void drawActions(float dt);
     void drawTree(Frustum &frustum, float dt);
     void drawBloom(Frustum &frustum, float dt);
+
+    void screenshot();
 public:
     Gource(FrameExporter* frameExporter);
     ~Gource();

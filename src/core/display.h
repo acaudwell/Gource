@@ -67,7 +67,7 @@ class SDLAppDisplay {
 public:
     int width, height;
     bool fullscreen;
-    vec3f clearColour;
+    vec4f clearColour;
 
     SDLAppDisplay();
     ~SDLAppDisplay();
@@ -80,6 +80,7 @@ public:
     void   clear();
     void   enableVsync(bool vsync);
     void   setClearColour(vec3f colour);
+    void   setClearColour(vec4f colour);
 
 #ifdef SDLAPP_SHADER_SUPPORT
     void   enableShaders(bool enable);
