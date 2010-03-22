@@ -21,6 +21,14 @@
 #include "conffile.h"
 
 class SDLAppSettings {
+protected:
+    std::string default_section_name;
+
+    std::map<std::string, std::string> arg_types;
+    std::map<std::string, std::string> arg_aliases;
+    std::map<std::string, std::string> conf_sections;
+
+    virtual void commandLineOption(const std::string& name, const std::string& value) {}
 public:
     int display_width;
     int display_height;
@@ -29,12 +37,6 @@ public:
 
     std::string output_ppm_filename;
     int output_framerate;
-
-    std::string default_section_name;
-
-    std::map<std::string, std::string> arg_types;
-    std::map<std::string, std::string> arg_aliases;
-    std::map<std::string, std::string> conf_sections;
 
     SDLAppSettings();
 

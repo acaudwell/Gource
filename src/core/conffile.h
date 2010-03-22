@@ -145,6 +145,10 @@ public:
 
     void addSection(ConfSection* section);
 
+    int countSection(const std::string& section);
+
+    void setEntry(const std::string& section, const std::string& key, const std::string& value);
+
     bool        hasEntry(const std::string& section,  const std::string& key);
     bool        hasValue(const std::string& section,  const std::string& key);
     std::string getString(const std::string& section, const std::string& key);

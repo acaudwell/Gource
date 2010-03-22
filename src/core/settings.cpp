@@ -36,6 +36,7 @@ SDLAppSettings::SDLAppSettings() {
 
     //boolean args
     arg_types["fullscreen"]     = "bool";
+    arg_types["windowed"]       = "bool";
     arg_types["multi-sampling"] = "bool";
     arg_types["viewport"]       = "string";
 }
@@ -49,7 +50,6 @@ void SDLAppSettings::setDisplayDefaults() {
     output_ppm_filename = "";
     output_framerate    = 60;
 }
-
 
 void SDLAppSettings::parseArgs(int argc, char *argv[], ConfFile& conffile, std::vector<std::string>* files) {
 
@@ -141,6 +141,12 @@ void SDLAppSettings::parseArgs(const std::vector<std::string>& arguments, ConfFi
         std::string section_name = default_section_name;
         if((findit = conf_sections.find(args)) != conf_sections.end()) {
             section_name = findit->second;
+        }
+
+        //command line options dont go into the conf file
+        if(section_name == "command-line") {
+            commandLineOption(args, argvalue);
+            continue;
         }
 
         //get section(s) of this type

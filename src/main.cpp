@@ -30,6 +30,37 @@ int main(int argc, char *argv[]) {
 
     try {
         gGourceSettings.parseArgs(argc, argv, conf, &files);
+
+        //load config
+        if(gGourceSettings.load_config.size() > 0) {
+            conf.clear();
+            conf.load(gGourceSettings.load_config);
+
+            //apply args to loaded conf file
+            gGourceSettings.parseArgs(argc, argv, conf);
+        }
+
+        //set path
+        if(files.size()>0) {
+            std::string path = files[files.size()-1];
+
+            ConfSectionList* sectionlist = conf.getSections("gource");
+
+            if(sectionlist!=0) {
+                for(ConfSectionList::iterator sit = sectionlist->begin(); sit != sectionlist->end(); sit++) {
+                    (*sit)->setEntry("path", path);
+                }
+            } else {
+                conf.setEntry("gource", "path", path);
+            }
+        }
+
+        //save config
+        if(gGourceSettings.save_config.size() > 0) {
+            conf.save(gGourceSettings.save_config);
+            exit(0);
+        }
+
         gGourceSettings.setDisplaySettings(conf);
         gGourceSettings.setGourceSettings(conf);
 
@@ -38,14 +69,11 @@ int main(int argc, char *argv[]) {
         SDLAppQuit(exception.what());
     }
 
-    //read log file
+    std::string path = conf.getString("gource", "path");
+    if(path.size()==0) path = ".";
 
-    std::string logfile = conf.getString("gource", "logfile");
-    if(logfile.size()==0 && files.size()>0) logfile = files[files.size()-1];
-    if(logfile.size()==0) logfile = ".";
-
-    //validate logfile
-    if(logfile == "-") {
+    //validate path
+    if(path == "-") {
 
         if(gGourceSettings.log_format.size() == 0) {
             SDLAppQuit("log-format required when reading from STDIN");
@@ -55,10 +83,10 @@ int main(int argc, char *argv[]) {
         std::cin.clear();
     }
 
-    //remove trailing slash and check if logfile is a directory
-    if(logfile.size() &&
-    (logfile[logfile.size()-1] == '\\' || logfile[logfile.size()-1] == '/')) {
-        logfile = logfile.substr(0,logfile.size()-1);
+    //remove trailing slash and check if path is a directory
+    if(path.size() &&
+    (path[path.size()-1] == '\\' || path[path.size()-1] == '/')) {
+        path = path.substr(0,path.size()-1);
     }
 
 #ifdef _WIN32
@@ -68,14 +96,14 @@ int main(int argc, char *argv[]) {
 
     bool isdir = false;
 
-    if(logfile.size()>0) {
+    if(path.size()>0) {
         struct stat fileinfo;
-        int rc = stat(logfile.c_str(), &fileinfo);
+        int rc = stat(path.c_str(), &fileinfo);
 
         if(rc==0 && fileinfo.st_mode & S_IFDIR) isdir = true;
     }
 
-    if(logfile.size()==0 || isdir) {
+    if(path.size()==0 || isdir) {
         SDLAppCreateWindowsConsole();
     }
 #endif
@@ -125,7 +153,7 @@ int main(int argc, char *argv[]) {
     Gource* gource = 0;
 
     try {
-        gource = new Gource(logfile);
+        gource = new Gource(path);
 
         if(exporter!=0) gource->setFrameExporter(exporter, gGourceSettings.output_framerate);
 

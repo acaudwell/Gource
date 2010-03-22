@@ -31,6 +31,8 @@
 void gource_help();
 
 class GourceSettings : public SDLAppSettings {
+protected:
+    void commandLineOption(const std::string& name, const std::string& value);
 public:
     bool hide_date;
     bool hide_users;
@@ -39,6 +41,9 @@ public:
     bool hide_usernames;
     bool hide_filenames;
     bool hide_dirnames;
+
+    std::string load_config;
+    std::string save_config;
 
     float start_position;
     float stop_position;

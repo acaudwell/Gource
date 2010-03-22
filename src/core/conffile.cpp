@@ -407,7 +407,7 @@ void ConfFile::save(const std::string& conffile) {
 
 void ConfFile::save() {
     if(conffile.size()==0) {
-        ConfFileException("filename not set", conffile.c_str(), 0);
+        throw ConfFileException("filename not set", conffile.c_str(), 0);
     }
 
     //save conf file
@@ -415,7 +415,8 @@ void ConfFile::save() {
     out.open(conffile.c_str());
 
     if(!out.is_open()) {
-        ConfFileException("failed to write conf file", conffile.c_str(), 0);
+        std::string write_error = std::string("failed to write config to ") + conffile;
+        throw ConfFileException(write_error, conffile.c_str(), 0);
     }
 
 
@@ -529,6 +530,20 @@ bool ConfFile::hasValue(const std::string& section, const std::string& key) {
     return false;
 }
 
+int ConfFile::countSection(const std::string& section) {
+    ConfSectionList* sectionlist = getSections(section);
+
+    if(sectionlist==0) return 0;
+
+    int count = 0;
+
+    for(ConfSectionList::iterator sit = sectionlist->begin(); sit != sectionlist->end(); sit++) {
+        count++;
+    }
+
+    return count;
+}
+
 bool ConfFile::hasSection(const std::string& section) {
 
     ConfSection* sec = getSection(section);
@@ -566,6 +581,19 @@ ConfSection* ConfFile::getSection(const std::string& section) {
     if(sectionlist==0 || sectionlist->size()==0) return 0;
 
     return sectionlist->front();
+}
+
+//returns the first section with a particular name
+void ConfFile::setEntry(const std::string& section, const std::string& key, const std::string& value) {
+
+    ConfSection* sec = getSection(section);
+
+    if(sec==0) {
+        sec = new ConfSection(section);
+        addSection(sec);
+    }
+
+    sec->setEntry(key, value);
 }
 
 //returns a list of all entries in a section with a particular name

@@ -34,8 +34,10 @@ void gource_help() {
     printf("Usage: gource [OPTIONS] [PATH]\n");
     printf("\nOptions:\n");
     printf("  -h, --help                       Help\n\n");
-    printf("  -WIDTHxHEIGHT                    Set window size\n");
-    printf("  -f                               Fullscreen\n\n");
+    printf("  -WIDTHxHEIGHT, --viewport        Set viewport size\n");
+    printf("  -f, --fullscreen                 Fullscreen\n");
+    printf("  -w, --windowed                   Windowed\n\n");
+
     printf("  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
     printf("      --stop-at-time SECONDS       Stop after a specified number of seconds\n");
@@ -91,6 +93,11 @@ void gource_help() {
     printf("  --output-ppm-stream FILE Write frames as PPM to a file ('-' for STDOUT)\n");
     printf("  --output-framerate FPS   Framerate of output (25,30,60)\n\n");
 
+    printf("  --load-config CONFIG_FILE        Load a config file\n");
+    printf("  --save-config CONFIG_FILE        Write a config file with the current options\n\n");
+
+    printf("  --path PATH\n\n");
+
     printf("PATH may be a Git, Bazaar or Mercurial dir, a log file or '-' to read STDIN.\n");
     printf("If ommited, gource will attempt to generate a log from the current directory.\n\n");
 
@@ -117,21 +124,34 @@ GourceSettings::GourceSettings() {
     arg_aliases["h"] = "help";
     arg_aliases["?"] = "help";
 
+    //command line only options
+    conf_sections["help"]            = "command-line";
+    conf_sections["log-command"]     = "command-line";
+    conf_sections["git-log-command"] = "command-line";
+    conf_sections["cvs-exp-command"] = "command-line";
+    conf_sections["hg-log-command"]  = "command-line";
+    conf_sections["bzr-log-command"] = "command-line";
+    conf_sections["load-config"]     = "command-line";
+    conf_sections["save-config"]     = "command-line";
+
     //boolean args
-    arg_types["help"]   = "bool";
-    arg_types["stop-on-idle"]   = "bool";
-    arg_types["stop-at-end"]    = "bool";
-    arg_types["dont-stop"]      = "bool";
-    arg_types["loop"]           = "bool";
-    arg_types["realtime"]       = "bool";
-    arg_types["colour-images"]  = "bool";
-    arg_types["hide-date"]      = "bool";
-    arg_types["hide-files"]     = "bool";
-    arg_types["hide-users"]     = "bool";
-    arg_types["hide-tree"]      = "bool";
-    arg_types["hide-usernames"] = "bool";
-    arg_types["hide-filenames"] = "bool";
-    arg_types["hide-dirnames"]  = "bool";
+    arg_types["help"]            = "bool";
+    arg_types["cvs-exp-command"] = "bool";
+    arg_types["hg-log-command"]  = "bool";
+    arg_types["bzr-log-command"] = "bool";
+    arg_types["stop-on-idle"]    = "bool";
+    arg_types["stop-at-end"]     = "bool";
+    arg_types["dont-stop"]       = "bool";
+    arg_types["loop"]            = "bool";
+    arg_types["realtime"]        = "bool";
+    arg_types["colour-images"]   = "bool";
+    arg_types["hide-date"]       = "bool";
+    arg_types["hide-files"]      = "bool";
+    arg_types["hide-users"]      = "bool";
+    arg_types["hide-tree"]       = "bool";
+    arg_types["hide-usernames"]  = "bool";
+    arg_types["hide-filenames"]  = "bool";
+    arg_types["hide-dirnames"]   = "bool";
 
     arg_types["disable-auto-skip"]  = "bool";
     arg_types["disable-progress"]   = "bool";
@@ -157,7 +177,10 @@ GourceSettings::GourceSettings() {
     arg_types["follow-user"]    = "multi-value";
     arg_types["highlight-user"] = "multi-value";
 
-    arg_types["logfile"]            = "string";
+    arg_types["log-command"]        = "string";
+    arg_types["load-config"]        = "string";
+    arg_types["save-config"]        = "string";
+    arg_types["path"]               = "string";
     arg_types["log-command"]        = "string";
     arg_types["background"]         = "string";
     arg_types["file-idle-time"]     = "string";
@@ -241,6 +264,51 @@ void GourceSettings::setGourceDefaults() {
     file_filters.clear();
 }
 
+void GourceSettings::commandLineOption(const std::string& name, const std::string& value) {
+
+    if(name == "help") {
+        gource_help();
+    }
+
+    if(name == "load-config" && value.size() > 0) {
+        load_config = value;
+        return;
+    }
+
+    if(name == "save-config" && value.size() > 0) {
+        save_config = value;
+        return;
+    }
+
+    std::string log_command;
+
+    if(name == "log-command") {
+        log_command = value;
+    }
+
+    if(name == "git-log-command" || log_command == "git") {
+        SDLAppInfo(gGourceGitLogCommand);
+    }
+
+    if(name == "cvs-exp-command" || log_command == "cvs") {
+        SDLAppInfo(gGourceCvsExpLogCommand);
+    }
+
+    if(name == "hg-log-command" || log_command == "hg") {
+        std::string command = gGourceMercurialCommand();
+        SDLAppInfo(command);
+    }
+
+    if(name == "bzr-log-command" || log_command == "bzr") {
+        std::string command = gGourceBzrLogCommand();
+        SDLAppInfo(command);
+    }
+
+    std::string invalid_error = std::string("invalid ") + name + std::string(" value");
+    throw ConfFileException(invalid_error, "", 0);
+}
+
+
 void GourceSettings::setGourceSettings(ConfFile& conffile, ConfSection* gource_settings) {
 
     setGourceDefaults();
@@ -249,42 +317,6 @@ void GourceSettings::setGourceSettings(ConfFile& conffile, ConfSection* gource_s
     if(gource_settings == 0) return;
 
     ConfEntry* entry = 0;
-
-    if(gource_settings->getBool("help")) {
-        gource_help();
-    }
-
-    std::string log_command;
-
-    if((entry = gource_settings->getEntry("log-command")) != 0) {
-
-        if(!entry->hasValue()) conffile.missingValueException(entry);
-
-        log_command = entry->getString();
-    }
-
-    if(gource_settings->getBool("git-log-command") || log_command == "git") {
-        SDLAppInfo(gGourceGitLogCommand);
-    }
-
-    if(gource_settings->getBool("cvs-exp-command") || log_command == "cvs") {
-        SDLAppInfo(gGourceCvsExpLogCommand);
-    }
-
-    if(gource_settings->getBool("hg-log-command") || log_command == "hg") {
-        std::string command = gGourceMercurialCommand();
-        SDLAppInfo(command);
-    }
-
-    if(gource_settings->getBool("bzr-log-command") || log_command == "bzr") {
-        std::string command = gGourceBzrLogCommand();
-        SDLAppInfo(command);
-    }
-
-    //didn't match any log commands
-    if(log_command.size() > 0) {
-        conffile.invalidValueException(entry);
-    }
 
     //hide flags
 

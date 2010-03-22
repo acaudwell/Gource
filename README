@@ -38,11 +38,18 @@ gource <options> <path>
 
 options:
 
-    -f      Fullscreen
+    -h, --help
+            Help.
 
-    -WIDTHxHEIGHT
-            Set the window size. If -f is also supplied, will attempt to set
+    -WIDTHxHEIGHT, --viewport WIDTHxHEIGHT
+            Set the viewport size. If -f is also supplied, will attempt to set
             the video mode to this also.
+
+    -f, --fullscreen
+            Fullscreen.
+
+    -w, --windowed
+            Windowed.
 
     -p, --start-position POSITION
             Begin at some position in the log (between 0.0 and 1.0).
@@ -167,6 +174,14 @@ options:
 
     --output-framerate FPS
             Framerate of output (used with --output-ppm-stream).
+
+    --load-config CONFIG_FILE
+            Load a config file.
+
+    --save-config CONFIG_FILE
+            Write a config file with the current options.
+
+    --path PATH
 
     path    Either a Git, Bazaar or Mercurial directory, a pre-generated log
             file (see log commands or the custom log format) or '-' to read

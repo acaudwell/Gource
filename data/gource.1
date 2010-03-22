@@ -13,11 +13,17 @@ The repository is displayed as a tree where the root of the repository is the ce
 requires a OpenGL capable video card to run.
 .SH OPTIONS
 .TP 8
+\fB\-h\fR
+Help
+.TP
+\fB\-WIDTHxHEIGHT, \-\-viewport WIDTHxHEIGHT\fR
+Set the viewport size. If \-f is also supplied, will attempt to set the video mode to this also.
+.TP
 \fB\-f\fR
 Fullscreen
 .TP
-\fB\-WIDTHxHEIGHT\fR
-Set the window size. If \-f is also supplied, will attempt to set the video mode to this also.
+\fB\-w\fR
+Windowed
 .TP
 \fB\-p, \-\-start\-position POSITION\fR
 Begin at some position in the log (between 0.0 and 1.0).
@@ -140,6 +146,14 @@ Write frames as PPM to a file ('\-' for STDOUT).
 .TP
 \fB\-\-output\-framerate FPS\fR
 Framerate of output (used with \-\-output\-ppm\-stream).
+.TP
+\fB\-\-load\-config CONFIG_FILE\fR
+Load a config file.
+.TP
+\fB\-\-save\-config CONFIG_FILE\fR
+Save a config file with the current options.
+.TP
+\fB\-\-path PATH\fR
 .TP
 \fBpath\fR
 Either a Git, Bazaar or Mercurial directory, a pre-generated log file (see log commands or the custom log format) or '\-' to read STDIN. If path is ommited \fIgource\fR will attempt to read a log from the current directory.
