@@ -55,14 +55,15 @@ int main(int argc, char *argv[]) {
             }
         }
 
+        //apply the config / see if its valid
+        gGourceSettings.setDisplaySettings(conf);
+        gGourceSettings.setGourceSettings(conf);
+
         //save config
         if(gGourceSettings.save_config.size() > 0) {
             conf.save(gGourceSettings.save_config);
             exit(0);
         }
-
-        gGourceSettings.setDisplaySettings(conf);
-        gGourceSettings.setGourceSettings(conf);
 
     } catch(ConfFileException& exception) {
 

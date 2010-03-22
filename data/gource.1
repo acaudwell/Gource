@@ -55,29 +55,29 @@ Time in seconds files remain idle before they are removed.
 \fB\-e, \-\-elasticity FLOAT\fR
 Elasticity of nodes.
 .TP
-\fB\-b, \-\-background FFFFFF\fR
+\fB\-b, \-\-background-colour FFFFFF\fR
 Background colour in hex.
+.TP
+\fB\-\-background\-image IMAGE\fR
+Set a background image.
+.TP
+\fB\-\-logo IMAGE\fR
+Logo to display in the foreground.
+.TP
+\fB\-\-logo\-offset XxY\fR
+Offset position of the logo.
 .TP
 \fB\-\-date\-format FORMAT\fR
 Specify display date string (strftime format).
 .TP
-\fB\-\-log\-format FORMAT\fR
-Specify format of the log being read (git,cvs,hg,bzr,custom). Required when reading STDIN.
+\fB\-\-log\-command VCS\fR
+Show the log command used by gource (git,cvs,hg,bzr).
+.TP
+\fB\-\-log\-format VCS\fR
+Specify format of the log being read (git,cvs,hg,bzr,custom). Required when reading from STDIN.
 .TP
 \fB\-\-git\-branch\fR
 Get the git log of a branch other than the current one.
-.TP
-\fB\-\-git\-log\-command\fR
-Print the git log command used by \fIgource\fR.
-.TP
-\fB\-\-hg\-log\-command\fR
-Print the hg log command (Mercurial) used by \fIgource\fR.
-.TP
-\fB\-\-bzr\-log\-command\fR
-Print the bzr log command (Bazaar) used by \fIgource\fR.
-.TP
-\fB\-\-cvs\-exp\-command\fR
-Print the cvs-exp.pl log command used by \fIgource\fR.
 .TP
 \fB\-\-follow\-user USER\fR
 Have the camera automatically follow a particular user.

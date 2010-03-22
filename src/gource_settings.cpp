@@ -51,8 +51,13 @@ void gource_help() {
     printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 10)\n");
     printf("      --realtime                   Realtime playback speed\n");
     printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)\n");
-    printf("  -e, --elasticity FLOAT           Elasticity of nodes\n");
-    printf("  -b, --background FFFFFF          Background colour in hex\n\n");
+    printf("  -e, --elasticity FLOAT           Elasticity of nodes\n\n");
+
+    printf("  -b, --background-colour FFFFFF   Background colour in hex\n");
+    printf("      --background-image IMAGE     Set a background image\n\n");
+
+    printf("  --logo IMAGE                     Logo to display in the foreground\n");
+    printf("  --logo-offset XxY                Offset position of the logo\n\n");
 
     printf("  --user-image-dir DIRECTORY       Dir containing images to use as avatars\n");
     printf("  --default-user-image IMAGE       Default user image file\n");
@@ -120,9 +125,10 @@ GourceSettings::GourceSettings() {
     arg_aliases["s"] = "seconds-per-day";
     arg_aliases["i"] = "file-idle-time";
     arg_aliases["e"] = "elasticity";
-    arg_aliases["b"] = "background";
     arg_aliases["h"] = "help";
     arg_aliases["?"] = "help";
+    arg_aliases["b"] = "background-colour";
+    arg_aliases["background"] = "background-colour";
 
     //command line only options
     conf_sections["help"]            = "command-line";
@@ -177,12 +183,15 @@ GourceSettings::GourceSettings() {
     arg_types["follow-user"]    = "multi-value";
     arg_types["highlight-user"] = "multi-value";
 
+    arg_types["background-image"]   = "string";
+    arg_types["logo"]               = "string";
+    arg_types["logo-offset"]        = "string";
     arg_types["log-command"]        = "string";
     arg_types["load-config"]        = "string";
     arg_types["save-config"]        = "string";
     arg_types["path"]               = "string";
     arg_types["log-command"]        = "string";
-    arg_types["background"]         = "string";
+    arg_types["background-colour"]  = "string";
     arg_types["file-idle-time"]     = "string";
     arg_types["user-image-dir"]     = "string";
     arg_types["default-user-image"] = "string";
@@ -221,6 +230,9 @@ void GourceSettings::setGourceDefaults() {
 
     loop = false;
 
+    logo = "";
+    logo_offset = vec2f(20.0f,20.0f);
+
     colour_user_images = false;
     default_user_image = "";
     user_image_dir     = "";
@@ -237,6 +249,7 @@ void GourceSettings::setGourceDefaults() {
     bloom_intensity  = 0.75f;
 
     background_colour = vec3f(0.1f, 0.1f, 0.1f);
+    background_image  = "";
 
     elasticity = 0.0f;
 
@@ -507,7 +520,7 @@ void GourceSettings::setGourceSettings(ConfFile& conffile, ConfSection* gource_s
         }
     }
 
-    if((entry = gource_settings->getEntry("background")) != 0) {
+    if((entry = gource_settings->getEntry("background-colour")) != 0) {
 
         if(!entry->hasValue()) conffile.entryException(entry, "specify background colour (FFFFFF)");
 
@@ -520,6 +533,37 @@ void GourceSettings::setGourceSettings(ConfFile& conffile, ConfSection* gource_s
         } else {
             conffile.invalidValueException(entry);
         }
+    }
+
+    if((entry = gource_settings->getEntry("background-image")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify background image (image path)");
+
+        background_image = entry->getString();
+    }
+
+    if((entry = gource_settings->getEntry("logo")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify logo (image path)");
+
+        logo = entry->getString();
+    }
+
+    if((entry = gource_settings->getEntry("logo-offset")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify logo-offset (XxY)");
+
+        std::string logo_offset_str = entry->getString();
+
+        int posx = 0;
+        int posy = 0;
+
+        if(parseRectangle(logo_offset_str, &posx, &posy)) {
+            logo_offset = vec2f(posx, posy);
+        } else {
+            conffile.invalidValueException(entry);
+        }
+
     }
 
     if((entry = gource_settings->getEntry("seconds-per-day")) != 0) {

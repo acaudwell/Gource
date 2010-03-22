@@ -45,6 +45,9 @@ public:
     std::string load_config;
     std::string save_config;
 
+    std::string logo;
+    vec2f logo_offset;
+
     float start_position;
     float stop_position;
     float stop_at_time;
@@ -75,6 +78,7 @@ public:
     float bloom_intensity;
 
     vec3f background_colour;
+    std::string background_image;
 
     float elasticity;
 

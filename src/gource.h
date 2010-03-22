@@ -98,6 +98,8 @@ class Gource : public SDLApp {
 
     TextureResource* bloomtex;
     TextureResource* beamtex;
+    TextureResource* logotex;
+    TextureResource* backgroundtex;
 
     FXFont font, fontlarge, fontmedium;
 
