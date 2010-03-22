@@ -58,7 +58,7 @@ bool Regex::isValid() {
     return valid;
 }
 
-bool Regex::match(std::string& str, std::vector<std::string>* results) {
+bool Regex::match(const std::string& str, std::vector<std::string>* results) {
 
     int ovector[REGEX_MAX_MATCHES];
 

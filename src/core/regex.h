@@ -57,7 +57,7 @@ class Regex {
 public:
     Regex(std::string regex, bool test = false);
     ~Regex();
-    bool match(std::string& str, std::vector<std::string>* results = 0);
+    bool match(const std::string& str, std::vector<std::string>* results = 0);
 
     bool isValid();
 
