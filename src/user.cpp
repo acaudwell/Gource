@@ -191,7 +191,7 @@ void RUser::assignIcon() {
 
             if(!gGourceSettings.colour_user_images) usercol = vec3f(1.0, 1.0, 1.0);
 
-            icon = texturemanager.grab(imagefile, 1, 1, 0, true);
+            icon = texturemanager.grabFile(imagefile);
 
             setHighlighted(true);
 
@@ -203,7 +203,7 @@ void RUser::assignIcon() {
     if(!image_assigned) {
         if(gGourceSettings.default_user_image.size() > 0) {
             if(!gGourceSettings.colour_user_images) usercol = vec3f(1.0, 1.0, 1.0);
-            icon = texturemanager.grab(gGourceSettings.default_user_image, 1, 1, 0, true);
+            icon = texturemanager.grabFile(gGourceSettings.default_user_image);
         } else {
             icon = texturemanager.grab("no_photo.png");
         }

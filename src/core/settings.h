@@ -18,6 +18,8 @@
 #ifndef SDLAPP_SETTINGS_H
 #define SDLAPP_SETTINGS_H
 
+#include "regex.h"
+
 #include "conffile.h"
 
 class SDLAppSettings {
@@ -29,6 +31,8 @@ protected:
     std::map<std::string, std::string> conf_sections;
 
     virtual void commandLineOption(const std::string& name, const std::string& value) {}
+
+    bool parseRectangle(const std::string& value, int* x=0, int* y=0);
 public:
     int display_width;
     int display_height;

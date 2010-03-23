@@ -40,18 +40,19 @@ public:
 
 class TextureResource : public Resource {
     int colourFormat(SDL_Surface* surface);
-    void loadTexture(std::string file, int mipmaps, int clamp, int trilinear, bool external_file);
+    void loadTexture(std::string file, bool mipmaps, bool clamp, bool trilinear, bool external_file);
 public:
 	int w, h;
     GLuint textureid;
-    TextureResource(std::string name, int mipmaps, int clamp, int trilinear, bool external_file);
+    TextureResource(std::string name, bool mipmaps, bool clamp, bool trilinear, bool external_file);
     ~TextureResource();
 };
 
 class TextureManager : public ResourceManager {
 public:
     TextureManager();
-    TextureResource* grab(std::string file, int mipmaps=1, int clamp=1, int trilinear=0, bool external_file = false);
+    TextureResource* grabFile(std::string name, bool mipmaps=true, bool clamp=true, bool trilinear=false);
+    TextureResource* grab(std::string file, bool mipmaps=true, bool clamp=true, bool trilinear=false, bool external_file = false);
 };
 
 extern TextureManager texturemanager;

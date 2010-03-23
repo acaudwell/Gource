@@ -81,30 +81,30 @@ options:
     -e, --elasticity FLOAT
             Elasticity of nodes.
 
-    -b, --background FFFFFF
+    -b, --background-colour FFFFFF
             Background colour in hex.
+
+    --background-image IMAGE
+        Set a background image.
+
+    --logo IMAGE
+        Logo to display in the foreground.
+
+    --logo-offset XxY
+        Offset position of the logo.
 
     --date-format FORMAT
             Specify display date string (strftime format).
 
-    --log-format FORMAT
+    --log-command VCS
+            Show the log command used by gource (git,cvs,hg,bzr)
+
+    --log-format VCS
             Specify format of the log being read (git,cvs,hg,bzr,custom).
-            Required when reading STDIN.
+            Required when reading from STDIN.
 
     --git-branch
             Get the git log of a branch other than the current one.
-
-    --git-log-command
-            Print the git log command used by gource.
-
-    --hg-log-command
-            Print the hg log (Mercurial) command used by gource.
-
-    --bzr-log-command
-            Print the bzr log (Bazaar) command used by gource.
-
-    --cvs-exp-command
-            Print the cvs-exp.pl log command used by gource.
 
     --follow-user USER
             Have the camera automatically follow a particular user.

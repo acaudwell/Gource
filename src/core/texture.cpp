@@ -34,24 +34,27 @@ TextureManager texturemanager;
 TextureManager::TextureManager() : ResourceManager() {
 }
 
-TextureResource* TextureManager::grab(std::string name, int mipmaps, int clamp, int trilinear, bool external_file) {
-    //debugLog("grabing %s\n", name.c_str());
+TextureResource* TextureManager::grabFile(std::string name, bool mipmaps, bool clamp, bool trilinear) {
+    return grab(name, mipmaps, clamp, trilinear, true);
+}
+
+TextureResource* TextureManager::grab(std::string name, bool mipmaps, bool clamp, bool trilinear, bool external_file) {
+
     Resource* r = resources[name];
 
     if(r==0) {
-        //debugLog("%s not found. creating resource...\n", name.c_str());
-
         r = new TextureResource(name, mipmaps, clamp, trilinear, external_file);
 
         resources[name] = r;
     }
     r->addref();
+
     return (TextureResource*)r;
 }
 
 // texture resource
 
-TextureResource::TextureResource(std::string file, int mipmaps, int clamp, int trilinear, bool external_file) : Resource(file) {
+TextureResource::TextureResource(std::string file, bool mipmaps, bool clamp, bool trilinear, bool external_file) : Resource(file) {
 
     //if doesnt have an absolute path, look in resource dir
     if(!external_file && !(file.size() > 2 && file[1] == ':') && !(file.size() > 1 && file[0] == '/')) {

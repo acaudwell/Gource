@@ -44,6 +44,19 @@ Gource::Gource(std::string logfile) {
     bloomtex = texturemanager.grab("bloom.tga");
     beamtex  = texturemanager.grab("beam.png");
 
+    logotex = 0;
+    backgroundtex = 0;
+
+    //load logo
+    if(gGourceSettings.logo.size() > 0) {
+        logotex = texturemanager.grabFile(gGourceSettings.logo);
+    }
+
+    //load background image
+    if(gGourceSettings.background_image.size() > 0) {
+        backgroundtex = texturemanager.grabFile(gGourceSettings.background_image);
+    }
+
     stop_position_reached=false;
 
     paused       = false;
@@ -1481,6 +1494,36 @@ void Gource::drawBackground(float dt) {
 
     display.setClearColour(gGourceSettings.background_colour);
     display.clear();
+
+    if(backgroundtex!=0) {
+        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glEnable(GL_TEXTURE_2D);
+
+        glColor4f(1.0, 1.0, 1.0, 1.0);
+
+        glBindTexture(GL_TEXTURE_2D, backgroundtex->textureid);
+
+        glPushMatrix();
+
+            glTranslatef(display.width/2 - backgroundtex->w/2, display.height/2 - backgroundtex->h/2, 0.0f);
+
+            glBegin(GL_QUADS);
+                glTexCoord2f(0.0f,0.0f);
+                glVertex2i(0, 0);
+
+                glTexCoord2f(1.0f,0.0f);
+                glVertex2i(backgroundtex->w, 0);
+
+                glTexCoord2f(1.0f,1.0f);
+                glVertex2i(backgroundtex->w, backgroundtex->h);
+
+                glTexCoord2f(0.0f,1.0f);
+                glVertex2i(0, backgroundtex->h);
+            glEnd();
+
+        glPopMatrix();
+    }
 }
 
 void Gource::drawTree(Frustum& frustum, float dt) {
@@ -1671,6 +1714,38 @@ void Gource::draw(float t, float dt) {
 
     if(!gGourceSettings.hide_date) {
         fontmedium.draw(display.width/2 - date_x_offset, 20, displaydate);
+    }
+
+    if(logotex!=0) {
+        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glEnable(GL_TEXTURE_2D);
+
+        glColor4f(1.0, 1.0, 1.0, 1.0);
+
+        glBindTexture(GL_TEXTURE_2D, logotex->textureid);
+
+        vec2f logopos = vec2f(display.width, display.height) - vec2f(logotex->w, logotex->h) - gGourceSettings.logo_offset;
+
+        glPushMatrix();
+
+            glTranslatef(logopos.x, logopos.y, 0.0);
+
+            glBegin(GL_QUADS);
+                glTexCoord2f(0.0f,0.0f);
+                glVertex2i(0, 0);
+
+                glTexCoord2f(1.0f,0.0f);
+                glVertex2i(logotex->w, 0);
+
+                glTexCoord2f(1.0f,1.0f);
+                glVertex2i(logotex->w, logotex->h);
+
+                glTexCoord2f(0.0f,1.0f);
+                glVertex2i(0, logotex->h);
+            glEnd();
+
+        glPopMatrix();
     }
 
     if(splash>0.0f) {

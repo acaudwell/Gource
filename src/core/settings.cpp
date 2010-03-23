@@ -17,6 +17,8 @@
 
 #include "settings.h"
 
+Regex SDLAppSettings_rect_regex("^([0-9.]+)x([0-9.]+)$");
+
 SDLAppSettings::SDLAppSettings() {
     setDisplayDefaults();
 
@@ -51,6 +53,19 @@ void SDLAppSettings::setDisplayDefaults() {
 
     output_ppm_filename = "";
     output_framerate    = 60;
+}
+
+bool SDLAppSettings::parseRectangle(const std::string& value, int* x, int* y) {
+
+    std::vector<std::string> matches;
+
+    if(SDLAppSettings_rect_regex.match(value, &matches)) {
+        if(x!=0) *x = atoi(matches[0].c_str());
+        if(y!=0) *y = atoi(matches[1].c_str());
+        return true;
+    }
+
+    return false;
 }
 
 void SDLAppSettings::parseArgs(int argc, char *argv[], ConfFile& conffile, std::vector<std::string>* files) {
@@ -99,15 +114,10 @@ void SDLAppSettings::parseArgs(const std::vector<std::string>& arguments, ConfFi
 
             std::string displayarg = args;
 
-            size_t x = displayarg.rfind("x");
+            int width  = 0;
+            int height = 0;
 
-            if(x != std::string::npos && x != 0 && x != displayarg.size()-1) {
-                std::string widthstr  = displayarg.substr(0, x);
-                std::string heightstr = displayarg.substr(x+1);
-
-                int width = atoi(widthstr.c_str());
-                int height = atoi(heightstr.c_str());
-
+            if(parseRectangle(displayarg, &width, &height)) {
                 if(width>0 && height>0) {
 
                     ConfSection* display_settings = conffile.getSection("display");
