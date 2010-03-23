@@ -26,7 +26,7 @@ void gource_help() {
     SDLAppCreateWindowsConsole();
 
     //resize window to fit help message
-    SDLAppResizeWindowsConsole(950);
+    SDLAppResizeWindowsConsole(970);
 #endif
 
     printf("Gource v%s\n", GOURCE_VERSION);
@@ -36,7 +36,7 @@ void gource_help() {
     printf("  -h, --help                       Help\n\n");
     printf("  -WIDTHxHEIGHT, --viewport        Set viewport size\n");
     printf("  -f, --fullscreen                 Fullscreen\n");
-    printf("  -w, --windowed                   Windowed\n\n");
+    printf("      --multi-sampling             Enable multi-sampling\n\n");
 
     printf("  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
@@ -69,7 +69,6 @@ void gource_help() {
     printf("  --log-format  VCS        Specify format of the log (git,cvs,hg,bzr,custom)\n");
     printf("  --git-branch             Get the git log of a particular branch\n\n");
 
-    printf("  --multi-sampling         Enable multi-sampling\n");
     printf("  --crop AXIS              Crop view on an axis (vertical,horizontal)\n\n");
 
     printf("  --bloom-multiplier       Adjust the amount of bloom (default: 1.0)\n");
@@ -95,11 +94,11 @@ void gource_help() {
     printf("  --highlight-all-users    Highlight the names of all users\n");
     printf("  --file-filter REGEX      Ignore files matching this regexe\n\n");
 
-    printf("  --output-ppm-stream FILE Write frames as PPM to a file ('-' for STDOUT)\n");
-    printf("  --output-framerate FPS   Framerate of output (25,30,60)\n\n");
+    printf("  --load-config CONF_FILE  Load a config file\n");
+    printf("  --save-config CONF_FILE  Save a config file with the current options\n\n");
 
-    printf("  --load-config CONFIG_FILE        Load a config file\n");
-    printf("  --save-config CONFIG_FILE        Write a config file with the current options\n\n");
+    printf("  -o,    --output-ppm-stream FILE Output PPM stream to a file ('-' for STDOUT)\n");
+    printf("  --fps, --output-framerate  FPS  Framerate of output (25,30,60)\n\n");
 
     printf("  --path PATH\n\n");
 

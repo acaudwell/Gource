@@ -169,17 +169,17 @@ options:
 
             Separate multiple elements with commas.
 
-    --output-ppm-stream FILE
-            Write frames as PPM to a file ('-' for STDOUT).
+    -o, --output-ppm-stream FILE
+            Output a PPM image stream to a file ('-' for STDOUT).
 
-    --output-framerate FPS
-            Framerate of output (used with --output-ppm-stream).
+    --fps, --output-framerate FPS
+            Framerate of output (25,30,60). Used with --output-ppm-stream.
 
     --load-config CONFIG_FILE
             Load a config file.
 
     --save-config CONFIG_FILE
-            Write a config file with the current options.
+            Save a config file with the current options.
 
     --path PATH
 
