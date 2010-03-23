@@ -35,10 +35,12 @@ SDLAppSettings::SDLAppSettings() {
     arg_aliases["w"] = "windowed";
 
     //boolean args
-    arg_types["fullscreen"]     = "bool";
-    arg_types["windowed"]       = "bool";
-    arg_types["multi-sampling"] = "bool";
-    arg_types["viewport"]       = "string";
+    arg_types["viewport"]          = "string";
+    arg_types["windowed"]          = "bool";
+    arg_types["fullscreen"]        = "bool";
+    arg_types["multi-sampling"]    = "bool";
+    arg_types["output-ppm-stream"] = "string";
+    arg_types["output-framerate"]  = "int";
 }
 
 void SDLAppSettings::setDisplayDefaults() {
