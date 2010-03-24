@@ -144,7 +144,7 @@ bool ConfEntry::hasValue() {
 
 bool ConfEntry::getBool() {
 
-    if(value == "1" || value == "true" || value == "yes" || value == "YES" || value == "Yes")
+    if(value == "1" || value == "true" || value == "True" || value == "TRUE" || value == "yes" || value == "Yes" || value == "YES")
         return true;
 
     return false;
@@ -559,6 +559,23 @@ void ConfFile::addSection(ConfSection* section) {
 
     if(sectionlist==0) {
         sectionmap[section->getName()] = sectionlist = new ConfSectionList;
+    }
+
+    sectionlist->push_back(section);
+}
+
+void ConfFile::setSection(ConfSection* section) {
+
+    ConfSectionList* sectionlist = getSections(section->getName());
+
+    if(sectionlist==0) {
+        sectionmap[section->getName()] = sectionlist = new ConfSectionList;
+    }
+
+    if(sectionlist->size() != 0) {
+        ConfSection* front = sectionlist->front();
+        sectionlist->pop_front();
+        delete front;
     }
 
     sectionlist->push_back(section);

@@ -144,6 +144,7 @@ public:
     ConfEntryList* getEntries(const std::string& section, const std::string& key);
 
     void addSection(ConfSection* section);
+    void setSection(ConfSection* section);
 
     int countSection(const std::string& section);
 
