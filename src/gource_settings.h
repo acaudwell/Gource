@@ -28,8 +28,6 @@
 #include "core/settings.h"
 #include "core/regex.h"
 
-void gource_help();
-
 class GourceSettings : public SDLAppSettings {
 protected:
     void commandLineOption(const std::string& name, const std::string& value);
@@ -105,6 +103,8 @@ public:
     void setGourceDefaults();
 
     void setGourceSettings(ConfFile& conf, ConfSection* gource_settings = 0);
+
+    void help();
 };
 
 extern GourceSettings gGourceSettings;

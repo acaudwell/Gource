@@ -182,7 +182,7 @@ int main(int argc, char *argv[]) {
     } catch(SDLAppException& exception) {
 
         if(exception.showHelp()) {
-            gource_help();
+            gGourceSettings.help();
         } else {
             SDLAppQuit(exception.what());
         }

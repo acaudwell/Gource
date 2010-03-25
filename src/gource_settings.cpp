@@ -20,7 +20,7 @@
 GourceSettings gGourceSettings;
 
 //display help message
-void gource_help() {
+void GourceSettings::help() {
 
 #ifdef _WIN32
     SDLAppCreateWindowsConsole();
@@ -280,7 +280,7 @@ void GourceSettings::setGourceDefaults() {
 void GourceSettings::commandLineOption(const std::string& name, const std::string& value) {
 
     if(name == "help") {
-        gource_help();
+        help();
     }
 
     if(name == "load-config" && value.size() > 0) {
