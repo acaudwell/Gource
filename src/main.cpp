@@ -56,8 +56,8 @@ int main(int argc, char *argv[]) {
         }
 
         //apply the config / see if its valid
-        gGourceSettings.setDisplaySettings(conf);
-        gGourceSettings.setGourceSettings(conf);
+        gGourceSettings.importDisplaySettings(conf);
+        gGourceSettings.importGourceSettings(conf);
 
         //save config
         if(gGourceSettings.save_config.size() > 0) {

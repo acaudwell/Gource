@@ -102,7 +102,7 @@ public:
 
     void setGourceDefaults();
 
-    void setGourceSettings(ConfFile& conf, ConfSection* gource_settings = 0);
+    void importGourceSettings(ConfFile& conf, ConfSection* gource_settings = 0);
 
     void help();
 };

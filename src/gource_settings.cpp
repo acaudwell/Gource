@@ -322,7 +322,7 @@ void GourceSettings::commandLineOption(const std::string& name, const std::strin
 }
 
 
-void GourceSettings::setGourceSettings(ConfFile& conffile, ConfSection* gource_settings) {
+void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gource_settings) {
 
     setGourceDefaults();
 

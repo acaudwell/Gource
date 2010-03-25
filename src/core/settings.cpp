@@ -53,6 +53,26 @@ void SDLAppSettings::setDisplayDefaults() {
     output_framerate    = 60;
 }
 
+void SDLAppSettings::exportDisplaySettings(ConfFile& conf) {
+
+    ConfSection* section = new ConfSection("display");
+
+    char viewportbuff[256];
+    snprintf(viewportbuff, 256, "%dx%d", display_width, display_height);
+
+    std::string viewport = std::string(viewportbuff);
+
+    section->setEntry(new ConfEntry("viewport", viewport));
+
+    if(fullscreen)
+        section->setEntry(new ConfEntry("fullscreen", fullscreen));
+
+    if(multisample)
+        section->setEntry(new ConfEntry("multi-sampling", multisample));
+
+    conf.setSection(section);
+}
+
 bool SDLAppSettings::parseRectangle(const std::string& value, int* x, int* y) {
 
     std::vector<std::string> matches;
@@ -185,7 +205,7 @@ void SDLAppSettings::parseArgs(const std::vector<std::string>& arguments, ConfFi
     }
 }
 
-void SDLAppSettings::setDisplaySettings(ConfFile& conffile) {
+void SDLAppSettings::importDisplaySettings(ConfFile& conffile) {
 
     setDisplayDefaults();
 

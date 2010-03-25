@@ -47,7 +47,8 @@ public:
     void parseArgs(int argc, char *argv[], ConfFile& conffile, std::vector<std::string>* files = 0);
     void parseArgs(const std::vector<std::string>& args, ConfFile& conffile, std::vector<std::string>* files = 0);
 
-    void setDisplaySettings(ConfFile& conf);
+    void exportDisplaySettings(ConfFile& conf);
+    void importDisplaySettings(ConfFile& conf);
 
     void setDisplayDefaults();
 };
