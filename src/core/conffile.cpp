@@ -234,9 +234,9 @@ void ConfSection::addEntry(ConfEntry* entry) {
     entrylist->push_back(entry);
 }
 
-void ConfSection::addEntry(const std::string& name, const std::string& value) {
+void ConfSection::addEntry(const std::string& name, const std::string& value, int lineno) {
 
-    ConfEntry* entry = new ConfEntry(name, value);
+    ConfEntry* entry = new ConfEntry(name, value, lineno);
     addEntry(entry);
 }
 
@@ -260,9 +260,9 @@ void ConfSection::setEntry(ConfEntry* entry) {
     entrylist->push_front(entry);
 }
 
-void ConfSection::setEntry(const std::string& name, const std::string& value) {
+void ConfSection::setEntry(const std::string& name, const std::string& value, int lineno) {
 
-    ConfEntry* entry = new ConfEntry(name, value);
+    ConfEntry* entry = new ConfEntry(name, value, lineno);
     setEntry(entry);
 }
 
@@ -498,7 +498,7 @@ void ConfFile::load() {
 
             if(sec==0) sec = new ConfSection("");
 
-            sec->addEntry(key, value);
+            sec->addEntry(key, value, lineno);
 
             debugLog("%s: [%s] %s => %s\n", conffile.c_str(), sec->getName().c_str(), key.c_str(), value.c_str());
 
@@ -718,8 +718,10 @@ void ConfFile::entryException(ConfEntry* entry, std::string reason) {
         errmsg = conffile;
 
         if(entry->getLineNumber() != 0) {
-            errmsg += std::string(", line ");
-            errmsg += entry->getLineNumber();
+            char linebuff[256];
+            snprintf(linebuff, 256, ", line %d", entry->getLineNumber());
+
+            errmsg += std::string(linebuff);
         }
 
         errmsg += std::string(": ");

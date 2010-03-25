@@ -111,8 +111,8 @@ public:
     void setEntry(ConfEntry* entry);
     void addEntry(ConfEntry* entry);
 
-    void setEntry(const std::string& name, const std::string& value);
-    void addEntry(const std::string& name, const std::string& value);
+    void setEntry(const std::string& name, const std::string& value, int lineno=0);
+    void addEntry(const std::string& name, const std::string& value, int lineno=0);
 };
 
 typedef std::list<ConfSection*> ConfSectionList;
