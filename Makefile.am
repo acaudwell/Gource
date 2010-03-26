@@ -34,10 +34,11 @@ gource_SOURCES = \
 	src/cvs-exp.cpp src/cvs-exp.h \
 	src/dirnode.cpp src/dirnode.h \
 	src/file.cpp src/file.h \
-	src/gource_settings.cpp src/gource_settings.h \
 	src/git.cpp src/git.h \
 	src/gitraw.cpp src/gitraw.h \
 	src/gource.cpp src/gource.h \
+	src/gource_demo.cpp src/gource_demo.h \
+	src/gource_settings.cpp src/gource_settings.h \
 	src/hg.cpp src/hg.h \
 	src/main.cpp src/main.h \
 	src/pawn.cpp src/pawn.h \

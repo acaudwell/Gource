@@ -53,6 +53,8 @@ int main(int argc, char *argv[]) {
             } else {
                 conf.setEntry("gource", "path", path);
             }
+        } else {
+            conf.setEntry("gource", "path", ".");
         }
 
         //apply the config / see if its valid
@@ -69,45 +71,6 @@ int main(int argc, char *argv[]) {
 
         SDLAppQuit(exception.what());
     }
-
-    std::string path = conf.getString("gource", "path");
-    if(path.size()==0) path = ".";
-
-    //validate path
-    if(path == "-") {
-
-        if(gGourceSettings.log_format.size() == 0) {
-            SDLAppQuit("log-format required when reading from STDIN");
-        }
-
-        while(std::cin.peek() == EOF && !std::cin.fail()) SDL_Delay(100);
-        std::cin.clear();
-    }
-
-    //remove trailing slash and check if path is a directory
-    if(path.size() &&
-    (path[path.size()-1] == '\\' || path[path.size()-1] == '/')) {
-        path = path.substr(0,path.size()-1);
-    }
-
-#ifdef _WIN32
-    //on windows, pre-open console window if we think this is a directory the
-    //user is trying to open, as system() commands will create a console window
-    //if there isn't one anyway.
-
-    bool isdir = false;
-
-    if(path.size()>0) {
-        struct stat fileinfo;
-        int rc = stat(path.c_str(), &fileinfo);
-
-        if(rc==0 && fileinfo.st_mode & S_IFDIR) isdir = true;
-    }
-
-    if(path.size()==0 || isdir) {
-        SDLAppCreateWindowsConsole();
-    }
-#endif
 
     // this causes corruption on some video drivers
     if(gGourceSettings.multisample) {
@@ -152,25 +115,21 @@ int main(int argc, char *argv[]) {
     if(gGourceSettings.multisample) glEnable(GL_MULTISAMPLE_ARB);
 
     Gource* gource = 0;
+    GourceDemo* gource_demo = 0;
 
     try {
-        gource = new Gource(path);
 
-        if(exporter!=0) gource->setFrameExporter(exporter, gGourceSettings.output_framerate);
+        if(gGourceSettings.demo) {
 
-//         for(std::vector<std::string>::iterator it = settings.follow_users.begin(); it != settings.follow_users.end(); it++) {
-//             gource->addFollowUser(*it);
-//         }
-// 
-//         for(std::vector<std::string>::iterator it = settings.highlight_users.begin(); it != settings.highlight_users.end(); it++) {
-//             gource->addHighlightUser(*it);
-//         }
-// 
-//         for(std::vector<Regex*>::iterator it = settings.filters.begin(); it != settings.filters.end(); it++) {
-//             gource->addFilter(*it);
-//         }
+            gource_demo = new GourceDemo(&conf, exporter);
+            gource_demo->run();
 
-        gource->run();
+        } else {
+
+            gource = new Gource(exporter);
+            gource->run();
+
+        }
 
     } catch(ResourceException& exception) {
 
@@ -189,9 +148,9 @@ int main(int argc, char *argv[]) {
 
     }
 
-    if(gource!=0) delete gource;
-
-    if(exporter != 0) delete exporter;
+    if(gource!=0)      delete gource;
+    if(gource_demo!=0) delete gource_demo;
+    if(exporter != 0)  delete exporter;
 
     //free resources
     display.quit();

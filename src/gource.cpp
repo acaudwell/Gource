@@ -23,9 +23,9 @@ int   gGourceMaxQuadTreeDepth = 6;
 
 int gGourceUserInnerLoops = 0;
 
-Gource::Gource(std::string logfile) {
+Gource::Gource(FrameExporter* exporter) {
 
-    this->logfile = logfile;
+    this->logfile = gGourceSettings.path;
 
     commitlog = 0;
 
@@ -97,6 +97,8 @@ Gource::Gource(std::string logfile) {
     framecount = 0;
 
     reset();
+
+    if(exporter!=0) setFrameExporter(exporter, gGourceSettings.output_framerate);
 }
 
 RCommitLog* Gource::determineFormat(std::string logfile) {

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2009 Andrew Caudwell (acaudwell@gmail.com)
+    Copyright (C) 2010 Andrew Caudwell (acaudwell@gmail.com)
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -15,10 +15,33 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GOURCE_MAIN_H
-#define GOURCE_MAIN_H
+#ifndef GOURCE_DEMO_H
+#define GOURCE_DEMO_H
 
-#include "gource_demo.h"
+#include "core/display.h"
+#include "core/sdlapp.h"
 #include "gource.h"
+
+class GourceDemo : public SDLApp {
+
+    Gource* gource;
+
+    FrameExporter* exporter;
+    ConfFile* conf;
+    ConfSectionList::iterator gource_settings;
+
+    Gource* getNext();
+
+public:
+    GourceDemo(ConfFile* conf, FrameExporter* exporter);
+    ~GourceDemo();
+
+    void update(float t, float dt);
+
+    void keyPress(SDL_KeyboardEvent *e);
+    void mouseMove(SDL_MouseMotionEvent *e);
+    void mouseClick(SDL_MouseButtonEvent *e);
+
+};
 
 #endif

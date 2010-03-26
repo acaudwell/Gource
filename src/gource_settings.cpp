@@ -36,7 +36,8 @@ void GourceSettings::help() {
     printf("  -h, --help                       Help\n\n");
     printf("  -WIDTHxHEIGHT, --viewport        Set viewport size\n");
     printf("  -f, --fullscreen                 Fullscreen\n");
-    printf("      --multi-sampling             Enable multi-sampling\n\n");
+    printf("      --multi-sampling             Enable multi-sampling\n");
+    printf("      --demo                       Run in demo mode\n\n");
 
     printf("  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
@@ -116,6 +117,8 @@ void GourceSettings::help() {
 GourceSettings::GourceSettings() {
     setGourceDefaults();
 
+    demo = false;
+
     default_section_name = "gource";
 
     //translate args
@@ -131,6 +134,7 @@ GourceSettings::GourceSettings() {
 
     //command line only options
     conf_sections["help"]            = "command-line";
+    conf_sections["demo"]            = "command-line";
     conf_sections["log-command"]     = "command-line";
     conf_sections["git-log-command"] = "command-line";
     conf_sections["cvs-exp-command"] = "command-line";
@@ -141,6 +145,7 @@ GourceSettings::GourceSettings() {
 
     //boolean args
     arg_types["help"]            = "bool";
+    arg_types["demo"]            = "bool";
     arg_types["cvs-exp-command"] = "bool";
     arg_types["hg-log-command"]  = "bool";
     arg_types["bzr-log-command"] = "bool";
@@ -282,6 +287,11 @@ void GourceSettings::commandLineOption(const std::string& name, const std::strin
         help();
     }
 
+    if(name == "demo") {
+        demo = true;
+        return;
+    }
+
     if(name == "load-config" && value.size() > 0) {
         load_config = value;
         return;
@@ -326,7 +336,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
     setGourceDefaults();
 
     if(gource_settings == 0) gource_settings = conffile.getSection(default_section_name);
-    if(gource_settings == 0) return;
+
+    if(gource_settings == 0) {
+        throw ConfFileException("file does not have a 'gource' section", conffile.getFilename(), 0);
+    }
 
     ConfEntry* entry = 0;
 
@@ -789,4 +802,43 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         }
     }
 
+
+    //validate path
+
+    path = gource_settings->getString("path");
+
+    if(path == "-") {
+
+        if(log_format.size() == 0) {
+            throw ConfFileException("log-format required when reading from STDIN", "", 0);
+        }
+
+        while(std::cin.peek() == EOF && !std::cin.fail()) SDL_Delay(100);
+        std::cin.clear();
+    }
+
+    //remove trailing slash and check if path is a directory
+    if(path.size() &&
+    (path[path.size()-1] == '\\' || path[path.size()-1] == '/')) {
+        path = path.substr(0,path.size()-1);
+    }
+
+#ifdef _WIN32
+    //on windows, pre-open console window if we think this is a directory the
+    //user is trying to open, as system() commands will create a console window
+    //if there isn't one anyway.
+
+    bool isdir = false;
+
+    if(path.size()>0) {
+        struct stat fileinfo;
+        int rc = stat(path.c_str(), &fileinfo);
+
+        if(rc==0 && fileinfo.st_mode & S_IFDIR) isdir = true;
+    }
+
+    if(path.size()==0 || isdir) {
+        SDLAppCreateWindowsConsole();
+    }
+#endif
 }

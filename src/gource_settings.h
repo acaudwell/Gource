@@ -32,6 +32,8 @@ class GourceSettings : public SDLAppSettings {
 protected:
     void commandLineOption(const std::string& name, const std::string& value);
 public:
+    bool demo;
+
     bool hide_date;
     bool hide_users;
     bool hide_tree;
@@ -42,6 +44,7 @@ public:
 
     std::string load_config;
     std::string save_config;
+    std::string path;
 
     std::string logo;
     vec2f logo_offset;

@@ -714,12 +714,16 @@ void ConfFile::entryException(ConfEntry* entry, std::string reason) {
 
     std::string errmsg;
 
+    int lineno = 0;
+
     if(conffile.size()) {
         errmsg = conffile;
 
-        if(entry->getLineNumber() != 0) {
+        if(entry != 0 && entry->getLineNumber() != 0) {
+            lineno = entry->getLineNumber();
+
             char linebuff[256];
-            snprintf(linebuff, 256, ", line %d", entry->getLineNumber());
+            snprintf(linebuff, 256, ", line %d", lineno);
 
             errmsg += std::string(linebuff);
         }
@@ -729,6 +733,6 @@ void ConfFile::entryException(ConfEntry* entry, std::string reason) {
 
     errmsg += reason;
 
-    throw ConfFileException(errmsg, conffile, entry->getLineNumber());
+    throw ConfFileException(errmsg, conffile, lineno);
 }
 

@@ -183,7 +183,7 @@ class Gource : public SDLApp {
     void drawTree(Frustum &frustum, float dt);
     void drawBloom(Frustum &frustum, float dt);
 public:
-    Gource(std::string logfile);
+    Gource(FrameExporter* frameExporter);
     ~Gource();
 
     void setCameraMode(const std::string& mode);
