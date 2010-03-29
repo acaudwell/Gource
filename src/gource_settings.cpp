@@ -167,7 +167,7 @@ GourceSettings::GourceSettings() {
     arg_types["hide-mouse"]      = "bool";
 
     arg_types["disable-auto-skip"]  = "bool";
- 
+
     arg_types["git-log-command"]= "bool";
     arg_types["cvs-exp-command"]= "bool";
     arg_types["hg-log-command"] = "bool";
@@ -341,7 +341,9 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
     if(gource_settings == 0) gource_settings = conffile.getSection(default_section_name);
 
     if(gource_settings == 0) {
-        throw ConfFileException("file does not have a 'gource' section", conffile.getFilename(), 0);
+        ConfSection* gource_section = new ConfSection("gource");
+        conffile.addSection(gource_section);
+        gource_settings = gource_section;
     }
 
     ConfEntry* entry = 0;
