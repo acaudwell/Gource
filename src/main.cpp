@@ -53,8 +53,6 @@ int main(int argc, char *argv[]) {
             } else {
                 conf.setEntry("gource", "path", path);
             }
-        } else {
-            conf.setEntry("gource", "path", ".");
         }
 
         //apply the config / see if its valid

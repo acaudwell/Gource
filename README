@@ -52,7 +52,7 @@ options:
             Windowed.
 
     -p, --start-position POSITION
-            Begin at some position in the log (between 0.0 and 1.0).
+            Begin at some position in the log (between 0.0 and 1.0 or 'random').
 
         --stop-position  POSITION
             Stop (exit) at some position in the log (does not work with STDIN).

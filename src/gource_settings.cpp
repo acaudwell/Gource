@@ -39,7 +39,7 @@ void GourceSettings::help() {
     printf("      --multi-sampling             Enable multi-sampling\n");
     printf("      --demo                       Run in demo mode\n\n");
 
-    printf("  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)\n");
+    printf("  -p, --start-position POSITION    Begin at some position (0.0-1.0 or 'random')\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
     printf("      --stop-at-time SECONDS       Stop after a specified number of seconds\n");
     printf("      --stop-on-idle               Stop on break in activity\n");
@@ -213,6 +213,8 @@ GourceSettings::GourceSettings() {
 }
 
 void GourceSettings::setGourceDefaults() {
+
+    path = ".";
 
     hide_date      = false;
     hide_users     = false;
@@ -632,12 +634,17 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if((entry = gource_settings->getEntry("start-position")) != 0) {
 
-        if(!entry->hasValue()) conffile.entryException(entry, "specify start-position (float)");
+        if(!entry->hasValue()) conffile.entryException(entry, "specify start-position (float,random)");
 
-        start_position = entry->getFloat();
+        if(entry->getString() == "random") {
+            srand(time(0));
+            start_position = (rand() % 1000) / 1000.0f;
+        } else {
+            start_position = entry->getFloat();
 
-        if(start_position<=0.0 || start_position>=1.0) {
-            conffile.entryException(entry, "start-position outside of range 0.0 - 1.0 (non-inclusive)");
+            if(start_position<=0.0 || start_position>=1.0) {
+                conffile.entryException(entry, "start-position outside of range 0.0 - 1.0 (non-inclusive)");
+            }
         }
     }
 
@@ -806,8 +813,9 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
 
     //validate path
-
-    path = gource_settings->getString("path");
+    if(gource_settings->hasValue("path")) {
+        path = gource_settings->getString("path");
+    }
 
     if(path == "-") {
 
