@@ -67,6 +67,10 @@ Gource::Gource(FrameExporter* exporter) {
     mousedragged = false;
     mouseclicked = false;
 
+    if(gGourceSettings.hide_mouse) {
+        SDL_ShowCursor(false);
+    }
+
     splash = -1.0;
 
     debug = false;
@@ -275,6 +279,7 @@ std::string Gource::dateAtPosition(float percent) {
 
 void Gource::mouseMove(SDL_MouseMotionEvent *e) {
     if(commitlog==0) return;
+    if(gGourceSettings.hide_mouse) return;
 
     Uint8 ms = SDL_GetMouseState(0,0);
     bool rightmouse = ms & SDL_BUTTON(SDL_BUTTON_RIGHT);
@@ -304,7 +309,7 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
 
     float pos;
 
-    if(!gGourceSettings.disable_progress && slider.mouseOver(mousepos, &pos)) {
+    if(!gGourceSettings.hide_progress && slider.mouseOver(mousepos, &pos)) {
         std::string date = dateAtPosition(pos);
         slider.setCaption(date);
     }
@@ -335,6 +340,7 @@ void Gource::zoom(bool zoomin) {
 
 void Gource::mouseClick(SDL_MouseButtonEvent *e) {
     if(commitlog==0) return;
+    if(gGourceSettings.hide_mouse) return;
 
     if(e->type == SDL_MOUSEBUTTONUP) {
 
@@ -583,8 +589,10 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             if(!(mousedragged || mouseclicked || ms & SDL_BUTTON(SDL_BUTTON_LEFT))) {
                 if(SDL_ShowCursor(SDL_QUERY) == SDL_ENABLE) {
                     SDL_ShowCursor(false);
+                    gGourceSettings.hide_mouse = true;
                 } else {
                     SDL_ShowCursor(true);
+                    gGourceSettings.hide_mouse = false;
                 }
             }
         }
@@ -821,7 +829,7 @@ void Gource::deleteUser(RUser* user) {
 }
 
 bool Gource::canSeek() {
-    if(gGourceSettings.disable_progress || commitlog == 0 || !commitlog->isSeekable()) return false;
+    if(gGourceSettings.hide_progress || commitlog == 0 || !commitlog->isSeekable()) return false;
 
     return true;
 }
@@ -1610,7 +1618,7 @@ void Gource::drawActions(float dt) {
 }
 
 void Gource::drawBloom(Frustum &frustum, float dt) {
-    if(gGourceSettings.disable_bloom) return;
+    if(gGourceSettings.hide_bloom) return;
 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);

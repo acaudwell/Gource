@@ -1,9 +1,12 @@
 0.27:
  * Added ini style config file support.
+ * Added demo mode for showing multiple projects in a loop.
  * Added --logo and --background-image options.
  * Added --dont-stop and --stop-at-time options.
  * Added --log-command option to use instead of multiple --log-command-VCS options.
  * Allow --file-idle-time 0 (files will never expire).
+ * Added --hide mouse option.
+ * Replaced --disable-progress and --disable-bloom with arguments to --hide.
 
 0.26:
  * Improved mouse dragging.

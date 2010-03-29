@@ -140,12 +140,6 @@ options:
     --bloom-intensity FLOAT
             Adjust the intensity of the bloom.
 
-    --disable-progress
-            Disable progress bar.
-
-    --disable-bloom
-            Disable bloom effect.
-
     --max-files
             Set the maximum number of files. Excess files will be discarded.
 
@@ -165,7 +159,8 @@ options:
             Camera mode (overview,track).
 
     --hide DISPLAY_ELEMENT
-            Hide display element (date,users,files,tree,usernames,filenames,dirnames).
+            Hide display element (bloom,date,dirnames,files,filenames,mouse,progress,tree,
+            users,usernames).
 
             Separate multiple elements with commas.
 

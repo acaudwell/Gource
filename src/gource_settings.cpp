@@ -49,6 +49,7 @@ void GourceSettings::help() {
 
     printf("  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens\n");
     printf("                                   for a number of seconds (default: 3)\n");
+    printf("      --disable-auto-skip          Disable auto skip\n");
     printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 10)\n");
     printf("      --realtime                   Realtime playback speed\n");
     printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)\n");
@@ -75,11 +76,8 @@ void GourceSettings::help() {
     printf("  --bloom-multiplier       Adjust the amount of bloom (default: 1.0)\n");
     printf("  --bloom-intensity        Adjust the intensity of the bloom (default: 0.75)\n\n");
 
-    printf("  --disable-auto-skip      Disable auto skipping\n");
-    printf("  --disable-progress       Disable the progress bar\n");
-    printf("  --disable-bloom          Disable bloom effect\n\n");
-
-    printf("  --hide DISPLAY_ELEMENT   date,users,files,tree,usernames,filenames,dirnames\n\n");
+    printf("  --hide DISPLAY_ELEMENT   bloom,date,dirnames,files,filenames,mouse,progress,tree,\n");
+    printf("                           users,usernames\n\n");
 
     printf("  --max-files NUMBER       Max number of active files (default: 1000)\n");
     printf("  --max-file-lag SECONDS   Max time files of a commit can take to appear\n\n");
@@ -131,6 +129,8 @@ GourceSettings::GourceSettings() {
     arg_aliases["?"] = "help";
     arg_aliases["b"] = "background-colour";
     arg_aliases["background"] = "background-colour";
+    arg_aliases["disable-bloom"]    = "hide-bloom";
+    arg_aliases["disable-progress"] = "hide-progress";
 
     //command line only options
     conf_sections["help"]            = "command-line";
@@ -162,11 +162,12 @@ GourceSettings::GourceSettings() {
     arg_types["hide-usernames"]  = "bool";
     arg_types["hide-filenames"]  = "bool";
     arg_types["hide-dirnames"]   = "bool";
+    arg_types["hide-progress"]   = "bool";
+    arg_types["hide-bloom"]      = "bool";
+    arg_types["hide-mouse"]      = "bool";
 
     arg_types["disable-auto-skip"]  = "bool";
-    arg_types["disable-progress"]   = "bool";
-    arg_types["disable-bloom"]      = "bool";
-
+ 
     arg_types["git-log-command"]= "bool";
     arg_types["cvs-exp-command"]= "bool";
     arg_types["hg-log-command"] = "bool";
@@ -220,6 +221,9 @@ void GourceSettings::setGourceDefaults() {
     hide_usernames = false;
     hide_filenames = false;
     hide_dirnames  = false;
+    hide_progress = false;
+    hide_bloom    = false;
+    hide_mouse    = false;
 
     start_position = 0.0;
     stop_position  = 0.0;
@@ -240,9 +244,6 @@ void GourceSettings::setGourceDefaults() {
     colour_user_images = false;
     default_user_image = "";
     user_image_dir     = "";
-
-    disable_progress = false;
-    disable_bloom    = false;
 
     camera_mode     = "overview";
 
@@ -381,7 +382,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
                && hide_field != "files"
                && hide_field != "usernames"
                && hide_field != "filenames"
-               && hide_field != "dirnames") {
+               && hide_field != "dirnames"
+               && hide_field != "bloom"
+               && hide_field != "progress"
+               && hide_field != "mouse") {
                 std::string unknown_hide_option = std::string("unknown option hide ") + hide_field;
                 conffile.entryException(entry, unknown_hide_option);
             }
@@ -411,6 +415,12 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             else if(hidestr == "usernames") hide_usernames = true;
             else if(hidestr == "filenames") hide_filenames = true;
             else if(hidestr == "dirnames")  hide_dirnames  = true;
+            else if(hidestr == "bloom")     hide_bloom     = true;
+            else if(hidestr == "progress")  hide_progress  = true;
+            else if(hidestr == "mouse")     {
+                hide_mouse     = true;
+                hide_progress  = true;
+            }
         }
     }
 
@@ -423,14 +433,6 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if(gource_settings->getBool("disable-auto-skip")) {
         auto_skip_seconds = -1.0;
-    }
-
-    if(gource_settings->getBool("disable-progress")) {
-        disable_progress = true;
-    }
-
-    if(gource_settings->getBool("disable-bloom")) {
-        disable_bloom = true;
     }
 
     if(gource_settings->getBool("loop")) {

@@ -41,6 +41,9 @@ public:
     bool hide_usernames;
     bool hide_filenames;
     bool hide_dirnames;
+    bool hide_progress;
+    bool hide_bloom;
+    bool hide_mouse;
 
     std::string load_config;
     std::string save_config;
@@ -66,9 +69,6 @@ public:
     bool colour_user_images;
     std::string default_user_image;
     std::string user_image_dir;
-
-    bool disable_progress;
-    bool disable_bloom;
 
     std::string camera_mode;
 
