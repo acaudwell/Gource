@@ -1236,7 +1236,8 @@ void Gource::logic(float t, float dt) {
 
     if(draw_loading) return;
 
-    if(splash>0.0) splash -= dt;
+    if(message_timer>0.0f) message_timer -= dt;
+    if(splash>0.0f)        splash -= dt;
 
     //init log file
     if(commitlog == 0) {
@@ -1636,6 +1637,20 @@ void Gource::drawBloom(Frustum &frustum, float dt) {
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
+void Gource::setMessage(const char* str, ...) {
+
+    char msgbuff[1024];
+
+    va_list vl;
+
+    va_start(vl, str);
+        vsnprintf(msgbuff, 1024, str, vl);
+    va_end(vl);
+
+    message = std::string(msgbuff);
+    message_timer = 5.0;
+}
+
 void Gource::screenshot() {
 
     char* screenbuff = new char[display.width * display.height * 4];
@@ -1649,8 +1664,19 @@ void Gource::screenshot() {
     char  bitsperpixel    = 32;
     char  imagedescriptor = 8;
 
+    //get next free recording name
+    char tganame[256];
+    struct stat finfo;
+    int tgano = 1;
+
+    while(tgano < 10000) {
+        snprintf(tganame, 256, "gource-%04d.tga", tgano);
+        if(stat(tganame, &finfo) != 0) break;
+        tgano++;
+    }
+
     //write tga
-    std::string filename("gource-screenshot.tga");
+    std::string filename(tganame);
 
     std::ofstream tga;
     tga.open(filename.c_str(), std::ios::out | std::ios::binary );
@@ -1667,6 +1693,8 @@ void Gource::screenshot() {
     tga.close();
 
     delete[] screenbuff;
+
+    setMessage("Wrote screenshot %s", tganame);
 }
 
 void Gource::draw(float t, float dt) {
@@ -1821,24 +1849,28 @@ void Gource::draw(float t, float dt) {
         font.draw(display.width/2 - awidth/2,display.height/2 + 30, "(C) 2009 Andrew Caudwell");
     }
 
-    if(debug) {
-        font.print(0,20, "FPS: %.2f", fps);
-        font.print(0,40,"Time Scale: %.2f", time_scale);
-        font.print(0,60,"Users: %d", users.size());
-        font.print(0,80,"Files: %d", files.size());
-        font.print(0,100,"Dirs: %d",  gGourceDirMap.size());
+    if(message_timer>0.0f) {
+         font.draw(1, 3, message);
+    }
 
-        font.print(0,120,"Log Position: %.2f", commitlog->getPercent());
-        font.print(0,140,"Camera: (%.2f, %.2f, %.2f)", campos.x, campos.y, campos.z);
-        font.print(0,160,"Gravity: %.2f", gGourceForceGravity);
-        font.print(0,180,"Update Tree: %u ms", update_dir_tree_time);
-        font.print(0,200,"Draw Tree: %u ms", draw_tree_time);
-        font.print(0,220,"Mouse Trace: %u ms", trace_time);
-        font.print(0,240,"Logic Time: %u ms", logic_time);
-        font.print(0,260,"Draw Time: %u ms", SDL_GetTicks() - draw_time);
-        font.print(0,280,"File Inner Loops: %d", gGourceFileInnerLoops);
-        font.print(0,300,"User Inner Loops: %d", gGourceUserInnerLoops);
-        font.print(0,320,"Dir Inner Loops: %d (QTree items = %d, nodes = %d)", gGourceDirNodeInnerLoops,
+    if(debug) {
+        font.print(1,20, "FPS: %.2f", fps);
+        font.print(1,40,"Time Scale: %.2f", time_scale);
+        font.print(1,60,"Users: %d", users.size());
+        font.print(1,80,"Files: %d", files.size());
+        font.print(1,100,"Dirs: %d",  gGourceDirMap.size());
+
+        font.print(1,120,"Log Position: %.4f", commitlog->getPercent());
+        font.print(1,140,"Camera: (%.2f, %.2f, %.2f)", campos.x, campos.y, campos.z);
+        font.print(1,160,"Gravity: %.2f", gGourceForceGravity);
+        font.print(1,180,"Update Tree: %u ms", update_dir_tree_time);
+        font.print(1,200,"Draw Tree: %u ms", draw_tree_time);
+        font.print(1,220,"Mouse Trace: %u ms", trace_time);
+        font.print(1,240,"Logic Time: %u ms", logic_time);
+        font.print(1,260,"Draw Time: %u ms", SDL_GetTicks() - draw_time);
+        font.print(1,280,"File Inner Loops: %d", gGourceFileInnerLoops);
+        font.print(1,300,"User Inner Loops: %d", gGourceUserInnerLoops);
+        font.print(1,320,"Dir Inner Loops: %d (QTree items = %d, nodes = %d)", gGourceDirNodeInnerLoops,
             dirNodeTree->item_count, dirNodeTree->node_count);
 
         if(selectedUser != 0) {
@@ -1846,7 +1878,7 @@ void Gource::draw(float t, float dt) {
         }
 
         if(selectedFile != 0) {
-            font.print(0,360,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
+            font.print(1,360,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
                     selectedFile->getDir()->fileCount(), selectedFile->getDir()->visibleFileCount());
         }
 

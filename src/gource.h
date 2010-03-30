@@ -141,6 +141,11 @@ class Gource : public SDLApp {
     QuadTree* dirNodeTree;
     QuadTree* userTree;
 
+    std::string message;
+    float message_timer;
+
+    void setMessage(const char* str, ...);
+
     void reset();
     void findUserImages();
 
