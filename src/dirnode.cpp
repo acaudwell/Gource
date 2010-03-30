@@ -918,25 +918,6 @@ void RDirNode::drawNames(FXFont& dirfont, Frustum& frustum) {
     }
 }
 
-void RDirNode::drawBeam(vec2f pos_src, vec4f col_src, vec2f pos_dest, vec4f col_dest, float beam_radius) {
-
-    vec2f perp = (pos_src - pos_dest).perpendicular().normal();
-
-    // src point
-    glColor4fv(col_src);
-    glTexCoord2f(0.0,0.0);
-    glVertex2f(pos_src.x - perp.x * beam_radius, pos_src.y - perp.y * beam_radius);
-    glTexCoord2f(1.0,0.0);
-    glVertex2f(pos_src.x + perp.x * beam_radius, pos_src.y + perp.y * beam_radius);
-
-    // dest point
-    glColor4fv(col_dest);
-    glTexCoord2f(1.0,0.0);
-    glVertex2f(pos_dest.x + perp.x * beam_radius, pos_dest.y + perp.y * beam_radius);
-    glTexCoord2f(0.0,0.0);
-    glVertex2f(pos_dest.x - perp.x * beam_radius, pos_dest.y - perp.y * beam_radius);
-}
-
 void RDirNode::drawShadows(Frustum &frustum, float dt) {
 
     if(frustum.boundsInFrustum(quadItemBounds)) {

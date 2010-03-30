@@ -31,7 +31,7 @@ class SplineEdge {
     std::vector<vec2f> spline_point;
     std::vector<vec4f> spline_colour;
 
-    void drawBeam(vec2f pos1, vec4f col1, vec2f pos2, vec4f col2, float radius);
+    void drawBeam(vec2f pos1, vec4f col1, vec2f pos2, vec4f col2, float radius, bool first);
 public:
     SplineEdge();
     SplineEdge(vec2f pos1, vec4f col1, vec2f pos2, vec4f col2, vec2f spos);

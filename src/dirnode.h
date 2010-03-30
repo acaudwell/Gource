@@ -88,7 +88,6 @@ class RDirNode : public QuadItem {
 
     void setInitialPosition();
 
-    void drawBeam(vec2f pos_src, vec4f col_src, vec2f pos_dest, vec4f col_dest, float beam_radius);
     void drawEdge(RDirNode* child);
     void updateSpline(float dt);
     void move(float dt);
