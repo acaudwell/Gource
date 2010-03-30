@@ -78,7 +78,7 @@ public:
     float bloom_multiplier;
     float bloom_intensity;
 
-    vec4f background_colour;
+    vec3f background_colour;
     std::string background_image;
 
     float elasticity;

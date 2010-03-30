@@ -38,6 +38,7 @@ public:
     int display_height;
     bool multisample;
     bool fullscreen;
+    bool transparent;
 
     std::string output_ppm_filename;
     int output_framerate;

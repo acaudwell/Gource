@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
     }
 
     //background needs alpha channel
-    if(gGourceSettings.background_colour.w < 1.0f) {
+    if(gGourceSettings.transparent) {
         display.enableAlpha(true);
     }
 

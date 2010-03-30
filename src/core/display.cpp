@@ -43,7 +43,7 @@ SDLAppDisplay::~SDLAppDisplay() {
 }
 
 void SDLAppDisplay::setClearColour(vec3f colour) {
-    //setClearColour(vec4f(colour,1.0f));
+    setClearColour(vec4f(colour, enable_alpha ? 0.0f : 1.0f));
 }
 
 void SDLAppDisplay::setClearColour(vec4f colour) {

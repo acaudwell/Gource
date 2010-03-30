@@ -31,6 +31,7 @@ SDLAppSettings::SDLAppSettings() {
     conf_sections["multi-sampling"]     = "display";
     conf_sections["output-ppm-stream"]  = "display";
     conf_sections["output-framerate"]   = "display";
+    conf_sections["transparent"]        = "display";
 
     //translate args
     arg_aliases["f"]   = "fullscreen";
@@ -42,9 +43,11 @@ SDLAppSettings::SDLAppSettings() {
     arg_types["viewport"]          = "string";
     arg_types["windowed"]          = "bool";
     arg_types["fullscreen"]        = "bool";
+    arg_types["transparent"]       = "bool";
     arg_types["multi-sampling"]    = "bool";
     arg_types["output-ppm-stream"] = "string";
     arg_types["output-framerate"]  = "int";
+
 }
 
 void SDLAppSettings::setDisplayDefaults() {
@@ -52,6 +55,7 @@ void SDLAppSettings::setDisplayDefaults() {
     display_height = 768;
     fullscreen     = false;
     multisample    = false;
+    transparent    = false;
 
     output_ppm_filename = "";
     output_framerate    = 60;
@@ -254,6 +258,10 @@ void SDLAppSettings::importDisplaySettings(ConfFile& conffile) {
 
     if(display_settings->getBool("windowed")) {
         fullscreen = false;
+    }
+
+    if(display_settings->getBool("transparent")) {
+        transparent = true;
     }
 
     if((entry = display_settings->getEntry("output-ppm-stream")) != 0) {

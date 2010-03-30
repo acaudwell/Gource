@@ -51,6 +51,9 @@ options:
     -w, --windowed
             Windowed.
 
+    --transparent
+            Make the background transparent. Only really useful for screenshots.
+
     -p, --start-position POSITION
             Begin at some position in the log (between 0.0 and 1.0 or 'random').
 
@@ -81,8 +84,8 @@ options:
     -e, --elasticity FLOAT
             Elasticity of nodes.
 
-    -b, --background-colour FFFFFF[FF]
-            Background colour in hex. Alpha channel optional. 
+    -b, --background-colour FFFFFF
+            Background colour in hex. 
 
     --background-image IMAGE
         Set a background image.

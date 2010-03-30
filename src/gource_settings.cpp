@@ -37,6 +37,7 @@ void GourceSettings::help() {
     printf("  -WIDTHxHEIGHT, --viewport        Set viewport size\n");
     printf("  -f, --fullscreen                 Fullscreen\n");
     printf("      --multi-sampling             Enable multi-sampling\n");
+    printf("      --transparent                Make the background transparent\n\n");
     printf("      --demo                       Run in demo mode\n\n");
 
     printf("  -p, --start-position POSITION    Begin at some position (0.0-1.0 or 'random')\n");
@@ -255,7 +256,7 @@ void GourceSettings::setGourceDefaults() {
     bloom_multiplier = 1.0f;
     bloom_intensity  = 0.75f;
 
-    background_colour = vec4f(0.1f, 0.1f, 0.1f, 1.0f);
+    background_colour = vec3f(0.1f, 0.1f, 0.1f);
     background_image  = "";
 
     elasticity = 0.0f;
@@ -542,17 +543,12 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
         if(!entry->hasValue()) conffile.entryException(entry, "specify background colour (FFFFFF)");
 
-        int r,g,b,a;
+        int r,g,b;
         std::string colstring = entry->getString();
 
-        if(colstring.size()==8 && sscanf(colstring.c_str(), "%02x%02x%02x%02x", &r, &g, &b, &a) == 4) {
-            background_colour = vec4f(r,g,b,a);
+        if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
+            background_colour = vec3f(r,g,b);
             background_colour /= 255.0f;
-            if(a==255) background_colour.w = 1.0f;
-        } else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
-            background_colour = vec4f(r,g,b,1.0f);
-            background_colour /= 255.0f;
-            background_colour.w = 1.0f;
         } else {
             conffile.invalidValueException(entry);
         }
