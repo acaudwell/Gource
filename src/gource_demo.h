@@ -26,12 +26,15 @@ class GourceDemo : public SDLApp {
 
     Gource* gource;
 
+    GLuint transition_texture;
+    float  transition_interval; 
+
     FrameExporter* exporter;
     ConfFile* conf;
     ConfSectionList::iterator gource_settings;
 
     Gource* getNext();
-
+    void blendLastFrame(float dt);
 public:
     GourceDemo(ConfFile* conf, FrameExporter* exporter);
     ~GourceDemo();

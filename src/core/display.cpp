@@ -188,12 +188,15 @@ void SDLAppDisplay::fullScreenQuad(bool coord_flip) {
 }
 
 void SDLAppDisplay::renderToTexture(GLuint target, int width, int height, GLenum format) {
+    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, target);
     glCopyTexImage2D(GL_TEXTURE_2D, 0, format, 0, 0, width, height, 0);
 }
 
 GLuint SDLAppDisplay::emptyTexture(int width, int height, GLenum format) {
     GLuint textureid;
+
+    glEnable(GL_TEXTURE_2D);
 
     glGenTextures(1, &textureid);
     glBindTexture(GL_TEXTURE_2D, textureid);

@@ -103,6 +103,9 @@ Gource::Gource(FrameExporter* exporter) {
     reset();
 
     if(exporter!=0) setFrameExporter(exporter, gGourceSettings.output_framerate);
+
+    //if recording a video or in demo mode, the slider is initially hidden
+    if(exporter==0 && !gGourceSettings.demo) slider.show();
 }
 
 RCommitLog* Gource::determineFormat(std::string logfile) {

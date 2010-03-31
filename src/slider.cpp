@@ -33,15 +33,18 @@ PositionSlider::PositionSlider(float percent) {
     slidercol = vec3f(1.0, 1.0, 1.0);
 
     mouseover = -1.0;
-    mouseover_elapsed = 0;
 
+    mouseover_elapsed = 1.0;
     fade_time = 1.0;
-
-    alpha = 1.0;
+    alpha = 0.0;
 }
 
 void PositionSlider::setColour(vec3f col) {
     slidercol = col;
+}
+
+void PositionSlider::show() {
+    mouseover_elapsed = 0.0;
 }
 
 bool PositionSlider::mouseOver(vec2f pos, float* percent_ptr) {

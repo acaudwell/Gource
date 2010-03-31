@@ -26,10 +26,20 @@ GourceDemo::GourceDemo(ConfFile* conf, FrameExporter* exporter) {
 
     gource = 0;
     gource_settings = conf->getSections("gource")->begin();
+
+    transition_texture = 0;
+    transition_interval = 0.0f;
+
+    if(strstr((const char *)glGetString(GL_EXTENSIONS), "GL_ARB_texture_non_power_of_two" )) {
+        transition_texture = display.emptyTexture(display.width, display.height, GL_RGBA);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    }
 }
 
 GourceDemo::~GourceDemo() {
     if(gource!=0) delete gource;
+    if(transition_texture!=0) glDeleteTextures(1, &transition_texture);
 }
 
 void GourceDemo::keyPress(SDL_KeyboardEvent *e) {
@@ -54,8 +64,12 @@ void GourceDemo::mouseClick(SDL_MouseButtonEvent *e) {
 
 Gource* GourceDemo::getNext() {
 
-    if(gource!=0) delete gource;
-    gource = 0;
+    if(gource!=0) {
+        delete gource;
+        gource = 0;
+
+        transition_interval = 1.0f;
+    }
 
     gGourceSettings.importGourceSettings(*conf, *gource_settings);
 
@@ -75,6 +89,36 @@ Gource* GourceDemo::getNext() {
     return gource;
 }
 
+void GourceDemo::blendLastFrame(float dt) {
+    if(transition_texture==0 || transition_interval<0.0f) return;
+
+    display.mode2D();
+
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glEnable(GL_TEXTURE_2D);
+
+    glBindTexture(GL_TEXTURE_2D, transition_texture);
+
+    glColor4f(1.0, 1.0, 1.0, transition_interval);
+
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 1.0f);
+        glVertex2f(0.0f, 0.0);
+
+        glTexCoord2f(1.0, 1.0f);
+        glVertex2f(display.width, 0.0);
+
+        glTexCoord2f(1.0, 0.0f);
+        glVertex2f(display.width, display.height);
+
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex2f(0.0f, display.height);
+    glEnd();
+
+    transition_interval -= dt;
+}
+
 void GourceDemo::update(float t, float dt) {
 
     if(gource==0 || gource->isFinished()) {
@@ -82,4 +126,13 @@ void GourceDemo::update(float t, float dt) {
     }
 
     gource->update(t, dt);
+
+    //copy last frame
+    if(gource->isFinished() && transition_texture!=0) {
+        display.renderToTexture(transition_texture, display.width, display.height, GL_RGBA);
+    } else {
+        //blend last frame of previous scene
+        blendLastFrame(dt);
+    }
+
 }

@@ -10,6 +10,7 @@
  * Allow --file-idle-time 0 (files will never expire).
  * Allow -start-position random to set a random start position.
  * Replaced --disable-progress and --disable-bloom with arguments to --hide.
+ * Log position slider is initially hidden if recording a video or in demo mode.
 
 0.26:
  * Improved mouse dragging.

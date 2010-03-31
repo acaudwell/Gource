@@ -46,6 +46,8 @@ public:
 
     void setPercent(float percent);
 
+    void show();
+
     bool mouseOver(vec2f pos, float* percent_ptr);
     bool click(vec2f pos, float* percent_ptr);
     void logic(float dt);
