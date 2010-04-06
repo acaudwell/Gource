@@ -12,6 +12,9 @@
  * Replaced --disable-progress and --disable-bloom with arguments to --hide.
  * Log position slider is initially hidden if recording a video or in demo mode.
 
+0.26a:
+ * Updated to latest version of GL autoconf macros.
+
 0.26:
  * Improved mouse dragging.
  * Holding right mouse button and moving the mouse rotates the view.
