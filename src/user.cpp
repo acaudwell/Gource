@@ -21,8 +21,6 @@ float gGourceBeamDist          = 100.0;
 float gGourceActionDist        = 50.0;
 float gGourcePersonalSpaceDist = 100.0;
 
-std::map<std::string, std::string> gGourceUserImageMap;
-
 RUser::RUser(std::string name, vec2f pos, int tagid) : Pawn(name,pos,tagid) {
 
     this->name = name;
@@ -183,10 +181,10 @@ void RUser::assignIcon() {
 
         std::map<std::string, std::string>::iterator findimage;
 
-        findimage = gGourceUserImageMap.find(name);
+        findimage = gGourceSettings.user_image_map.find(name);
 
         //do we have this image
-        if(findimage != gGourceUserImageMap.end()) {
+        if(findimage != gGourceSettings.user_image_map.end()) {
             std::string imagefile = findimage->second;
 
             if(!gGourceSettings.colour_user_images) usercol = vec3f(1.0, 1.0, 1.0);

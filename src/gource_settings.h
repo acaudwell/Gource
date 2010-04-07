@@ -20,6 +20,8 @@
 
 #define GOURCE_VERSION "0.27"
 
+#include <dirent.h>
+
 #include "hg.h"
 #include "git.h"
 #include "bzr.h"
@@ -69,6 +71,7 @@ public:
     bool colour_user_images;
     std::string default_user_image;
     std::string user_image_dir;
+    std::map<std::string, std::string> user_image_map;
 
     std::string camera_mode;
 

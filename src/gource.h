@@ -23,7 +23,6 @@
 #endif
 
 #include <deque>
-#include <dirent.h>
 #include <fstream>
 
 #include "core/display.h"
@@ -147,7 +146,6 @@ class Gource : public SDLApp {
     void setMessage(const char* str, ...);
 
     void reset();
-    void findUserImages();
 
     void deleteUser(RUser* user);
     void deleteFile(RFile* file);

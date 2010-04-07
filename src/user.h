@@ -18,6 +18,8 @@
 #ifndef RUSER_H
 #define RUSER_H
 
+#include "gource_settings.h"
+
 #include "pawn.h"
 #include "action.h"
 #include "file.h"
@@ -83,7 +85,5 @@ public:
     void drawActions(float dt);
     void draw(float dt);
 };
-
-extern std::map<std::string, std::string> gGourceUserImageMap;
 
 #endif

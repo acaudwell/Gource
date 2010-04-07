@@ -247,6 +247,7 @@ void GourceSettings::setGourceDefaults() {
     colour_user_images = false;
     default_user_image = "";
     user_image_dir     = "";
+    user_image_map.clear();
 
     camera_mode     = "overview";
 
@@ -503,6 +504,35 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         //append slash
         if(user_image_dir[user_image_dir.size()-1] != '/') {
             user_image_dir += std::string("/");
+        }
+
+        //get jpg and png images in dir
+        DIR *dp;
+        struct dirent *dirp;
+
+        user_image_map.clear();
+
+        if((dp = opendir(gGourceSettings.user_image_dir.c_str())) != 0) {
+
+            while ((dirp = readdir(dp)) != 0) {
+                std::string dirfile = std::string(dirp->d_name);
+
+                int extpos = 0;
+
+                if(   (extpos=dirfile.rfind(".jpg"))  == std::string::npos
+                && (extpos=dirfile.rfind(".jpeg")) == std::string::npos
+                && (extpos=dirfile.rfind(".png"))  == std::string::npos) continue;
+
+
+                std::string image_path = gGourceSettings.user_image_dir + dirfile;
+                std::string name       = dirfile.substr(0,extpos);
+
+                debugLog("%s => %s\n", name.c_str(), image_path.c_str());
+
+                user_image_map[name] = image_path;
+            }
+
+            closedir(dp);
         }
     }
 
