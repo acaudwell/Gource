@@ -1828,22 +1828,24 @@ void Gource::draw(float t, float dt) {
 
     if(debug) {
         font.print(1,20, "FPS: %.2f", fps);
-        font.print(1,40,"Time Scale: %.2f", time_scale);
-        font.print(1,60,"Users: %d", users.size());
-        font.print(1,80,"Files: %d", files.size());
-        font.print(1,100,"Dirs: %d",  gGourceDirMap.size());
+        font.print(1,40,"Days Per Second: %.2f",
+            gGourceSettings.days_per_second);
+        font.print(1,60,"Time Scale: %.2f", time_scale);
+        font.print(1,80,"Users: %d", users.size());
+        font.print(1,100,"Files: %d", files.size());
+        font.print(1,120,"Dirs: %d",  gGourceDirMap.size());
 
-        font.print(1,120,"Log Position: %.4f", commitlog->getPercent());
-        font.print(1,140,"Camera: (%.2f, %.2f, %.2f)", campos.x, campos.y, campos.z);
-        font.print(1,160,"Gravity: %.2f", gGourceForceGravity);
-        font.print(1,180,"Update Tree: %u ms", update_dir_tree_time);
-        font.print(1,200,"Draw Tree: %u ms", draw_tree_time);
-        font.print(1,220,"Mouse Trace: %u ms", trace_time);
-        font.print(1,240,"Logic Time: %u ms", logic_time);
-        font.print(1,260,"Draw Time: %u ms", SDL_GetTicks() - draw_time);
-        font.print(1,280,"File Inner Loops: %d", gGourceFileInnerLoops);
-        font.print(1,300,"User Inner Loops: %d", gGourceUserInnerLoops);
-        font.print(1,320,"Dir Inner Loops: %d (QTree items = %d, nodes = %d)", gGourceDirNodeInnerLoops,
+        font.print(1,140,"Log Position: %.4f", commitlog->getPercent());
+        font.print(1,160,"Camera: (%.2f, %.2f, %.2f)", campos.x, campos.y, campos.z);
+        font.print(1,180,"Gravity: %.2f", gGourceForceGravity);
+        font.print(1,200,"Update Tree: %u ms", update_dir_tree_time);
+        font.print(1,220,"Draw Tree: %u ms", draw_tree_time);
+        font.print(1,240,"Mouse Trace: %u ms", trace_time);
+        font.print(1,260,"Logic Time: %u ms", logic_time);
+        font.print(1,280,"Draw Time: %u ms", SDL_GetTicks() - draw_time);
+        font.print(1,300,"File Inner Loops: %d", gGourceFileInnerLoops);
+        font.print(1,320,"User Inner Loops: %d", gGourceUserInnerLoops);
+        font.print(1,340,"Dir Inner Loops: %d (QTree items = %d, nodes = %d)", gGourceDirNodeInnerLoops,
             dirNodeTree->item_count, dirNodeTree->node_count);
 
         if(selectedUser != 0) {
