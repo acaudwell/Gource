@@ -86,6 +86,8 @@ void SDLAppDisplay::init(std::string window_title, int width, int height, bool f
     SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO);
     atexit(SDL_Quit);
 
+    SDL_EnableUNICODE(1);
+
     //vsync
     if(vsync) SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
     else SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 0);

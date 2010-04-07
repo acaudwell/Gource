@@ -570,7 +570,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
     if (e->type == SDL_KEYUP) return;
 
     if (e->type == SDL_KEYDOWN) {
-        if (e->keysym.sym == SDLK_ESCAPE) {
+        if (e->keysym.unicode == SDLK_ESCAPE) {
             appFinished=true;
         }
 
@@ -640,15 +640,15 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             gGourceGravity = !gGourceGravity;
         }
 
-        if(e->keysym.sym == SDLK_TAB) {
+        if(e->keysym.unicode == SDLK_TAB) {
             selectNextUser();
         }
 
-        if (e->keysym.sym == SDLK_SPACE) {
+        if (e->keysym.unicode == SDLK_SPACE) {
             paused = !paused;
         }
 
-        if (e->keysym.sym == SDLK_EQUALS) {
+        if (e->keysym.unicode == SDLK_EQUALS || e->keysym.unicode == SDLK_PLUS) {
             if(gGourceSettings.days_per_second>=1.0) {
                 gGourceSettings.days_per_second = std::min(30.0f, floorf(gGourceSettings.days_per_second) + 1.0f);
             } else {
@@ -656,7 +656,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             }
         }
 
-        if (e->keysym.sym == SDLK_MINUS) {
+        if (e->keysym.unicode == SDLK_MINUS) {
             if(gGourceSettings.days_per_second>1.0) {
                 gGourceSettings.days_per_second = std::max(0.0f, floorf(gGourceSettings.days_per_second) - 1.0f);
             } else {
@@ -672,15 +672,15 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             zoom(false);
         }
 
-        if(e->keysym.sym == SDLK_LEFTBRACKET) {
+        if(e->keysym.unicode == SDLK_LEFTBRACKET) {
             gGourceForceGravity /= 1.1;
         }
 
-        if(e->keysym.sym == SDLK_RIGHTBRACKET) {
+        if(e->keysym.unicode == SDLK_RIGHTBRACKET) {
             gGourceForceGravity *= 1.1;
         }
 
-        if(e->keysym.sym == SDLK_PERIOD) {
+        if(e->keysym.unicode == SDLK_PERIOD) {
 
             if(time_scale>=1.0) {
                 time_scale = std::min(4.0f, floorf(time_scale) + 1.0f);
@@ -689,7 +689,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             }
         }
 
-        if(e->keysym.sym == SDLK_COMMA) {
+        if(e->keysym.unicode == SDLK_COMMA) {
 
             if(time_scale>1.0) {
                 time_scale = std::max(0.0f, floorf(time_scale) - 1.0f);
@@ -698,7 +698,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             }
         }
 
-        if(e->keysym.sym == SDLK_SLASH) {
+        if(e->keysym.unicode == SDLK_SLASH) {
             time_scale = 1.0f;
         }
     }
