@@ -1,4 +1,5 @@
 0.27:
+ * Support international keyboards (Peter Kjellerstedt).
  * Added take screenshot button (F12). Screenshots respect the alpha channel.
  * Added --transparent to make the background see-through (for screenshots).
  * Added ini style config file support.
