@@ -78,6 +78,13 @@ public:
     vec2f       getVec2();
     vec3f       getVec3();
     vec4f       getVec4();
+    
+    bool isFloat();
+    bool isInt();
+    bool isBool();
+    bool isVec2();
+    bool isVec3();
+    bool isVec4();
 };
 
 typedef std::list<ConfEntry*> ConfEntryList;

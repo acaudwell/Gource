@@ -574,9 +574,12 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(!entry->hasValue()) conffile.entryException(entry, "specify background colour (FFFFFF)");
 
         int r,g,b;
+
         std::string colstring = entry->getString();
 
-        if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
+        if(entry->isVec3()) {
+            background_colour = entry->getVec3();
+        } else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
             background_colour = vec3f(r,g,b);
             background_colour /= 255.0f;
         } else {

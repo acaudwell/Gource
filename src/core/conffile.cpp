@@ -20,6 +20,9 @@
 //section of config file
 Regex ConfFile_section("^\\s*\\[([^\\]]+)\\]\\s*$");
 
+Regex ConfFile_int_value("^\\s*-?(\\d+)\\s*$");
+Regex ConfFile_float_value("^\\s*-?(\\d*\\.?\\d+)\\s*$");
+
 // parse key value pair, seperated by an equals sign, removing white space on key and front of the value
 Regex ConfFile_key_value("^\\s*([^=\\s]+)\\s*=\\s*([^\\s].*)?$");
 
@@ -134,6 +137,16 @@ int ConfEntry::getInt() {
     return atoi(value.c_str());
 }
 
+bool ConfEntry::isFloat() {
+    if(ConfFile_float_value.match(value)) return true;
+    return false;
+}
+
+bool ConfEntry::isInt() {
+    if(ConfFile_float_value.match(value)) return true;
+    return false;
+}
+
 float ConfEntry::getFloat() {
     return atof(value.c_str());
 }
@@ -142,11 +155,25 @@ bool ConfEntry::hasValue() {
     return getString().size() > 0;
 }
 
+bool ConfEntry::isBool() {
+
+    if(   value == "1" || value == "true" || value == "True" || value == "TRUE" || value == "yes" || value == "Yes" || value == "YES"
+       || value == "0" || value == "false" || value == "False" || value == "FALSE" || value == "no" || value == "No" || value == "NO")
+    return true;
+
+    return false;
+}
+
 bool ConfEntry::getBool() {
 
     if(value == "1" || value == "true" || value == "True" || value == "TRUE" || value == "yes" || value == "Yes" || value == "YES")
         return true;
 
+    return false;
+}
+
+bool ConfEntry::isVec2() {
+    if(ConfFile_vec2_value.match(value)) return true;
     return false;
 }
 
@@ -158,9 +185,12 @@ vec2f ConfEntry::getVec2() {
         return vec2f(atof(matches[0].c_str()), atof(matches[1].c_str()));
     }
 
-    debugLog("'%s' did not match vec2 regex\n", value.c_str());
-
     return vec2f(0.0, 0.0);
+}
+
+bool ConfEntry::isVec3() {
+    if(ConfFile_vec3_value.match(value)) return true;
+    return false;
 }
 
 vec3f ConfEntry::getVec3() {
@@ -171,11 +201,13 @@ vec3f ConfEntry::getVec3() {
         return vec3f(atof(matches[0].c_str()), atof(matches[1].c_str()), atof(matches[2].c_str()));
     }
 
-    debugLog("'%s' did not match vec3 regex\n", value.c_str());
-
     return vec3f(0.0, 0.0, 0.0);
 }
 
+bool ConfEntry::isVec4() {
+    if(ConfFile_vec4_value.match(value)) return true;
+    return false;
+}
 
 vec4f ConfEntry::getVec4() {
 
@@ -184,8 +216,6 @@ vec4f ConfEntry::getVec4() {
     if(ConfFile_vec4_value.match(value, &matches)) {
         return vec4f(atof(matches[0].c_str()), atof(matches[1].c_str()), atof(matches[2].c_str()), atof(matches[3].c_str()) );
     }
-
-    debugLog("'%s' did not match vec4 regex\n", value.c_str());
 
     return vec4f(0.0, 0.0, 0.0, 0.0);
 }
