@@ -310,7 +310,7 @@ public:
         this->w = vec.w;
     }
 
-    vec4(vec3<T>& vec, T w) {
+    vec4(const vec3<T>& vec, T w) {
         this->x = vec.x;
         this->y = vec.y;
         this->z = vec.z;
@@ -353,11 +353,11 @@ public:
         return vec4<T>(vec.x*n, vec.y*n, vec.z*n, vec.w*n);
     }
 
-    bool operator== (vec4<T> &vec) const {
+    bool operator== (const vec4<T> &vec) const {
         return (vec.x==x && vec.y==y && vec.z==z && vec.w==w);
     }
 
-    bool operator!= (vec4<T> &vec) const {
+    bool operator!= (const vec4<T> &vec) const {
         return (vec.x!=x || vec.y!=y || vec.z!=z || vec.w==w);
     }
 
