@@ -189,7 +189,7 @@ class Gource : public SDLApp {
 
     void screenshot();
 public:
-    Gource(FrameExporter* frameExporter);
+    Gource(FrameExporter* frameExporter = 0);
     ~Gource();
 
     void setCameraMode(const std::string& mode);
