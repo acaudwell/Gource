@@ -1480,7 +1480,7 @@ void Gource::loadingScreen() {
 void Gource::drawBackground(float dt) {
     if(!gGourceDrawBackground) return;
 
-    display.setClearColour(gGourceSettings.background_colour);
+    display.setClearColour(vec4f(gGourceSettings.background_colour, gGourceSettings.transparent ? 0.0f : 1.0f));
     display.clear();
 
     if(backgroundtex!=0) {
