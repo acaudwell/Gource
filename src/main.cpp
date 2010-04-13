@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
 
     try {
 
-        if(gGourceSettings.demo) {
+        if(conf.countSection("gource") > 1) {
 
             gource_demo = new GourceDemo(&conf, exporter);
             gource_demo->run();

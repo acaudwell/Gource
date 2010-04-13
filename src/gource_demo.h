@@ -26,6 +26,8 @@ class GourceDemo : public SDLApp {
 
     Gource* gource;
 
+    bool next;
+
     GLuint transition_texture;
     float  transition_interval; 
 

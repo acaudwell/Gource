@@ -24,6 +24,8 @@ GourceDemo::GourceDemo(ConfFile* conf, FrameExporter* exporter) {
     this->conf     = conf;
     this->exporter = exporter;
 
+    next = false;
+
     gource = 0;
     gource_settings = conf->getSections("gource")->begin();
 
@@ -46,9 +48,14 @@ void GourceDemo::keyPress(SDL_KeyboardEvent *e) {
 
     //Quit demo if the user presses ESC
     if (e->type == SDL_KEYDOWN) {
-        if (e->keysym.sym == SDLK_ESCAPE) {
+        if (e->keysym.unicode == SDLK_ESCAPE) {
             appFinished=true;
         }
+
+        if (e->keysym.unicode == SDLK_RETURN) {
+            next = true;
+        }
+
     }
 
     if(gource!=0) gource->keyPress(e);
@@ -73,8 +80,8 @@ Gource* GourceDemo::getNext() {
 
     gGourceSettings.importGourceSettings(*conf, *gource_settings);
 
-    if(gGourceSettings.stop_at_time<=0.0f) {
-        gGourceSettings.stop_at_time=60.0f;
+    if(gGourceSettings.stop_at_time <= 0.0f && gGourceSettings.stop_position <= 0.0f) {
+        gGourceSettings.stop_at_time = 90.0f;
     }
 
     gource_settings++;
@@ -85,6 +92,8 @@ Gource* GourceDemo::getNext() {
     }
 
     Gource* gource = new Gource(exporter);
+
+    next = false;
 
     return gource;
 }
@@ -121,7 +130,7 @@ void GourceDemo::blendLastFrame(float dt) {
 
 void GourceDemo::update(float t, float dt) {
 
-    if(gource==0 || gource->isFinished()) {
+    if(gource == 0 || next || gource->isFinished()) {
         gource = getNext();
     }
 

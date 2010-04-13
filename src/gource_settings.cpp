@@ -38,7 +38,6 @@ void GourceSettings::help() {
     printf("  -f, --fullscreen                 Fullscreen\n");
     printf("      --multi-sampling             Enable multi-sampling\n");
     printf("      --transparent                Make the background transparent\n\n");
-    printf("      --demo                       Run in demo mode\n\n");
 
     printf("  -p, --start-position POSITION    Begin at some position (0.0-1.0 or 'random')\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
@@ -116,8 +115,6 @@ void GourceSettings::help() {
 GourceSettings::GourceSettings() {
     setGourceDefaults();
 
-    demo = false;
-
     default_section_name = "gource";
 
     //translate args
@@ -135,7 +132,6 @@ GourceSettings::GourceSettings() {
 
     //command line only options
     conf_sections["help"]            = "command-line";
-    conf_sections["demo"]            = "command-line";
     conf_sections["log-command"]     = "command-line";
     conf_sections["git-log-command"] = "command-line";
     conf_sections["cvs-exp-command"] = "command-line";
@@ -146,7 +142,6 @@ GourceSettings::GourceSettings() {
 
     //boolean args
     arg_types["help"]            = "bool";
-    arg_types["demo"]            = "bool";
     arg_types["cvs-exp-command"] = "bool";
     arg_types["hg-log-command"]  = "bool";
     arg_types["bzr-log-command"] = "bool";
@@ -228,9 +223,9 @@ void GourceSettings::setGourceDefaults() {
     hide_bloom    = false;
     hide_mouse    = false;
 
-    start_position = 0.0;
-    stop_position  = 0.0;
-    stop_at_time   = -1.0;
+    start_position = 0.0f;
+    stop_position  = 0.0f;
+    stop_at_time   = -1.0f;
     stop_on_idle   = false;
     stop_at_end    = false;
     dont_stop      = false;
@@ -290,11 +285,6 @@ void GourceSettings::commandLineOption(const std::string& name, const std::strin
 
     if(name == "help") {
         help();
-    }
-
-    if(name == "demo") {
-        demo = true;
-        return;
     }
 
     if(name == "load-config" && value.size() > 0) {
