@@ -206,34 +206,39 @@ bool RCommitLog::isFinished() {
     return false;
 }
 
-std::string RCommitLog::createTempLog() {
-    //create temp file
-    char logfile_buff[1024];
+//create temp file
+void RCommitLog::createTempLog() {
+
+    std::string tempdir;
 
 #ifdef _WIN32
     DWORD tmplen = GetTempPath(0, "");
 
-    if(tmplen == 0) return 0;
+    if(tmplen == 0) return;
 
     std::vector<TCHAR> temp(tmplen+1);
 
     tmplen = GetTempPath(static_cast<DWORD>(temp.size()), &temp[0]);
 
-    if(tmplen == 0 || tmplen >= temp.size()) return 0;
+    if(tmplen == 0 || tmplen >= temp.size()) return;
 
-    std::string temp_file_path(temp.begin(),
-                               temp.begin() + static_cast<std::size_t>(tmplen));
+    tempdir = std::string(temp.begin(), temp.begin() + static_cast<std::size_t>(tmplen));
+    tempdir += "\\";
 
-    temp_file_path += "gource.tmp";
-
-    sprintf(logfile_buff, "%s", temp_file_path.c_str());
 #else
-    uid_t myuid = getuid();
-    sprintf(logfile_buff, "/tmp/gource-%d.tmp", myuid);
+    tempdir = "/tmp/";
 #endif
-    temp_file = std::string(logfile_buff);
 
-    return temp_file;
+    char tmplate[1024];
+    snprintf(tmplate, 1024, "%sgource-XXXXXX", tempdir.c_str());
+
+#ifdef _WIN32
+    if(mktemp(tmplate) < 0) return;
+#else
+    if(mkstemp(tmplate) < 0) return;
+#endif
+
+    temp_file = std::string(tmplate);
 }
 
 // RCommitFile

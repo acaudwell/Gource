@@ -1,3 +1,6 @@
+0.26b:
+ * Use unpredictable temp filenames to prevent a malicious user overwriting arbitrary files using a symlink attack.
+
 0.26a:
  * Updated to latest version of GL autoconf macros.
 
