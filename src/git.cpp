@@ -70,6 +70,8 @@ BaseLog* GitCommitLog::generateLog(std::string dir) {
     //create temp file
     createTempLog();
 
+    if(temp_file.size()==0) return 0;
+
     if(chdir(dir.c_str()) != 0) {
         return 0;
     }

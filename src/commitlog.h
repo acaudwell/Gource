@@ -77,7 +77,7 @@ protected:
 
     bool checkFirstChar(int firstChar, std::istream& stream);
 
-    std::string createTempLog();
+    void createTempLog();
 
     bool getNextLine(std::string& line);
 
