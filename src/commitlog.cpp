@@ -222,9 +222,8 @@ void RCommitLog::createTempLog() {
 
     if(tmplen == 0 || tmplen >= temp.size()) return;
 
-    std::string tempdir = std::string(temp.begin(), temp.begin() + static_cast<std::size_t>(tmplen));
+    tempdir = std::string(temp.begin(), temp.begin() + static_cast<std::size_t>(tmplen));
     tempdir += "\\";
-
 #else
     tempdir = "/tmp/";
 #endif
@@ -232,7 +231,11 @@ void RCommitLog::createTempLog() {
     char tmplate[1024];
     snprintf(tmplate, 1024, "%sgource-XXXXXX", tempdir.c_str());
 
+#ifdef _WIN32
+    if(mktemp(tmplate) < 0) return;
+#else
     if(mkstemp(tmplate) < 0) return;
+#endif
 
     temp_file = std::string(tmplate);
 }
