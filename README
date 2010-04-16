@@ -60,6 +60,9 @@ options:
         --stop-position  POSITION
             Stop (exit) at some position in the log (does not work with STDIN).
 
+    -t, --stop-at-time SECONDS
+            Stop (exit) after a specified number of seconds.
+
         --stop-on-idle
             Stop on break in activity. May be combined with --stop-position.
 
@@ -95,6 +98,15 @@ options:
 
     --logo-offset XxY
         Offset position of the logo.
+
+    --title TITLE
+        Set a title.
+
+    --font-size SIZE
+        Font size.
+
+    --font-colour FFFFFF
+        Font colour in hex.
 
     --date-format FORMAT
             Specify display date string (strftime format).

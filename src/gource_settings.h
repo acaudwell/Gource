@@ -84,6 +84,11 @@ public:
     vec3f background_colour;
     std::string background_image;
 
+    std::string title;
+    
+    int font_size;
+    vec3f font_colour;
+
     float elasticity;
 
     std::string git_branch;

@@ -41,7 +41,7 @@ void GourceSettings::help() {
 
     printf("  -p, --start-position POSITION    Begin at some position (0.0-1.0 or 'random')\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
-    printf("      --stop-at-time SECONDS       Stop after a specified number of seconds\n");
+    printf("  -t, --stop-at-time SECONDS       Stop after a specified number of seconds\n");
     printf("      --stop-on-idle               Stop on break in activity\n");
     printf("      --stop-at-end                Stop at end of the log\n");
     printf("      --dont-stop                  Keep running after the end of the log\n");
@@ -56,10 +56,12 @@ void GourceSettings::help() {
     printf("  -e, --elasticity FLOAT           Elasticity of nodes\n\n");
 
     printf("  -b, --background-colour FFFFFF   Background colour in hex\n");
-    printf("      --background-image IMAGE     Set a background image\n\n");
-
+    printf("      --background-image IMAGE     Set a background image\n");
     printf("  --logo IMAGE                     Logo to display in the foreground\n");
-    printf("  --logo-offset XxY                Offset position of the logo\n\n");
+    printf("  --logo-offset XxY                Offset position of the logo\n");
+    printf("  --title TITLE                    Set a title\n");
+    printf("  --font-size SIZE                 Font size\n");
+    printf("  --font-colour FFFFFF             Font colour in hex\n\n");
 
     printf("  --user-image-dir DIRECTORY       Dir containing images to use as avatars\n");
     printf("  --default-user-image IMAGE       Default user image file\n");
@@ -121,6 +123,7 @@ GourceSettings::GourceSettings() {
     arg_aliases["p"] = "start-position";
     arg_aliases["a"] = "auto-skip-seconds";
     arg_aliases["s"] = "seconds-per-day";
+    arg_aliases["t"] = "stop-at-time";
     arg_aliases["i"] = "file-idle-time";
     arg_aliases["e"] = "elasticity";
     arg_aliases["h"] = "help";
@@ -179,6 +182,7 @@ GourceSettings::GourceSettings() {
     arg_types["user-friction"]     = "float";
 
     arg_types["max-files"] = "int";
+    arg_types["font-size"] = "int";
 
     arg_types["file-filter"]    = "multi-value";
     arg_types["follow-user"]    = "multi-value";
@@ -206,6 +210,8 @@ GourceSettings::GourceSettings() {
     arg_types["max-file-lag"]       = "string";
     arg_types["user-scale"]         = "string";
     arg_types["camera-mode"]        = "string";
+    arg_types["title"]              = "string";
+    arg_types["font-colour"]        = "string";
 }
 
 void GourceSettings::setGourceDefaults() {
@@ -255,6 +261,11 @@ void GourceSettings::setGourceDefaults() {
     background_colour = vec3f(0.1f, 0.1f, 0.1f);
     background_image  = "";
 
+    title             = "";
+
+    font_size = 16;
+    font_colour = vec3f(1.0f, 1.0f, 1.0f);
+    
     elasticity = 0.0f;
 
     git_branch = "";
@@ -559,6 +570,35 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         }
     }
 
+    if((entry = gource_settings->getEntry("font-size")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify font size (FFFFFF)");
+
+        font_size = entry->getInt();
+
+        if(font_size<1 || font_size>100) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("font-colour")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify font colour (FFFFFF)");
+
+        int r,g,b;
+
+        std::string colstring = entry->getString();
+
+        if(entry->isVec3()) {
+            font_colour = entry->getVec3();
+        } else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
+            font_colour = vec3f(r,g,b);
+            font_colour /= 255.0f;
+        } else {
+            conffile.invalidValueException(entry);
+        }
+    }
+
     if((entry = gource_settings->getEntry("background-colour")) != 0) {
 
         if(!entry->hasValue()) conffile.entryException(entry, "specify background colour (FFFFFF)");
@@ -582,6 +622,13 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(!entry->hasValue()) conffile.entryException(entry, "specify background image (image path)");
 
         background_image = entry->getString();
+    }
+
+    if((entry = gource_settings->getEntry("title")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify title");
+
+        title = entry->getString();
     }
 
     if((entry = gource_settings->getEntry("logo")) != 0) {

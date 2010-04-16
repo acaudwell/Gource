@@ -33,7 +33,7 @@ Gource::Gource(FrameExporter* exporter) {
     fontlarge.dropShadow(true);
     fontlarge.roundCoordinates(true);
 
-    fontmedium = fontmanager.grab("FreeSans.ttf", 16);
+    fontmedium = fontmanager.grab("FreeSans.ttf", gGourceSettings.font_size);
     fontmedium.dropShadow(true);
     fontmedium.roundCoordinates(false);
 
@@ -1761,10 +1761,6 @@ void Gource::draw(float t, float dt) {
 
     vec3f campos = camera.getPos();
 
-    if(!gGourceSettings.hide_date) {
-        fontmedium.draw(display.width/2 - date_x_offset, 20, displaydate);
-    }
-
     if(logotex!=0) {
         glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
@@ -1822,9 +1818,27 @@ void Gource::draw(float t, float dt) {
         font.draw(display.width/2 - awidth/2,display.height/2 + 30, "(C) 2009 Andrew Caudwell");
     }
 
-    if(message_timer>0.0f) {
-         font.draw(1, 3, message);
+    // text using the specified font goes here
+
+    glColor4f(gGourceSettings.font_colour.x, gGourceSettings.font_colour.y, gGourceSettings.font_colour.z, 1.0f);
+
+    if(!gGourceSettings.hide_date) {
+        fontmedium.draw(display.width/2 - date_x_offset, 20, displaydate);
     }
+
+    if(gGourceSettings.title.size()>0) {
+        fontmedium.alignTop(false);
+        fontmedium.draw(10, display.height - 10, gGourceSettings.title);
+        fontmedium.alignTop(true);
+    }
+
+    if(message_timer>0.0f) {
+         fontmedium.draw(1, 3, message);
+    }
+    
+    // end text
+
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
     if(debug) {
         font.print(1,20, "FPS: %.2f", fps);
