@@ -32,6 +32,7 @@
 #include "core/seeklog.h"
 #include "core/frustum.h"
 #include "core/regex.h"
+#include "core/ppm.h"
 
 #include "gource_settings.h"
 
@@ -50,7 +51,6 @@
 #include "user.h"
 #include "dirnode.h"
 #include "zoomcamera.h"
-#include "ppm.h"
 
 class Gource : public SDLApp {
     std::string logfile;

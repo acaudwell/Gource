@@ -17,6 +17,7 @@ gource_SOURCES = \
 	src/core/logger.cpp src/core/logger.h \
 	src/core/pi.h \
 	src/core/plane.cpp src/core/plane.h \
+	src/core/ppm.cpp src/core/ppm.h \
 	src/core/quadtree.cpp src/core/quadtree.h \
 	src/core/regex.cpp src/core/regex.h \
 	src/core/resource.cpp src/core/resource.h \
@@ -42,7 +43,6 @@ gource_SOURCES = \
 	src/hg.cpp src/hg.h \
 	src/main.cpp src/main.h \
 	src/pawn.cpp src/pawn.h \
-	src/ppm.cpp src/ppm.h \
 	src/slider.cpp src/slider.h \
 	src/spline.cpp src/spline.h \
 	src/user.cpp src/user.h \
