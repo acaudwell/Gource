@@ -22,17 +22,21 @@ Gource requires the following libraries to compile:
 2. Building
 ===========
 
+If you got the source directly from the Gource.git repository, you will first
+need to run autoreconf to generate the configure script:
+
+    autoreconf -f -i
+
+You also need to initialize and update the submodules:
+
+    git submodule init
+    git submodule update
+
 Building on Linux/Mac OS:
 
     ./configure
     make
     make install
-
-If you got the source directly from the Gource.git repository, you will first need to run:
-
-    autoreconf -f -i
-
-To generate the configure script.
 
 Building on Windows:
 
@@ -44,7 +48,8 @@ A pre-built version for Windows is normally available from the homepage.
 3. Configure Options
 ====================
 
-By default Gource will install some GNU FreeFont TTF Fonts on your system. If you already have
-these fonts installed, you can configure Gource to use these instead:
+By default Gource will install some GNU FreeFont TTF Fonts on your system.
+
+If you already have these fonts, you can configure Gource to use them with:
 
     ./configure --enable-ttf-font-dir=/path/to/freefont/
