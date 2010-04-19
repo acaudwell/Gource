@@ -1,0 +1,3 @@
+[submodule "src/core"]
+	path = src/core
+	url = git@github.com:acaudwell/Core.git
