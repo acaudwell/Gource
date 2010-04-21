@@ -19,7 +19,6 @@
 		<Compiler>
 			<Add option="-O3" />
 			<Add option="-W" />
-			<Add option="-Wall" />
 			<Add option="-Dmain=SDL_main" />
 			<Add directory="C:\source\git\gource\src" />
 		</Compiler>
@@ -60,6 +59,8 @@
 		<Unit filename="src\core\pi.h" />
 		<Unit filename="src\core\plane.cpp" />
 		<Unit filename="src\core\plane.h" />
+		<Unit filename="src\core\ppm.cpp" />
+		<Unit filename="src\core\ppm.h" />
 		<Unit filename="src\core\quadtree.cpp" />
 		<Unit filename="src\core\quadtree.h" />
 		<Unit filename="src\core\regex.cpp" />
@@ -102,8 +103,6 @@
 		<Unit filename="src\main.h" />
 		<Unit filename="src\pawn.cpp" />
 		<Unit filename="src\pawn.h" />
-		<Unit filename="src\ppm.cpp" />
-		<Unit filename="src\ppm.h" />
 		<Unit filename="src\slider.cpp" />
 		<Unit filename="src\slider.h" />
 		<Unit filename="src\spline.cpp" />
