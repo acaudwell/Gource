@@ -908,7 +908,8 @@ void Gource::processCommit(RCommit& commit, float t) {
 
             //if we already have max files in circulation
             //we cant add any more
-            if(files.size() >= gGourceSettings.max_files) continue;
+            if(files.size() >= gGourceSettings.max_files)
+                continue;
 
             int tagid = tag_seq++;
 
@@ -1072,7 +1073,7 @@ void Gource::updateBounds() {
 void Gource::updateUsers(float t, float dt) {
     std::vector<RUser*> inactiveUsers;
 
-    int idle_users = 0;
+    size_t idle_users = 0;
 
     //recalc the user bounds
     user_bounds.reset();
@@ -1835,7 +1836,7 @@ void Gource::draw(float t, float dt) {
     if(message_timer>0.0f) {
          fontmedium.draw(1, 3, message);
     }
-    
+
     // end text
 
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);

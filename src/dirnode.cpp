@@ -298,7 +298,7 @@ int RDirNode::fileCount() {
 }
 
 std::string RDirNode::commonPathPrefix(std::string& str) {
-    int c = 0;
+    size_t c = 0;
     int slash = -1;
 
     while(c<abspath.size() && c<str.size() && abspath[c] == str[c]) {

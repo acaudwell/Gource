@@ -103,7 +103,7 @@ bool ApacheCombinedLog::parseCommit(RCommit& commit) {
     int bytes     = atol(matches[4].c_str());
 
     //remove args from url
-    int argpos = file.rfind("?");
+    size_t argpos = file.rfind("?");
     if(argpos != std::string::npos) {
         file = file.substr(0,argpos);
     }

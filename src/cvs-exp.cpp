@@ -47,8 +47,7 @@ bool CVSEXPCommitLog::parseCommit(RCommit& commit) {
     //read commit no
     if(!cvsexp_commitno_regex.match(line, &entries)) return false;
 
-    int commitno = atoi(entries[0].c_str());
-
+    //int commitno = atoi(entries[0].c_str());
     //debugLog("commitno matched\n");
 
     if(!logf->getNextLine(line)) return false;

@@ -280,7 +280,7 @@ void GourceSettings::setGourceDefaults() {
 
     font_size = 16;
     font_colour = vec3f(1.0f, 1.0f, 1.0f);
-    
+
     elasticity = 0.0f;
 
     git_branch = "";
@@ -537,7 +537,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             while ((dirp = readdir(dp)) != 0) {
                 std::string dirfile = std::string(dirp->d_name);
 
-                int extpos = 0;
+                size_t extpos = 0;
 
                 if(   (extpos=dirfile.rfind(".jpg"))  == std::string::npos
                 && (extpos=dirfile.rfind(".jpeg")) == std::string::npos
