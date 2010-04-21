@@ -115,7 +115,7 @@ public:
 
     void importGourceSettings(ConfFile& conf, ConfSection* gource_settings = 0);
 
-    void help();
+    void help(bool extended_help=false);
 };
 
 extern GourceSettings gGourceSettings;

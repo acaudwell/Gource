@@ -20,7 +20,7 @@
 GourceSettings gGourceSettings;
 
 //display help message
-void GourceSettings::help() {
+void GourceSettings::help(bool extended_help) {
 
 #ifdef _WIN32
     SDLAppCreateWindowsConsole();
@@ -36,8 +36,7 @@ void GourceSettings::help() {
     printf("  -h, --help                       Help\n\n");
     printf("  -WIDTHxHEIGHT, --viewport        Set viewport size\n");
     printf("  -f, --fullscreen                 Fullscreen\n");
-    printf("      --multi-sampling             Enable multi-sampling\n");
-    printf("      --transparent                Make the background transparent\n\n");
+    printf("      --multi-sampling             Enable multi-sampling\n\n");
 
     printf("  -p, --start-position POSITION    Begin at some position (0.0-1.0 or 'random')\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
@@ -52,59 +51,72 @@ void GourceSettings::help() {
     printf("      --disable-auto-skip          Disable auto skip\n");
     printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 10)\n");
     printf("      --realtime                   Realtime playback speed\n");
-    printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)\n");
     printf("  -e, --elasticity FLOAT           Elasticity of nodes\n\n");
-
-    printf("  -b, --background-colour FFFFFF   Background colour in hex\n");
-    printf("      --background-image IMAGE     Set a background image\n");
-    printf("  --logo IMAGE                     Logo to display in the foreground\n");
-    printf("  --logo-offset XxY                Offset position of the logo\n");
-    printf("  --title TITLE                    Set a title\n");
-    printf("  --font-size SIZE                 Font size\n");
-    printf("  --font-colour FFFFFF             Font colour in hex\n\n");
 
     printf("  --user-image-dir DIRECTORY       Dir containing images to use as avatars\n");
     printf("  --default-user-image IMAGE       Default user image file\n");
     printf("  --colour-images                  Colourize user images\n\n");
 
-    printf("  --date-format FORMAT     Specify display date string (strftime format)\n\n");
+    printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)\n");
+    printf("      --file-filter REGEX          Ignore files matching this regexe\n\n");
+
+    printf("  --max-files NUMBER       Max number of active files (default: 1000)\n");
+    printf("  --max-file-lag SECONDS   Max time files of a commit can take to appear\n\n");
 
     printf("  --log-command VCS        Show the log command used by gource (git,cvs,hg,bzr)\n");
     printf("  --log-format  VCS        Specify format of the log (git,cvs,hg,bzr,custom)\n");
     printf("  --git-branch             Get the git log of a particular branch\n\n");
 
-    printf("  --crop AXIS              Crop view on an axis (vertical,horizontal)\n\n");
-
-    printf("  --bloom-multiplier       Adjust the amount of bloom (default: 1.0)\n");
-    printf("  --bloom-intensity        Adjust the intensity of the bloom (default: 0.75)\n\n");
-
-    printf("  --hide DISPLAY_ELEMENT   bloom,date,dirnames,files,filenames,mouse,progress,tree,\n");
-    printf("                           users,usernames\n\n");
-
-    printf("  --max-files NUMBER       Max number of active files (default: 1000)\n");
-    printf("  --max-file-lag SECONDS   Max time files of a commit can take to appear\n\n");
-
-    printf("  --max-user-speed UNITS   Speed users can travel per second (default: 500)\n\n");
-    printf("  --user-friction SECONDS  Time users come to a complete hault (default: 0.67)\n");
-    printf("  --user-scale SCALE       Change scale of users (default: 1.0)\n\n");
-
-    printf("  --camera-mode MODE       Camera mode (overview,track)\n\n");
-
     printf("  --follow-user USER       Camera will automatically follow this user\n");
     printf("  --highlight-user USER    Highlight the names of a particular user\n");
-    printf("  --highlight-all-users    Highlight the names of all users\n");
-    printf("  --file-filter REGEX      Ignore files matching this regexe\n\n");
+    printf("  --highlight-all-users    Highlight the names of all users\n\n");
 
     printf("  --load-config CONF_FILE  Load a config file\n");
     printf("  --save-config CONF_FILE  Save a config file with the current options\n\n");
 
-    printf("  -o,    --output-ppm-stream FILE Output PPM stream to a file ('-' for STDOUT)\n");
-    printf("  --fps, --output-framerate  FPS  Framerate of output (25,30,60)\n\n");
+    printf("  -o, --output-ppm-stream FILE    Output PPM stream to a file ('-' for STDOUT)\n");
+    printf("  -r, --output-framerate  FPS     Framerate of output (25,30,60)\n\n");
+
+if(extended_help) {
+    printf("Extended Options:\n\n");
+
+    printf("  -b, --background-colour FFFFFF   Background colour in hex\n");
+    printf("      --background-image IMAGE     Set a background image\n\n");
+
+    printf("  --bloom-multiplier       Adjust the amount of bloom (default: 1.0)\n");
+    printf("  --bloom-intensity        Adjust the intensity of the bloom (default: 0.75)\n\n");
+
+    printf("  --crop AXIS              Crop view on an axis (vertical,horizontal)\n");
+    printf("  --camera-mode MODE       Camera mode (overview,track)\n\n");
+
+    printf("  --date-format FORMAT     Specify display date string (strftime format)\n\n");
+
+    printf("  --font-size SIZE         Font size\n");
+    printf("  --font-colour FFFFFF     Font colour in hex\n\n");
+
+    printf("  --hide DISPLAY_ELEMENT   bloom,date,dirnames,files,filenames,mouse,progress,tree,\n");
+    printf("                           users,usernames\n\n");
+
+    printf("  --logo IMAGE             Logo to display in the foreground\n");
+    printf("  --logo-offset XxY        Offset position of the logo\n\n");
+
+    printf("  --title TITLE            Set a title\n\n");
+
+    printf("  --transparent            Make the background transparent\n\n");
+
+    printf("  --user-friction SECONDS  Time users come to a complete hault (default: 0.67)\n");
+    printf("  --user-scale SCALE       Change scale of users (default: 1.0)\n");
+    printf("  --max-user-speed UNITS   Speed users can travel per second (default: 500)\n\n");
 
     printf("  --path PATH\n\n");
+}
 
     printf("PATH may be a Git, Bazaar or Mercurial dir, a log file or '-' to read STDIN.\n");
     printf("If ommited, gource will attempt to generate a log from the current directory.\n\n");
+
+    if(!extended_help) {
+        printf("To see the full command line options use '-H'\n\n");
+    }
 
 #ifdef _WIN32
     printf("Press Enter\n");
@@ -128,6 +140,7 @@ GourceSettings::GourceSettings() {
     arg_aliases["e"] = "elasticity";
     arg_aliases["h"] = "help";
     arg_aliases["?"] = "help";
+    arg_aliases["H"] = "extended-help";
     arg_aliases["b"] = "background-colour";
     arg_aliases["background"] = "background-colour";
     arg_aliases["disable-bloom"]    = "hide-bloom";
@@ -135,6 +148,7 @@ GourceSettings::GourceSettings() {
 
     //command line only options
     conf_sections["help"]            = "command-line";
+    conf_sections["extended-help"]   = "command-line";
     conf_sections["log-command"]     = "command-line";
     conf_sections["git-log-command"] = "command-line";
     conf_sections["cvs-exp-command"] = "command-line";
@@ -145,6 +159,7 @@ GourceSettings::GourceSettings() {
 
     //boolean args
     arg_types["help"]            = "bool";
+    arg_types["extended-help"]   = "bool";
     arg_types["cvs-exp-command"] = "bool";
     arg_types["hg-log-command"]  = "bool";
     arg_types["bzr-log-command"] = "bool";
@@ -296,6 +311,10 @@ void GourceSettings::commandLineOption(const std::string& name, const std::strin
 
     if(name == "help") {
         help();
+    }
+
+    if(name == "extended-help") {
+        help(true);
     }
 
     if(name == "load-config" && value.size() > 0) {

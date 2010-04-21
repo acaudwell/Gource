@@ -39,7 +39,7 @@ gource <options> <path>
 options:
 
     -h, --help
-            Help.
+            Help ('-H' for extended help).
 
     -WIDTHxHEIGHT, --viewport WIDTHxHEIGHT
             Set the viewport size. If -f is also supplied, will attempt to set
@@ -182,7 +182,7 @@ options:
     -o, --output-ppm-stream FILE
             Output a PPM image stream to a file ('-' for STDOUT).
 
-    --fps, --output-framerate FPS
+    -r, --output-framerate FPS
             Framerate of output (25,30,60). Used with --output-ppm-stream.
 
     --load-config CONFIG_FILE
