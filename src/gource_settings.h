@@ -34,8 +34,6 @@ class GourceSettings : public SDLAppSettings {
 protected:
     void commandLineOption(const std::string& name, const std::string& value);
 public:
-    bool demo;
-
     bool hide_date;
     bool hide_users;
     bool hide_tree;
@@ -46,6 +44,8 @@ public:
     bool hide_progress;
     bool hide_bloom;
     bool hide_mouse;
+
+    bool disable_auto_rotate;
 
     std::string load_config;
     std::string save_config;
@@ -85,7 +85,7 @@ public:
     std::string background_image;
 
     std::string title;
-    
+
     int font_size;
     vec3f font_colour;
 

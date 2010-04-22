@@ -173,6 +173,9 @@ options:
     --camera-mode MODE
             Camera mode (overview,track).
 
+    --disable-auto-rotate
+            Disable automatic camera rotation.
+
     --hide DISPLAY_ELEMENT
             Hide display element (bloom,date,dirnames,files,filenames,mouse,progress,tree,
             users,usernames).

@@ -105,7 +105,7 @@ Gource::Gource(FrameExporter* exporter) {
     if(exporter!=0) setFrameExporter(exporter, gGourceSettings.output_framerate);
 
     //if recording a video or in demo mode, the slider is initially hidden
-    if(exporter==0 && !gGourceSettings.demo) slider.show();
+    if(exporter==0) slider.show();
 }
 
 RCommitLog* Gource::determineFormat(std::string logfile) {
@@ -1182,12 +1182,17 @@ void Gource::updateTime() {
 void Gource::updateCamera(float dt) {
 
     //camera tracking
+    Bounds2D cambounds;
+
+    bool auto_rotate = !gGourceSettings.disable_auto_rotate;
 
     if(backgroundSelected) {
         Bounds2D mousebounds;
         mousebounds.update(backgroundPos);
 
-        camera.adjust(mousebounds);
+        cambounds = mousebounds;
+
+        auto_rotate = false;
 
     } else if(track_users && (selectedFile !=0 || selectedUser !=0)) {
         Bounds2D focusbounds;
@@ -1197,13 +1202,34 @@ void Gource::updateCamera(float dt) {
         if(selectedUser !=0) focusbounds.update(selectedUser->getPos());
         if(selectedFile !=0) focusbounds.update(selectedFile->getAbsolutePos());
 
-        camera.adjust(focusbounds);
+        cambounds = focusbounds;
     } else {
-        if(track_users && idle_time==0) camera.adjust(user_bounds);
-        else camera.adjust(dir_bounds);
+        if(track_users && idle_time==0) cambounds = user_bounds;
+        else cambounds = dir_bounds;
     }
 
+    camera.adjust(cambounds);
+
     camera.logic(dt);
+
+    //automatically rotate camera
+    if(auto_rotate) {
+
+        float dratio = 0.95f;
+
+        Uint8 ms = SDL_GetMouseState(0,0);
+        bool rightmouse = ms & SDL_BUTTON(SDL_BUTTON_RIGHT);
+
+        if(!rightmouse && dir_bounds.area() > 10000.0f) {
+
+            float ratio = dir_bounds.width() / dir_bounds.height();
+
+            if(ratio<dratio) {
+                //rotate up to 90 degrees a second
+                rotate_angle = 90.0f * (dratio-ratio) * dt * DEGREES_TO_RADIANS;
+            }
+        }
+    }
 }
 
 void Gource::logic(float t, float dt) {

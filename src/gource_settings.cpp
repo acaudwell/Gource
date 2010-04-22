@@ -26,7 +26,7 @@ void GourceSettings::help(bool extended_help) {
     SDLAppCreateWindowsConsole();
 
     //resize window to fit help message
-    SDLAppResizeWindowsConsole(970);
+    SDLAppResizeWindowsConsole(750);
 #endif
 
     printf("Gource v%s\n", GOURCE_VERSION);
@@ -80,8 +80,8 @@ void GourceSettings::help(bool extended_help) {
 if(extended_help) {
     printf("Extended Options:\n\n");
 
-    printf("  -b, --background-colour FFFFFF   Background colour in hex\n");
-    printf("      --background-image IMAGE     Set a background image\n\n");
+    printf("  -b, --background-colour  FFFFFF    Background colour in hex\n");
+    printf("      --background-image   IMAGE     Set a background image\n\n");
 
     printf("  --bloom-multiplier       Adjust the amount of bloom (default: 1.0)\n");
     printf("  --bloom-intensity        Adjust the intensity of the bloom (default: 0.75)\n\n");
@@ -89,13 +89,15 @@ if(extended_help) {
     printf("  --crop AXIS              Crop view on an axis (vertical,horizontal)\n");
     printf("  --camera-mode MODE       Camera mode (overview,track)\n\n");
 
+    printf("  --disable-auto-rotate    Disable automatic camera rotation\n\n");
+
     printf("  --date-format FORMAT     Specify display date string (strftime format)\n\n");
 
     printf("  --font-size SIZE         Font size\n");
     printf("  --font-colour FFFFFF     Font colour in hex\n\n");
 
-    printf("  --hide DISPLAY_ELEMENT   bloom,date,dirnames,files,filenames,mouse,progress,tree,\n");
-    printf("                           users,usernames\n\n");
+    printf("  --hide DISPLAY_ELEMENT   bloom,date,dirnames,files,filenames,mouse,progress,\n");
+    printf("                           tree,users,usernames\n\n");
 
     printf("  --logo IMAGE             Logo to display in the foreground\n");
     printf("  --logo-offset XxY        Offset position of the logo\n\n");
@@ -180,7 +182,8 @@ GourceSettings::GourceSettings() {
     arg_types["hide-bloom"]      = "bool";
     arg_types["hide-mouse"]      = "bool";
 
-    arg_types["disable-auto-skip"]  = "bool";
+    arg_types["disable-auto-rotate"] = "bool";
+    arg_types["disable-auto-skip"]   = "bool";
 
     arg_types["git-log-command"]= "bool";
     arg_types["cvs-exp-command"]= "bool";
@@ -250,6 +253,8 @@ void GourceSettings::setGourceDefaults() {
     stop_on_idle   = false;
     stop_at_end    = false;
     dont_stop      = false;
+
+    disable_auto_rotate = false;
 
     auto_skip_seconds = 3.0f;
     days_per_second   = 0.1f; // TODO: check this is right
@@ -455,6 +460,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(!entry->hasValue()) conffile.missingValueException(entry);
 
         date_format = entry->getString();
+    }
+
+    if(gource_settings->getBool("disable-auto-rotate")) {
+        disable_auto_rotate=true;
     }
 
     if(gource_settings->getBool("disable-auto-skip")) {
