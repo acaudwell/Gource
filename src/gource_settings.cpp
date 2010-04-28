@@ -162,9 +162,6 @@ GourceSettings::GourceSettings() {
     //boolean args
     arg_types["help"]            = "bool";
     arg_types["extended-help"]   = "bool";
-    arg_types["cvs-exp-command"] = "bool";
-    arg_types["hg-log-command"]  = "bool";
-    arg_types["bzr-log-command"] = "bool";
     arg_types["stop-on-idle"]    = "bool";
     arg_types["stop-at-end"]     = "bool";
     arg_types["dont-stop"]       = "bool";
@@ -181,6 +178,7 @@ GourceSettings::GourceSettings() {
     arg_types["hide-progress"]   = "bool";
     arg_types["hide-bloom"]      = "bool";
     arg_types["hide-mouse"]      = "bool";
+    arg_types["highlight-all-users"] = "bool";
 
     arg_types["disable-auto-rotate"] = "bool";
     arg_types["disable-auto-skip"]   = "bool";
