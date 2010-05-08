@@ -19,8 +19,6 @@
 
 // GourceShell
 
-int gGourceShellRepos = 0;
-
 GourceShell::GourceShell(ConfFile* conf, FrameExporter* exporter) {
 
     this->conf     = conf;

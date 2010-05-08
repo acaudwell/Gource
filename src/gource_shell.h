@@ -49,6 +49,4 @@ public:
 
 };
 
-extern int gGourceShellRepos;
-
 #endif
