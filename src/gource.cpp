@@ -104,8 +104,8 @@ Gource::Gource(FrameExporter* exporter) {
 
     if(exporter!=0) setFrameExporter(exporter, gGourceSettings.output_framerate);
 
-    //if recording a video or in demo mode, the slider is initially hidden
-    if(exporter==0) slider.show();
+    //if recording a video or in demo mode, or multiple repos, the slider is initially hidden
+    if(exporter==0 && gGourceSettings.repo_count==1) slider.show();
 }
 
 RCommitLog* Gource::determineFormat(std::string logfile) {
@@ -297,6 +297,7 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
         //moving camera
 
         if(rightmouse) {
+            manual_rotate = true;
             rotate_angle = std::min(1.0f, (float) fabs(mag.x) / 10.0f) * 5.0f * DEGREES_TO_RADIANS;
             if(mag.x < 0.0) rotate_angle = -rotate_angle;
             return;
@@ -435,6 +436,7 @@ void Gource::setCameraMode(const std::string& mode) {
 }
 
 void Gource::setCameraMode(bool track_users) {
+    manual_rotate = false;
     this->track_users = track_users;
     if(selectedUser!=0) camera.lockOn(track_users);
     backgroundSelected=false;
@@ -721,6 +723,8 @@ void Gource::reset() {
 
     selectedFile = 0;
     hoverFile = 0;
+
+    manual_rotate = false;
 
     selectedUser = 0;
     hoverUser = 0;
@@ -1184,7 +1188,7 @@ void Gource::updateCamera(float dt) {
     //camera tracking
     Bounds2D cambounds;
 
-    bool auto_rotate = !gGourceSettings.disable_auto_rotate;
+    bool auto_rotate = !manual_rotate && !gGourceSettings.disable_auto_rotate;
 
     if(backgroundSelected) {
         Bounds2D mousebounds;
@@ -1271,6 +1275,7 @@ void Gource::logic(float t, float dt) {
 
     //apply rotation
     if(rotate_angle != 0.0f) {
+
         float s = sinf(rotate_angle);
         float c = cosf(rotate_angle);
 
