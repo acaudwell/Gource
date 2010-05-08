@@ -18,7 +18,7 @@
 #ifndef GOURCE_MAIN_H
 #define GOURCE_MAIN_H
 
-#include "gource_demo.h"
+#include "gource_shell.h"
 #include "gource.h"
 
 #endif

@@ -34,6 +34,8 @@ class GourceSettings : public SDLAppSettings {
 protected:
     void commandLineOption(const std::string& name, const std::string& value);
 public:
+    int repo_count;
+
     bool hide_date;
     bool hide_users;
     bool hide_tree;

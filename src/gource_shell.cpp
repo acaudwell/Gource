@@ -15,11 +15,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "gource_demo.h"
+#include "gource_shell.h"
 
-// GourceDemo
+// GourceShell
 
-GourceDemo::GourceDemo(ConfFile* conf, FrameExporter* exporter) {
+int gGourceShellRepos = 0;
+
+GourceShell::GourceShell(ConfFile* conf, FrameExporter* exporter) {
 
     this->conf     = conf;
     this->exporter = exporter;
@@ -28,6 +30,8 @@ GourceDemo::GourceDemo(ConfFile* conf, FrameExporter* exporter) {
 
     gource = 0;
     gource_settings = conf->getSections("gource")->begin();
+
+    gGourceSettings.repo_count = conf->countSection("gource");
 
     transition_texture = 0;
     transition_interval = 0.0f;
@@ -39,12 +43,12 @@ GourceDemo::GourceDemo(ConfFile* conf, FrameExporter* exporter) {
     }
 }
 
-GourceDemo::~GourceDemo() {
+GourceShell::~GourceShell() {
     if(gource!=0) delete gource;
     if(transition_texture!=0) glDeleteTextures(1, &transition_texture);
 }
 
-void GourceDemo::keyPress(SDL_KeyboardEvent *e) {
+void GourceShell::keyPress(SDL_KeyboardEvent *e) {
 
     //Quit demo if the user presses ESC
     if (e->type == SDL_KEYDOWN) {
@@ -53,7 +57,8 @@ void GourceDemo::keyPress(SDL_KeyboardEvent *e) {
         }
 
         if (e->keysym.unicode == SDLK_RETURN) {
-            next = true;
+            if(gGourceSettings.repo_count>1)
+                next = true;
         }
 
     }
@@ -61,15 +66,15 @@ void GourceDemo::keyPress(SDL_KeyboardEvent *e) {
     if(gource!=0) gource->keyPress(e);
 }
 
-void GourceDemo::mouseMove(SDL_MouseMotionEvent *e) {
+void GourceShell::mouseMove(SDL_MouseMotionEvent *e) {
     if(gource!=0) gource->mouseMove(e);
 }
 
-void GourceDemo::mouseClick(SDL_MouseButtonEvent *e) {
+void GourceShell::mouseClick(SDL_MouseButtonEvent *e) {
     if(gource!=0) gource->mouseClick(e);
 }
 
-Gource* GourceDemo::getNext() {
+Gource* GourceShell::getNext() {
 
     if(gource!=0) {
         delete gource;
@@ -78,17 +83,28 @@ Gource* GourceDemo::getNext() {
         transition_interval = 1.0f;
     }
 
+    if(gource_settings == conf->getSections("gource")->end()) {
+        return 0;
+    }
+
     gGourceSettings.importGourceSettings(*conf, *gource_settings);
 
-    if(gGourceSettings.stop_at_time <= 0.0f && gGourceSettings.stop_position <= 0.0f) {
-        gGourceSettings.stop_at_time = 90.0f;
+    //multiple repo special settings
+    if(gGourceSettings.repo_count > 1) {
+
+        //set a stop condition
+        if(gGourceSettings.stop_at_time <= 0.0f && gGourceSettings.stop_position <= 0.0f) {
+            gGourceSettings.stop_at_time = 90.0f;
+        }
     }
 
     gource_settings++;
 
-    //loop
+    //loop unless only 1 repo
     if(gource_settings == conf->getSections("gource")->end()) {
-        gource_settings = conf->getSections("gource")->begin();
+        if(gGourceSettings.repo_count>1) {
+            gource_settings = conf->getSections("gource")->begin();
+        }
     }
 
     Gource* gource = new Gource(exporter);
@@ -98,7 +114,7 @@ Gource* GourceDemo::getNext() {
     return gource;
 }
 
-void GourceDemo::blendLastFrame(float dt) {
+void GourceShell::blendLastFrame(float dt) {
     if(transition_texture==0 || transition_interval<0.0f) return;
 
     display.mode2D();
@@ -128,20 +144,29 @@ void GourceDemo::blendLastFrame(float dt) {
     transition_interval -= dt;
 }
 
-void GourceDemo::update(float t, float dt) {
+void GourceShell::update(float t, float dt) {
 
-    if(gource == 0 || next || gource->isFinished()) {
+    if(gource == 0 || gource->isFinished()) {
         gource = getNext();
+        
+        if(gource==0) appFinished=true;
+        return;
     }
 
     gource->update(t, dt);
 
     //copy last frame
-    if(gource->isFinished() && transition_texture!=0) {
+    if( (next|| gource->isFinished()) && transition_texture!=0) {
         display.renderToTexture(transition_texture, display.width, display.height, GL_RGBA);
     } else {
         //blend last frame of previous scene
         blendLastFrame(dt);
     }
 
+    if(next) {
+        delete gource;
+        gource = 0;
+        transition_interval = 1.0f;
+        next = false;
+    }
 }

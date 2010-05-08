@@ -38,7 +38,7 @@ gource_SOURCES = \
 	src/git.cpp src/git.h \
 	src/gitraw.cpp src/gitraw.h \
 	src/gource.cpp src/gource.h \
-	src/gource_demo.cpp src/gource_demo.h \
+	src/gource_shell.cpp src/gource_shell.h \
 	src/gource_settings.cpp src/gource_settings.h \
 	src/hg.cpp src/hg.h \
 	src/main.cpp src/main.h \

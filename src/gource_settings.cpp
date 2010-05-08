@@ -129,6 +129,8 @@ if(extended_help) {
 }
 
 GourceSettings::GourceSettings() {
+    repo_count = 0;
+
     setGourceDefaults();
 
     default_section_name = "gource";

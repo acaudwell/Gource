@@ -117,22 +117,11 @@ int main(int argc, char *argv[]) {
 
     if(gGourceSettings.multisample) glEnable(GL_MULTISAMPLE_ARB);
 
-    Gource* gource = 0;
-    GourceDemo* gource_demo = 0;
+    GourceShell* gourcesh = 0;
 
     try {
-
-        if(conf.countSection("gource") > 1) {
-
-            gource_demo = new GourceDemo(&conf, exporter);
-            gource_demo->run();
-
-        } else {
-
-            gource = new Gource(exporter);
-            gource->run();
-
-        }
+        gourcesh = new GourceShell(&conf, exporter);
+        gourcesh->run();
 
     } catch(ResourceException& exception) {
 
@@ -151,8 +140,7 @@ int main(int argc, char *argv[]) {
 
     }
 
-    if(gource!=0)      delete gource;
-    if(gource_demo!=0) delete gource_demo;
+    if(gourcesh != 0) delete gourcesh;
     if(exporter != 0)  delete exporter;
 
     //free resources

@@ -15,14 +15,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GOURCE_DEMO_H
-#define GOURCE_DEMO_H
+#ifndef GOURCE_SHELL_H
+#define GOURCE_SHELL_H
 
 #include "core/display.h"
 #include "core/sdlapp.h"
 #include "gource.h"
 
-class GourceDemo : public SDLApp {
+class GourceShell : public SDLApp {
 
     Gource* gource;
 
@@ -38,8 +38,8 @@ class GourceDemo : public SDLApp {
     Gource* getNext();
     void blendLastFrame(float dt);
 public:
-    GourceDemo(ConfFile* conf, FrameExporter* exporter);
-    ~GourceDemo();
+    GourceShell(ConfFile* conf, FrameExporter* exporter);
+    ~GourceShell();
 
     void update(float t, float dt);
 
@@ -48,5 +48,7 @@ public:
     void mouseClick(SDL_MouseButtonEvent *e);
 
 };
+
+extern int gGourceShellRepos;
 
 #endif
