@@ -1,19 +1,20 @@
 0.27:
- * Display time stops on the time of the last commit.
+ * Display time stops at the time of the last commit.
+ * Position slider is now hidden by default if recording a video.
  * Automatic camera rotation for better use of screen space.
  * Support international keyboards (Peter Kjellerstedt).
- * Added take screenshot button (F12). Screenshots respect the alpha channel.
+ * Added ini style config file support (see --load/save-config).
+ * Added support for multiple repositories.
+ * Added screenshot button (F12). Screenshots respect the alpha channel.
  * Added --transparent to make the background see-through (for screenshots).
- * Added ini style config file support.
- * Added demo mode for showing multiple projects in a loop.
  * Added --logo and --background-image options.
- * Added --dont-stop and --stop-at-time options.
- * Added --log-command option to use instead of multiple --log-command-VCS options.
- * Added --hide mouse option.
+ * Added --dont-stop option for manual exiting when recording videos.
+ * Added --stop-at-time option to stop Gource after a number of seconds.
+ * Added --hide 'mouse' option.
  * Allow --file-idle-time 0 (files will never expire).
- * Allow -start-position random to set a random start position.
- * Replaced --disable-progress and --disable-bloom with arguments to --hide.
- * Log position slider is initially hidden if recording a video or in demo mode.
+ * Allow --start-position 'random' to set a random start position.
+ * --log-command VCS replaces multiple --log-command-VCS options.
+ * --disable-progress and --disable-bloom with arguments to --hide.
 
 0.26a:
  * Updated to latest version of GL autoconf macros.
