@@ -114,6 +114,7 @@ class Gource : public SDLApp {
     int framecount;
 
     time_t currtime;
+    time_t lasttime;
     float runtime;
     float subseconds;
 
@@ -174,7 +175,7 @@ class Gource : public SDLApp {
     void updateQuadTree();
     void updateBounds();
 
-    void updateTime();
+    void updateTime(time_t display_time);
 
     void mousetrace(Frustum& frustum, float dt);
 

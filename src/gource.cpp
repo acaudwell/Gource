@@ -755,9 +755,11 @@ void Gource::reset() {
 
     files.clear();
 
+    
     time_scale = 1.0f;
     idle_time=0;
     currtime=0;
+    lasttime=0;
     subseconds=0.0;
     tag_seq = 1;
     commit_seq = 1;
@@ -1169,11 +1171,17 @@ void Gource::updateDirs(float dt) {
     root->logic(dt);
 }
 
-void Gource::updateTime() {
+void Gource::updateTime(time_t display_time) {
+
+    if(display_time == 0) {
+        displaydate = "";
+        return;
+    }
+
     //display date
     char datestr[256];
     char timestr[256];
-    struct tm* timeinfo = localtime ( &currtime );
+    struct tm* timeinfo = localtime ( &display_time );
 
     strftime(datestr, 256, gGourceSettings.date_format.c_str(), timeinfo);
     displaydate = datestr;
@@ -1313,7 +1321,7 @@ void Gource::logic(float t, float dt) {
     }
 
     if(currtime==0 && commitqueue.size()) {
-        currtime   = commitqueue[0].timestamp;
+        currtime   = lasttime = commitqueue[0].timestamp;
         subseconds = 0.0;
     }
 
@@ -1344,7 +1352,7 @@ void Gource::logic(float t, float dt) {
         RCommit commit = commitqueue[0];
 
         if(gGourceSettings.auto_skip_seconds>=0.0 && idle_time >= gGourceSettings.auto_skip_seconds) {
-            currtime = commit.timestamp;
+            currtime = lasttime = commit.timestamp;
             idle_time = 0.0;
         }
 
@@ -1352,7 +1360,7 @@ void Gource::logic(float t, float dt) {
 
         processCommit(commit, t);
 
-        currtime = commit.timestamp;
+        currtime = lasttime = commit.timestamp;
         subseconds = 0.0;
 
         commitqueue.pop_front();
@@ -1372,7 +1380,7 @@ void Gource::logic(float t, float dt) {
 
     updateCamera(dt);
 
-    updateTime();
+    updateTime(commitqueue.size() > 0 ? currtime : lasttime);
 }
 
 void Gource::mousetrace(Frustum& frustum, float dt) {
