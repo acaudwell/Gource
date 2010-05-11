@@ -93,10 +93,10 @@
 		<Unit filename="src\gitraw.h" />
 		<Unit filename="src\gource.cpp" />
 		<Unit filename="src\gource.h" />
-		<Unit filename="src\gource_demo.cpp" />
-		<Unit filename="src\gource_demo.h" />
 		<Unit filename="src\gource_settings.cpp" />
 		<Unit filename="src\gource_settings.h" />
+		<Unit filename="src\gource_shell.cpp" />
+		<Unit filename="src\gource_shell.h" />
 		<Unit filename="src\hg.cpp" />
 		<Unit filename="src\hg.h" />
 		<Unit filename="src\main.cpp" />
