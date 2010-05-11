@@ -93,6 +93,7 @@ public:
 
     float elasticity;
 
+    bool git_submodules;
     std::string git_branch;
 
     std::string log_format;

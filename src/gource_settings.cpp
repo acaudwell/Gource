@@ -181,6 +181,7 @@ GourceSettings::GourceSettings() {
     arg_types["hide-bloom"]      = "bool";
     arg_types["hide-mouse"]      = "bool";
     arg_types["highlight-all-users"] = "bool";
+    arg_types["git-submodules"]  = "bool";
 
     arg_types["disable-auto-rotate"] = "bool";
     arg_types["disable-auto-skip"]   = "bool";
@@ -289,6 +290,7 @@ void GourceSettings::setGourceDefaults() {
     elasticity = 0.0f;
 
     git_branch = "";
+    git_submodules = false;
 
     log_format  = "";
     date_format = "%A, %d %B, %Y %X";
@@ -472,6 +474,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if(gource_settings->getBool("loop")) {
         loop = true;
+    }
+
+    if(gource_settings->getBool("git-submodules")) {
+        git_submodules = true;
     }
 
     if((entry = gource_settings->getEntry("git-branch")) != 0) {

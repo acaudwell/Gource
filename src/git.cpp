@@ -33,6 +33,10 @@ GitCommitLog::GitCommitLog(std::string logfile) : RCommitLog(logfile, 'u') {
 
     log_command = gGourceGitLogCommand;
 
+    if(gGourceSettings.git_submodules) {
+        log_command += " --submodule=log";
+    }
+
     if(gGourceSettings.git_branch.size()>0) {
         log_command += " ";
         log_command += gGourceSettings.git_branch;
