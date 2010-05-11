@@ -92,7 +92,7 @@ Gource* GourceShell::getNext() {
 
         //set a stop condition
         if(gGourceSettings.stop_at_time <= 0.0f && gGourceSettings.stop_position <= 0.0f) {
-            gGourceSettings.stop_at_time = 90.0f;
+            gGourceSettings.stop_at_time = 60.0f;
         }
     }
 
