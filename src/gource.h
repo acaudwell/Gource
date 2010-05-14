@@ -65,6 +65,7 @@ class Gource : public SDLApp {
 
     bool manual_rotate;
 
+    bool grab_mouse;
     bool mousemoved;
     bool mouseclicked;
     bool mousedragged;
