@@ -100,7 +100,7 @@ Gource* GourceShell::getNext() {
 
     //loop unless only 1 repo
     if(gource_settings == conf->getSections("gource")->end()) {
-        if(gGourceSettings.repo_count>1) {
+        if(gGourceSettings.repo_count>1 && exporter==0) {
             gource_settings = conf->getSections("gource")->begin();
         }
     }
