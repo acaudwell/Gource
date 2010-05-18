@@ -41,7 +41,10 @@ Gource::Gource(FrameExporter* exporter) {
     font.dropShadow(true);
     font.roundCoordinates(true);
 
-    bloomtex = texturemanager.grab("bloom.tga");
+    //only use bloom with alpha channel if transparent due to artifacts on some video cards
+    std::string bloom_tga = gGourceSettings.transparent ? "bloom_alpha.tga" : "bloom.tga";
+
+    bloomtex = texturemanager.grab(bloom_tga);
     beamtex  = texturemanager.grab("beam.png");
 
     logotex = 0;

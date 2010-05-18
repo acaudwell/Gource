@@ -36,6 +36,7 @@ my @exclusions = (
     qr{^/todo.txt$},
     qr{^/build-stamp$},
     qr{^/autom4te},
+    qr{^/src/core/README$},
 );
 
 my @inclusions = (
@@ -51,8 +52,14 @@ my @inclusions = (
     qr{^/m4/.+\.m4$},
     qr{^/configure(?:\.ac)?$},
     qr{^/src/.+\.(?:cpp|h)$},
-    qr{^/data/.+\.(?:png|tga|ttf|1)$},
-    qr{^/data/gource.style$},
+    qr{^/data/file\.png$},
+    qr{^/data/no_photo\.png$},
+    qr{^/data/beam\.png$},
+    qr{^/data/bloom\.tga$},
+    qr{^/data/bloom_alpha\.tga$},
+    qr{^/data/fonts/FreeSans\.ttf$},
+    qr{^/data/gource\.1$},
+    qr{^/data/gource\.style$},
     qr{^/data/fonts/README$},
     qr{^/config\.guess$},
     qr{^/config\.sub$},

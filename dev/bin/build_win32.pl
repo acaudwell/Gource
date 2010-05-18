@@ -41,10 +41,13 @@ doit("mkdir -p $WINBUILD/data/");
 doit("mkdir -p $WINBUILD/data/fonts/");
 
 doit("cp gource.exe $WINBUILD");
-doit("cp data/*.png $WINBUILD/data/");
-doit("cp data/*.tga $WINBUILD/data/");
+doit("cp data/beam.png $WINBUILD/data/");
+doit("cp data/file.png $WINBUILD/data/");
+doit("cp data/no_photo.png $WINBUILD/data/");
+doit("cp data/bloom.tga $WINBUILD/data/");
+doit("cp data/bloom_alpha.tga $WINBUILD/data/");
 doit("cp data/gource.style $WINBUILD/data/");
-doit("cp data/fonts/*.ttf $WINBUILD/data/fonts/");
+doit("cp data/fonts/FreeSans.ttf $WINBUILD/data/fonts/");
 
 dosify('README',    "$WINBUILD/README.txt");
 dosify('ChangeLog',    "$WINBUILD/ChangeLog.txt");
