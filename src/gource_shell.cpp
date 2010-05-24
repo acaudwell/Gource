@@ -151,6 +151,7 @@ void GourceShell::update(float t, float dt) {
         return;
     }
 
+    gource->fps = this->fps;
     gource->update(t, dt);
 
     //copy last frame
