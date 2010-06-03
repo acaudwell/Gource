@@ -33,6 +33,7 @@
 #include "core/frustum.h"
 #include "core/regex.h"
 #include "core/ppm.h"
+#include "core/mousecursor.h"
 
 #include "gource_settings.h"
 
@@ -64,6 +65,8 @@ class Gource : public SDLApp {
     bool debug, trace_debug;
 
     bool manual_rotate;
+
+    MouseCursor cursor;
 
     bool grab_mouse;
     bool mousemoved;
