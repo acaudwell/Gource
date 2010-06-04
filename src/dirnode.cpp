@@ -993,7 +993,8 @@ void RDirNode::drawEdgeShadows(float dt) const{
 
         //draw edge - assumes calcEdges() called before hand so spline will exist
         if(child->isVisible()) {
-           splines[child].drawShadow();
+           std::map<RDirNode*, SplineEdge>::const_iterator it = splines.find(child);
+           if(it != splines.end()) it->second.drawShadow();
 
            child->drawEdgeShadows(dt);
         }
@@ -1007,7 +1008,8 @@ void RDirNode::drawEdges(float dt) const{
 
         //draw edge - assumes calcEdges() called before hand so spline will exist
         if(child->isVisible()) {
-           splines[child].draw();
+           std::map<RDirNode*, SplineEdge>::const_iterator it = splines.find(child);
+           if(it != splines.end()) it->second.draw();
 
            child->drawEdges(dt);
         }
