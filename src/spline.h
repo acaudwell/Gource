@@ -31,13 +31,13 @@ class SplineEdge {
     std::vector<vec2f> spline_point;
     std::vector<vec4f> spline_colour;
 
-    void drawBeam(vec2f pos1, vec4f col1, vec2f pos2, vec4f col2, float radius, bool first);
+    void drawBeam(const vec2f & pos1, const vec4f & col1, const vec2f & pos2, const vec4f & col2, float radius, bool first) const;
 public:
     SplineEdge();
     SplineEdge(vec2f pos1, vec4f col1, vec2f pos2, vec4f col2, vec2f spos);
 
-    void drawShadow();
-    void draw();
+    void drawShadow() const;
+    void draw() const;
 };
 
 #endif

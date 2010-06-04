@@ -83,8 +83,8 @@ public:
     void setHidden(bool hidden);
     bool isHidden();
 
-    virtual float getAlpha() { return std::min(elapsed/fadetime, 1.0f); }
-    virtual vec3f getColour() { return vec3f(1.0, 1.0, 1.0); }
+    virtual float getAlpha() const{ return std::min(elapsed/fadetime, 1.0f); }
+    virtual vec3f getColour() const { return vec3f(1.0, 1.0, 1.0); }
 
     virtual TextureResource* getIcon() { return icon; };
 

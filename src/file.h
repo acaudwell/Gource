@@ -44,29 +44,29 @@ class RFile : public Pawn {
     GLuint namelist;
 
     void setPath();
-    vec3f getNameColour();
+    vec3f getNameColour() const;
     void drawNameText(float alpha);
 public:
     std::string path;
     std::string fullpath;
 
-    RFile(std::string name, vec3f colour, vec2f pos, int tagid);
+    RFile(const std::string & name, const vec3f & colour, const vec2f & pos, int tagid);
     ~RFile();
 
-    vec3f getFileColour();
-    vec3f getColour();
+    const vec3f & getFileColour() const;
+    vec3f getColour() const;
 
-    float getAlpha();
+    float getAlpha() const;
 
-    void touch(vec3f colour);
+    void touch(const vec3f & colour);
 
-    std::string getFullPath();
+    const std::string & getFullPath() const;
 
     void setSelected(bool selected);
 
     void setHidden(bool hidden);
 
-    void setDest(vec2f dest);
+    void setDest(const vec2f & dest);
     void setDistance(float distance);
 
     void logic(float dt);
@@ -74,12 +74,12 @@ public:
 
     void remove();
 
-    vec2f getAbsolutePos();
+    vec2f getAbsolutePos() const;
 
-    RDirNode* getDir();
+    RDirNode* getDir() const;
     void setDir(RDirNode* dir);
 
-    int getPathHash();
+    int getPathHash() const;
 };
 
 extern float gGourceFileDiameter;

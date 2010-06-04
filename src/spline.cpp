@@ -58,7 +58,7 @@ SplineEdge::SplineEdge(vec2f pos1, vec4f col1, vec2f pos2, vec4f col2, vec2f spo
     }
 }
 
-void SplineEdge::drawBeam(vec2f pos1, vec4f col1, vec2f pos2, vec4f col2, float radius, bool first) {
+void SplineEdge::drawBeam(const vec2f & pos1, const vec4f & col1, const vec2f & pos2, const vec4f & col2, float radius, bool first) const{
 
     vec2f perp = (pos1 - pos2).perpendicular().normal() * radius;
 
@@ -79,7 +79,7 @@ void SplineEdge::drawBeam(vec2f pos1, vec4f col1, vec2f pos2, vec4f col2, float 
     glVertex2f(pos2.x - perp.x, pos2.y - perp.y);
 }
 
-void SplineEdge::drawShadow() {
+void SplineEdge::drawShadow() const{
 
     int edges_count = spline_point.size() - 1;
 
@@ -94,7 +94,7 @@ void SplineEdge::drawShadow() {
     glEnd();
 }
 
-void SplineEdge::draw() {
+void SplineEdge::draw() const{
 
     int edges_count = spline_point.size() - 1;
 

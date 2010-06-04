@@ -17,11 +17,11 @@
 
 #include "file.h"
 
-float gGourceFileDiameter  = 8.0;
+float gGourceFileDiameter  = 8.0; 
 
 std::vector<RFile*> gGourceRemovedFiles;
 
-RFile::RFile(std::string name, vec3f colour, vec2f pos, int tagid) : Pawn(name,pos,tagid) {
+RFile::RFile(const std::string & name, const vec3f & colour, const vec2f & pos, int tagid) : Pawn(name,pos,tagid) {
     hidden = true;
     icon = texturemanager.grab("file.png");
     size = gGourceFileDiameter;
@@ -68,19 +68,19 @@ void RFile::setDir(RDirNode* dir) {
     this->dir = dir;
 }
 
-std::string RFile::getFullPath() {
+const std::string & RFile::getFullPath() const {
     return fullpath;
 }
 
-RDirNode* RFile::getDir() {
+RDirNode* RFile::getDir() const{
     return dir;
 }
 
-vec2f RFile::getAbsolutePos() {
+vec2f RFile::getAbsolutePos() const{
     return pos + dir->getPos();
 }
 
-int RFile::getPathHash() {
+int RFile::getPathHash() const{
     return path_hash;
 }
 
@@ -121,15 +121,15 @@ void RFile::setSelected(bool selected) {
     glEndList();
 }
 
-vec3f RFile::getNameColour() {
+vec3f RFile::getNameColour() const{
     return selected ? vec3f(1.0, 1.0, 0.3) : namecol;
 }
 
-vec3f RFile::getFileColour() {
+const vec3f & RFile::getFileColour() const{
     return file_colour;
 }
 
-vec3f RFile::getColour() {
+vec3f RFile::getColour() const{
     if(selected) return vec3f(1.0, 1.0, 1.0);
 
     float lc = elapsed - last_action;
@@ -141,7 +141,7 @@ vec3f RFile::getColour() {
     return file_colour;
 }
 
-float RFile::getAlpha() {
+float RFile::getAlpha() const{
     float alpha = Pawn::getAlpha();
 
     //user fades out if not doing anything
@@ -156,7 +156,7 @@ void RFile::setDistance(float distance) {
     this->distance = distance;
 }
 
-void RFile::setDest(vec2f dest) {
+void RFile::setDest(const vec2f & dest) {
     this->dest = dest;
 }
 
@@ -165,7 +165,7 @@ void RFile::logic(float dt) {
 
     vec2f dest_pos = dest;
 /*
-    if(dir->getParent() != 0 && dir->dirCount()==0) {
+    if(dir->getParent() != 0 && dir->noDirs()) {
         vec2f dirnorm = dir->getNodeNormal();
         dest_pos = dirnorm + dest;
     }*/
@@ -208,7 +208,7 @@ void RFile::logic(float dt) {
     if(isHidden()) elapsed = 0.0;
 }
 
-void RFile::touch(vec3f colour) {
+void RFile::touch(const vec3f & colour) {
     last_action = elapsed;
     touch_colour = colour;
 

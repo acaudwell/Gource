@@ -43,6 +43,8 @@ RUser::RUser(std::string name, vec2f pos, int tagid) : Pawn(name,pos,tagid) {
     name_interval = 5.0;
 
     min_units_ps = 100.0;
+
+    actionCount = activeCount = 0;
 }
 
 void RUser::addAction(RAction* action) {
@@ -50,6 +52,7 @@ void RUser::addAction(RAction* action) {
     if(action->source != this) return;
 
     actions.push_back(action);
+    actionCount++;
 }
 
 // remove references to this file
@@ -60,6 +63,7 @@ void RUser::fileRemoved(RFile* f) {
         if(a->target == f) {
             it = actions.erase(it);
             delete a;
+            actionCount--;
             continue;
         }
 
@@ -90,7 +94,7 @@ void RUser::applyForceUser(RUser* u) {
 
     //different repelling force depending on how busy the user is
     float desired_dist = getActionCount() == 0 ?
-        gGourcePersonalSpaceDist : (actions.size()>0 && activeActions.size()==0) ?
+        gGourcePersonalSpaceDist : (!actions.empty() && activeActions.empty()) ?
             gGourcePersonalSpaceDist * 0.1 : gGourcePersonalSpaceDist * 0.5;
 
     //resolve overlap
@@ -134,7 +138,7 @@ void RUser::applyForceAction(RAction* action) {
 }
 
 void RUser::applyForceToActions() {
-    if(activeActions.size()==0 && actions.size()==0) return;
+    if(activeActions.empty() && actions.empty()) return;
 
     last_action = elapsed;
 
@@ -152,7 +156,7 @@ void RUser::applyForceToActions() {
         if(action_influence >= max_influence) break;
     }
 
-    if(activeActions.size()!=0) return;
+    if(!activeActions.empty()) return;
 
     //if no actions being worked on, move towards one pending action
     for(std::list<RAction*>::iterator it = actions.begin(); it != actions.end(); it++) {
@@ -212,11 +216,11 @@ void RUser::assignIcon() {
 }
 
 int RUser::getActionCount() {
-    return actions.size() + activeActions.size();
+    return actionCount + activeCount;
 }
 
 int RUser::getPendingActionCount() {
-    return actions.size();
+    return actionCount;
 }
 
 void RUser::logic(float t, float dt) {
@@ -226,7 +230,7 @@ void RUser::logic(float t, float dt) {
 
     bool find_nearby_action = false;
 
-    if(actions.size() && action_interval <= 0) {
+    if(!actions.empty() && action_interval <= 0) {
         find_nearby_action = true;
     }
 
@@ -237,8 +241,10 @@ void RUser::logic(float t, float dt) {
         //add all files which are too old
         if(gGourceSettings.max_file_lag>=0.0 && action->addedtime < t - gGourceSettings.max_file_lag) {
             it = actions.erase(it);
+            actionCount--;
             action->rate = 2.0;
             activeActions.push_back(action);
+            activeCount++;
             continue;
         }
 
@@ -250,6 +256,7 @@ void RUser::logic(float t, float dt) {
         if(action_dist < gGourceBeamDist) {
             it = actions.erase(it);
             activeActions.push_back(action);
+            actionCount--; activeCount++;
             break;
         }
 
@@ -258,7 +265,7 @@ void RUser::logic(float t, float dt) {
 
     //reset action interval
     if(action_interval <= 0) {
-        int total_actions = actions.size() + activeActions.size();
+        int total_actions = actionCount + activeCount;
 
         action_interval = total_actions ? (1.0 / (float)total_actions) : 1.0;
     }
@@ -273,6 +280,7 @@ void RUser::logic(float t, float dt) {
         if(action->isFinished()) {
             it = activeActions.erase(it);
             delete action;
+            activeCount--;
             continue;
         }
 
@@ -289,7 +297,7 @@ void RUser::logic(float t, float dt) {
 
     //ensure characters dont crawl
 //     float accel_amount = accel.length();
-//     if(actions.size()>0 && accel_amount > 0.0 && accel_amount < min_units_ps) {
+//     if(!actions.empty() && accel_amount > 0.0 && accel_amount < min_units_ps) {
 //         accel = accel.normal() * min_units_ps;
 //     }
 
@@ -325,7 +333,7 @@ vec3f RUser::getNameColour() {
     return (selected||highlighted) ? vec3f(1.0, 1.0, 0.3) : namecol;
 }
 
-vec3f RUser::getColour() {
+vec3f RUser::getColour() const{
     if(selected) return vec3f(1.0, 1.0, 1.0);
 
     return usercol;
@@ -347,7 +355,7 @@ float RUser::getAlpha() {
 }
 
 bool RUser::isIdle() {
-    return (activeActions.size()==0 && actions.size()==0);
+    return (activeActions.empty() && actions.empty());
 }
 
 bool RUser::isFading() {

@@ -95,12 +95,10 @@ void RAction::draw(float dt) {
 
 CreateAction::CreateAction(RUser* source, RFile* target, float addedtime) : RAction(source, target, addedtime) {
     colour = vec3f(0.0, 1.0, 0.0);
-    action = "Create";
 }
 
 RemoveAction::RemoveAction(RUser* source, RFile* target, float addedtime): RAction(source, target, addedtime) {
     colour = vec3f(1.0, 0.0, 0.0);
-    action = "Remove";
 }
 
 void RemoveAction::logic(float dt) {
@@ -115,5 +113,4 @@ void RemoveAction::logic(float dt) {
 
 ModifyAction::ModifyAction(RUser* source, RFile* target, float addedtime) : RAction(source, target, addedtime) {
     colour = vec3f(1.0, 0.7, 0.3);
-    action = "Modify";
 }

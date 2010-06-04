@@ -31,7 +31,7 @@ int  gGourceFileInnerLoops = 0;
 
 std::map<std::string, RDirNode*> gGourceDirMap;
 
-RDirNode::RDirNode(RDirNode* parent, std::string abspath) {
+RDirNode::RDirNode(RDirNode* parent, const std::string & abspath) {
 
     changePath(abspath);
 
@@ -67,19 +67,19 @@ RDirNode::RDirNode(RDirNode* parent, std::string abspath) {
     calcColour();
 }
 
-void RDirNode::changePath(std::string abspath) {
+void RDirNode::changePath(const std::string & abspath) {
     //fix up path
-    if(abspath.size() == 0 || abspath[abspath.size()-1] != '/') {
-        abspath = abspath + std::string("/");
-    }
 
     gGourceDirMap.erase(this->abspath);
+    this->abspath = abspath;
+
+    if(abspath.empty() || abspath[abspath.size()-1] != '/') {
+        this->abspath += std::string("/");
+    }
 
     //debugLog("new dirnode %s\n", abspath.c_str());
 
-    this->abspath = abspath;
-
-    gGourceDirMap[abspath] = this;
+    gGourceDirMap[this->abspath] = this;
 }
 
 RDirNode::~RDirNode() {
@@ -90,7 +90,7 @@ RDirNode::~RDirNode() {
     gGourceDirMap.erase(abspath);
 }
 
-int RDirNode::getTokenOffset() {
+int RDirNode::getTokenOffset() const{
     return path_token_offset;
 }
 
@@ -124,36 +124,31 @@ void RDirNode::rotate(float s, float c) {
     }
 }
 
-void RDirNode::setPos(vec2f pos) {
+void RDirNode::setPos(const vec2f & pos) {
     this->pos = pos;
 }
 
 //returns true if supplied path prefixes the nodes path
-bool RDirNode::prefixedBy(std::string path) {
-    if(path.size()==0) return false;
-
-    if(path[path.size()-1] != '/') {
-        path = path + std::string("/");
-    }
-
-    int pos = abspath.find(path);
-
-    if(pos==0) return true;
-
-    return false;
+bool RDirNode::prefixedBy(const std::string & path) const {
+    if(path.empty()) return false;
+    
+    if(path[path.size()-1] != '/')
+        return abspath.find(path + std::string("/")) == 0;
+    else
+        return abspath.find(path) == 0;
 }
 
-std::string RDirNode::getPath() {
+const std::string & RDirNode::getPath() const{
     return abspath;
 }
 
 
 
-RDirNode* RDirNode::getParent() {
+RDirNode* RDirNode::getParent() const{
     return parent;
 }
 
-int RDirNode::getDepth() {
+int RDirNode::getDepth() const{
     return depth;
 }
 
@@ -190,7 +185,6 @@ void RDirNode::setParent(RDirNode* parent) {
         depth = parent->getDepth() + 1;
     }
 }
-
 
 void RDirNode::addNode(RDirNode* node) {
     // does this node prefix any other nodes, if so, add them to it
@@ -256,7 +250,7 @@ bool RDirNode::removeFile(RFile* f) {
 
         if(removed) {
             //node is now empty, reap!
-            if(node->fileCount()==0 && node->dirCount()==0) {
+            if(node->noFiles() && node->noDirs()) {
                 children.erase(it);
                 debugLog("deleting node %s...\n", node->getPath().c_str());
                 delete node;
@@ -279,7 +273,7 @@ bool RDirNode::isVisible() {
 
     if(visible) return true;
 
-    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         if((*it)->isVisible()) {
             visible = true;
             return true;
@@ -289,15 +283,19 @@ bool RDirNode::isVisible() {
     return false;
 }
 
-int RDirNode::visibleFileCount() {
+int RDirNode::visibleFileCount() const{
     return visible_count;
 }
 
-int RDirNode::fileCount() {
+int RDirNode::fileCount() const{
     return files.size();
 }
 
-std::string RDirNode::commonPathPrefix(std::string& str) {
+bool RDirNode::noFiles() const{
+    return files.empty();
+}
+
+std::string RDirNode::commonPathPrefix(const std::string & str) const{
     size_t c = 0;
     int slash = -1;
 
@@ -331,7 +329,7 @@ bool RDirNode::addFile(RFile* f) {
 
     //simply change path of node and add this to it
     if(   parent==0 && abspath == "/"
-       && f->path.compare(abspath) != 0 && fileCount()==0 && dirCount()==0) {
+       && f->path.compare(abspath) != 0 && noFiles() && noDirs()) {
         debugLog("modifying root path to %s\n", f->path.c_str());
         changePath(f->path);
     }
@@ -408,20 +406,20 @@ bool RDirNode::addFile(RFile* f) {
     return true;
 }
 
-float RDirNode::getRadius() {
+float RDirNode::getRadius() const{
     return dir_radius;
 }
 
-float RDirNode::getRadiusSqrt() {
+float RDirNode::getRadiusSqrt() const{
     return dir_radius_sqrt;
 }
 
-vec3f RDirNode::averageFileColour() {
+vec3f RDirNode::averageFileColour() const{
 
     vec3f av;
     int count = 0;
 
-    for(std::list<RFile*>::iterator it = files.begin(); it != files.end(); it++) {
+    for(std::list<RFile*>::const_iterator it = files.begin(); it != files.end(); it++) {
         RFile* file = (*it);
 
         if(file->isHidden()) continue;
@@ -435,7 +433,7 @@ vec3f RDirNode::averageFileColour() {
 
     count = 0;
 
-    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end();it++) {
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end();it++) {
             RDirNode* child =  (*it);
 
             av += child->averageFileColour();
@@ -447,7 +445,7 @@ vec3f RDirNode::averageFileColour() {
     return av;
 }
 
-vec4f RDirNode::getColour() {
+const vec4f & RDirNode::getColour() const{
     return col;
 }
 
@@ -489,7 +487,7 @@ void RDirNode::calcArea() {
     }
 }
 
-float RDirNode::getArea() {
+float RDirNode::getArea() const{
     return dir_area;
 }
 
@@ -501,7 +499,7 @@ void RDirNode::calcRadius() {
     this->dir_radius_sqrt = sqrt(dir_radius);
 }
 
-float RDirNode::distanceTo(RDirNode* node) {
+float RDirNode::distanceTo(RDirNode* node) const{
 
     float posd        = (node->getPos() - pos).length();
     float myradius    = getRadius();
@@ -545,22 +543,22 @@ void RDirNode::applyForceDir(RDirNode* node) {
     accel += distance * dir.normal();
 }
 
-vec2f RDirNode::getPos() {
+const vec2f & RDirNode::getPos() const{
     return pos;
 }
 
-bool RDirNode::isParentOf(RDirNode* node) {
+bool RDirNode::isParentOf(RDirNode* node) const{
 
     if(node->prefixedBy(abspath)) return true;
 
     return false;
 }
 
-bool RDirNode::empty() {
-    return (visible_count==0 && dirCount()==0) ? true : false;
+bool RDirNode::empty() const{
+    return (visible_count==0 && noDirs()) ? true : false;
 }
 
-void RDirNode::applyForces(QuadTree& quadtree) {
+void RDirNode::applyForces(const QuadTree & quadtree) {
 
     //child nodes
     for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
@@ -624,13 +622,13 @@ void RDirNode::applyForces(QuadTree& quadtree) {
     }
 
     //  * dirs should repulse from other dirs of this parent
-    std::list<RDirNode*>* siblings = parent->getChildren();
-    if(siblings->size() > 0) {
+    const std::list<RDirNode*> & siblings = parent->getChildren();
+    if(!siblings.empty()) {
         vec2f sib_accel;
 
         int visible = 1;
 
-        for(std::list<RDirNode*>::iterator it = siblings->begin(); it != siblings->end(); it++) {
+        for(std::list<RDirNode*>::const_iterator it = siblings.begin(); it != siblings.end(); it++) {
             RDirNode* node = (*it);
 
             if(node == this) continue;
@@ -652,22 +650,22 @@ void RDirNode::applyForces(QuadTree& quadtree) {
 
 }
 
-void RDirNode::debug(int indent) {
+void RDirNode::debug(int indent) const{
     std::string indentstr;
     while(indentstr.size() < indent) indentstr += " ";
 
     debugLog("%s%s\n", indentstr.c_str(), abspath.c_str());
 
-    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
         node->debug(indent+1);
     }
 }
 
-int RDirNode::totalFileCount() {
+int RDirNode::totalFileCount() const{
     int total = visibleFileCount();
 
-    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
         total += node->visibleFileCount();
     }
@@ -675,10 +673,10 @@ int RDirNode::totalFileCount() {
     return total;
 }
 
-int RDirNode::totalDirCount() {
+int RDirNode::totalDirCount() const{
     int total = 1;
 
-    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
         total += node->totalDirCount();
     }
@@ -686,12 +684,16 @@ int RDirNode::totalDirCount() {
     return total;
 }
 
-int RDirNode::dirCount() {
+int RDirNode::dirCount() const{
     return children.size();
 }
 
-std::list<RDirNode*>* RDirNode::getChildren() {
-    return &children;
+bool RDirNode::noDirs() const{
+    return children.empty();
+}
+
+const std::list<RDirNode*> & RDirNode::getChildren() const{
+    return children;
 }
 
 void RDirNode::updateSpline(float dt) {
@@ -758,7 +760,7 @@ void RDirNode::move(float dt) {
     accel = vec2f(0.0, 0.0);
 }
 
-vec2f RDirNode::getNodeNormal() {
+const vec2f & RDirNode::getNodeNormal() const{
     return node_normal;
 }
 
@@ -778,6 +780,7 @@ void RDirNode::updateFilePositions() {
     int max_files = 1;
     int diameter  = 1;
     int file_no   = 0;
+    float d = 0.0;
 
     int files_left = visible_count;
 
@@ -792,8 +795,6 @@ void RDirNode::updateFilePositions() {
 
         vec2f dest = calcFileDest(max_files, file_no);
 
-        float d = ((float)(diameter-1)) * gGourceFileDiameter;
-
         f->setDest(dest);
         f->setDistance(d);
 
@@ -802,8 +803,9 @@ void RDirNode::updateFilePositions() {
 
         if(file_no>=max_files) {
             diameter++;
+            d += gGourceFileDiameter;
             max_files = (int) std::max(1.0, diameter*PI);
-
+            
             if(files_left<max_files) {
                 max_files = files_left;
             }
@@ -864,7 +866,7 @@ void RDirNode::logic(float dt) {
     since_last_node_change += dt;
 }
 
-void RDirNode::drawDirName(FXFont& dirfont) {
+void RDirNode::drawDirName(const FXFont& dirfont) const{
     if(gGourceSettings.hide_dirnames) return;
 
     if(since_last_node_change > 5.0) return;
@@ -893,7 +895,7 @@ void RDirNode::drawDirName(FXFont& dirfont) {
         glPopMatrix();
 }
 
-void RDirNode::drawNames(FXFont& dirfont, Frustum& frustum) {
+void RDirNode::drawNames(const FXFont & dirfont, const Frustum & frustum){
 
     glPushMatrix();
     glTranslatef(pos.x, pos.y, 0.0);
@@ -903,7 +905,7 @@ void RDirNode::drawNames(FXFont& dirfont, Frustum& frustum) {
     }
 
     if(!(gGourceSettings.hide_filenames || gGourceSettings.hide_files) && frustum.boundsInFrustum(quadItemBounds)) {
-        for(std::list<RFile*>::iterator it = files.begin(); it!=files.end(); it++) {
+        for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
             RFile* f = *it;
             f->drawName();
         }
@@ -912,13 +914,13 @@ void RDirNode::drawNames(FXFont& dirfont, Frustum& frustum) {
     glPopMatrix();
 
 
-    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
         node->drawNames(dirfont,frustum);
     }
 }
 
-void RDirNode::drawShadows(Frustum &frustum, float dt) {
+void RDirNode::drawShadows(const Frustum & frustum, float dt) const{
 
     if(frustum.boundsInFrustum(quadItemBounds)) {
 
@@ -926,7 +928,7 @@ void RDirNode::drawShadows(Frustum &frustum, float dt) {
         glTranslatef(pos.x, pos.y, 0.0);
 
         //draw files
-        for(std::list<RFile*>::iterator it = files.begin(); it!=files.end(); it++) {
+        for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
             RFile* f = *it;
             if(f->isHidden()) continue;
 
@@ -936,13 +938,13 @@ void RDirNode::drawShadows(Frustum &frustum, float dt) {
         glPopMatrix();
     }
 
-    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
         node->drawShadows(frustum, dt);
     }
 }
 
-void RDirNode::drawFiles(Frustum &frustum, float dt) {
+void RDirNode::drawFiles(const Frustum & frustum, float dt) const{
 
     if(frustum.boundsInFrustum(quadItemBounds)) {
 
@@ -953,7 +955,7 @@ void RDirNode::drawFiles(Frustum &frustum, float dt) {
 
             //draw files
 
-            for(std::list<RFile*>::iterator it = files.begin(); it!=files.end(); it++) {
+            for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
                 RFile* f = *it;
                 if(f->isHidden()) continue;
 
@@ -965,17 +967,17 @@ void RDirNode::drawFiles(Frustum &frustum, float dt) {
 
     glDisable(GL_TEXTURE_2D);
 
-    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
         node->drawFiles(frustum,dt);
     }
 }
 
-vec2f RDirNode::getSPos() {
+const vec2f & RDirNode::getSPos() const{
     return projected_spos;
 }
 
-vec2f RDirNode::getProjectedPos() {
+const vec2f & RDirNode::getProjectedPos() const{
     return projected_pos;
 }
 
@@ -984,12 +986,12 @@ void RDirNode::calcProjectedPos() {
     projected_spos = display.project(vec3f(spos.x, spos.y, 0.0)).truncate();
 }
 
-void RDirNode::drawEdgeShadows(float dt) {
+void RDirNode::drawEdgeShadows(float dt) const{
 
-    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
 
-        //draw edge
+        //draw edge - assumes calcEdges() called before hand so spline will exist
         if(child->isVisible()) {
            splines[child].drawShadow();
 
@@ -998,12 +1000,12 @@ void RDirNode::drawEdgeShadows(float dt) {
     }
 }
 
-void RDirNode::drawEdges(float dt) {
+void RDirNode::drawEdges(float dt) const{
 
-    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
 
-        //draw edge
+        //draw edge - assumes calcEdges() called before hand so spline will exist
         if(child->isVisible()) {
            splines[child].draw();
 
@@ -1012,7 +1014,7 @@ void RDirNode::drawEdges(float dt) {
     }
 }
 
-void RDirNode::drawBloom(Frustum& frustum, float dt) {
+void RDirNode::drawBloom(const Frustum & frustum, float dt){
 
     if(isVisible() && frustum.boundsInFrustum(quadItemBounds)) {
 
@@ -1039,27 +1041,27 @@ void RDirNode::drawBloom(Frustum& frustum, float dt) {
 
     }
 
-    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
         node->drawBloom(frustum,dt);
     }
 }
 
-void RDirNode::drawSimple(Frustum& frustum, float dt) {
+void RDirNode::drawSimple(const Frustum & frustum, float dt) const{
 
     glDisable(GL_TEXTURE_2D);
 
     if(frustum.boundsInFrustum(quadItemBounds)) {
         glPushMatrix();
             glTranslatef(pos.x, pos.y, 0.0);
-            for(std::list<RFile*>::iterator it = files.begin(); it!=files.end(); it++) {
+            for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
                 RFile* f = *it;
                 f->drawSimple(dt);
             }
         glPopMatrix();
     }
 
-    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
         node->drawSimple(frustum,dt);
     }

@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
         gGourceSettings.parseArgs(argc, argv, conf, &files);
 
         //load config
-        if(gGourceSettings.load_config.size() > 0) {
+        if(!gGourceSettings.load_config.empty()) {
             conf.clear();
             conf.load(gGourceSettings.load_config);
 
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
         }
 
         //set path
-        if(files.size()>0) {
+        if(!files.empty()) {
             std::string path = files[files.size()-1];
 
             ConfSectionList* sectionlist = conf.getSections("gource");
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
         gGourceSettings.importGourceSettings(conf);
 
         //save config
-        if(gGourceSettings.save_config.size() > 0) {
+        if(!gGourceSettings.save_config.empty()) {
             conf.save(gGourceSettings.save_config);
             exit(0);
         }

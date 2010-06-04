@@ -36,6 +36,8 @@ class RUser : public Pawn {
 
     std::list<RAction*> actions;
     std::list<RAction*> activeActions;
+    size_t actionCount;
+    size_t activeCount;
 
     float action_interval;
     float action_dist;
@@ -57,7 +59,7 @@ class RUser : public Pawn {
 public:
     RUser(std::string name, vec2f pos, int tagid);
 
-    vec3f getColour();
+    vec3f getColour() const;
 
     std::string getName();
     std::string getUsername();

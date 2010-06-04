@@ -27,7 +27,6 @@ class RFile;
 class RAction {
 protected:
     vec3f colour;
-    std::string action;
 public:
     RUser* source;
     RFile* target;
