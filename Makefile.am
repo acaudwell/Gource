@@ -15,6 +15,7 @@ gource_SOURCES = \
 	src/core/frustum.cpp src/core/frustum.h \
 	src/core/fxfont.cpp src/core/fxfont.h \
 	src/core/logger.cpp src/core/logger.h \
+	src/core/mousecursor.cpp src/core/mousecursor.h \
 	src/core/pi.h \
 	src/core/plane.cpp src/core/plane.h \
 	src/core/ppm.cpp src/core/ppm.h \
