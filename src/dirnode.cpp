@@ -516,9 +516,7 @@ float RDirNode::distanceTo(RDirNode* node) const{
 void RDirNode::applyForceDir(RDirNode* node) {
     if(node == this) return;
 
-    vec2f node_pos = node->getPos();
-
-    vec2f dir = node_pos - pos;
+    vec2f dir = node->getPos() - pos;
 
     float posd2       = dir.length2();
     float myradius    = getRadius();
@@ -584,11 +582,12 @@ void RDirNode::applyForces(const QuadTree & quadtree) {
         if(d==parent) continue;
         if(d->parent==this) continue;
 
-        if((seentest = seen.find(d)) != seen.end()) {
+        if(d->node_count != 1) {
+            if((seentest = seen.find(d)) != seen.end()) {
             continue;
+            }
+            seen.insert(d);
         }
-
-        seen.insert(d);
 
         if(isParent(d)) continue;
         if(d->isParent(this)) continue;

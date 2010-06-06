@@ -771,7 +771,7 @@ void Gource::reset() {
 
     files.clear();
 
-    
+
     time_scale = 1.0f;
     idle_time=0;
     currtime=0;
@@ -1039,8 +1039,8 @@ void Gource::interactUsers() {
 
         RUser* a = ait->second;
 
-        std::set<int> seen;
-        std::set<int>::iterator seentest;
+        std::set<RUser*> seen;
+        std::set<RUser*>::iterator seentest;
 
         std::vector<QuadItem*> inbounds;
 
@@ -1052,11 +1052,12 @@ void Gource::interactUsers() {
 
             if(b==a) continue;
 
-            if((seentest = seen.find(b->getTagID())) != seen.end()) {
-                continue;
+            if(b->node_count != 1) {
+                if((seentest = seen.find(b)) != seen.end()) {
+                    continue;
+                }
+                seen.insert(b);
             }
-
-            seen.insert(b->getTagID());
 
             a->applyForceUser(b);
             gGourceUserInnerLoops++;
