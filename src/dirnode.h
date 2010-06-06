@@ -132,7 +132,7 @@ public:
 
     const vec2f & getNodeNormal() const;
 
-    bool isParentOf(RDirNode* node) const;
+    bool isParent(RDirNode* node) const;
 
     bool addFile(RFile* f);
     bool removeFile(RFile* f);

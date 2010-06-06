@@ -131,7 +131,7 @@ void RDirNode::setPos(const vec2f & pos) {
 //returns true if supplied path prefixes the nodes path
 bool RDirNode::prefixedBy(const std::string & path) const {
     if(path.empty()) return false;
-    
+
     if(path[path.size()-1] != '/')
         return abspath.find(path + std::string("/")) == 0;
     else
@@ -547,11 +547,11 @@ const vec2f & RDirNode::getPos() const{
     return pos;
 }
 
-bool RDirNode::isParentOf(RDirNode* node) const{
+bool RDirNode::isParent(RDirNode* node) const {
+    if(node==parent) return true;
+    if(parent==0) return false;
 
-    if(node->prefixedBy(abspath)) return true;
-
-    return false;
+    return parent->isParent(node);
 }
 
 bool RDirNode::empty() const{
@@ -572,8 +572,8 @@ void RDirNode::applyForces(const QuadTree & quadtree) {
     std::vector<QuadItem*> inbounds;
     int found = quadtree.getItemsInBounds(inbounds, quadItemBounds);
 
-    std::set<std::string> seen;
-    std::set<std::string>::iterator seentest;
+    std::set<RDirNode*> seen;
+    std::set<RDirNode*>::iterator seentest;
 
     //apply forces with other that are inside the 'box' of this nodes radius
     for(std::vector<QuadItem*>::iterator it = inbounds.begin(); it != inbounds.end(); it++) {
@@ -584,14 +584,14 @@ void RDirNode::applyForces(const QuadTree & quadtree) {
         if(d==parent) continue;
         if(d->parent==this) continue;
 
-        if((seentest = seen.find(d->getPath())) != seen.end()) {
+        if((seentest = seen.find(d)) != seen.end()) {
             continue;
         }
 
-        seen.insert(d->getPath());
+        seen.insert(d);
 
-        if(isParentOf(d)) continue;
-        if(d->isParentOf(this)) continue;
+        if(isParent(d)) continue;
+        if(d->isParent(this)) continue;
 
         applyForceDir(d);
 
@@ -805,7 +805,7 @@ void RDirNode::updateFilePositions() {
             diameter++;
             d += gGourceFileDiameter;
             max_files = (int) std::max(1.0, diameter*PI);
-            
+
             if(files_left<max_files) {
                 max_files = files_left;
             }
