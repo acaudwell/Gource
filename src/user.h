@@ -77,7 +77,7 @@ public:
     int getActionCount();
     int getPendingActionCount();
 
-    float getAlpha();
+    float getAlpha() const;
 
     void applyForceToActions();
     void applyForceAction(RAction* action);

@@ -343,7 +343,7 @@ std::string RUser::getName() {
     return name;
 }
 
-float RUser::getAlpha() {
+float RUser::getAlpha() const {
     float alpha = Pawn::getAlpha();
     //user fades out if not doing anything
     if(elapsed - last_action > gGourceSettings.user_idle_time) {
