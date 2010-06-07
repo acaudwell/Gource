@@ -80,8 +80,8 @@ public:
 
     virtual void setSelected(bool selected);
 
-    void setHidden(bool hidden);
-    bool isHidden();
+    void setHidden(bool hidden){ this->hidden = hidden; }
+    bool isHidden(){ return hidden; }
 
     virtual float getAlpha() const{ return std::min(elapsed/fadetime, 1.0f); }
     virtual vec3f getColour() const { return vec3f(1.0, 1.0, 1.0); }

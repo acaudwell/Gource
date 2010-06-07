@@ -60,15 +60,6 @@ void Pawn::showName() {
     if(name_interval <= 0.0) name_interval = nametime;
 }
 
-void Pawn::setHidden(bool hidden) {
-    showName();
-    this->hidden = false;
-}
-
-bool Pawn::isHidden() {
-    return hidden;
-}
-
 void Pawn::updateQuadItemBounds() {
 
     float ratio = icon->h / (float) icon->w;

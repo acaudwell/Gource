@@ -17,7 +17,7 @@
 
 #include "file.h"
 
-float gGourceFileDiameter  = 8.0; 
+float gGourceFileDiameter  = 8.0;
 
 std::vector<RFile*> gGourceRemovedFiles;
 
@@ -152,14 +152,6 @@ float RFile::getAlpha() const{
     return alpha;
 }
 
-void RFile::setDistance(float distance) {
-    this->distance = distance;
-}
-
-void RFile::setDest(const vec2f & dest) {
-    this->dest = dest;
-}
-
 void RFile::logic(float dt) {
     Pawn::logic(dt);
 
@@ -222,7 +214,7 @@ void RFile::touch(const vec3f & colour) {
 
         removing=false;
     }
-
+    showName();
     setHidden(false);
     dir->fileUpdated(true);
 }

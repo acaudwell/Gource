@@ -66,8 +66,8 @@ public:
 
     void setHidden(bool hidden);
 
-    void setDest(const vec2f & dest);
-    void setDistance(float distance);
+    void setDest(const vec2f & dest){ this->dest = dest; }
+    void setDistance(float distance){ this->distance = distance; }
 
     void logic(float dt);
     void draw(float dt);
