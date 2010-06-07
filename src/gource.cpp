@@ -1723,7 +1723,9 @@ void Gource::draw(float t, float dt) {
 
     trace_time = SDL_GetTicks();
 
-    mousetrace(frustum,dt);
+    if(!gGourceSettings.hide_mouse) {
+        mousetrace(frustum,dt);
+    }
 
     trace_time = SDL_GetTicks() - trace_time;
 
