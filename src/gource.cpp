@@ -1039,29 +1039,9 @@ void Gource::interactUsers() {
 
         RUser* a = ait->second;
 
-        std::set<RUser*> seen;
-        std::set<RUser*>::iterator seentest;
-
-        std::vector<QuadItem*> inbounds;
-
-        int found = userTree->getItemsInBounds(inbounds, a->quadItemBounds);
-
-        for(std::vector<QuadItem*>::iterator it = inbounds.begin(); it != inbounds.end(); it++) {
-
-            RUser* b = (RUser*) (*it);
-
-            if(b==a) continue;
-
-            if(b->node_count != 1) {
-                if((seentest = seen.find(b)) != seen.end()) {
-                    continue;
-                }
-                seen.insert(b);
-            }
-
-            a->applyForceUser(b);
-            gGourceUserInnerLoops++;
-        }
+        UserForceFunctor uff(a);
+        userTree->visitItemsInBounds(a->quadItemBounds, uff);
+        gGourceUserInnerLoops += uff.getLoopCount();
 
         a->applyForceToActions();
     }

@@ -556,7 +556,7 @@ bool RDirNode::empty() const{
     return (visible_count==0 && noDirs()) ? true : false;
 }
 
-void RDirNode::applyForces(const QuadTree & quadtree) {
+void RDirNode::applyForces(QuadTree & quadtree) {
 
     //child nodes
     for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
@@ -567,35 +567,9 @@ void RDirNode::applyForces(const QuadTree & quadtree) {
 
     if(parent == 0) return;
 
-    std::vector<QuadItem*> inbounds;
-    int found = quadtree.getItemsInBounds(inbounds, quadItemBounds);
-
-    std::set<RDirNode*> seen;
-    std::set<RDirNode*>::iterator seentest;
-
-    //apply forces with other that are inside the 'box' of this nodes radius
-    for(std::vector<QuadItem*>::iterator it = inbounds.begin(); it != inbounds.end(); it++) {
-
-        RDirNode* d = (RDirNode*) (*it);
-
-        if(d==this) continue;
-        if(d==parent) continue;
-        if(d->parent==this) continue;
-
-        if(d->node_count != 1) {
-            if((seentest = seen.find(d)) != seen.end()) {
-            continue;
-            }
-            seen.insert(d);
-        }
-
-        if(isParent(d)) continue;
-        if(d->isParent(this)) continue;
-
-        applyForceDir(d);
-
-        gGourceDirNodeInnerLoops++;
-    }
+    DirForceFunctor dff(this);
+    quadtree.visitItemsInBounds(quadItemBounds, dff);
+    gGourceDirNodeInnerLoops += dff.getLoopCount();
 
     //always call on parent no matter how far away
     applyForceDir(parent);

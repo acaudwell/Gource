@@ -88,4 +88,37 @@ public:
     void draw(float dt);
 };
 
+
+class UserForceFunctor : public VisitFunctor<QuadItem>{
+
+  private:
+    RUser * this_user;
+    std::set<RUser*> seen;
+    int loopCount;
+
+  public:
+    UserForceFunctor(RUser * user) : this_user(user), seen(), loopCount(0){}
+    int getLoopCount() const{ return loopCount; }
+    void operator()(QuadItem * user){
+
+       std::set<RUser*>::iterator seentest;
+
+       RUser * b = (RUser*) (user);
+
+       if(b==this_user) return;
+
+       if(b->node_count != 1) {
+           if((seentest = seen.find(b)) != seen.end())
+               return;
+
+           seen.insert(b);
+       }
+
+       this_user->applyForceUser(b);
+       loopCount++;
+
+    }
+
+};
+
 #endif

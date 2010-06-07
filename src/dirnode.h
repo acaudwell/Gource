@@ -173,7 +173,7 @@ public:
 
     void applyForceDir(RDirNode* dir);
 
-    void applyForces(const QuadTree &quadtree);
+    void applyForces(QuadTree &quadtree);
 
     void logic(float dt);
 
@@ -188,6 +188,42 @@ public:
     void drawNames(const FXFont & dirfont, const Frustum & frustum);
 
     void nodeCount() const;
+};
+
+class DirForceFunctor : public VisitFunctor<QuadItem>{
+  private:
+    RDirNode * this_dir;
+    std::set<RDirNode*> seen;
+    size_t loopCount;
+
+  public:
+    DirForceFunctor(RDirNode * dir) : this_dir(dir), seen(), loopCount(0){}
+    int getLoopCount() const{ return loopCount; }
+    void operator()(QuadItem * item){
+
+        std::set<RDirNode*>::iterator seentest;
+        RDirNode* d = (RDirNode*) (item);
+
+        if(d==this_dir) return;
+        if(d==this_dir->getParent()) return;
+        if(d->getParent() == this_dir) return;
+
+        if(d->node_count != 1) {
+            if((seentest = seen.find(d)) != seen.end())
+                return;
+
+            seen.insert(d);
+        }
+
+        if(this_dir->isParent(d)) return;
+        if(d->isParent(this_dir)) return;
+
+        this_dir->applyForceDir(d);
+
+        loopCount++;
+
+    }
+
 };
 
 extern int gGourceDirNodeInnerLoops;
