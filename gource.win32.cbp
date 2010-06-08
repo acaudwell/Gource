@@ -56,6 +56,8 @@
 		<Unit filename="src\core\fxfont.h" />
 		<Unit filename="src\core\logger.cpp" />
 		<Unit filename="src\core\logger.h" />
+		<Unit filename="src\core\mousecursor.cpp" />
+		<Unit filename="src\core\mousecursor.h" />
 		<Unit filename="src\core\pi.h" />
 		<Unit filename="src\core\plane.cpp" />
 		<Unit filename="src\core\plane.h" />
