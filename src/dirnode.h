@@ -69,12 +69,12 @@ class RDirNode : public QuadItem {
     float file_area;
     float dir_radius;
     float dir_radius_sqrt;
+    float parent_radius;
 
     int depth;
 
     int visible_count;
 
-    void calcArea();
     void calcRadius();
     void calcColour();
 
@@ -143,6 +143,7 @@ public:
 
     void updateQuadItemBounds();
 
+    float getParentRadius() const;
     float getRadius() const;
     float getRadiusSqrt() const;
 
@@ -165,7 +166,7 @@ public:
 
     void setParent(RDirNode* parent);
 
-    float distanceTo(RDirNode* node) const;
+    float distanceToParent() const;
 
     void addNode(RDirNode* node);
 

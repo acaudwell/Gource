@@ -406,6 +406,10 @@ bool RDirNode::addFile(RFile* f) {
     return true;
 }
 
+float RDirNode::getParentRadius() const{
+    return parent_radius;
+}
+
 float RDirNode::getRadius() const{
     return dir_radius;
 }
@@ -474,41 +478,36 @@ void RDirNode::calcColour() {
     this->col /= (float) fcount + 1.0;
 }
 
-void RDirNode::calcArea() {
-
-    float total_file_area = file_area * visible_count;
-
-    dir_area = total_file_area;
-
-    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
-        RDirNode* node = (*it);
-
-        dir_area += node->getArea();
-    }
-}
-
 float RDirNode::getArea() const{
     return dir_area;
 }
 
 void RDirNode::calcRadius() {
-    calcArea();
 
-    // was gGourceMinDirSize
+    float total_file_area = file_area * visible_count;
+
+    dir_area = total_file_area;
+
+    //float parent_circ        = 0.0;
+
+    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+        RDirNode* node = (*it);
+
+        dir_area += node->getArea();
+    //    parent_circ += node->getRadiusSqrt();
+    }
+
     this->dir_radius = std::max(1.0f, (float)sqrt(dir_area)) * gGourceDirPadding;
-    this->dir_radius_sqrt = sqrt(dir_radius);
+    //this->dir_radius_sqrt = sqrt(dir_radius); //dir_radius_sqrt is not used
+
+//    this->parent_radius = std::max(1.0, parent_circ / PI);
+    this->parent_radius = std::max(1.0, sqrt(total_file_area) * gGourceDirPadding);
 }
 
-float RDirNode::distanceTo(RDirNode* node) const{
+float RDirNode::distanceToParent() const{
 
-    float posd        = (node->getPos() - pos).length();
-    float myradius    = getRadius();
-
-    float your_radius = std::max(1.0, sqrt((node->visibleFileCount() * file_area)) * gGourceDirPadding);
-
-    float sumradius = myradius + your_radius;
-
-    float distance = posd - sumradius;
+    float posd     = (parent->getPos() - pos).length();
+    float distance = posd - (dir_radius + parent->getParentRadius());
 
     return distance;
 }
@@ -575,7 +574,7 @@ void RDirNode::applyForces(QuadTree & quadtree) {
     applyForceDir(parent);
 
     //pull towards parent
-    float parent_dist = distanceTo(parent);
+    float parent_dist = distanceToParent();
 
     //  * dirs should attract to sit on the radius of the parent dir ie:
     //    should attract to distance_to_parent * normal_to_parent
