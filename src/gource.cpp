@@ -235,29 +235,30 @@ void Gource::init() {
 
 void Gource::update(float t, float dt) {
 
-    dt = std::min(dt, max_tick_rate);
+    float scaled_dt = std::min(dt, max_tick_rate);
 
     //if exporting a video use a fixed tick rate rather than time based
     if(frameExporter != 0) {
-        dt = max_tick_rate;
+        scaled_dt = max_tick_rate;
     }
 
-    dt *= time_scale;
+    //apply time scaling
+    scaled_dt *= time_scale;
 
     //have to manage runtime internally as we're messing with dt
-    if(!paused) runtime += dt;
+    if(!paused) runtime += scaled_dt;
 
     if(gGourceSettings.stop_at_time > 0.0 && runtime >= gGourceSettings.stop_at_time) appFinished = true;
 
     logic_time = SDL_GetTicks();
 
-    logic(runtime, dt);
+    logic(runtime, scaled_dt);
 
     logic_time = SDL_GetTicks() - logic_time;
 
     draw_time = SDL_GetTicks();
 
-    draw(runtime, dt);
+    draw(runtime, scaled_dt);
 
     //extract frames based on frameskip setting if frameExporter defined
     if(frameExporter != 0) {
@@ -266,7 +267,11 @@ void Gource::update(float t, float dt) {
         }
     }
 
-    cursor.draw(mousepos);
+    if(!gGourceSettings.hide_mouse) {
+        //note: cursor uses real dt
+        cursor.logic(dt);
+        cursor.draw();
+    }
 
     framecount++;
 }
@@ -316,8 +321,14 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
 
         if(rightmouse) {
             manual_rotate = true;
-            rotate_angle = std::min(1.0f, (float) fabs(mag.x) / 10.0f) * 5.0f * DEGREES_TO_RADIANS;
-            if(mag.x < 0.0) rotate_angle = -rotate_angle;
+            if(fabs(mag.x) > fabs(mag.y)) {
+                rotate_angle = std::min(1.0f, (float) fabs(mag.x) / 10.0f) * 5.0f * DEGREES_TO_RADIANS;
+                if(mag.x < 0.0f) rotate_angle = -rotate_angle;
+            } else {
+                rotate_angle = std::min(1.0f, (float) fabs(mag.y) / 10.0f) * 5.0f * DEGREES_TO_RADIANS;
+                if(mag.y < 0.0f) rotate_angle = -rotate_angle;
+            }
+
             return;
         }
 
@@ -326,8 +337,12 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
         return;
     }
 
+    if(grab_mouse) return;
+
     mousepos = vec2f(e->x, e->y);
     mousemoved=true;
+
+    cursor.updatePos(mousepos);
 
     float pos;
 
@@ -363,6 +378,9 @@ void Gource::zoom(bool zoomin) {
 void Gource::mouseClick(SDL_MouseButtonEvent *e) {
     if(commitlog==0) return;
     if(gGourceSettings.hide_mouse) return;
+
+    //mouse click should stop the cursor being idle
+    cursor.updatePos(mousepos);
 
     if(e->type == SDL_MOUSEBUTTONUP) {
 
@@ -605,7 +623,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             //toggle mouse visiblity unless mouse clicked/pressed/dragged
             if(!(mousedragged || mouseclicked || cursor.leftButtonPressed() )) {
 
-                if(cursor.isVisible()) {
+                if(!cursor.isHidden()) {
                     cursor.showCursor(false);
                     gGourceSettings.hide_mouse = true;
                 } else {
@@ -1717,7 +1735,7 @@ void Gource::draw(float t, float dt) {
 
     trace_time = SDL_GetTicks();
 
-    if(!gGourceSettings.hide_mouse) {
+    if(!gGourceSettings.hide_mouse && cursor.isVisible()) {
         mousetrace(frustum,dt);
     }
 
