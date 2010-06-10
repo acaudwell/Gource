@@ -65,7 +65,7 @@ protected:
     bool selected;
 public:
     Pawn(std::string name, vec2f pos, int tagid);
-    vec2f getPos();
+    const vec2f & getPos() const { return pos; }
     void setPos(vec2f pos);
 
     void updateQuadItemBounds();

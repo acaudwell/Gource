@@ -44,10 +44,6 @@ float Pawn::getSize() {
     return size;
 }
 
-vec2f Pawn::getPos() {
-    return pos;
-}
-
 void Pawn::setPos(vec2f pos) {
     this->pos = pos;
 }
@@ -199,8 +195,6 @@ void Pawn::drawShadow(float dt) {
 
 void Pawn::draw(float dt) {
     if(hidden) return;
-
-    glLoadName(tagid);
 
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
