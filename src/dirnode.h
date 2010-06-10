@@ -208,6 +208,8 @@ class DirForceFunctor : public VisitFunctor<QuadItem>{
         if(d==this_dir) return;
         if(d==this_dir->getParent()) return;
         if(d->getParent() == this_dir) return;
+        if(this_dir->isParent(d)) return;
+        if(d->isParent(this_dir)) return;
 
         if(d->node_count != 1) {
             if((seentest = seen.find(d)) != seen.end())
@@ -215,9 +217,6 @@ class DirForceFunctor : public VisitFunctor<QuadItem>{
 
             seen.insert(d);
         }
-
-        if(this_dir->isParent(d)) return;
-        if(d->isParent(this_dir)) return;
 
         this_dir->applyForceDir(d);
 
