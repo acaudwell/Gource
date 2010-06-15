@@ -41,33 +41,37 @@ CPPFLAGS="$CPPFLAGS $SDL_CFLAGS"
 LIBS="$LIBS $SDL_LIBS"
 
 #Freetype2
-AC_CHECK_FT2([9.0.3],[],[AC_MSG_ERROR([FreeType2 is required by FTGL. Please see README])])
+AC_CHECK_FT2([9.0.3],[],[AC_MSG_ERROR([FreeType2 is required by FTGL. Please see INSTALL])])
 CXXFLAGS="$CXXFLAGS $FT2_CFLAGS"
 CPPFLAGS="$CPPFLAGS $FT2_CFLAGS"
 
 #FTGL
-PKG_CHECK_MODULES(FTGL, ftgl >= 2.1.3, [], AC_MSG_ERROR(ftgl 2.1.3 or greater is required. Please see README))
+PKG_CHECK_MODULES(FTGL, ftgl >= 2.1.3, [], AC_MSG_ERROR(FTGL 2.1.3 or greater is required. Please see INSTALL))
 CXXFLAGS="$CXXFLAGS $FTGL_CFLAGS"
 CPPFLAGS="$CPPFLAGS $FTGL_CFLAGS"
 LIBS="$LIBS $FTGL_LIBS"
 
 #PNG library
-AC_CHECK_LIB(png, png_read_info, , AC_MSG_ERROR([PNG library required. Please see README]))
+AC_CHECK_LIB(png, png_read_info, , AC_MSG_ERROR([PNG library required. Please see INSTALL]))
 
 #JPEG library
-AC_CHECK_LIB(jpeg, jpeg_read_header, , AC_MSG_ERROR([JPEG library required. Please see README]))
+AC_CHECK_LIB(jpeg, jpeg_read_header, , AC_MSG_ERROR([JPEG library required. Please see INSTALL]))
 
 #SDL_image library with PNG support
-AC_CHECK_LIB(SDL_image, IMG_LoadPNG_RW, LIBS="$LIBS -lSDL_image", AC_MSG_ERROR([SDL_image required. Please see README]))
+AC_CHECK_LIB(SDL_image, IMG_LoadPNG_RW, LIBS="$LIBS -lSDL_image", AC_MSG_ERROR([SDL_image required. Please see INSTALL]))
 
 #PCRE
-AC_CHECK_LIB([pcre], [pcre_compile],, AC_MSG_ERROR(PCRE is required. Please see README))
+AC_CHECK_LIB([pcre], [pcre_compile],, AC_MSG_ERROR(PCRE is required. Please see INSTALL))
+
+#GLEW
+AC_CHECK_LIB(GLEW, glewInit, LIBS="$LIBS -lGLEW", AC_MSG_ERROR([GLEW required. Please see INSTALL]))
 
 #Check for required headers
-AC_CHECK_HEADER([SDL.h],, AC_MSG_ERROR(SDL.h is required. Please see README))
-AC_CHECK_HEADER([SDL_image.h],, AC_MSG_ERROR(SDL_image.h is required. Please see README))
-AC_CHECK_HEADER([ftgl.h],, AC_MSG_ERROR(ftgl.h is required. Please see README))
-AC_CHECK_HEADER([pcre.h],, AC_MSG_ERROR(pcre.h is required. Please see README))
+AC_CHECK_HEADER([SDL.h],, AC_MSG_ERROR(SDL.h is required. Please see INSTALL))
+AC_CHECK_HEADER([SDL_image.h],, AC_MSG_ERROR(SDL_image.h is required. Please see INSTALL))
+AC_CHECK_HEADER([ftgl.h],, AC_MSG_ERROR(ftgl.h is required. Please see INSTALL))
+AC_CHECK_HEADER([pcre.h],, AC_MSG_ERROR(pcre.h is required. Please see INSTALL))
+AC_CHECK_HEADER([GL/glew.h],, AC_MSG_ERROR(glew.h is required. Please see INSTALL))
 
 #see if ttf-font-dir option is enabled
 AC_ARG_ENABLE(ttf-font-dir,[AS_HELP_STRING([--enable-ttf-font-dir=DIR],[directory containing GNU FreeFont TTF fonts])],[gourcefontdir="$enableval"],[gourcefontdir=""])
