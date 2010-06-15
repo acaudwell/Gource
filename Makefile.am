@@ -11,7 +11,6 @@ gource_SOURCES = \
 	src/core/camera.cpp src/core/camera.h \
 	src/core/conffile.cpp src/core/conffile.h \
 	src/core/display.cpp src/core/display.h \
-	src/core/extensions.cpp src/core/extensions.h \
 	src/core/frustum.cpp src/core/frustum.h \
 	src/core/fxfont.cpp src/core/fxfont.h \
 	src/core/logger.cpp src/core/logger.h \
