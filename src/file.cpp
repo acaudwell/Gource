@@ -117,12 +117,12 @@ void RFile::setSelected(bool selected) {
 
     //pre-compile name display list
     glNewList(namelist, GL_COMPILE);
-       font.print(0.0f, 0.0f, name.c_str());
+       font.draw(0.0f, 0.0f, name);
     glEndList();
 }
 
-vec3f RFile::getNameColour() const{
-    return selected ? vec3f(1.0, 1.0, 0.3) : namecol;
+const vec3f& RFile::getNameColour() const{
+    return selected ? selectedcol : namecol;
 }
 
 const vec3f & RFile::getFileColour() const{
@@ -227,52 +227,34 @@ void RFile::setHidden(bool hidden) {
     Pawn::setHidden(hidden);
 }
 
-void RFile::drawNameText(float alpha) {
+void RFile::drawNameText(float alpha) const {
 
-    vec3f nameCol = getNameColour();
+    if(!selected && alpha <= 0.01) return;
 
-    if(gGourceSettings.hide_filenames) alpha = 0.0;
+    vec3f nameCol    = getNameColour();
+    float name_alpha = selected ? 1.0 : alpha;
 
-    if(selected || alpha > 0.01) {
+    vec3f drawpos = screenpos;
 
-        float name_alpha = selected ? 1.0 : alpha;
+    drawpos.x += 10.0;
+    drawpos.y -= 10.0;
 
-        vec3f drawpos = vec3f(pos.x, pos.y, 0.0);
+    glPushMatrix();
 
-        vec3f screenpos = display.project(drawpos);
+        glTranslatef(drawpos.x, drawpos.y, 0.0);
 
-        screenpos.x += 10.0;
-        screenpos.y -= 10.0;
-
-        glMatrixMode(GL_PROJECTION);
-            glPushMatrix();
-            glLoadIdentity();
-                glOrtho(0, display.width, display.height, 0, -1.0, 1.0);
-
-         glMatrixMode(GL_MODELVIEW);
-             glPushMatrix();
-                glLoadIdentity();
-
-            glTranslatef(screenpos.x, screenpos.y, 0.0);
-
-            //hard coded drop shadow
-            glPushMatrix();
-                glTranslatef(1.0, 1.0, 0.0);
-                glColor4f(0.0, 0.0, 0.0, name_alpha * 0.7f);
-                glCallList(namelist);
-            glPopMatrix();
-
-            //draw name
-            glColor4f(nameCol.x, nameCol.y, nameCol.z, name_alpha);
+        //hard coded drop shadow
+        glPushMatrix();
+            glTranslatef(1.0, 1.0, 0.0);
+            glColor4f(0.0, 0.0, 0.0, name_alpha * 0.7f);
             glCallList(namelist);
+        glPopMatrix();
 
-         glMatrixMode(GL_PROJECTION);
-            glPopMatrix();
+        //draw name
+        glColor4f(nameCol.x, nameCol.y, nameCol.z, name_alpha);
+        glCallList(namelist);
 
-         glMatrixMode(GL_MODELVIEW);
-            glPopMatrix();
-
-    }
+    glPopMatrix();
 }
 
 void RFile::draw(float dt) {

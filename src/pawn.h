@@ -30,6 +30,8 @@ protected:
     vec2f pos;
     vec2f shadowOffset;
 
+    vec3f screenpos;
+
     std::string name;
     float namewidth;
     float size;
@@ -42,6 +44,7 @@ protected:
     float nametime;
     float name_interval;
     vec3f namecol;
+    vec3f selectedcol;
 
     bool shadow;
 
@@ -57,16 +60,18 @@ protected:
 
     bool mouseover;
 
-    virtual bool nameVisible();
+    virtual bool nameVisible() const;
 
-    virtual void drawNameText(float alpha);
-    virtual vec3f getNameColour();
+    virtual void drawNameText(float alpha) const;
+    virtual const vec3f& getNameColour() const;
 protected:
     bool selected;
 public:
     Pawn(std::string name, vec2f pos, int tagid);
     const vec2f & getPos() const { return pos; }
     void setPos(vec2f pos);
+
+    void calcScreenPos(const vec2f& offset);
 
     void updateQuadItemBounds();
 
@@ -81,7 +86,7 @@ public:
     virtual void setSelected(bool selected);
 
     void setHidden(bool hidden){ this->hidden = hidden; }
-    bool isHidden(){ return hidden; }
+    bool isHidden() const { return hidden; }
 
     virtual float getAlpha() const{ return std::min(elapsed/fadetime, 1.0f); }
     virtual vec3f getColour() const { return vec3f(1.0, 1.0, 1.0); }
@@ -93,7 +98,7 @@ public:
     void drawShadow(float dt);
     void drawSimple(float dt);
 
-    void drawName();
+    void drawName() const;
 };
 
 extern float gGourceShadowStrength;

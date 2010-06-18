@@ -51,11 +51,11 @@ class RUser : public Pawn {
 
     bool highlighted;
 
-    bool nameVisible();
+    bool nameVisible() const;
 
     void updateFont();
-    vec3f getNameColour();
-    void drawNameText(float alpha);
+    const vec3f& getNameColour() const;
+    void drawNameText(float alpha) const;
 public:
     RUser(std::string name, vec2f pos, int tagid);
 

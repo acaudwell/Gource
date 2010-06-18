@@ -847,44 +847,49 @@ void RDirNode::drawDirName(const FXFont& dirfont) const{
 
     glColor4f(1.0, 1.0, 1.0, alpha);
 
-    vec3f screenpos = display.project(vec3f(0.0, 0.0, 0.0));
+    dirfont.draw(screenpos.x, screenpos.y, path_token);
+}
 
-    glMatrixMode(GL_PROJECTION);
-        glPushMatrix();
-        glLoadIdentity();
-            glOrtho(0, display.width, display.height, 0, -1.0, 1.0);
 
-        glMatrixMode(GL_MODELVIEW);
-            glPushMatrix();
-            glLoadIdentity();
+// project positions of files and directories on the display in 2d
+void RDirNode::calcScreenPos() {
 
-        dirfont.draw(screenpos.x, screenpos.y, path_token);
+    if(!gGourceSettings.hide_dirnames) {
+        screenpos = display.project(vec3f(pos.x, pos.y, 0.0));
+    }
 
-        glMatrixMode(GL_PROJECTION);
-        glPopMatrix();
+    if(!gGourceSettings.hide_filenames) {
 
-        glMatrixMode(GL_MODELVIEW);
-        glPopMatrix();
+        //first pass - calculate positions of names
+        for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
+                RFile* f = *it;
+                f->calcScreenPos(pos);
+        }
+
+    }
+
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
+        RDirNode* node = (*it);
+        node->calcScreenPos();
+    }
 }
 
 void RDirNode::drawNames(const FXFont & dirfont, const Frustum & frustum){
 
-    glPushMatrix();
-    glTranslatef(pos.x, pos.y, 0.0);
-
-    if(isVisible()) {
+    if(!gGourceSettings.hide_dirnames && isVisible()) {
         drawDirName(dirfont);
     }
 
-    if(!(gGourceSettings.hide_filenames || gGourceSettings.hide_files) && frustum.boundsInFrustum(quadItemBounds)) {
-        for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
-            RFile* f = *it;
-            f->drawName();
+    if(!gGourceSettings.hide_filenames) {
+
+        if(!(gGourceSettings.hide_filenames || gGourceSettings.hide_files) && frustum.boundsInFrustum(quadItemBounds)) {
+            for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
+                RFile* f = *it;
+                f->drawName();
+            }
         }
+
     }
-
-    glPopMatrix();
-
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);

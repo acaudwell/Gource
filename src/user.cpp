@@ -329,8 +329,8 @@ void RUser::setSelected(bool selected) {
     updateFont();
 }
 
-vec3f RUser::getNameColour() {
-    return (selected||highlighted) ? vec3f(1.0, 1.0, 0.3) : namecol;
+const vec3f& RUser::getNameColour() const {
+    return (selected||highlighted) ? selectedcol : namecol;
 }
 
 vec3f RUser::getColour() const{
@@ -365,11 +365,11 @@ bool RUser::isInactive() {
     return isIdle() && (elapsed - last_action) > 10.0;
 }
 
-bool RUser::nameVisible() {
+bool RUser::nameVisible() const {
     return (Pawn::nameVisible() || highlighted) ? true : false;
 }
 
-void RUser::drawNameText(float alpha) {
+void RUser::drawNameText(float alpha) const {
     if(gGourceSettings.hide_users) return;
 
     float user_alpha = getAlpha();
@@ -388,24 +388,11 @@ void RUser::drawNameText(float alpha) {
 
         glColor4f(nameCol.x, nameCol.y, nameCol.z, (selected||highlighted) ? user_alpha : alpha);
 
-        glMatrixMode(GL_PROJECTION);
-            glPushMatrix();
-            glLoadIdentity();
-                glOrtho(0, display.width, display.height, 0, -1.0, 1.0);
+        display.push2D();
 
-         glMatrixMode(GL_MODELVIEW);
-             glPushMatrix();
-                glLoadIdentity();
+        font.draw(screenpos.x, screenpos.y, name); // above user
 
-         font.draw(screenpos.x, screenpos.y, name); // above player
-
-         glMatrixMode(GL_PROJECTION);
-            glPopMatrix();
-
-         glMatrixMode(GL_MODELVIEW);
-            glPopMatrix();
-
-        //font.draw(pos.x - (namewidth/(float)2.0), pos.y - (float)size*1.4, name.c_str()); // above player
+        display.pop2D();
     }
 }
 

@@ -132,6 +132,8 @@ class Gource : public SDLApp {
     Uint32 draw_time;
     Uint32 logic_time;
     Uint32 trace_time;
+    Uint32 name_calc_time;
+    Uint32 name_draw_time;
 
     bool track_users;
 

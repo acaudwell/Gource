@@ -38,6 +38,7 @@ Pawn::Pawn(std::string name, vec2f pos, int tagid) {
     this->nametime = 5.0;
     this->name_interval = 0.0;
     this->namecol = vec3f(1.0, 1.0, 1.0);
+    this->selectedcol = vec3f(1.0, 1.0, 0.3);
 }
 
 float Pawn::getSize() {
@@ -90,11 +91,15 @@ std::string Pawn::getName() {
     return name;
 }
 
-vec3f Pawn::getNameColour() {
+const vec3f& Pawn::getNameColour() const {
     return namecol;
 }
 
-void Pawn::drawNameText(float alpha) {
+void Pawn::calcScreenPos(const vec2f& offset) {
+    screenpos = display.project(vec3f(pos.x+offset.x, pos.y+offset.y, 0.0f));
+}
+
+void Pawn::drawNameText(float alpha) const {
 
     if(alpha>0.0) {
         vec3f nameCol = getNameColour();
@@ -110,11 +115,11 @@ void Pawn::drawNameText(float alpha) {
 }
 
 
-bool Pawn::nameVisible() {
+bool Pawn::nameVisible() const {
     return (!selected && name_interval < 0.0 || isHidden()) ? false : true;
 }
 
-void Pawn::drawName() {
+void Pawn::drawName() const {
     if(!nameVisible()) return;
 
     float done = nametime - name_interval;

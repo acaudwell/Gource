@@ -65,7 +65,6 @@ class RDirNode : public QuadItem {
     float since_last_file_change;
     float since_last_node_change;
 
-
     float file_area;
     float dir_radius;
     float dir_radius_sqrt;
@@ -75,12 +74,13 @@ class RDirNode : public QuadItem {
 
     int visible_count;
 
+    vec3f screenpos;
+    vec2f node_normal;
+
     void calcRadius();
     void calcColour();
 
     std::string commonPathPrefix(const std::string& str) const;
-
-    vec2f node_normal;
 
     void changePath(const std::string & abspath);
 
@@ -173,7 +173,6 @@ public:
     void debug(int indent=0) const;
 
     void applyForceDir(RDirNode* dir);
-
     void applyForces(QuadTree &quadtree);
 
     void logic(float dt);
@@ -186,6 +185,9 @@ public:
     void drawShadows(const Frustum & frustum, float dt) const;
     void drawFiles(const Frustum & frustum, float dt) const;
     void drawSimple(const Frustum & frustum, float dt) const;
+
+    void calcScreenPos();
+
     void drawNames(const FXFont & dirfont, const Frustum & frustum);
 
     void nodeCount() const;

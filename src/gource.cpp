@@ -1763,7 +1763,24 @@ void Gource::draw(float t, float dt) {
     //draw bloom
     drawBloom(frustum, dt);
 
+    name_calc_time = SDL_GetTicks();
+
+    root->calcScreenPos();
+
+    name_calc_time = SDL_GetTicks() - name_calc_time;
+
+
+    name_draw_time = SDL_GetTicks();
+
+    //switch to 2D, preserve current state
+    display.push2D();
+
     root->drawNames(font,frustum);
+
+    //switch back
+    display.pop2D();
+
+    name_draw_time = SDL_GetTicks() - name_draw_time;
 
     if(!(gGourceSettings.hide_usernames || gGourceSettings.hide_users)) {
         for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
@@ -1775,12 +1792,9 @@ void Gource::draw(float t, float dt) {
     if(selectedUser !=0) selectedUser->drawName();
 
     if(selectedFile !=0) {
-        vec2f dirpos = selectedFile->getDir()->getPos();
-
-        glPushMatrix();
-            glTranslatef(dirpos.x, dirpos.y, 0.0);
+        display.push2D();
             selectedFile->drawName();
-        glPopMatrix();
+        display.pop2D();
     }
 
     if(debug) {
@@ -1907,7 +1921,7 @@ void Gource::draw(float t, float dt) {
         font.print(1,220,"Draw Tree: %u ms", draw_tree_time);
         font.print(1,240,"Mouse Trace: %u ms", trace_time);
         font.print(1,260,"Logic Time: %u ms", logic_time);
-        font.print(1,280,"Draw Time: %u ms", SDL_GetTicks() - draw_time);
+        font.print(1,280,"Draw Time: %u ms (Names: Calc Time = %u ms, Draw Time = %u ms)", SDL_GetTicks() - draw_time, name_calc_time, name_draw_time);
         font.print(1,300,"File Inner Loops: %d", gGourceFileInnerLoops);
         font.print(1,320,"User Inner Loops: %d", gGourceUserInnerLoops);
         font.print(1,340,"Dir Inner Loops: %d (QTree items = %d, nodes = %d)", gGourceDirNodeInnerLoops,
