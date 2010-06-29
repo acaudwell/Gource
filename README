@@ -177,10 +177,20 @@ options:
             Disable automatic camera rotation.
 
     --hide DISPLAY_ELEMENT
-            Hide display element (bloom,date,dirnames,files,filenames,mouse,progress,tree,
-            users,usernames).
+            Hide one or more display elements from the list below:
 
-            Separate multiple elements with commas.
+            bloom     - bloom effect
+            date      - current date
+            dirnames  - names of directories
+            files     - file icons
+            filenames - names of files
+            mouse     - mouse cursor
+            progress  - progress bar widget
+            tree      - animated tree structure
+            users     - user avatars
+            usernames - names of users
+
+            Separate multiple elements with commas (eg 'mouse,progress')
 
     -o, --output-ppm-stream FILE
             Output a PPM image stream to a file ('-' for STDOUT).

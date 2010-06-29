@@ -149,9 +149,21 @@ Camera mode (overview,track).
 Disable automatic camera rotation.
 .TP
 \fB\-\-hide DISPLAY_ELEMENT\fR
-Hide display element (bloom,date,dirnames,files,filenames,mouse,progress,tree,users,usernames).
+Hide one or more display elements from the list below:
 
-Separate multiple elements with commas.
+    bloom     \- bloom effect
+    date      \- current date
+    dirnames  \- names of directories
+    files     \- file icons
+    filenames \- names of files
+    mouse     \- mouse cursor
+    progress  \- progress bar widget
+    tree      \- animated tree structure
+    users     \- user avatars
+    usernames \- names of users
+
+Separate multiple elements with commas (eg 'mouse,progress')
+
 .TP
 \fB\-o, \-\-output\-ppm\-stream FILE\fR
 Output a PPM image stream to a file ('\-' for STDOUT).
