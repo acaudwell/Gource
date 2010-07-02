@@ -34,6 +34,8 @@ class RFile : public Pawn {
     RDirNode* dir;
 
     bool removing;
+    bool expiring;
+
     float last_action;
 
     float radius;
@@ -53,6 +55,9 @@ public:
     RFile(const std::string & name, const vec3f & colour, const vec2f & pos, int tagid);
     ~RFile();
 
+    bool isExpiring() const { return expiring; }
+    bool isRemoving() const { return removing; }
+    
     const vec3f & getFileColour() const;
     vec3f getColour() const;
 

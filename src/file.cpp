@@ -35,6 +35,7 @@ RFile::RFile(const std::string & name, const vec3f & colour, const vec2f & pos, 
     file_colour = colour;
 
     last_action = 0.0;
+    expiring=false;
     removing=false;
 
     shadow = true;
@@ -62,6 +63,7 @@ RFile::~RFile() {
 
 void RFile::remove() {
     last_action = elapsed - gGourceSettings.file_idle_time;
+    removing = true;
 }
 
 void RFile::setDir(RDirNode* dir) {
@@ -87,10 +89,6 @@ int RFile::getPathHash() const{
 void RFile::setPath() {
 
     size_t pos = name.rfind('/');
-
-    if(pos == std::string::npos) {
-        pos = name.rfind('\\');
-    }
 
     if(pos != std::string::npos) {
         path = name.substr(0,pos+1);
@@ -145,7 +143,7 @@ float RFile::getAlpha() const{
     float alpha = Pawn::getAlpha();
 
     //user fades out if not doing anything
-    if(gGourceSettings.file_idle_time > 0.0f && elapsed - last_action > gGourceSettings.file_idle_time) {
+    if(elapsed - last_action > gGourceSettings.file_idle_time) {
         alpha = 1.0 - std::min(elapsed - last_action - gGourceSettings.file_idle_time, 1.0f);
     }
 
@@ -181,8 +179,8 @@ void RFile::logic(float dt) {
     accel = vec2f(0.0f, 0.0f);
 
     // has completely faded out
-    if(!removing && gGourceSettings.file_idle_time > 0.0f && elapsed - last_action >= gGourceSettings.file_idle_time + 1.0) {
-        removing=true;
+    if(!expiring && elapsed - last_action >= gGourceSettings.file_idle_time + 1.0) {
+        expiring=true;
 
         bool found = false;
 
@@ -194,17 +192,25 @@ void RFile::logic(float dt) {
 
         }
 
-        if(!found) gGourceRemovedFiles.push_back(this);
+        if(!found) {
+            gGourceRemovedFiles.push_back(this);
+            //fprintf(stderr, "expiring %s\n", fullpath.c_str());
+        }
     }
 
-    if(isHidden()) elapsed = 0.0;
+    if(isHidden() && !removing) elapsed = 0.0;
 }
 
 void RFile::touch(const vec3f & colour) {
+    if(removing) return;
+
+    //fprintf(stderr, "touch %s\n", fullpath.c_str());
+
     last_action = elapsed;
     touch_colour = colour;
 
-    if(removing) {
+    //un expire file
+    if(expiring) {
         for(std::vector<RFile*>::iterator it = gGourceRemovedFiles.begin(); it != gGourceRemovedFiles.end(); it++) {
             if((*it) == this) {
                 gGourceRemovedFiles.erase(it);
@@ -212,8 +218,9 @@ void RFile::touch(const vec3f & colour) {
             }
         }
 
-        removing=false;
+        expiring=false;
     }
+
     showName();
     setHidden(false);
     dir->fileUpdated(true);
