@@ -61,9 +61,9 @@ RFile::~RFile() {
     glDeleteLists(namelist, 1);
 }
 
-void RFile::remove() {
+void RFile::remove(bool force) {
     last_action = elapsed - gGourceSettings.file_idle_time;
-    removing = true;
+    if(force) removing = true;
 }
 
 void RFile::setDir(RDirNode* dir) {

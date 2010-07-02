@@ -77,7 +77,7 @@ public:
     void logic(float dt);
     void draw(float dt);
 
-    void remove();
+    void remove(bool force=false);
 
     vec2f getAbsolutePos() const;
 
