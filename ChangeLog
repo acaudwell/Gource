@@ -4,6 +4,7 @@
  * Automatic camera rotation for better use of screen space.
  * Support international keyboards (Peter Kjellerstedt).
  * C++ efficiency improvements (Jacob Metcalfe).
+ * Fixed crash when reading from STDIN.
  * Added ini style config file support (see --load/save-config).
  * Added support for multiple repositories.
  * Added screenshot button (F12). Screenshots respect the alpha channel.

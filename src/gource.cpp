@@ -866,8 +866,15 @@ void Gource::readLog() {
 
         RCommit commit;
 
+        if(!commitlog->nextCommit(commit)) {
+            if(!commitlog->isSeekable()) {
+                break;
+            }
+            continue;
+        }
+
         //ignore blank commits
-        if(commitlog->nextCommit(commit) && commit.files.size() > 0) {
+        if(commit.files.size() > 0) {
             commitqueue.push_back(commit);
         }
     }
