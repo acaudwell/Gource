@@ -106,6 +106,7 @@ public:
     float user_friction;
     float user_scale;
 
+    bool highlight_dirs;
     bool highlight_all_users;
     std::vector<std::string> highlight_users;
     std::vector<std::string> follow_users;

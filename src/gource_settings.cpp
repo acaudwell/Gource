@@ -69,7 +69,8 @@ void GourceSettings::help(bool extended_help) {
 
     printf("  --follow-user USER       Camera will automatically follow this user\n");
     printf("  --highlight-user USER    Highlight the names of a particular user\n");
-    printf("  --highlight-all-users    Highlight the names of all users\n\n");
+    printf("  --highlight-users        Highlight the names of all users\n\n");
+    printf("  --highlight-dirs         Highlight the names of all directories\n\n");
 
     printf("  --load-config CONF_FILE  Load a config file\n");
     printf("  --save-config CONF_FILE  Save a config file with the current options\n\n");
@@ -149,6 +150,7 @@ GourceSettings::GourceSettings() {
     arg_aliases["background"] = "background-colour";
     arg_aliases["disable-bloom"]    = "hide-bloom";
     arg_aliases["disable-progress"] = "hide-progress";
+    arg_types["highlight-users"] = "highlight-all-users";
 
     //command line only options
     conf_sections["help"]            = "command-line";
@@ -181,6 +183,7 @@ GourceSettings::GourceSettings() {
     arg_types["hide-bloom"]      = "bool";
     arg_types["hide-mouse"]      = "bool";
     arg_types["highlight-all-users"] = "bool";
+    arg_types["highlight-dirs"] = "bool";
 
     arg_types["disable-auto-rotate"] = "bool";
     arg_types["disable-auto-skip"]   = "bool";
@@ -304,6 +307,7 @@ void GourceSettings::setGourceDefaults() {
     follow_users.clear();
     highlight_users.clear();
     highlight_all_users = false;
+    highlight_dirs = false;
 
     //delete file filters
     for(std::vector<Regex*>::iterator it = file_filters.begin(); it != file_filters.end(); it++) {
@@ -719,6 +723,9 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(file_idle_time<0.0f || file_idle_time == 0.0f && file_idle_str[0] != '0' ) {
             conffile.invalidValueException(entry);
         }
+        if(file_idle_time==0.0f) {
+            file_idle_time = 86400.0f;
+        }
     }
 
     if((entry = gource_settings->getEntry("user-idle-time")) != 0) {
@@ -846,6 +853,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if(gource_settings->getBool("highlight-all-users")) {
         highlight_all_users = true;
+    }
+
+    if(gource_settings->getBool("highlight-dirs")) {
+        highlight_dirs = true;
     }
 
     if((entry = gource_settings->getEntry("camera-mode")) != 0) {

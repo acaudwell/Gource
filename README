@@ -127,8 +127,11 @@ options:
     --highlight-user USER
             Highlight the names of a particular user.
 
-    --highlight-all-users
+    --highlight-users
             Highlight the names of all users.
+
+    --highlight-dirs
+            Highlight the names of all directories.
 
     --file-filter REGEX
             Filter out any files matching a specified regular expression.
