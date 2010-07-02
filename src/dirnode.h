@@ -101,6 +101,8 @@ public:
     RDirNode(RDirNode* parent, const std::string & abspath);
     ~RDirNode();
 
+    void printFiles();
+    
     bool empty() const;
 
     bool isAnchor(RDirNode* node) const;

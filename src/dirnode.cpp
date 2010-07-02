@@ -249,10 +249,13 @@ bool RDirNode::removeFile(RFile* f) {
         bool removed = node->removeFile(f);
 
         if(removed) {
+            //fprintf(stderr, "%s file removed from a child. child file count=%d, dir count =%d\n", getPath().c_str(), node->fileCount(), node->dirCount());
+            //node->printFiles();
+
             //node is now empty, reap!
             if(node->noFiles() && node->noDirs()) {
                 children.erase(it);
-                debugLog("deleting node %s...\n", node->getPath().c_str());
+                //fprintf(stderr, "deleting node %s from %s\n", node->getPath().c_str(), getPath().c_str());
                 delete node;
                 nodeUpdated(false);
             }
@@ -263,6 +266,15 @@ bool RDirNode::removeFile(RFile* f) {
 
     return false;
 }
+
+
+void RDirNode::printFiles() {
+    for(std::list<RFile*>::iterator it = files.begin(); it != files.end(); it++) {
+        RFile* file = (*it);
+        fprintf(stderr, "%s: %s %s%s%s\n", getPath().c_str(), file->fullpath.c_str() , file->isExpiring() ? "expiring " : "", file->isRemoving() ? "removing " : "", file->isHidden() ? "hidden " : "");
+    }
+}
+
 
 void RDirNode::addVisible() {
     visible_count++;
@@ -345,6 +357,18 @@ bool RDirNode::addFile(RFile* f) {
         fileUpdated(false);
 
         return true;
+    }
+
+    //do we have a file in this directory thats fullpath is a prefix of this file, if so
+    //that file is actually a directory - the file should be removed, and a directory with that path added
+    for(std::list<RFile*>::const_iterator it = files.begin(); it != files.end(); it++) {
+        RFile* file = (*it);
+
+        if(f->path.find(file->fullpath) == 0) {
+            //fprintf(stderr, "removing %s as is actually the directory of %s\n", file->fullpath.c_str(), f->fullpath.c_str());
+            file->remove();
+            break;
+        }
     }
 
     //does this belong to one of the children ?
@@ -841,9 +865,9 @@ void RDirNode::logic(float dt) {
 void RDirNode::drawDirName(const FXFont& dirfont) const{
     if(gGourceSettings.hide_dirnames) return;
 
-    if(since_last_node_change > 5.0) return;
+    if(!gGourceSettings.highlight_dirs && since_last_node_change > 5.0) return;
 
-    float alpha = std::max(0.0f, 5.0f - since_last_node_change) / 5.0f;
+    float alpha = gGourceSettings.highlight_dirs ? 1.0 : std::max(0.0f, 5.0f - since_last_node_change) / 5.0f;
 
     glColor4f(1.0, 1.0, 1.0, alpha);
 
