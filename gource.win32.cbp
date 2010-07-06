@@ -31,6 +31,7 @@
 			<Add library="opengl32" />
 			<Add library="SDL_image" />
 			<Add library="glu32" />
+			<Add library="glew32" />
 		</Linker>
 		<Unit filename="src\action.cpp" />
 		<Unit filename="src\action.h" />
@@ -47,9 +48,6 @@
 		<Unit filename="src\core\conffile.h" />
 		<Unit filename="src\core\display.cpp" />
 		<Unit filename="src\core\display.h" />
-		<Unit filename="src\core\extensions.cpp" />
-		<Unit filename="src\core\extensions.h" />
-		<Unit filename="src\core\fontpack.h" />
 		<Unit filename="src\core\frustum.cpp" />
 		<Unit filename="src\core\frustum.h" />
 		<Unit filename="src\core\fxfont.cpp" />
