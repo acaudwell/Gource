@@ -248,7 +248,7 @@ void Gource::update(float t, float dt) {
     //have to manage runtime internally as we're messing with dt
     if(!paused) runtime += scaled_dt;
 
-    if(gGourceSettings.stop_at_time > 0.0 && runtime >= gGourceSettings.stop_at_time) appFinished = true;
+    if(gGourceSettings.stop_at_time > 0.0 && runtime >= gGourceSettings.stop_at_time) stop_position_reached = true;
 
     logic_time = SDL_GetTicks();
 
@@ -860,6 +860,8 @@ void Gource::seekTo(float percent) {
 }
 
 void Gource::readLog() {
+    if(stop_position_reached) return;
+
     //debugLog("readLog()\n");
 
     while(!commitlog->isFinished() && commitqueue.size() < 1) {
@@ -892,15 +894,9 @@ void Gource::readLog() {
 
     bool is_finished = commitlog->isFinished();
 
-    //see if we have reached the end and should exit
-    //the next time all users are idle
     if(   gGourceSettings.stop_at_end && is_finished
        || gGourceSettings.stop_position > 0.0 && commitlog->isSeekable() && (is_finished || last_percent >= gGourceSettings.stop_position)) {
-
         stop_position_reached = true;
-
-        //if not stopping on idle exit immediately
-        if(!gGourceSettings.stop_on_idle) appFinished = true;
     }
 
     // useful to figure out where we have crashes
@@ -1132,13 +1128,13 @@ void Gource::updateUsers(float t, float dt) {
         }
     }
 
+    if(users.empty() && stop_position_reached) {
+        appFinished = true;
+    }
+
     //nothing is moving so increment idle
     if(idle_users==users.size()) {
         idle_time += dt;
-
-        //if stop_on_idle is set and either no stop condition is set or the condition has been reached, exit
-        if(gGourceSettings.stop_on_idle && (gGourceSettings.stop_position == 0.0f && !gGourceSettings.stop_at_end || stop_position_reached)) appFinished = true;
-
     } else {
         idle_time = 0;
     }
@@ -1367,7 +1363,8 @@ void Gource::logic(float t, float dt) {
 
         RCommit commit = commitqueue[0];
 
-        if(gGourceSettings.auto_skip_seconds>=0.0 && idle_time >= gGourceSettings.auto_skip_seconds) {
+        //auto skip ahead, unless stop_position_reached
+        if(gGourceSettings.auto_skip_seconds>=0.0 && idle_time >= gGourceSettings.auto_skip_seconds && !stop_position_reached) {
             currtime = lasttime = commit.timestamp;
             idle_time = 0.0;
         }

@@ -63,9 +63,6 @@ options:
     -t, --stop-at-time SECONDS
             Stop (exit) after a specified number of seconds.
 
-        --stop-on-idle
-            Stop on break in activity. May be combined with --stop-position.
-
         --stop-at-end
             Stop (exit) at the end of the log / stream.
 
