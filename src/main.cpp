@@ -99,8 +99,6 @@ int main(int argc, char *argv[]) {
     FrameExporter* exporter = 0;
 
     if(gGourceSettings.output_ppm_filename.size() > 0) {
-        //recording a video kind of implies you want this
-        if(!gGourceSettings.dont_stop) gGourceSettings.stop_at_end = true;
 
         try {
 
@@ -141,7 +139,7 @@ int main(int argc, char *argv[]) {
     }
 
     if(gourcesh != 0) delete gourcesh;
-    if(exporter != 0)  delete exporter;
+    if(exporter != 0) delete exporter;
 
     //free resources
     display.quit();

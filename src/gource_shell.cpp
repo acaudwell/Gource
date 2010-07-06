@@ -87,6 +87,10 @@ Gource* GourceShell::getNext() {
 
     gGourceSettings.importGourceSettings(*conf, *gource_settings);
 
+    //recording a video kind of implies you want this
+    if(exporter!=0 && !gGourceSettings.dont_stop && !gGourceSettings.loop)
+        gGourceSettings.stop_at_end = true;
+
     //multiple repo special settings
     if(gGourceSettings.repo_count > 1) {
 
