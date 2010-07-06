@@ -150,7 +150,7 @@ GourceSettings::GourceSettings() {
     arg_aliases["background"] = "background-colour";
     arg_aliases["disable-bloom"]    = "hide-bloom";
     arg_aliases["disable-progress"] = "hide-progress";
-    arg_types["highlight-users"] = "highlight-all-users";
+    arg_aliases["highlight-users"] = "highlight-all-users";
 
     //command line only options
     conf_sections["help"]            = "command-line";
@@ -790,6 +790,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         stop_at_end = true;
     }
 
+    //NOTE: this no longer does anything
     if(gource_settings->getBool("stop-on-idle")) {
         stop_on_idle = true;
     }
