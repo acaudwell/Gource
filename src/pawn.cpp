@@ -31,8 +31,9 @@ Pawn::Pawn(std::string name, vec2f pos, int tagid) {
 
     shadow = false;
 
-    this->shadowOffset = vec2f(2.0, 2.0);
+    namewidth = 0;
 
+    this->shadowOffset = vec2f(2.0, 2.0);
     this->elapsed = 0.0;
     this->fadetime = 1.0;
     this->nametime = 5.0;
@@ -109,7 +110,6 @@ void Pawn::drawNameText(float alpha) const {
 
         glColor4f(nameCol.x, nameCol.y, nameCol.z, alpha);
 
-        float namewidth = font.getWidth(name);
         font.draw(pos.x - ((float)namewidth/2.0), pos.y - size*1.2, name.c_str()); // above player
     }
 }

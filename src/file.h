@@ -45,6 +45,8 @@ class RFile : public Pawn {
 
     GLuint namelist;
 
+    std::string shortname;
+
     void setPath();
     const vec3f& getNameColour() const;
     void drawNameText(float alpha) const;

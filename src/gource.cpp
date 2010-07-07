@@ -1659,8 +1659,6 @@ void Gource::drawBloom(Frustum &frustum, float dt) {
     glBlendFunc (GL_ONE, GL_ONE);
 
     root->drawBloom(frustum, dt);
-
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Gource::setMessage(const char* str, ...) {
@@ -1766,6 +1764,8 @@ void Gource::draw(float t, float dt) {
 
     //draw bloom
     drawBloom(frustum, dt);
+
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     name_calc_time = SDL_GetTicks();
 

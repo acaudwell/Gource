@@ -133,6 +133,9 @@ options:
     --file-filter REGEX
             Filter out any files matching a specified regular expression.
 
+    --file-extensions
+            Show filename extensions only.
+
     --user-image-dir DIRECTORY
             Directory containing .jpg or .png images of users 
             (eg 'Full Name.png') to use as avatars.

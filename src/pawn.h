@@ -84,6 +84,7 @@ public:
     std::string getName();
 
     virtual void setSelected(bool selected);
+    bool isSelected() { return selected; };
 
     void setHidden(bool hidden){ this->hidden = hidden; }
     bool isHidden() const { return hidden; }

@@ -878,18 +878,17 @@ void RDirNode::drawDirName(const FXFont& dirfont) const{
 // project positions of files and directories on the display in 2d
 void RDirNode::calcScreenPos() {
 
-    if(!gGourceSettings.hide_dirnames) {
-        screenpos = display.project(vec3f(pos.x, pos.y, 0.0));
-    }
+    screenpos = display.project(vec3f(pos.x, pos.y, 0.0));
 
-    if(!gGourceSettings.hide_filenames) {
+    //first pass - calculate positions of names
+    for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
+            RFile* f = *it;
 
-        //first pass - calculate positions of names
-        for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
-                RFile* f = *it;
-                f->calcScreenPos(pos);
-        }
-
+            // TODO: different offsets for selected/not selected
+            if(f->isSelected())
+                f->calcScreenPos(pos + vec2f(5.5f, -2.0f));
+            else
+                f->calcScreenPos(pos + vec2f(5.5f, -1.0f));
     }
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {

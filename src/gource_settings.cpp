@@ -58,7 +58,8 @@ void GourceSettings::help(bool extended_help) {
     printf("  --colour-images                  Colourize user images\n\n");
 
     printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)\n");
-    printf("      --file-filter REGEX          Ignore files matching this regexe\n\n");
+    printf("      --file-filter REGEX          Ignore files matching this regexe\n");
+    printf("      --file-extensions            Show filename extensions only\n\n");
 
     printf("  --max-files NUMBER       Max number of active files (default: 1000)\n");
     printf("  --max-file-lag SECONDS   Max time files of a commit can take to appear\n\n");
@@ -184,6 +185,7 @@ GourceSettings::GourceSettings() {
     arg_types["hide-mouse"]      = "bool";
     arg_types["highlight-all-users"] = "bool";
     arg_types["highlight-dirs"] = "bool";
+    arg_types["file-extensions"] = "bool";
 
     arg_types["disable-auto-rotate"] = "bool";
     arg_types["disable-auto-skip"]   = "bool";
@@ -314,6 +316,7 @@ void GourceSettings::setGourceDefaults() {
         delete (*it);
     }
     file_filters.clear();
+    file_extensions = false;
 }
 
 void GourceSettings::commandLineOption(const std::string& name, const std::string& value) {
@@ -899,6 +902,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
             follow_users.push_back(entry->getString());
         }
+    }
+
+    if(gource_settings->getBool("file-extensions")) {
+        file_extensions=true;
     }
 
     if((entry = gource_settings->getEntry("file-filter")) != 0) {

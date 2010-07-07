@@ -44,12 +44,14 @@ RFile::RFile(const std::string & name, const vec3f & colour, const vec2f & pos, 
 
     this->fullpath = name;
     this->name = name;
+
     path_hash = 0;
 
     setPath();
 
     namelist = glGenLists(1);
 
+    font = 0;
     setSelected(false);
 
     dir = 0;
@@ -93,30 +95,40 @@ void RFile::setPath() {
     if(pos != std::string::npos) {
         path = name.substr(0,pos+1);
         name = name.substr(pos+1, std::string::npos);
-        return;
+    } else {
+        path = std::string("");
     }
 
-    path = std::string("");
+    //trim name to just extension
+    if(gGourceSettings.file_extensions) {
+        int dotsep=0;
+        if((dotsep=name.rfind(".")) != std::string::npos && dotsep != name.size()-1 && dotsep != 0) {
+            shortname = name.substr(dotsep+1);
+        }
+    }
 }
 
+int call_count = 0;
+
+
 void RFile::setSelected(bool selected) {
+    if(font.getFTFont()!=0 && this->selected==selected) return;
 
     if(selected) {
         font = fontmanager.grab("FreeSans.ttf", 18);
     } else {
         font = fontmanager.grab("FreeSans.ttf", 11);
     }
+
     font.dropShadow(false);
     font.roundCoordinates(true);
-
-    namewidth = font.getWidth(name.c_str());
 
     Pawn::setSelected(selected);
 
     //pre-compile name display list
-    glNewList(namelist, GL_COMPILE);
-       font.draw(0.0f, 0.0f, name);
-    glEndList();
+    //glNewList(namelist, GL_COMPILE);
+    //   font.draw(0.0f, 0.0f, (selected || shortname.size()==0) ? name : shortname);
+    //glEndList();
 }
 
 const vec3f& RFile::getNameColour() const{
@@ -243,8 +255,8 @@ void RFile::drawNameText(float alpha) const {
 
     vec3f drawpos = screenpos;
 
-    drawpos.x += 10.0;
-    drawpos.y -= 10.0;
+    //drawpos.x += 10.0;
+    //drawpos.y -= 10.0;
 
     glPushMatrix();
 
@@ -254,12 +266,14 @@ void RFile::drawNameText(float alpha) const {
         glPushMatrix();
             glTranslatef(1.0, 1.0, 0.0);
             glColor4f(0.0, 0.0, 0.0, name_alpha * 0.7f);
-            glCallList(namelist);
+            //glCallList(namelist);
+            font.draw(0.0f, 0.0f, (selected || shortname.size()==0) ? name : shortname);
         glPopMatrix();
 
         //draw name
         glColor4f(nameCol.x, nameCol.y, nameCol.z, name_alpha);
-        glCallList(namelist);
+        //glCallList(namelist);
+        font.draw(0.0f, 0.0f, (selected || shortname.size()==0) ? name : shortname);
 
     glPopMatrix();
 }
