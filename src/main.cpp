@@ -31,6 +31,33 @@ int main(int argc, char *argv[]) {
     try {
         gGourceSettings.parseArgs(argc, argv, conf, &files);
 
+        if(gGourceSettings.load_config.empty() && !files.empty()) {
+            //see if file looks like a config file
+            for(std::vector<std::string>::iterator fit = files.begin(); fit != files.end(); fit++) {
+                std::string file = *fit;
+
+                if(   file.rfind(".conf") == file.size()-5
+                   || file.rfind(".cfg")  == file.size()-4
+                   || file.rfind(".ini")  == file.size()-4) {
+
+                    bool is_conf=true;
+
+                    try {
+                        ConfFile conftest;
+                        conftest.load(file);
+                    } catch(ConfFileException& exception) {
+                        is_conf = false;
+                    }
+
+                    if(is_conf) {
+                        gGourceSettings.load_config = file;
+                        files.erase(fit);
+                        break;
+                    }
+                }
+            }
+        }
+
         //load config
         if(!gGourceSettings.load_config.empty()) {
             conf.clear();
