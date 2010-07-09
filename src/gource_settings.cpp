@@ -41,7 +41,6 @@ void GourceSettings::help(bool extended_help) {
     printf("  -p, --start-position POSITION    Begin at some position (0.0-1.0 or 'random')\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
     printf("  -t, --stop-at-time SECONDS       Stop after a specified number of seconds\n");
-    printf("      --stop-on-idle               Stop on break in activity\n");
     printf("      --stop-at-end                Stop at end of the log\n");
     printf("      --dont-stop                  Keep running after the end of the log\n");
     printf("      --loop                       Loop at the end of the log\n\n");
@@ -58,7 +57,6 @@ void GourceSettings::help(bool extended_help) {
     printf("  --colour-images                  Colourize user images\n\n");
 
     printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)\n");
-    printf("      --file-filter REGEX          Ignore files matching this regexe\n");
     printf("      --file-extensions            Show filename extensions only\n\n");
 
     printf("  --max-files NUMBER       Max number of active files (default: 1000)\n");
@@ -67,11 +65,6 @@ void GourceSettings::help(bool extended_help) {
     printf("  --log-command VCS        Show the log command used by gource (git,cvs,hg,bzr)\n");
     printf("  --log-format  VCS        Specify format of the log (git,cvs,hg,bzr,custom)\n");
     printf("  --git-branch             Get the git log of a particular branch\n\n");
-
-    printf("  --follow-user USER       Camera will automatically follow this user\n");
-    printf("  --highlight-user USER    Highlight the names of a particular user\n");
-    printf("  --highlight-users        Highlight the names of all users\n\n");
-    printf("  --highlight-dirs         Highlight the names of all directories\n\n");
 
     printf("  --load-config CONF_FILE  Load a config file\n");
     printf("  --save-config CONF_FILE  Save a config file with the current options\n\n");
@@ -108,15 +101,24 @@ if(extended_help) {
 
     printf("  --transparent            Make the background transparent\n\n");
 
+    printf("  --user-filter REGEX      Ignore usernames matching this regex\n");
+    printf("  --file-filter REGEX      Ignore files matching this regex\n\n");
+
     printf("  --user-friction SECONDS  Time users come to a complete hault (default: 0.67)\n");
     printf("  --user-scale SCALE       Change scale of users (default: 1.0)\n");
     printf("  --max-user-speed UNITS   Speed users can travel per second (default: 500)\n\n");
 
+    printf("  --follow-user USER       Camera will automatically follow this user\n");
+    printf("  --highlight-user USER    Highlight the names of a particular user\n");
+    printf("  --highlight-users        Highlight the names of all users\n\n");
+    printf("  --highlight-dirs         Highlight the names of all directories\n\n");
+
     printf("  --path PATH\n\n");
 }
 
-    printf("PATH may be a Git, Bazaar or Mercurial dir, a log file or '-' to read STDIN.\n");
-    printf("If ommited, gource will attempt to generate a log from the current directory.\n\n");
+    printf("PATH may be a supported version control directory, a log file, a gource config\n");
+    printf("file, or '-' to read STDIN. If ommited, gource will attempt to generate a log\n");
+    printf("from the current directory.\n\n");
 
     if(!extended_help) {
         printf("To see the full command line options use '-H'\n\n");
@@ -207,6 +209,7 @@ GourceSettings::GourceSettings() {
     arg_types["max-files"] = "int";
     arg_types["font-size"] = "int";
 
+    arg_types["user-filter"]    = "multi-value";
     arg_types["file-filter"]    = "multi-value";
     arg_types["follow-user"]    = "multi-value";
     arg_types["highlight-user"] = "multi-value";
@@ -317,6 +320,12 @@ void GourceSettings::setGourceDefaults() {
     }
     file_filters.clear();
     file_extensions = false;
+
+    //delete user filters
+    for(std::vector<Regex*>::iterator it = user_filters.begin(); it != user_filters.end(); it++) {
+        delete (*it);
+    }
+    user_filters.clear();
 }
 
 void GourceSettings::commandLineOption(const std::string& name, const std::string& value) {
@@ -924,12 +933,37 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
             if(!r->isValid()) {
                 delete r;
-                conffile.entryException(entry, "invalid filt-filter regular expression");
+                conffile.entryException(entry, "invalid file-filter regular expression");
             }
 
             file_filters.push_back(r);
         }
     }
+
+    if((entry = gource_settings->getEntry("user-filter")) != 0) {
+
+        ConfEntryList* filters = gource_settings->getEntries("user-filter");
+
+        for(ConfEntryList::iterator it = filters->begin(); it != filters->end(); it++) {
+
+            entry = *it;
+
+            if(!entry->hasValue()) conffile.entryException(entry, "specify user-filter (regex)");
+
+            std::string filter_string = entry->getString();
+
+            Regex* r = new Regex(filter_string, 1);
+
+            if(!r->isValid()) {
+                delete r;
+                conffile.entryException(entry, "invalid user-filter regular expression");
+            }
+
+            user_filters.push_back(r);
+        }
+    }
+
+
 
 
     //validate path

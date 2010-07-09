@@ -913,41 +913,52 @@ void Gource::processCommit(RCommit& commit, float t) {
     std::map<std::string, RUser*>::iterator seen_user = users.find(commit.username);
     if(seen_user != users.end()) user = seen_user->second;
 
+
+    //check user against filters, if found, discard commit
+    if(user == 0 && !gGourceSettings.user_filters.empty()) {
+        for(std::vector<Regex*>::iterator ri = gGourceSettings.user_filters.begin(); ri != gGourceSettings.user_filters.end(); ri++) {
+            Regex* r = *ri;
+
+            if(r->match(commit.username)) {
+                return;
+            }
+        }
+    }
+
     //find files of this commit or create it
     for(std::list<RCommitFile>::iterator it = commit.files.begin(); it != commit.files.end(); it++) {
 
         RCommitFile& cf = *it;
 
-        bool filtered_filename = false;
-
-        //check filename against filters
-        for(std::vector<Regex*>::iterator ri = gGourceSettings.file_filters.begin(); ri != gGourceSettings.file_filters.end(); ri++) {
-            Regex* r = *ri;
-
-            if(r->match(cf.filename)) {
-                filtered_filename = true;
-                break;
-            }
-        }
-
-        if(filtered_filename) continue;
-
-        std::map<std::string, RFile*>::iterator seen_file;
-
-        seen_file = files.find(cf.filename);
-
         RFile* file = 0;
 
-        if(seen_file != files.end()) {
+        std::map<std::string, RFile*>::iterator seen_file = files.find(cf.filename);
+        if(seen_file != files.end()) file = seen_file->second;
 
-            file = seen_file->second;
-
-        } else {
+        if(file == 0) {
 
             //if we already have max files in circulation
             //we cant add any more
             if(files.size() >= gGourceSettings.max_files)
                 continue;
+
+            //check filename against filters
+            if(!gGourceSettings.file_filters.empty()) {
+
+                bool filtered_filename = false;
+
+                for(std::vector<Regex*>::iterator ri = gGourceSettings.file_filters.begin(); ri != gGourceSettings.file_filters.end(); ri++) {
+                    Regex* r = *ri;
+
+                    if(r->match(cf.filename)) {
+                        filtered_filename = true;
+                        break;
+                    }
+                }
+
+                if(filtered_filename) continue;
+
+            }
 
             int tagid = tag_seq++;
 

@@ -136,6 +136,9 @@ options:
     --file-extensions
             Show filename extensions only.
 
+    --user-filter REGEX
+            Filter out any users matching a specified regular expression.
+
     --user-image-dir DIRECTORY
             Directory containing .jpg or .png images of users 
             (eg 'Full Name.png') to use as avatars.
@@ -198,21 +201,26 @@ options:
     -o, --output-ppm-stream FILE
             Output a PPM image stream to a file ('-' for STDOUT).
 
+            This will automatically hide the progress bar initially and
+            enable 'stop-at-end' unless other behaviour is specified.
+
     -r, --output-framerate FPS
             Framerate of output (25,30,60). Used with --output-ppm-stream.
 
     --load-config CONFIG_FILE
-            Load a config file.
+            Load a gource conf file.
 
     --save-config CONFIG_FILE
-            Save a config file with the current options.
+            Save a gource conf file with the current options.
 
     --path PATH
 
-    path    Either a Git, Bazaar or Mercurial directory, a pre-generated log
-            file (see log commands or the custom log format) or '-' to read
-            STDIN. If path is ommited gource will attempt to read a log from
-            the current directory.
+    path    Either a supported version control directory, a pre-generated log
+            file (see log commands or the custom log format), a gource conf
+            file or '-' to read STDIN.
+
+            If path is ommited, gource will attempt to read a log from the
+            current directory.
 
 Git, Bazaar and Mercurial Examples:
 

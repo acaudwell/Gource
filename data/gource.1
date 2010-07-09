@@ -103,11 +103,14 @@ Highlight the names of all users.
 \fB\-\-highlight\-dirs\fR
 Highlight the names of all directories.
 .TP
+\fB\-\-file\-extensions\fR
+Show filename extensions only.
+.TP
 \fB\-\-file\-filter REGEX\fR
 Filter out any files matching a specified regular expression.
 .TP
-\fB\-\-file\-extensions\fR
-Show filename extensions only.
+\fB\-\-user\-filter REGEX\fR
+Filter out any usernames matching a specified regular expression.
 .TP
 \fB\-\-user\-image\-dir DIRECTORY\fR
 Directory containing .jpg or .png images of users (eg 'Full Name.png') to use as avatars.
@@ -170,6 +173,9 @@ Separate multiple elements with commas (eg 'mouse,progress')
 .TP
 \fB\-o, \-\-output\-ppm\-stream FILE\fR
 Output a PPM image stream to a file ('\-' for STDOUT).
+
+This will automatically hide the progress bar initially and enable 'stop\-at\-end' unless other behaviour is specified.
+
 .TP
 \fB\-r, \-\-output\-framerate FPS\fR
 Framerate of output (25,30,60). Used with \-\-output\-ppm\-stream.
@@ -183,7 +189,10 @@ Save a config file with the current options.
 \fB\-\-path PATH\fR
 .TP
 \fBpath\fR
-Either a Git, Bazaar or Mercurial directory, a pre-generated log file (see log commands or the custom log format) or '\-' to read STDIN. If path is ommited \fIgource\fR will attempt to read a log from the current directory.
+Either a supported version control directory, a pre-generated log file (see log commands or the custom log format), a gource conf file or '-' to read STDIN.
+
+If path is ommited, gource will attempt to read a log from the current directory.
+
 .SH GIT, BAZAAR AND MERCURIAL EXAMPLES
 
 View the log of the respository in the current path:
