@@ -72,7 +72,6 @@
 		<Unit filename="src\core\seeklog.h" />
 		<Unit filename="src\core\settings.cpp" />
 		<Unit filename="src\core\settings.h" />
-		<Unit filename="src\core\shader.h" />
 		<Unit filename="src\core\stringhash.cpp" />
 		<Unit filename="src\core\stringhash.h" />
 		<Unit filename="src\core\texture.cpp" />
