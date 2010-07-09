@@ -1,4 +1,4 @@
-0.27:
+0.27-beta1:
  * Display time stops at the time of the last commit.
  * Users fade out when end reached rather than ending abruptly.
  * Position slider is now hidden by default if recording a video.

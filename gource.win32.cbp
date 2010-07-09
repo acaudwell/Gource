@@ -20,7 +20,6 @@
 			<Add option="-O3" />
 			<Add option="-W" />
 			<Add option="-Dmain=SDL_main" />
-			<Add directory="C:\source\git\gource\src" />
 		</Compiler>
 		<Linker>
 			<Add option="ftgl.dll" />

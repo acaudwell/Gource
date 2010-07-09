@@ -37,6 +37,8 @@ my @exclusions = (
     qr{^/build-stamp$},
     qr{^/autom4te},
     qr{^/src/core/README$},
+    qr{\.d$},
+    qr{^/test/},
 );
 
 my @inclusions = (
@@ -57,6 +59,7 @@ my @inclusions = (
     qr{^/data/beam\.png$},
     qr{^/data/bloom\.tga$},
     qr{^/data/bloom_alpha\.tga$},
+    qr{^/data/cursor\.png$},
     qr{^/data/fonts/FreeSans\.ttf$},
     qr{^/data/gource\.1$},
     qr{^/data/gource\.style$},
