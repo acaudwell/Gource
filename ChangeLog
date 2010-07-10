@@ -8,7 +8,6 @@
  * Fixed crash when reading from STDIN.
  * Fixed intermittent crash closing Gource when using --output-ppm-stream.
  * Added ini style config file support (see --load/save-config).
- * Added support for multiple repositories.
  * Added screenshot button (F12). Screenshots respect the alpha channel.
  * Added --transparent to make the background see-through (for screenshots).
  * Added --logo and --background-image options.
@@ -21,7 +20,7 @@
  * Allow --file-idle-time 0 (files will never expire).
  * Allow --start-position 'random' to set a random start position.
  * --log-command VCS replaces multiple --log-command-VCS options.
- * --disable-progress and --disable-bloom with arguments to --hide.
+ * Replaced --disable-progress and --disable-bloom with arguments to --hide.
 
 0.26a:
  * Updated to latest version of GL autoconf macros.
