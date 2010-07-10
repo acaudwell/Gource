@@ -327,7 +327,12 @@ bool RDirNode::addFile(RFile* f) {
     //doesnt match this path at all
     if(f->path.find(abspath) != 0) {
 
-        if(parent!=0) return false;
+        if(parent != 0) return false;
+
+        //if this is the root node (ie no parent), we fork it
+        //if we encounter a file with a non matching path to the
+        //current root path. the calling process then checks if
+        //the root now has a parent node, and changes the pointer.
 
         RDirNode* newparent;
 
@@ -359,8 +364,22 @@ bool RDirNode::addFile(RFile* f) {
         return true;
     }
 
+    bool added = false;
+
+    //does this belong to one of the children ?
+    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+        RDirNode* child =  (*it);
+
+        added = child->addFile(f);
+
+        if(added) break;
+    }
+
+    if(added && parent != 0) return true;
+
     //do we have a file in this directory thats fullpath is a prefix of this file, if so
     //that file is actually a directory - the file should be removed, and a directory with that path added
+    //if this is the root node we do this regardless of if the file was added to a child node
     for(std::list<RFile*>::const_iterator it = files.begin(); it != files.end(); it++) {
         RFile* file = (*it);
 
@@ -371,14 +390,7 @@ bool RDirNode::addFile(RFile* f) {
         }
     }
 
-    //does this belong to one of the children ?
-    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
-        RDirNode* child =  (*it);
-
-        bool added = child->addFile(f);
-
-        if(added) return true;
-    }
+    if(added) return true;
 
     //add new child, add it to that
     //if commonpath is longer than abspath, add intermediate node, else just add at the files path
