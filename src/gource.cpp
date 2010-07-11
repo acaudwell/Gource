@@ -1289,7 +1289,10 @@ void Gource::logic(float t, float dt) {
             //if not in a git dir and no log file, show help
             if(logfile.size() == 0 || logfile == ".") {
                 SDL_Quit();
-                throw SDLAppException("", true);
+
+                SDLAppException exception("");
+                exception.setShowHelp(true);
+                throw exception;
             } else if(SDLAppDirExists(logfile)) {
                 throw SDLAppException("directory not supported");
             } else {
