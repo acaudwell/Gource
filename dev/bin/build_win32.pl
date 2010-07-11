@@ -5,7 +5,7 @@ use warnings;
 use FindBin;
 
 sub gource_version {
-    my $version = `cat $FindBin::Bin/../../src/gource.h | grep GOURCE_VERSION`;
+    my $version = `cat $FindBin::Bin/../../src/gource_settings.h | grep GOURCE_VERSION`;
     $version =~ /"([^"]+)"/ or die("could not determine version\n");
     $version = $1;
     return $version;
@@ -42,6 +42,7 @@ doit("mkdir -p $WINBUILD/data/fonts/");
 
 doit("cp gource.exe $WINBUILD");
 doit("cp data/beam.png $WINBUILD/data/");
+doit("cp data/cursor.png $WINBUILD/data/");
 doit("cp data/file.png $WINBUILD/data/");
 doit("cp data/no_photo.png $WINBUILD/data/");
 doit("cp data/bloom.tga $WINBUILD/data/");
@@ -63,6 +64,7 @@ doit("cp dev/win32/ftgl.dll $WINBUILD");
 doit("cp dev/win32/jpeg.dll $WINBUILD");
 doit("cp dev/win32/libpng12-0.dll $WINBUILD");
 doit("cp dev/win32/zlib1.dll $WINBUILD");
+doit("cp dev/win32/glew32.dll $WINBUILD");
 
 chdir($WINBUILD);
 doit("zip -r gource-$VERSION.win32.zip *");
