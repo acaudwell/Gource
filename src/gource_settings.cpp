@@ -616,7 +616,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if((entry = gource_settings->getEntry("font-size")) != 0) {
 
-        if(!entry->hasValue()) conffile.entryException(entry, "specify font size (FFFFFF)");
+        if(!entry->hasValue()) conffile.entryException(entry, "specify font size");
 
         font_size = entry->getInt();
 
