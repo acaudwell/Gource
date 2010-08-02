@@ -11,6 +11,13 @@ use warnings;
 
 #use Data::Dumper;
 
+my $windows = $^O =~ /win32|msys/i;
+
+if($windows) {
+    require Win32::Process::Info;
+    Win32::Process::Info->import();
+}
+
 my($server) = @ARGV;
 my $user = $ENV{USER};
 
@@ -19,28 +26,15 @@ if($server && $server =~ /(.+)\@(.+)/) {
     $server = $2;
 }
 
+die('remote ps via ssh unimplemented on Win32') if $windows && $server;
+
 $|=1;
 
 my %process;
 
-sub _make_command_path {
-    my $proc = shift;
+sub _proc_list {
 
-    my @path;
-
-    my $node = $proc;
-
-    while($node) {
-        push @path, $node->{pid} . '.' . $node->{command};
-        $node = $node->{ppid} ? $process{$node->{ppid}} : 0;
-    }
-
-    return join('/', reverse @path);
-}
-
-while(1) {
-
-    my $ps_command = 'ps axo pid,ppid,user,comm,time';
+    my $ps_command =  'ps axo pid,ppid,uid,time,comm';
 
     my @pslist = $server ? `ssh $user\@$server "$ps_command"` : `$ps_command`;
 
@@ -54,15 +48,17 @@ while(1) {
 
     my @stack;
 
-    my $current_time = time;
-
     #build process tree
     foreach my $line (@pslist) {
         $line =~ s/^\s+//;
+               
+       	my ($pid, $ppid, $uid, $time, @command) = split(/\s+/, $line);
 
-        my($pid, $ppid, $username, $command, $time) = split(/\s+/, $line);
+    	my $username = (getpwuid($uid))[0] or next;
 
-        $command =~ s{/}{:}g;
+    	my $command = join(' ', @command) || '';
+
+        $command =~ s{^.+/}{}g;
 
         my $proc;
 
@@ -83,6 +79,66 @@ while(1) {
 
         #warn Dumper($process{$pid});
     }
+}
+
+sub _win32_proc_list {
+    my $pi = Win32::Process::Info->new ();
+
+    foreach my $winproc ($pi->GetProcInfo) {
+
+#        use Data::Dumper;
+#        print Dumper($proc);
+
+        my $pid      = $winproc->{ProcessId};
+        my $ppid     = $winproc->{ParentProcessId};
+        my $command  = $winproc->{Description};
+        my $username = $winproc->{Owner} || 'System';
+        my $time     = $winproc->{UserModeTime};
+
+        $username =~ s/^.+\\//;               
+        $command  =~ s/\.exe$//i;
+
+        next unless $command && $pid && $username;
+
+        my $proc;
+
+        if($proc = $process{$pid}) {
+            $proc->{status} = ($proc->{'time'} ne $time) ? 'M' : '';
+        } else {
+            $proc = {
+                pid      => $pid,
+                ppid     => $ppid,
+                username => $username,
+                command  => $command,
+                'time'   => $time,
+                status   => 'A',
+            };
+
+            $process{$pid} = $proc;
+        }
+
+
+    }
+}
+
+sub _make_command_path {
+    my $proc = shift;
+
+    my @path;
+
+    my $node = $proc;
+
+    while($node) {
+        push @path, $node->{pid} . '.' . $node->{command};
+        $node = $node->{ppid} ? $process{$node->{ppid}} : 0;
+    }
+
+    return join('/', reverse @path);
+}
+
+while(1) {
+
+    my @proclist = $windows ? _win32_proc_list : _proc_list;
 
     my @filter_pids;
 
@@ -93,7 +149,7 @@ while(1) {
         next unless $proc;
 
         # delete ps process and parents of
-        if($proc->{command} eq 'ps' & $proc->{username} eq $user || $proc->{command} eq 'gource') {
+        if($proc->{command} eq 'ps' && $proc->{username} eq $user || $proc->{command} eq 'gource') {
             while($proc) {
                 push @filter_pids, $proc->{pid};
                 $proc = $proc->{ppid} ? $process{$proc->{ppid}} : undef;
@@ -104,6 +160,8 @@ while(1) {
     delete $process{$_} for @filter_pids;
 
     my @expired_pids;
+
+    my $current_time = time;
 
     foreach my $pid (sort {$a <=> $b} keys %process) {
 
