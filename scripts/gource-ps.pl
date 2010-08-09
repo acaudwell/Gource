@@ -8,8 +8,15 @@
 
 use strict;
 use warnings;
+use Getopt::Long qw(GetOptions);
 
 #use Data::Dumper;
+
+my %opt = ();
+
+if(!GetOptions(\%opt, 'debug|d')) {
+    die("usage: gource-ps.pl [[USER\@]SERVER] | gource --log-format custom - ...\n");
+}
 
 my $windows = $^O =~ /win32|msys/i;
 
@@ -34,7 +41,7 @@ my %process;
 
 sub _proc_list {
 
-    my $ps_command =  'ps axo pid,ppid,uid,time,comm';
+    my $ps_command =  'ps axo pid,ppid,user,time,comm';
 
     my @pslist = $server ? `ssh $user\@$server "$ps_command"` : `$ps_command`;
 
@@ -51,13 +58,10 @@ sub _proc_list {
     #build process tree
     foreach my $line (@pslist) {
         $line =~ s/^\s+//;
-               
-       	my ($pid, $ppid, $uid, $time, @command) = split(/\s+/, $line);
 
-    	my $username = (getpwuid($uid))[0] or next;
+        my ($pid, $ppid, $username, $time, @command) = split(/\s+/, $line);
 
-    	my $command = join(' ', @command) || '';
-
+        my $command = join(' ', @command) || '';
         $command =~ s{^.+/}{}g;
 
         my $proc;
@@ -168,7 +172,9 @@ while(1) {
         my $proc = $process{$pid};
 
         if($proc->{status}) {
-            print join('|', $current_time, $proc->{username}, $proc->{status}, _make_command_path($proc)), "\n"
+            my $output_line = join('|', $current_time, $proc->{username}, $proc->{status}, _make_command_path($proc)). "\n";
+            print $output_line;
+            print STDERR $output_line if $opt{debug};
         }
 
         #delete if not seen next time
