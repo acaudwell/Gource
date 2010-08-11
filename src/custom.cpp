@@ -19,10 +19,10 @@
 
 Regex custom_regex("^([0-9]+)\\|([^|]*)\\|([ADM]?)\\|([^|]+)(?:\\|#?([A-F0-9]{6}))?");
 
-CustomLog::CustomLog(std::string logfile) : RCommitLog(logfile) {
+CustomLog::CustomLog(const std::string& logfile) : RCommitLog(logfile) {
 }
 
-vec3f CustomLog::parseColour(std::string cstr) {
+vec3f CustomLog::parseColour(const std::string& cstr) {
     debugLog("parseColour\n");
     vec3f colour;
     int r,g,b;
@@ -58,17 +58,9 @@ bool CustomLog::readCustomCommit(RCommit& commit) {
     if(!custom_regex.match(line, &entries)) return false;
 
     long timestamp       = atol(entries[0].c_str());
-    std::string username = entries[1];
 
-    if(username.size()==0) {
-        username = "Unknown";
-    }
-
-    std::string action = "A";
-
-    if(entries[2].size()>0) {
-        action = entries[2];
-    }
+    std::string username = (entries[1].size()>0) ? entries[1] : "Unknown";
+    std::string action   = (entries[2].size()>0) ? entries[2] : "A";
 
     bool has_colour = false;
     vec3f colour;

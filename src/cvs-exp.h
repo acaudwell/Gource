@@ -24,7 +24,7 @@ class CVSEXPCommitLog : public RCommitLog {
 protected:
     bool parseCommit(RCommit& commit);
 public:
-    CVSEXPCommitLog(std::string logfile);
+    CVSEXPCommitLog(const std::string& logfile);
 };
 
 extern std::string gGourceCvsExpLogCommand;

@@ -37,11 +37,11 @@ public:
     std::string action;
     vec3f colour;
 
-    RCommitFile(std::string filename, std::string action, vec3f colour);
+    RCommitFile(const std::string& filename, const std::string& action, vec3f colour);
 };
 
 class RCommit {
-    vec3f fileColour(std::string filename);
+    vec3f fileColour(const std::string& filename);
 public:
     time_t timestamp;
     std::string username;
@@ -50,13 +50,12 @@ public:
 
     bool isValid();
 
-    void addBranch(std::string branch);
-    void addFile(std::string& filename, std::string& action);
-    void addFile(std::string& filename, std::string& action, vec3f colour);
+    void addFile(const std::string& filename, const std::string& action);
+    void addFile(const std::string& filename, const std::string& action, vec3f colour);
 
     RCommit();
     void debug();
-    virtual bool parse(BaseLog* logf) {};
+    virtual bool parse(BaseLog* logf) { return false; };
 };
 
 class RCommitLog {
@@ -83,7 +82,7 @@ protected:
 
     virtual bool parseCommit(RCommit& commit) { return false; };
 public:
-    RCommitLog(std::string logfile, int firstChar = -1);
+    RCommitLog(const std::string& logfile, int firstChar = -1);
     ~RCommitLog();
 
     void seekTo(float percent);

@@ -25,9 +25,9 @@ std::string gGourceMercurialCommand();
 class MercurialLog : public RCommitLog {
 protected:
     bool parseCommit(RCommit& commit);
-    BaseLog* generateLog(std::string dir);
+    BaseLog* generateLog(const std::string& dir);
 public:
-    MercurialLog(std::string logfile);
+    MercurialLog(const std::string& logfile);
 };
 
 #endif

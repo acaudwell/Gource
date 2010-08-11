@@ -57,7 +57,7 @@ class RUser : public Pawn {
     const vec3f& getNameColour() const;
     void drawNameText(float alpha) const;
 public:
-    RUser(std::string name, vec2f pos, int tagid);
+    RUser(const std::string& name, vec2f pos, int tagid);
 
     vec3f getColour() const;
 

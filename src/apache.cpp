@@ -24,7 +24,7 @@ Regex apache_entry_request("\"([^ ]+) +([^ ]+) +([^ ]+)\" +([^ ]+) +([^\\s+]+)(.
 Regex apache_entry_agent(" +\"([^\"]+)\" +\"([^\"]+)\" +\"([^\"]+)\"");
 Regex apache_hostname_parts("([^.]+)(?:\\.([^.]+))?(?:\\.([^.]+))?(?:\\.([^.]+))?(?:\\.([^.]+))?(?:\\.([^.]+))?(?:\\.([^.]+))?(?:\\.([^.]+))?$");
 
-ApacheCombinedLog::ApacheCombinedLog(std::string logfile) : RCommitLog(logfile) {
+ApacheCombinedLog::ApacheCombinedLog(const std::string& logfile) : RCommitLog(logfile) {
 }
 
 //parse apache access.log entry into components

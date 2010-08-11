@@ -28,7 +28,7 @@ std::string gGourceMercurialCommand() {
     return std::string("hg log -r 0:tip --style ") + gource_style_path;
 }
 
-MercurialLog::MercurialLog(std::string logfile) : RCommitLog(logfile) {
+MercurialLog::MercurialLog(const std::string& logfile) : RCommitLog(logfile) {
 
     log_command = gGourceMercurialCommand();
 
@@ -43,7 +43,7 @@ MercurialLog::MercurialLog(std::string logfile) : RCommitLog(logfile) {
     }
 }
 
-BaseLog* MercurialLog::generateLog(std::string dir) {
+BaseLog* MercurialLog::generateLog(const std::string& dir) {
 
     //does directory have a .git ?
     std::string hgdir = dir + std::string("/.hg");

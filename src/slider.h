@@ -42,7 +42,7 @@ public:
 
     void setColour(vec3f col);
 
-    void setCaption(std::string cap);
+    void setCaption(const std::string& cap);
 
     void setPercent(float percent);
 

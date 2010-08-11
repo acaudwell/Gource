@@ -117,7 +117,7 @@ Gource::Gource(FrameExporter* exporter) {
     if(exporter==0 && gGourceSettings.repo_count==1) slider.show();
 }
 
-RCommitLog* Gource::determineFormat(std::string logfile) {
+RCommitLog* Gource::determineFormat(const std::string& logfile) {
     debugLog("determineFormat(%s)\n", logfile.c_str());
 
     RCommitLog* clog = 0;

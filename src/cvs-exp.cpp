@@ -27,7 +27,7 @@ Regex cvsexp_end_regex("^(=+)$");
 
 std::string gGourceCvsExpLogCommand = "cvs-exp.pl -notree";
 
-CVSEXPCommitLog::CVSEXPCommitLog(std::string logfile) : RCommitLog(logfile) {
+CVSEXPCommitLog::CVSEXPCommitLog(const std::string& logfile) : RCommitLog(logfile) {
 }
 
 // parse modified cvs format log entries
@@ -54,7 +54,6 @@ bool CVSEXPCommitLog::parseCommit(RCommit& commit) {
 
     //should be a branch
     if(cvsexp_branch_regex.match(line, &entries)) {
-        //commit.addBranch(entries[0]);
 
         //read next blank line
         if(!logf->getNextLine(line)) return false;

@@ -19,7 +19,7 @@
 
 float gGourceShadowStrength = 0.5;
 
-Pawn::Pawn(std::string name, vec2f pos, int tagid) {
+Pawn::Pawn(const std::string& name, vec2f pos, int tagid) {
     this->name  = name;
     this->pos   = pos;
     this->tagid = tagid;

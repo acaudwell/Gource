@@ -28,7 +28,7 @@ class GitRawCommitLog : public RCommitLog {
 protected:
     bool parseCommit(RCommit& commit);
 public:
-    GitRawCommitLog(std::string logfile);
+    GitRawCommitLog(const std::string& logfile);
 };
 
 #endif

@@ -29,7 +29,7 @@ std::string gGourceGitLogCommand = "git log "
     "--reverse --raw --encoding=UTF-8 "
     "--no-renames";
 
-GitCommitLog::GitCommitLog(std::string logfile) : RCommitLog(logfile, 'u') {
+GitCommitLog::GitCommitLog(const std::string& logfile) : RCommitLog(logfile, 'u') {
 
     log_command = gGourceGitLogCommand;
 
@@ -49,7 +49,7 @@ GitCommitLog::GitCommitLog(std::string logfile) : RCommitLog(logfile, 'u') {
     }
 }
 
-BaseLog* GitCommitLog::generateLog(std::string dir) {
+BaseLog* GitCommitLog::generateLog(const std::string& dir) {
     //get working directory
     char cwd_buff[1024];
 

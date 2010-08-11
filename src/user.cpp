@@ -21,7 +21,7 @@ float gGourceBeamDist          = 100.0;
 float gGourceActionDist        = 50.0;
 float gGourcePersonalSpaceDist = 100.0;
 
-RUser::RUser(std::string name, vec2f pos, int tagid) : Pawn(name,pos,tagid) {
+RUser::RUser(const std::string& name, vec2f pos, int tagid) : Pawn(name,pos,tagid) {
 
     this->name = name;
 

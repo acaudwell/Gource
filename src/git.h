@@ -29,9 +29,9 @@ extern std::string gGourceGitLogCommand;
 class GitCommitLog : public RCommitLog {
 protected:
     bool parseCommit(RCommit& commit);
-    BaseLog* generateLog(std::string dir);
+    BaseLog* generateLog(const std::string& dir);
 public:
-    GitCommitLog(std::string logfile);
+    GitCommitLog(const std::string& logfile);
 };
 
 #endif

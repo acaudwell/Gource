@@ -29,9 +29,9 @@
 class ApacheCombinedLog : public RCommitLog {
 protected:
     bool parseCommit(RCommit& commit);
-    BaseLog* generateLog(std::string dir);
+    BaseLog* generateLog(const std::string& dir);
 public:
-    ApacheCombinedLog(std::string logfile);
+    ApacheCombinedLog(const std::string& logfile);
 };
 
 #endif

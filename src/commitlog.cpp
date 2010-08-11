@@ -17,7 +17,7 @@
 
 #include "commitlog.h"
 
-std::string munge_utf8(std::string& str) {
+std::string munge_utf8(const std::string& str) {
 
     std::string munged;
     try {
@@ -32,7 +32,7 @@ std::string munge_utf8(std::string& str) {
 
 //RCommitLog
 
-RCommitLog::RCommitLog(std::string logfile, int firstChar) {
+RCommitLog::RCommitLog(const std::string& logfile, int firstChar) {
 
     logf     = 0;
     seekable = false;
@@ -242,13 +242,15 @@ void RCommitLog::createTempLog() {
 
 // RCommitFile
 
-RCommitFile::RCommitFile(std::string filename, std::string action, vec3f colour) {
+RCommitFile::RCommitFile(const std::string& filename, const std::string& action, vec3f colour) {
+
+    this->filename = munge_utf8(filename);
+
     //prepend a root slash
-    if(filename[0] != '/') filename = std::string("/") + filename;
+    if(this->filename[0] != '/') {
+        this->filename.insert(0, 1, '/');
+    }
 
-    filename = munge_utf8(filename);
-
-    this->filename = filename;
     this->action   = action;
     this->colour   = colour;
 }
@@ -257,7 +259,7 @@ RCommit::RCommit() {
     timestamp = 0;
 }
 
-vec3f RCommit::fileColour(std::string filename) {
+vec3f RCommit::fileColour(const std::string& filename) {
 
     size_t pos = filename.rfind('.');
 
@@ -270,11 +272,11 @@ vec3f RCommit::fileColour(std::string filename) {
     }
 }
 
-void RCommit::addFile(std::string& filename, std::string& action) {
+void RCommit::addFile(const std::string& filename, const std::string& action) {
     files.push_back(RCommitFile(filename, action, fileColour(filename)));
 }
 
-void RCommit::addFile(std::string& filename, std::string& action, vec3f colour) {
+void RCommit::addFile(const std::string& filename, const  std::string& action, vec3f colour) {
     files.push_back(RCommitFile(filename, action, colour));
 }
 

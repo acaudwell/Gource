@@ -26,7 +26,7 @@ std::string gGourceBzrLogCommand() {
     return std::string("bzr log --verbose -r 1..-1 --short -n0 --forward");
 }
 
-BazaarLog::BazaarLog(std::string logfile) : RCommitLog(logfile) {
+BazaarLog::BazaarLog(const std::string& logfile) : RCommitLog(logfile) {
 
     log_command = gGourceBzrLogCommand();
 
@@ -41,7 +41,7 @@ BazaarLog::BazaarLog(std::string logfile) : RCommitLog(logfile) {
     }
 }
 
-BaseLog* BazaarLog::generateLog(std::string dir) {
+BaseLog* BazaarLog::generateLog(const std::string& dir) {
 
     //does directory have a .bzr ?
     std::string bzrdir = dir + std::string("/.bzr");

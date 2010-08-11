@@ -171,7 +171,7 @@ class Gource : public SDLApp {
 
     void toggleCameraMode();
 
-    RCommitLog* determineFormat(std::string logfile);
+    RCommitLog* determineFormat(const std::string& logfile);
 
     void interactUsers();
 

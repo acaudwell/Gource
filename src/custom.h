@@ -25,10 +25,10 @@ protected:
 
     bool readCustomCommit(RCommit& commit);
 
-    vec3f parseColour(std::string cstr);
+    vec3f parseColour(const std::string& cstr);
     bool parseCommit(RCommit& commit);
 public:
-    CustomLog(std::string logfile);
+    CustomLog(const std::string& logfile);
 };
 
 #endif

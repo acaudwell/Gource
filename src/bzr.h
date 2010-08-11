@@ -25,9 +25,9 @@ std::string gGourceBzrLogCommand();
 class BazaarLog : public RCommitLog {
 protected:
     bool parseCommit(RCommit& commit);
-    BaseLog* generateLog(std::string dir);
+    BaseLog* generateLog(const std::string& dir);
 public:
-    BazaarLog(std::string logfile);
+    BazaarLog(const std::string& logfile);
 };
 
 #endif

@@ -78,7 +78,7 @@ bool PositionSlider::click(vec2f pos, float* percent_ptr) {
     return false;
 }
 
-void PositionSlider::setCaption(std::string caption) {
+void PositionSlider::setCaption(const std::string& caption) {
     capwidth = 0.0;
     this->caption = caption;
 

@@ -28,7 +28,7 @@ Regex git_raw_file("^:[0-9]+ [0-9]+ [0-9a-z]+\\.* ([0-9a-z]+)\\.* ([A-Z])[ \\t]+
 
 std::string gGourceGitRawLogCommand = "git log --reverse --raw --pretty=raw";
 
-GitRawCommitLog::GitRawCommitLog(std::string logfile) : RCommitLog(logfile, 'c') {
+GitRawCommitLog::GitRawCommitLog(const std::string& logfile) : RCommitLog(logfile, 'c') {
 
     log_command = gGourceGitRawLogCommand;
 }
