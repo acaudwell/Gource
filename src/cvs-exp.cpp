@@ -20,8 +20,8 @@
 Regex cvsexp_commitno_regex("^([0-9]{6}):");
 Regex cvsexp_branch_regex("^BRANCH \\[(.+)\\]$");
 Regex cvsexp_date_regex("^\\(date: ([0-9]{4})[-/]([0-9]{2})[-/]([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})(?: [+-][0-9]{4})?;(.+)$");
-Regex cvsexp_detail_regex("author: ([a-zA-Z0-9_-]+);  state: ([a-zA-Z]+);(.+)$");
-Regex cvsexp_lines_regex("lines: \\+([0-9]+) -([0-9]+)");
+Regex cvsexp_detail_regex("author: ([^;]+);  state: ([^;]+);(.+)$");
+//Regex cvsexp_lines_regex("lines: \\+([0-9]+) -([0-9]+)");
 Regex cvsexp_entry_regex("\\| (.+),v:([0-9.]+),?");
 Regex cvsexp_end_regex("^(=+)$");
 
@@ -86,8 +86,9 @@ bool CVSEXPCommitLog::parseCommit(RCommit& commit) {
 
     commit.username = entries[0];
 
-    std::string commit_state    = entries[1];
+    std::string commit_state = entries[1];
 
+    /* not used
     //if rest is not ')' parse lines
     rest = entries[2];
 
@@ -95,6 +96,7 @@ bool CVSEXPCommitLog::parseCommit(RCommit& commit) {
     if(rest.size() > 2) {
         if(!cvsexp_lines_regex.match(rest, &entries)) return false;
     }
+    */
 
     if(!logf->getNextLine(line)) return false;
 

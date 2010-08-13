@@ -1,6 +1,7 @@
 0.28:
  * Bazaar support for merged commits (Nick Moffit).
  * C++ efficiency improvements (Oliver Smith).
+ * Improved cvs-exp log compatibility.
 
 0.27:
  * Display time stops at the time of the last commit.
