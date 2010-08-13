@@ -51,6 +51,9 @@ void RUser::addAction(RAction* action) {
 
     if(action->source != this) return;
 
+    if(isIdle()) showName();
+    //name_interval = name_interval > 0.0 ? std::max(name_interval,nametime-1.0f) : nametime;
+
     actions.push_back(action);
     actionCount++;
 }

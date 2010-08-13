@@ -2,6 +2,7 @@
  * Bazaar support for merged commits (Nick Moffit).
  * C++ efficiency improvements (Oliver Smith).
  * Improved cvs-exp log compatibility.
+ * Re-show name of user when adding a new action if user is idle.
 
 0.27:
  * Display time stops at the time of the last commit.
