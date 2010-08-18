@@ -27,6 +27,7 @@ ZoomCamera::ZoomCamera(vec3f start, vec3f target, float min_distance, float max_
     setMinDistance(min_distance);
     setMaxDistance(max_distance);
 
+    padding = 1.0;
     speed = 1.0;
     lockon = false;
     lockon_time = 0.0;
@@ -39,6 +40,10 @@ void ZoomCamera::reset() {
 
 float ZoomCamera::getMaxDistance() { return max_distance; }
 float ZoomCamera::getMinDistance() { return min_distance; }
+
+void ZoomCamera::setPadding(float padding) {
+    this->padding = padding;
+}
 
 void ZoomCamera::setMaxDistance(float max) {
     max_distance = max;
@@ -67,8 +72,8 @@ void ZoomCamera::adjust(Bounds2D& bounds) {
     //center camera on bounds
 
     //scale by 10% so we dont have stuff right on the edge of the screen
-    float width  = bounds.width() * 1.10;
-    float height = bounds.height() * 1.10;
+    float width  = bounds.width() * padding;
+    float height = bounds.height() * padding;
 
     vec2f centre  = bounds.centre();
 

@@ -30,6 +30,7 @@ class ZoomCamera : public Camera {
     float speed;
     float lockon_time;
 
+    float padding;
     float min_distance, max_distance;
 public:
     ZoomCamera();
@@ -41,6 +42,8 @@ public:
 
     float getMinDistance();
     float getMaxDistance();
+
+    void setPadding(float padding);
 
     void setMinDistance(float min);
     void setMaxDistance(float max);
