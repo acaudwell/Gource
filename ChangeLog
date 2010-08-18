@@ -5,6 +5,7 @@
  * Re-show name of user when adding a new action if user is idle.
  * Added --padding option to control camera view padding.
  * More accurate camera tracking (tracks the bounding boxes of objects).
+ * Improved automatic rotation logic.
 
 0.27:
  * Display time stops at the time of the last commit.

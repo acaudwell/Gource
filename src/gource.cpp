@@ -757,6 +757,7 @@ void Gource::reset() {
     hoverFile = 0;
 
     manual_rotate = false;
+    rotation_interval = 0.0f;
 
     selectedUser = 0;
     hoverUser = 0;
@@ -1253,19 +1254,22 @@ void Gource::updateCamera(float dt) {
     //automatically rotate camera
     if(auto_rotate) {
 
-        float dratio = 0.95f;
+        if(rotation_interval > 0.0f) {
 
-        bool rightmouse = cursor.rightButtonPressed();
+            //rotate 90 degrees over the period of 1 second
+            rotate_angle = 90.0f * std::min(rotation_interval, rotation_interval*dt) * DEGREES_TO_RADIANS;
+            rotation_interval -= rotation_interval*dt;
 
-        if(!rightmouse && dir_bounds.area() > 10000.0f) {
+        } else if(!cursor.rightButtonPressed() && dir_bounds.area() > 10000.0f) {
 
             float ratio = dir_bounds.width() / dir_bounds.height();
 
-            if(ratio<dratio) {
-                //rotate up to 90 degrees a second
-                rotate_angle = 90.0f * (dratio-ratio) * dt * DEGREES_TO_RADIANS;
+            if(ratio < 0.67f) {
+                rotation_interval = 1.0f;
             }
         }
+    } else {
+        rotation_interval = 0.0f;
     }
 }
 
@@ -1948,6 +1952,7 @@ void Gource::draw(float t, float dt) {
         font.print(1,320,"User Inner Loops: %d", gGourceUserInnerLoops);
         font.print(1,340,"Dir Inner Loops: %d (QTree items = %d, nodes = %d)", gGourceDirNodeInnerLoops,
             dirNodeTree->item_count, dirNodeTree->node_count);
+        font.print(1,360,"Dir Bounds Ratio: %.2f", dir_bounds.width() / dir_bounds.height());
 
         if(selectedUser != 0) {
 

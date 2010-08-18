@@ -65,6 +65,7 @@ class Gource : public SDLApp {
     bool debug, trace_debug;
 
     bool manual_rotate;
+    float rotation_interval;
 
     MouseCursor cursor;
 

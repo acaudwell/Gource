@@ -83,7 +83,7 @@ if(extended_help) {
 
     printf("  --camera-mode MODE       Camera mode (overview,track)\n");
     printf("  --crop AXIS              Crop view on an axis (vertical,horizontal)\n");
-    printf("  --padding FLOAT          Camera view padding (default: 1.0)\n\n");
+    printf("  --padding FLOAT          Camera view padding (default: 1.1)\n\n");
 
     printf("  --disable-auto-rotate    Disable automatic camera rotation\n\n");
 
@@ -282,7 +282,7 @@ void GourceSettings::setGourceDefaults() {
     user_image_map.clear();
 
     camera_mode     = "overview";
-    padding         = 1.0f;
+    padding         = 1.1f;
 
     crop_vertical   = false;
     crop_horizontal = false;
