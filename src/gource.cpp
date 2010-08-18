@@ -29,6 +29,10 @@ Gource::Gource(FrameExporter* exporter) {
 
     commitlog = 0;
 
+    if(!gGourceSettings.file_graphic) {
+        gGourceSettings.file_graphic = texturemanager.grab("file.png");
+    }
+
     fontlarge = fontmanager.grab("FreeSans.ttf", 42);
     fontlarge.dropShadow(true);
     fontlarge.roundCoordinates(true);
@@ -98,7 +102,8 @@ Gource::Gource(FrameExporter* exporter) {
     date_x_offset = 0;
 
     camera = ZoomCamera(vec3f(0,0, -300), vec3f(0.0, 0.0, 0.0), 250.0, 5000.0);
-
+    camera.setPadding(gGourceSettings.padding);
+    
     setCameraMode(gGourceSettings.camera_mode);
 
     root = 0;
@@ -1057,7 +1062,6 @@ void Gource::interactUsers() {
     for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
         RUser* user = it->second;
 
-        user->updateQuadItemBounds();
         userTree->addItem(user);
     }
 
@@ -1081,10 +1085,11 @@ void Gource::updateBounds() {
     user_bounds.reset();
 
     for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
-        RUser* u = it->second;
+        RUser* user = it->second;
 
-        if(!u->isIdle()) {
-            user_bounds.update(u->getPos());
+        if(!user->isIdle()) {
+            user->updateQuadItemBounds();
+            user_bounds.update(user->quadItemBounds);
         }
     }
 
@@ -1094,7 +1099,8 @@ void Gource::updateBounds() {
         RDirNode* node = it->second;
 
         if(node->isVisible()) {
-            dir_bounds.update(node->getPos());
+            node->updateQuadItemBounds();
+            dir_bounds.update(node->quadItemBounds);
         }
     }
 }
@@ -1104,9 +1110,6 @@ void Gource::updateUsers(float t, float dt) {
     std::vector<RUser*> inactiveUsers;
 
     size_t idle_users = 0;
-
-    //recalc the user bounds
-    user_bounds.reset();
 
     // move users
     for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
@@ -1156,7 +1159,7 @@ void Gource::updateUsers(float t, float dt) {
     }
 }
 
-void Gource::updateQuadTree() {
+void Gource::interactDirs() {
 
     // update quad tree
     Bounds2D quadtreebounds = dir_bounds;
@@ -1182,7 +1185,6 @@ void Gource::updateQuadTree() {
         RDirNode* node = it->second;
 
         if(!node->empty()) {
-            node->updateQuadItemBounds();
             dirNodeTree->addItem(node);
         }
     }
@@ -1329,7 +1331,7 @@ void Gource::logic(float t, float dt) {
     //still want to update camera while paused
     if(paused) {
         updateBounds();
-        updateQuadTree();
+        interactDirs();
         updateCamera(dt);
         return;
     }
@@ -1398,11 +1400,12 @@ void Gource::logic(float t, float dt) {
     gGourceDirNodeInnerLoops = 0;
     gGourceFileInnerLoops = 0;
 
+    updateBounds();
+
     interactUsers();
     updateUsers(t, dt);
 
-    updateQuadTree();
-    updateBounds();
+    interactDirs();
     updateDirs(dt);
 
     updateCamera(dt);
@@ -1817,6 +1820,7 @@ void Gource::draw(float t, float dt) {
 
     if(debug) {
         glDisable(GL_TEXTURE_2D);
+        glLineWidth(2.0);
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
         track_users ? user_bounds.draw() : dir_bounds.draw();

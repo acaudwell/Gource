@@ -76,6 +76,7 @@ public:
     std::map<std::string, std::string> user_image_map;
 
     std::string camera_mode;
+    float padding;
 
     bool crop_vertical;
     bool crop_horizontal;
@@ -113,6 +114,8 @@ public:
     std::vector<Regex*> file_filters;
     std::vector<Regex*> user_filters;
     bool file_extensions;
+
+    TextureResource* file_graphic;
 
     GourceSettings();
 

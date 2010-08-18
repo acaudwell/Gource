@@ -34,7 +34,7 @@ RUser::RUser(const std::string& name, vec2f pos, int tagid) : Pawn(name,pos,tagi
 
     highlighted=false;
 
-    assignIcon();
+    assignUserImage();
 
     setSelected(false);
 
@@ -173,12 +173,12 @@ void RUser::applyForceToActions() {
 
 }
 
-void RUser::assignIcon() {
+void RUser::assignUserImage() {
     struct stat fileinfo;
 
     usercol = colourHash(name);
 
-    bool image_assigned = false;
+    TextureResource* graphic = 0;
 
     if(gGourceSettings.user_image_dir.size() > 0) {
 
@@ -196,23 +196,23 @@ void RUser::assignIcon() {
 
             if(!gGourceSettings.colour_user_images) usercol = vec3f(1.0, 1.0, 1.0);
 
-            icon = texturemanager.grabFile(imagefile);
+            graphic = texturemanager.grabFile(imagefile);
 
             setHighlighted(true);
-
-            image_assigned = true;
         }
     }
 
     //nope
-    if(!image_assigned) {
+    if(!graphic) {
         if(gGourceSettings.default_user_image.size() > 0) {
             if(!gGourceSettings.colour_user_images) usercol = vec3f(1.0, 1.0, 1.0);
-            icon = texturemanager.grabFile(gGourceSettings.default_user_image);
+            graphic = texturemanager.grabFile(gGourceSettings.default_user_image);
         } else {
-            icon = texturemanager.grab("no_photo.png");
+            graphic = texturemanager.grab("no_photo.png");
         }
     }
+
+    setGraphic(graphic);
 
     usercol = usercol * 0.6 + vec3f(1.0, 1.0, 1.0) * 0.4;
     usercol *= 0.9;
@@ -385,7 +385,7 @@ void RUser::drawNameText(float alpha) const {
 
         vec3f drawpos = vec3f(pos.x, pos.y, 0.0);
 
-        vec3f screenpos = display.project(drawpos - vec3f(0.0, 0.5 * size * (icon->h / (float) icon->w), 0.0f ));
+        vec3f screenpos = display.project(drawpos - vec3f(0.0, 0.5 * size * graphic_ratio, 0.0f ));
         screenpos.x -= namewidth * 0.5;
         screenpos.y -= font.getHeight();
 

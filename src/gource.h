@@ -173,12 +173,14 @@ class Gource : public SDLApp {
 
     RCommitLog* determineFormat(const std::string& logfile);
 
-    void interactUsers();
+    void updateCamera(float dt);
 
     void updateUsers(float t, float dt);
     void updateDirs(float dt);
-    void updateCamera(float dt);
-    void updateQuadTree();
+
+    void interactUsers();
+    void interactDirs();
+
     void updateBounds();
 
     void updateTime(time_t display_time);

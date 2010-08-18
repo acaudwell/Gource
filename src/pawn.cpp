@@ -40,6 +40,9 @@ Pawn::Pawn(const std::string& name, vec2f pos, int tagid) {
     this->name_interval = 0.0;
     this->namecol = vec3f(1.0, 1.0, 1.0);
     this->selectedcol = vec3f(1.0, 1.0, 0.3);
+
+    this->graphic = 0;
+    this->graphic_ratio = 1.0;
 }
 
 float Pawn::getSize() {
@@ -60,10 +63,9 @@ void Pawn::showName() {
 
 void Pawn::updateQuadItemBounds() {
 
-    float ratio = icon->h / (float) icon->w;
     float halfsize_x = size * 0.5f;
 
-    vec2f halfsize ( halfsize_x, halfsize_x * ratio );
+    vec2f halfsize ( halfsize_x, halfsize_x * graphic_ratio );
 
     //set bounds
     quadItemBounds.set(pos - halfsize, pos + halfsize);
@@ -76,6 +78,18 @@ void Pawn::logic(float dt) {
         if(name_interval>0.0) name_interval -= dt;
     }
 }
+
+void Pawn::setGraphic(TextureResource* graphic) {
+
+    if(graphic) {
+        graphic_ratio = graphic->h / (float) graphic->w;
+    } else {
+        graphic_ratio = 1.0f;
+    }
+
+    this->graphic = graphic;
+}
+
 
 void Pawn::setMouseOver(bool over) {
     showName();
@@ -136,9 +150,8 @@ void Pawn::drawSimple(float dt) {
 
     glLoadName(tagid);
 
-    float ratio = icon->h / (float) icon->w;
     float halfsize = size * 0.5f;
-    vec2f offsetpos = pos - vec2f(halfsize, halfsize*ratio);
+    vec2f offsetpos = pos - vec2f(halfsize, halfsize*graphic_ratio);
 
     float alpha = getAlpha();
     vec3f col = getColour();
@@ -156,10 +169,10 @@ void Pawn::drawSimple(float dt) {
             glVertex2f(size, 0.0f);
 
             glTexCoord2f(1.0f,1.0f);
-            glVertex2f(size, size*ratio);
+            glVertex2f(size, size*graphic_ratio);
 
             glTexCoord2f(0.0f,1.0f);
-            glVertex2f(0.0f, size*ratio);
+            glVertex2f(0.0f, size*graphic_ratio);
         glEnd();
 
     glPopMatrix();
@@ -167,13 +180,12 @@ void Pawn::drawSimple(float dt) {
 void Pawn::drawShadow(float dt) {
     if(isHidden() || !shadow) return;
 
-    float ratio = icon->h / (float) icon->w;
     float halfsize = size * 0.5f;
-    vec2f offsetpos = pos - vec2f(halfsize, halfsize*ratio) + shadowOffset;
+    vec2f offsetpos = pos - vec2f(halfsize, halfsize*graphic_ratio) + shadowOffset;
 
     float alpha = getAlpha();
 
-    glBindTexture(GL_TEXTURE_2D, getIcon()->textureid);
+    glBindTexture(GL_TEXTURE_2D, graphic->textureid);
 
     glColor4f(0.0, 0.0, 0.0, alpha * gGourceShadowStrength);
 
@@ -188,10 +200,10 @@ void Pawn::drawShadow(float dt) {
             glVertex2f(size, 0.0f);
 
             glTexCoord2f(1.0f,1.0f);
-            glVertex2f(size, size*ratio);
+            glVertex2f(size, size*graphic_ratio);
 
             glTexCoord2f(0.0f,1.0f);
-            glVertex2f(0.0f, size*ratio);
+            glVertex2f(0.0f, size*graphic_ratio);
         glEnd();
     glPopMatrix();
 }
@@ -202,15 +214,14 @@ void Pawn::draw(float dt) {
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
 
-    float ratio = icon->h / (float) icon->w;
     float halfsize = size * 0.5f;
-    vec2f offsetpos = pos - vec2f(halfsize, halfsize*ratio);
+    vec2f offsetpos = pos - vec2f(halfsize, halfsize*graphic_ratio);
 
     float alpha = getAlpha();
 
     vec3f col = getColour();
 
-    glBindTexture(GL_TEXTURE_2D, getIcon()->textureid);
+    glBindTexture(GL_TEXTURE_2D, graphic->textureid);
 
     glPushMatrix();
         glTranslatef(offsetpos.x, offsetpos.y, 0.0f);
@@ -225,10 +236,10 @@ void Pawn::draw(float dt) {
             glVertex2f(size, 0.0f);
 
             glTexCoord2f(1.0f,1.0f);
-            glVertex2f(size, size*ratio);
+            glVertex2f(size, size*graphic_ratio);
 
             glTexCoord2f(0.0f,1.0f);
-            glVertex2f(0.0f, size*ratio);
+            glVertex2f(0.0f, size*graphic_ratio);
         glEnd();
 
     glPopMatrix();

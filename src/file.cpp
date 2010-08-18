@@ -23,9 +23,10 @@ std::vector<RFile*> gGourceRemovedFiles;
 
 RFile::RFile(const std::string & name, const vec3f & colour, const vec2f & pos, int tagid) : Pawn(name,pos,tagid) {
     hidden = true;
-    icon = texturemanager.grab("file.png");
     size = gGourceFileDiameter;
     radius = size * 0.5;
+
+    setGraphic(gGourceSettings.file_graphic);
 
     speed = 5.0;
     nametime = 4.0;

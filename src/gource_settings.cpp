@@ -81,8 +81,9 @@ if(extended_help) {
     printf("  --bloom-multiplier       Adjust the amount of bloom (default: 1.0)\n");
     printf("  --bloom-intensity        Adjust the intensity of the bloom (default: 0.75)\n\n");
 
+    printf("  --camera-mode MODE       Camera mode (overview,track)\n");
     printf("  --crop AXIS              Crop view on an axis (vertical,horizontal)\n");
-    printf("  --camera-mode MODE       Camera mode (overview,track)\n\n");
+    printf("  --padding FLOAT          Camera view padding (default: 1.0)\n\n");
 
     printf("  --disable-auto-rotate    Disable automatic camera rotation\n\n");
 
@@ -134,6 +135,7 @@ if(extended_help) {
 
 GourceSettings::GourceSettings() {
     repo_count = 0;
+    file_graphic = 0;
 
     setGourceDefaults();
 
@@ -205,6 +207,7 @@ GourceSettings::GourceSettings() {
     arg_types["stop-at-time"]      = "float";
     arg_types["max-user-speed"]    = "float";
     arg_types["user-friction"]     = "float";
+    arg_types["padding"]           = "float";
 
     arg_types["max-files"] = "int";
     arg_types["font-size"] = "int";
@@ -279,6 +282,7 @@ void GourceSettings::setGourceDefaults() {
     user_image_map.clear();
 
     camera_mode     = "overview";
+    padding         = 1.0f;
 
     crop_vertical   = false;
     crop_horizontal = false;
@@ -384,9 +388,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
     if(gource_settings == 0) gource_settings = conffile.getSection(default_section_name);
 
     if(gource_settings == 0) {
-        ConfSection* gource_section = new ConfSection("gource");
-        conffile.addSection(gource_section);
-        gource_settings = gource_section;
+        gource_settings = conffile.addSection("gource");
     }
 
     ConfEntry* entry = 0;
@@ -879,6 +881,17 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         camera_mode = entry->getString();
 
         if(camera_mode != "overview" && camera_mode != "track") {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("padding")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify padding (float)");
+
+        padding = entry->getFloat();
+
+        if(padding <= 0.0f || padding >= 2.0f) {
             conffile.invalidValueException(entry);
         }
     }

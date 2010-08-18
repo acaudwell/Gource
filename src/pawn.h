@@ -54,9 +54,8 @@ protected:
 
     FXFont font;
 
-    TextureResource* icon;
-
-    int class_id;
+    float graphic_ratio;
+    TextureResource* graphic;
 
     bool mouseover;
 
@@ -92,7 +91,7 @@ public:
     virtual float getAlpha() const{ return std::min(elapsed/fadetime, 1.0f); }
     virtual vec3f getColour() const { return vec3f(1.0, 1.0, 1.0); }
 
-    virtual TextureResource* getIcon() { return icon; };
+    void setGraphic(TextureResource* graphic);
 
     void logic(float dt);
     void draw(float dt);

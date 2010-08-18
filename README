@@ -152,6 +152,9 @@ options:
     --crop AXIS
             Crop view on an axis (vertical,horizontal).
 
+    --padding FLOAT
+            Camera view padding.
+
     --multi-sampling
             Enable multi-sampling.
 

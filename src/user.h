@@ -32,7 +32,8 @@ class RAction;
 class RFile;
 
 class RUser : public Pawn {
-    void assignIcon();
+
+    void assignUserImage();
 
     std::list<RAction*> actions;
     std::list<RAction*> activeActions;
