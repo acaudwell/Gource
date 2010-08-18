@@ -52,15 +52,11 @@ void RAction::draw(float dt) {
     vec2f offset     = (dest - src).normal().perpendicular() * target->getSize() * 0.5;
     vec2f offset_src = offset * 0.3f;
 
-    float max_alpha = 1.0;
-    float alpha = max_alpha * (1.0 - progress);
-
+    float alpha = 1.0 - progress;
     float alpha2 = alpha * 0.1;
 
     vec4f col1 = vec4f(colour, alpha);
     vec4f col2 = vec4f(colour, alpha2);
-
-    glColor4f(1.0, 1.0, 1.0, 1.0);
 
     glBegin(GL_QUADS);
         glColor4fv(col2);
