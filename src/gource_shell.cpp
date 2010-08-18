@@ -120,7 +120,7 @@ Gource* GourceShell::getNext() {
 }
 
 void GourceShell::blendLastFrame(float dt) {
-    if(transition_texture==0 || transition_interval<0.0f) return;
+    if(transition_texture==0 || transition_interval <= 0.0f) return;
 
     display.mode2D();
 
