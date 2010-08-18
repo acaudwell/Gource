@@ -1101,11 +1101,9 @@ void RDirNode::drawSimple(const Frustum & frustum, float dt) const{
 void RDirNode::updateQuadItemBounds() {
     float radius = getRadius();
 
-    //set bounds
-    Bounds2D bounds;
-    bounds.update(pos - vec2f(radius,radius));
-    bounds.update(pos + vec2f(radius,radius));
+    vec2f radoffset(radius, radius);
 
-    quadItemBounds = bounds;
+    //set bounds
+    quadItemBounds.set(pos - radoffset, pos + radoffset);
 }
 

@@ -61,14 +61,12 @@ void Pawn::showName() {
 void Pawn::updateQuadItemBounds() {
 
     float ratio = icon->h / (float) icon->w;
-    float halfsize = size * 0.5f;
+    float halfsize_x = size * 0.5f;
+
+    vec2f halfsize ( halfsize_x, halfsize_x * ratio );
 
     //set bounds
-    Bounds2D bounds;
-    bounds.update(pos - vec2f(halfsize,halfsize));
-    bounds.update(pos + vec2f(halfsize,halfsize));
-
-    quadItemBounds = bounds;
+    quadItemBounds.set(pos - halfsize, pos + halfsize);
 }
 
 void Pawn::logic(float dt) {
