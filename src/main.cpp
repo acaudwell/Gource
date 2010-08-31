@@ -110,8 +110,12 @@ int main(int argc, char *argv[]) {
     //enable vsync
     display.enableVsync(true);
 
-    try {
+#ifdef SDLAPP_XWINDOWS
+    //set window-id specified
+    if(gGourceSettings.window_id > 0) display.setXWindow(gGourceSettings.window_id);
+#endif
 
+    try {
         display.init("Gource", gGourceSettings.display_width, gGourceSettings.display_height, gGourceSettings.fullscreen);
 
     } catch(SDLInitException& exception) {

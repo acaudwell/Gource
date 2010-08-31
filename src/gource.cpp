@@ -75,13 +75,13 @@ Gource::Gource(FrameExporter* exporter) {
     mousedragged = false;
     mouseclicked = false;
 
-    if(1) {
+    if(!display.screensaver) {
         cursor.setCursorTexture(texturemanager.grab("cursor.png"));
         cursor.useSystemCursor(false);
-    }
 
-    if(gGourceSettings.hide_mouse) {
-        cursor.showCursor(false);
+        if(gGourceSettings.hide_mouse) {
+            cursor.showCursor(false);
+        }
     }
 
     splash = -1.0;
@@ -119,7 +119,7 @@ Gource::Gource(FrameExporter* exporter) {
     if(exporter!=0) setFrameExporter(exporter, gGourceSettings.output_framerate);
 
     //if recording a video or in demo mode, or multiple repos, the slider is initially hidden
-    if(exporter==0 && gGourceSettings.repo_count==1) slider.show();
+    if(exporter==0 && gGourceSettings.repo_count==1 && !display.screensaver) slider.show();
 }
 
 RCommitLog* Gource::determineFormat(const std::string& logfile) {
