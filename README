@@ -45,6 +45,9 @@ options:
             Set the viewport size. If -f is also supplied, will attempt to set
             the video mode to this also.
 
+    --window-id WINDOW_ID
+            Set the window to use (X Windows).
+
     -f, --fullscreen
             Fullscreen.
 

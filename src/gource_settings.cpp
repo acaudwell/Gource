@@ -36,6 +36,9 @@ void GourceSettings::help(bool extended_help) {
     printf("  -h, --help                       Help\n\n");
     printf("  -WIDTHxHEIGHT, --viewport        Set viewport size\n");
     printf("  -f, --fullscreen                 Fullscreen\n");
+#ifdef SDLAPP_XWINDOWS
+    printf("      --window-id WINDOW_ID        Set the window to use\n");
+#endif
     printf("      --multi-sampling             Enable multi-sampling\n\n");
 
     printf("  -p, --start-position POSITION    Begin at some position (0.0-1.0 or 'random')\n");

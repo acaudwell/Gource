@@ -27,6 +27,7 @@
 #include "bzr.h"
 #include "cvs-exp.h"
 
+#include "core/display.h"
 #include "core/settings.h"
 #include "core/regex.h"
 
