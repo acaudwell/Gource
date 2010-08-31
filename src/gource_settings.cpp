@@ -38,7 +38,9 @@ void GourceSettings::help(bool extended_help) {
     printf("  -f, --fullscreen                 Fullscreen\n");
     printf("      --multi-sampling             Enable multi-sampling\n");
     printf("      --no-vsync                   Disable vsync\n\n");
-
+#ifdef SDLAPP_XWINDOWS
+    printf("      --window-id WINDOW_ID        Set the window to use\n");
+#endif
     printf("  -p, --start-position POSITION    Begin at some position (0.0-1.0 or 'random')\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
     printf("  -t, --stop-at-time SECONDS       Stop after a specified number of seconds\n");

@@ -29,6 +29,7 @@
 #include "formats/cvs2cl.h"
 #include "formats/svn.h"
 
+#include "core/display.h"
 #include "core/settings.h"
 #include "core/regex.h"
 
