@@ -381,6 +381,9 @@ void GourceSettings::commandLineOption(const std::string& name, const std::strin
 }
 
 
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
 void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gource_settings) {
 
     setGourceDefaults();
@@ -573,6 +576,18 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
                 std::string image_path = gGourceSettings.user_image_dir + dirfile;
                 std::string name       = dirfile.substr(0,extpos);
+              
+#ifdef __APPLE__
+                CFMutableStringRef help = CFStringCreateMutable(kCFAllocatorDefault, 0);
+                CFStringAppendCString(help, name.c_str(), kCFStringEncodingUTF8);
+                CFStringNormalize(help, kCFStringNormalizationFormC);
+                char data[4096];
+                CFStringGetCString(help,
+                                   data,
+                                   sizeof(data),
+                                   kCFStringEncodingUTF8);
+                name = data;
+#endif
 
                 debugLog("%s => %s\n", name.c_str(), image_path.c_str());
 
