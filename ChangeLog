@@ -1,3 +1,6 @@
+0.29:
+ * Fix handling of avatars for UTF-8 usernames on MACOSX (Christian Köstlin).
+
 0.28:
  * Bazaar support for merged commits (Nick Moffit).
  * C++ efficiency improvements (Oliver Smith).
