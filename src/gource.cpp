@@ -103,7 +103,7 @@ Gource::Gource(FrameExporter* exporter) {
 
     camera = ZoomCamera(vec3f(0,0, -300), vec3f(0.0, 0.0, 0.0), 250.0, 5000.0);
     camera.setPadding(gGourceSettings.padding);
-    
+
     setCameraMode(gGourceSettings.camera_mode);
 
     root = 0;
@@ -248,7 +248,7 @@ void Gource::update(float t, float dt) {
     }
 
     //apply time scaling
-    scaled_dt *= time_scale;
+    scaled_dt *= gGourceSettings.time_scale;
 
     //have to manage runtime internally as we're messing with dt
     if(!paused) runtime += scaled_dt;
@@ -716,24 +716,24 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
 
         if(e->keysym.unicode == SDLK_PERIOD) {
 
-            if(time_scale>=1.0) {
-                time_scale = std::min(4.0f, floorf(time_scale) + 1.0f);
+            if(gGourceSettings.time_scale>=1.0) {
+                gGourceSettings.time_scale = std::min(4.0f, floorf(gGourceSettings.time_scale) + 1.0f);
             } else {
-                time_scale = std::min(1.0f, time_scale * 2.0f);
+                gGourceSettings.time_scale = std::min(1.0f, gGourceSettings.time_scale * 2.0f);
             }
         }
 
         if(e->keysym.unicode == SDLK_COMMA) {
 
-            if(time_scale>1.0) {
-                time_scale = std::max(0.0f, floorf(time_scale) - 1.0f);
+            if(gGourceSettings.time_scale>1.0) {
+                gGourceSettings.time_scale = std::max(0.0f, floorf(gGourceSettings.time_scale) - 1.0f);
             } else {
-                time_scale = std::max(0.25f, time_scale * 0.5f);
+                gGourceSettings.time_scale = std::max(0.25f, gGourceSettings.time_scale * 0.5f);
             }
         }
 
         if(e->keysym.unicode == SDLK_SLASH) {
-            time_scale = 1.0f;
+            gGourceSettings.time_scale = 1.0f;
         }
     }
 }
@@ -790,8 +790,6 @@ void Gource::reset() {
 
     files.clear();
 
-
-    time_scale = 1.0f;
     idle_time=0;
     currtime=0;
     lasttime=0;
@@ -1939,7 +1937,7 @@ void Gource::draw(float t, float dt) {
         font.print(1,20, "FPS: %.2f", fps);
         font.print(1,40,"Days Per Second: %.2f",
             gGourceSettings.days_per_second);
-        font.print(1,60,"Time Scale: %.2f", time_scale);
+        font.print(1,60,"Time Scale: %.2f", gGourceSettings.time_scale);
         font.print(1,80,"Users: %d", users.size());
         font.print(1,100,"Files: %d", files.size());
         font.print(1,120,"Dirs: %d",  gGourceDirMap.size());

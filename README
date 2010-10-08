@@ -78,6 +78,9 @@ options:
         --realtime
             Realtime playback speed.
 
+    -c, --time-scale SCALE
+            Change simulation time scale.
+
     -i, --file-idle-time SECONDS
             Time in seconds files remain idle before they are removed.
 

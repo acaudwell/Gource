@@ -82,7 +82,6 @@ class Gource : public SDLApp {
     bool backgroundSelected;
 
     float last_percent;
-    float time_scale;
 
     bool stop_position_reached;
 

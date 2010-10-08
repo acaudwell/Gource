@@ -26,7 +26,7 @@ void GourceSettings::help(bool extended_help) {
     SDLAppCreateWindowsConsole();
 
     //resize window to fit help message
-    SDLAppResizeWindowsConsole(770);
+    SDLAppResizeWindowsConsole(790);
 #endif
 
     printf("Gource v%s\n", GOURCE_VERSION);
@@ -50,6 +50,7 @@ void GourceSettings::help(bool extended_help) {
     printf("      --disable-auto-skip          Disable auto skip\n");
     printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 10)\n");
     printf("      --realtime                   Realtime playback speed\n");
+    printf("  -c, --time-scale SCALE           Change simuation time scale (default: 1.0)\n");
     printf("  -e, --elasticity FLOAT           Elasticity of nodes\n\n");
 
     printf("  --user-image-dir DIRECTORY       Dir containing images to use as avatars\n");
@@ -152,6 +153,7 @@ GourceSettings::GourceSettings() {
     arg_aliases["?"] = "help";
     arg_aliases["H"] = "extended-help";
     arg_aliases["b"] = "background-colour";
+    arg_aliases["c"] = "time-scale";
     arg_aliases["background"] = "background-colour";
     arg_aliases["disable-bloom"]    = "hide-bloom";
     arg_aliases["disable-progress"] = "hide-progress";
@@ -208,6 +210,7 @@ GourceSettings::GourceSettings() {
     arg_types["max-user-speed"]    = "float";
     arg_types["user-friction"]     = "float";
     arg_types["padding"]           = "float";
+    arg_types["time-scale"]        = "float";
 
     arg_types["max-files"] = "int";
     arg_types["font-size"] = "int";
@@ -270,6 +273,7 @@ void GourceSettings::setGourceDefaults() {
     auto_skip_seconds = 3.0f;
     days_per_second   = 0.1f; // TODO: check this is right
     file_idle_time    = 60.0f;
+    time_scale        = 1.0f;
 
     loop = false;
 
@@ -576,7 +580,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
                 std::string image_path = gGourceSettings.user_image_dir + dirfile;
                 std::string name       = dirfile.substr(0,extpos);
-              
+
 #ifdef __APPLE__
                 CFMutableStringRef help = CFStringCreateMutable(kCFAllocatorDefault, 0);
                 CFStringAppendCString(help, name.c_str(), kCFStringEncodingUTF8);
@@ -768,6 +772,17 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         }
     }
 
+    if((entry = gource_settings->getEntry("time-scale")) != 0) {
+
+        if(!entry->hasValue())
+            conffile.entryException(entry, "specify time-scale (scale)");
+
+        time_scale = entry->getFloat();
+
+        if(time_scale <= 0.0f || time_scale > 4.0f) {
+            conffile.entryException(entry, "time-scale outside of range 0.0 - 4.0");
+        }
+    }
 
     if((entry = gource_settings->getEntry("start-position")) != 0) {
 

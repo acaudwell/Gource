@@ -106,6 +106,7 @@ public:
     float user_idle_time;
     float user_friction;
     float user_scale;
+    float time_scale;
 
     bool highlight_dirs;
     bool highlight_all_users;
