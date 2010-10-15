@@ -76,6 +76,8 @@ void GourceSettings::help(bool extended_help) {
 if(extended_help) {
     printf("Extended Options:\n\n");
 
+    printf("  --output-custom-log FILE  Output a custom format log file ('-' for STDOUT).\n\n");
+    
     printf("  -b, --background-colour  FFFFFF    Background colour in hex\n");
     printf("      --background-image   IMAGE     Set a background image\n\n");
 
@@ -113,8 +115,11 @@ if(extended_help) {
     printf("  --follow-user USER       Camera will automatically follow this user\n");
     printf("  --highlight-user USER    Highlight the names of a particular user\n");
     printf("  --highlight-users        Highlight the names of all users\n\n");
-    printf("  --highlight-dirs         Highlight the names of all directories\n\n");
+    printf("  --highlight-dirs         Highlight the names of all directories\n");
+    printf("  --highlight-colour       Font colour for highlighted text\n\n");
 
+    printf("  --hash-seed SEED         Change the seed of hash function.\n\n");
+    
     printf("  --path PATH\n\n");
 }
 
@@ -169,6 +174,7 @@ GourceSettings::GourceSettings() {
     conf_sections["bzr-log-command"] = "command-line";
     conf_sections["load-config"]     = "command-line";
     conf_sections["save-config"]     = "command-line";
+    conf_sections["output-custom-log"] = "command-line";
 
     //boolean args
     arg_types["help"]            = "bool";
@@ -214,6 +220,7 @@ GourceSettings::GourceSettings() {
 
     arg_types["max-files"] = "int";
     arg_types["font-size"] = "int";
+    arg_types["hash-seed"] = "int";
 
     arg_types["user-filter"]    = "multi-value";
     arg_types["file-filter"]    = "multi-value";
@@ -226,6 +233,7 @@ GourceSettings::GourceSettings() {
     arg_types["log-command"]        = "string";
     arg_types["load-config"]        = "string";
     arg_types["save-config"]        = "string";
+    arg_types["output-custom-log"]  = "string";
     arg_types["path"]               = "string";
     arg_types["log-command"]        = "string";
     arg_types["background-colour"]  = "string";
@@ -244,6 +252,7 @@ GourceSettings::GourceSettings() {
     arg_types["camera-mode"]        = "string";
     arg_types["title"]              = "string";
     arg_types["font-colour"]        = "string";
+    arg_types["highlight-colour"]   = "string";
 }
 
 void GourceSettings::setGourceDefaults() {
@@ -301,6 +310,7 @@ void GourceSettings::setGourceDefaults() {
 
     font_size = 16;
     font_colour = vec3f(1.0f, 1.0f, 1.0f);
+    highlight_colour = vec3f(1.0f, 1.0f, 0.3f);
 
     elasticity = 0.0f;
 
@@ -322,6 +332,8 @@ void GourceSettings::setGourceDefaults() {
     highlight_all_users = false;
     highlight_dirs = false;
 
+    gStringHashSeed = 31;
+    
     //delete file filters
     for(std::vector<Regex*>::iterator it = file_filters.begin(); it != file_filters.end(); it++) {
         delete (*it);
@@ -378,6 +390,11 @@ void GourceSettings::commandLineOption(const std::string& name, const std::strin
     if(name == "bzr-log-command" || log_command == "bzr") {
         std::string command = gGourceBzrLogCommand();
         SDLAppInfo(command);
+    }
+
+    if(name == "output-custom-log" && value.size() > 0) {
+        output_custom_filename = value;
+        return;
     }
 
     std::string invalid_error = std::string("invalid ") + name + std::string(" value");
@@ -645,6 +662,13 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             conffile.invalidValueException(entry);
         }
     }
+    
+    if((entry = gource_settings->getEntry("hash-seed")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify hash seed (integer)");
+
+        gStringHashSeed = entry->getInt();
+    }    
 
     if((entry = gource_settings->getEntry("font-colour")) != 0) {
 
@@ -677,6 +701,24 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         } else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
             background_colour = vec3f(r,g,b);
             background_colour /= 255.0f;
+        } else {
+            conffile.invalidValueException(entry);
+        }
+    }
+    
+    if((entry = gource_settings->getEntry("highlight-colour")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify highlight colour (FFFFFF)");
+
+        int r,g,b;
+
+        std::string colstring = entry->getString();
+
+        if(entry->isVec3()) {
+            highlight_colour = entry->getVec3();
+        } else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
+            highlight_colour = vec3f(r,g,b);
+            highlight_colour /= 255.0f;
         } else {
             conffile.invalidValueException(entry);
         }

@@ -122,6 +122,33 @@ Gource::Gource(FrameExporter* exporter) {
     if(exporter==0 && gGourceSettings.repo_count==1) slider.show();
 }
 
+void Gource::writeCustomLog(const std::string& logfile, const std::string& output_file) {
+    RCommitLog* commitlog = determineFormat(logfile);
+    
+    if(!commitlog) return;
+
+    RCommit commit;
+
+    FILE* fh = stdout;
+    
+    if(output_file != "-") {
+        fh = fopen(output_file.c_str(), "w");
+    
+        if(!fh) return;
+    }
+   
+    while(commitlog->nextCommit(commit)) {
+        for(std::list<RCommitFile>::iterator it = commit.files.begin(); it != commit.files.end(); it++) {
+            RCommitFile& cf = *it;
+            fprintf(fh, "%d|%s|%s|%s\n", commit.timestamp, commit.username.c_str(), cf.action.c_str(), cf.filename.c_str());
+        }
+        commit.files.clear();
+    }
+
+    if(output_file != "-") fclose(fh);
+
+}
+
 RCommitLog* Gource::determineFormat(const std::string& logfile) {
     debugLog("determineFormat(%s)\n", logfile.c_str());
 

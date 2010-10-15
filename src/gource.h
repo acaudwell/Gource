@@ -171,7 +171,7 @@ class Gource : public SDLApp {
 
     void toggleCameraMode();
 
-    RCommitLog* determineFormat(const std::string& logfile);
+    static RCommitLog* determineFormat(const std::string& logfile);
 
     void updateCamera(float dt);
 
@@ -202,6 +202,8 @@ class Gource : public SDLApp {
 public:
     Gource(FrameExporter* frameExporter = 0);
     ~Gource();
+
+    static void writeCustomLog(const std::string& logfile, const std::string& output_file);
 
     void setCameraMode(const std::string& mode);
     void setCameraMode(bool track_users);

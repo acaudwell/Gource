@@ -110,11 +110,15 @@ public:
 
     bool highlight_dirs;
     bool highlight_all_users;
+    vec3f highlight_colour;
+   
     std::vector<std::string> highlight_users;
     std::vector<std::string> follow_users;
     std::vector<Regex*> file_filters;
     std::vector<Regex*> user_filters;
     bool file_extensions;
+    
+    std::string output_custom_filename;
 
     TextureResource* file_graphic;
 

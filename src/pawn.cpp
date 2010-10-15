@@ -39,7 +39,8 @@ Pawn::Pawn(const std::string& name, vec2f pos, int tagid) {
     this->nametime = 5.0;
     this->name_interval = 0.0;
     this->namecol = vec3f(1.0, 1.0, 1.0);
-    this->selectedcol = vec3f(1.0, 1.0, 0.3);
+
+    this->selectedcol = gGourceSettings.highlight_colour;
 
     this->graphic = 0;
     this->graphic_ratio = 1.0;

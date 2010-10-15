@@ -133,6 +133,9 @@ options:
     --highlight-dirs
             Highlight the names of all directories.
 
+    --highlight-colour FFFFFF
+            Highlighted text colour in hex.
+
     --file-filter REGEX
             Filter out any files matching a specified regular expression.
 
@@ -204,6 +207,9 @@ options:
 
             Separate multiple elements with commas (eg 'mouse,progress')
 
+    --hash-seed SEED
+            Change the seed of hash function.
+
     -o, --output-ppm-stream FILE
             Output a PPM image stream to a file ('-' for STDOUT).
 
@@ -212,6 +218,9 @@ options:
 
     -r, --output-framerate FPS
             Framerate of output (25,30,60). Used with --output-ppm-stream.
+
+    --output-custom-log FILE
+            Output a custom format log file ('-' for STDOUT).
 
     --load-config CONFIG_FILE
             Load a gource conf file.

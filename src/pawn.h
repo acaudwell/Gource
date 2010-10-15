@@ -20,6 +20,8 @@
 
 #include <string>
 
+#include "gource_settings.h"
+
 #include "core/display.h"
 #include "core/fxfont.h"
 #include "core/vectors.h"
