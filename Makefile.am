@@ -7,6 +7,7 @@ gource_SOURCES = \
 	src/apache.cpp src/apache.h \
         src/bzr.cpp src/bzr.h \
 	src/commitlog.cpp src/commitlog.h \
+	src/caption.cpp src/caption.h \
 	src/core/bounds.h \
 	src/core/camera.cpp src/core/camera.h \
 	src/core/conffile.cpp src/core/conffile.h \

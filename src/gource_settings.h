@@ -118,8 +118,13 @@ public:
     std::vector<Regex*> user_filters;
     bool file_extensions;
     
-    std::string output_custom_filename;
-
+    std::string caption_file;
+    vec3f caption_colour;
+    float caption_duration;
+    int caption_size;
+    
+    std::string output_custom_filename;   
+    
     TextureResource* file_graphic;
 
     GourceSettings();

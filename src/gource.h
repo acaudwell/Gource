@@ -23,6 +23,7 @@
 #endif
 
 #include <deque>
+#include <list>
 #include <fstream>
 
 #include "core/display.h"
@@ -48,6 +49,7 @@
 #include "slider.h"
 
 #include "action.h"
+#include "caption.h"
 #include "file.h"
 #include "user.h"
 #include "dirnode.h"
@@ -107,7 +109,7 @@ class Gource : public SDLApp {
     TextureResource* logotex;
     TextureResource* backgroundtex;
 
-    FXFont font, fontlarge, fontmedium;
+    FXFont font, fontlarge, fontmedium, fontcaption;
 
     bool first_read;
     bool draw_loading;
@@ -145,6 +147,9 @@ class Gource : public SDLApp {
     std::map<std::string, RFile*> files;
     std::map<int, RFile*> tagfilemap;
     std::map<int, RUser*> tagusermap;
+    
+    std::list<RCaption*> captions;
+    std::list<RCaption*> active_captions;
 
     QuadTree* dirNodeTree;
     QuadTree* userTree;
@@ -164,6 +169,8 @@ class Gource : public SDLApp {
     void selectFile(RFile* file);
     void selectNextUser();
 
+    void loadCaptions();
+    
     void readLog();
     void processCommit(RCommit& commit, float t);
 
