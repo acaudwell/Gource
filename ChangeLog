@@ -4,6 +4,7 @@
  * Added --highlight-colour option.
  * Added --hash-seed option.
  * Added --output-custom-log option.
+ * Removed arbitrary 1024 maximum length limit for log lines.
 
 0.28:
  * Bazaar support for merged commits (Nick Moffit).
