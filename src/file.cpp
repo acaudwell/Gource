@@ -268,13 +268,13 @@ void RFile::drawNameText(float alpha) const {
             glTranslatef(1.0, 1.0, 0.0);
             glColor4f(0.0, 0.0, 0.0, name_alpha * 0.7f);
             //glCallList(namelist);
-            font.draw(0.0f, 0.0f, (selected || shortname.size()==0) ? name : shortname);
+            font.draw(0.0f, 0.0f, (selected || shortname.empty()) ? name : shortname);
         glPopMatrix();
 
         //draw name
         glColor4f(nameCol.x, nameCol.y, nameCol.z, name_alpha);
         //glCallList(namelist);
-        font.draw(0.0f, 0.0f, (selected || shortname.size()==0) ? name : shortname);
+        font.draw(0.0f, 0.0f, (selected || shortname.empty()) ? name : shortname);
 
     glPopMatrix();
 }
