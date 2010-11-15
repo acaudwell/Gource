@@ -5,6 +5,7 @@
  * Added --hash-seed option.
  * Added --output-custom-log option.
  * Removed arbitrary 1024 maximum length limit for log lines.
+ * Fixed two file colouring bugs (quoted files from git-log, period in file path).
 
 0.28:
  * Bazaar support for merged commits (Nick Moffit).

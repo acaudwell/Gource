@@ -147,6 +147,15 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
         std::string status = line.substr(tab - 1, 1);
         std::string file   = line.substr(tab + 1);
 
+        if(file.empty()) continue;
+
+        //check for and remove double quotes
+        if(file.find('"') == 0 && file.rfind('"') == file.size()-1) {
+            if(file.size()<=2) continue;
+
+            file = file.substr(1,file.size()-2);
+        }
+
         commit.addFile(file, status);
     }
 

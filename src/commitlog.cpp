@@ -261,10 +261,11 @@ RCommit::RCommit() {
 
 vec3f RCommit::fileColour(const std::string& filename) {
 
-    size_t pos = filename.rfind('.');
+    size_t slash = filename.rfind('/');
+    size_t dot   = filename.rfind('.');
 
-    if(pos != std::string::npos && pos+1<filename.size()) {
-        std::string file_ext = filename.substr(pos+1);
+    if(dot != std::string::npos && dot+1<filename.size() && (slash == std::string::npos || slash < dot)) {
+        std::string file_ext = filename.substr(dot+1);
 
         return colourHash(file_ext);
     } else {
