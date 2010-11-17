@@ -66,18 +66,26 @@ void ZoomCamera::lockOn(bool lockon) {
 void ZoomCamera::setSpeed(float speed) {
     this->speed = speed;
 }
+void ZoomCamera::adjust(const Bounds2D& bounds) {
+    adjust(bounds, true);
+}
 
-void ZoomCamera::adjust(Bounds2D& bounds) {
+void ZoomCamera::adjust(const Bounds2D& bounds, bool adjust_distance) {
 
     //center camera on bounds
+
+    vec2f centre  = bounds.centre();
+
+    //adjust by screen ratio
+    dest.x = centre.x;
+    dest.y = centre.y;
+
+    if(!adjust_distance) return;
 
     //scale by 10% so we dont have stuff right on the edge of the screen
     float width  = bounds.width() * padding;
     float height = bounds.height() * padding;
 
-    vec2f centre  = bounds.centre();
-
-    //adjust by screen ratio
     float dratio = display.height / (float) display.width;
 
       if(dratio > 1.0) {
@@ -116,7 +124,11 @@ void ZoomCamera::adjust(Bounds2D& bounds) {
     if(distance < min_distance) distance = min_distance;
     if(distance > max_distance) distance = max_distance;
 
-    this->dest = vec3f(centre.x, centre.y, -distance);
+    this->dest.z = -distance;
+}
+
+void ZoomCamera::setDistance(float distance) {
+    dest.z = -distance;
 }
 
 void ZoomCamera::logic(float dt) {

@@ -1,11 +1,12 @@
 0.29:
  * Fix handling of avatars for UTF-8 usernames on MACOSX (Christian Köstlin).
+ * Made camera behaviour when zooming and selecting objects more intuitive.
  * Exposed --time-scale option (previously only available interactively).
  * Added --highlight-colour option.
  * Added --hash-seed option.
  * Added --output-custom-log option.
  * Removed arbitrary 1024 maximum length limit for log lines.
- * Fixed two file colouring bugs (quoted files from git-log, period in file path).
+ * Fixed two file colouring bugs (quoted files from git, period in file path).
 
 0.28:
  * Bazaar support for merged commits (Nick Moffit).

@@ -124,19 +124,19 @@ Gource::Gource(FrameExporter* exporter) {
 
 void Gource::writeCustomLog(const std::string& logfile, const std::string& output_file) {
     RCommitLog* commitlog = determineFormat(logfile);
-    
+
     if(!commitlog) return;
 
     RCommit commit;
 
     FILE* fh = stdout;
-    
+
     if(output_file != "-") {
         fh = fopen(output_file.c_str(), "w");
-    
+
         if(!fh) return;
     }
-   
+
     while(commitlog->nextCommit(commit)) {
         for(std::list<RCommitFile>::iterator it = commit.files.begin(); it != commit.files.end(); it++) {
             RCommitFile& cf = *it;
@@ -387,24 +387,23 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
 
 void Gource::zoom(bool zoomin) {
 
-    float min_distance = camera.getMinDistance();
-    float max_distance = camera.getMaxDistance();
+    manual_zoom = true;
 
     float zoom_multi = 1.1;
 
+    float distance = -camera.getDest().z;
+
     if(zoomin) {
-        min_distance /= zoom_multi;
-        if(min_distance < 100.0f)
-            min_distance = 100.0f;
+        distance /= zoom_multi;
 
-        camera.setMinDistance(min_distance);
+        if(distance < 100.0f) distance = 100.0f;
     } else {
-        min_distance *= zoom_multi;
-        if(min_distance > 4999.0f)
-            min_distance = 4999.0f;
+        distance *= zoom_multi;
 
-        camera.setMinDistance(min_distance);
+        if(distance > 4999.0f) distance = 4999.0f;
     }
+
+    camera.setDistance(distance);
 }
 
 void Gource::mouseClick(SDL_MouseButtonEvent *e) {
@@ -499,7 +498,11 @@ void Gource::setCameraMode(const std::string& mode) {
 }
 
 void Gource::setCameraMode(bool track_users) {
-    manual_rotate = false;
+    manual_rotate   = false;
+    manual_zoom     = false;
+
+    camera_detached = false;
+
     this->track_users = track_users;
     if(selectedUser!=0) camera.lockOn(track_users);
     backgroundSelected=false;
@@ -520,6 +523,7 @@ void Gource::selectBackground() {
     selectUser(0);
 
     backgroundSelected = true;
+    camera_detached = true;
 
     backgroundPos = camera.getPos().truncate();
 
@@ -783,7 +787,9 @@ void Gource::reset() {
     selectedFile = 0;
     hoverFile = 0;
 
-    manual_rotate = false;
+    camera_detached = false;
+    manual_rotate   = false;
+    manual_zoom     = false;
     rotation_remaining_angle = 0.0f;
 
     selectedUser = 0;
@@ -1246,33 +1252,38 @@ void Gource::updateTime(time_t display_time) {
 void Gource::updateCamera(float dt) {
 
     //camera tracking
-    Bounds2D cambounds;
 
     bool auto_rotate = !manual_rotate && !gGourceSettings.disable_auto_rotate;
 
     if(backgroundSelected) {
+
         Bounds2D mousebounds;
         mousebounds.update(backgroundPos);
 
-        cambounds = mousebounds;
-
         auto_rotate = false;
 
-    } else if(track_users && (selectedFile !=0 || selectedUser !=0)) {
-        Bounds2D focusbounds;
+        camera.adjust(mousebounds, false);
 
-        vec3f camerapos = camera.getPos();
+    } else if(!camera_detached) {
 
-        if(selectedUser !=0) focusbounds.update(selectedUser->getPos());
-        if(selectedFile !=0) focusbounds.update(selectedFile->getAbsolutePos());
+        Bounds2D cambounds;
 
-        cambounds = focusbounds;
-    } else {
-        if(track_users && idle_time==0) cambounds = user_bounds;
-        else cambounds = dir_bounds;
+        if(track_users && (selectedFile !=0 || selectedUser !=0)) {
+            Bounds2D focusbounds;
+
+            vec3f camerapos = camera.getPos();
+
+            if(selectedUser !=0) focusbounds.update(selectedUser->getPos());
+            if(selectedFile !=0) focusbounds.update(selectedFile->getAbsolutePos());
+
+            cambounds = focusbounds;
+        } else {
+            if(track_users && idle_time==0) cambounds = user_bounds;
+            else cambounds = dir_bounds;
+        }
+
+        camera.adjust(cambounds, !manual_zoom);
     }
-
-    camera.adjust(cambounds);
 
     camera.logic(dt);
 
@@ -1556,9 +1567,14 @@ void Gource::mousetrace(Frustum& frustum, float dt) {
     }
 
     if(mouseclicked) {
-        if(hoverUser!=0) selectUser(hoverUser);
-        else if(hoverFile!=0) selectFile(hoverFile);
-        else {
+
+        if(hoverUser!=0) {
+            camera.lockOn(false);
+            selectUser(hoverUser);
+        } else if(hoverFile!=0) {
+            camera.lockOn(false);
+            selectFile(hoverFile);
+        } else {
             selectBackground();
         }
     }

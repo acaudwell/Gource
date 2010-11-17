@@ -40,10 +40,13 @@ public:
 
     void lockOn(bool lockon);
 
+    vec3f getDest() { return dest; }
+
     float getMinDistance();
     float getMaxDistance();
 
     void setPadding(float padding);
+    void setDistance(float distance);
 
     void setMinDistance(float min);
     void setMaxDistance(float max);
@@ -51,7 +54,9 @@ public:
 
     void reset();
     void logic(float dt);
-    void adjust(Bounds2D& bounds);
+    void adjustDistance();
+    void adjust(const Bounds2D& bounds);
+    void adjust(const Bounds2D& bounds, bool adjust_distance);
 };
 
 extern bool gGourceVerticalCrop;

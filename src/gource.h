@@ -64,6 +64,8 @@ class Gource : public SDLApp {
 
     bool debug, trace_debug;
 
+    bool camera_detached;
+    bool manual_zoom;
     bool manual_rotate;
     float rotation_remaining_angle;
 
