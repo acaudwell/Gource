@@ -887,7 +887,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
         max_files = entry->getInt();
 
-        if(max_files<1) {
+        if(max_files<0 || max_files == 0 && entry->getString() != "0") {
             conffile.invalidValueException(entry);
         }
     }

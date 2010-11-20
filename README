@@ -82,7 +82,8 @@ options:
             Change simulation time scale.
 
     -i, --file-idle-time SECONDS
-            Time in seconds files remain idle before they are removed.
+            Time in seconds files remain idle before they are removed or 0
+            for no limit.
 
     -e, --elasticity FLOAT
             Elasticity of nodes.
@@ -171,10 +172,14 @@ options:
             Adjust the intensity of the bloom.
 
     --max-files
-            Set the maximum number of files. Excess files will be discarded.
+            Set the maximum number of files or 0 for no limit.
+
+            Excess files will be discarded.
 
     --max-file-lag SECONDS
             Max time files of a commit can take to appear.
+
+            Use -1 for no limit.
 
     --max-user-speed UNITS
             Max speed users can travel per second.

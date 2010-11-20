@@ -56,7 +56,7 @@ Realtime playback speed.
 Change simulation time scale.
 .TP
 \fB\-i, \-\-file\-idle\-time SECONDS\fR
-Time in seconds files remain idle before they are removed.
+Time in seconds files remain idle before they are removed or 0 for no limit.
 .TP
 \fB\-e, \-\-elasticity FLOAT\fR
 Elasticity of nodes.
@@ -143,10 +143,10 @@ Adjust the amount of bloom.
 Adjust the intensity of the bloom.
 .TP
 \fB\-\-max\-files\fR
-Set the maximum number of files. Excess files will be discarded.
+Set the maximum number of files or 0 for no limit. Excess files will be discarded.
 .TP
 \fB\-\-max\-file\-lag SECONDS\fR
-Max time files of a commit can take to appear.
+Max time files of a commit can take to appear. Use -1 for no limit.
 .TP
 \fB\-\-max\-user\-speed UNITS\fR
 Max speed users can travel per second.

@@ -976,7 +976,7 @@ void Gource::processCommit(RCommit& commit, float t) {
 
             //if we already have max files in circulation
             //we cant add any more
-            if(files.size() >= gGourceSettings.max_files)
+            if(gGourceSettings.max_files > 0 && files.size() >= gGourceSettings.max_files)
                 continue;
 
             //check filename against filters
