@@ -63,6 +63,10 @@ void ZoomCamera::lockOn(bool lockon) {
     this->lockon = lockon;
 }
 
+void ZoomCamera::stop() {
+    this->dest = pos;
+}
+
 void ZoomCamera::setSpeed(float speed) {
     this->speed = speed;
 }

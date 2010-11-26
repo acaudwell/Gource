@@ -64,9 +64,10 @@ class Gource : public SDLApp {
 
     bool debug, trace_debug;
 
-    bool camera_detached;
     bool manual_zoom;
     bool manual_rotate;
+    bool manual_camera;
+
     float rotation_remaining_angle;
 
     MouseCursor cursor;
@@ -76,12 +77,14 @@ class Gource : public SDLApp {
     bool mouseclicked;
     bool mousedragged;
 
+    vec2f cursor_move;
+    
+    bool use_selection_bounds;
+    Bounds2D selection_bounds;
+    
     float rotate_angle;
 
     vec2f mousepos;
-
-    vec2f backgroundPos;
-    bool backgroundSelected;
 
     float last_percent;
 

@@ -364,7 +364,7 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
             return;
         }
 
-        backgroundPos += mag;
+        cursor_move = mag;
 
         return;
     }
@@ -501,11 +501,10 @@ void Gource::setCameraMode(bool track_users) {
     manual_rotate   = false;
     manual_zoom     = false;
 
-    camera_detached = false;
-
     this->track_users = track_users;
     if(selectedUser!=0) camera.lockOn(track_users);
-    backgroundSelected=false;
+
+    manual_camera = false;
 
     gGourceSettings.camera_mode = track_users ? "track" : "overview";
 }
@@ -522,10 +521,7 @@ void Gource::selectBackground() {
 
     selectUser(0);
 
-    backgroundSelected = true;
-    camera_detached = true;
-
-    backgroundPos = camera.getPos().truncate();
+    manual_camera = true;
 
     cursor.showCursor(false);
     grab_mouse=true;
@@ -536,8 +532,6 @@ void Gource::selectBackground() {
 void Gource::selectUser(RUser* user) {
     //already selected do nothing
     if(user!=0 && selectedUser==user) return;
-
-    backgroundSelected=false;
 
     if(selectedFile != 0) {
         selectedFile->setSelected(false);
@@ -569,8 +563,6 @@ void Gource::selectFile(RFile* file) {
 
     //already selected do nothing
     if(file!=0 && selectedFile==file) return;
-
-    backgroundSelected=false;
 
     if(selectedUser != 0) {
         selectedUser->setSelected(false);
@@ -729,11 +721,11 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             }
         }
 
-        if(e->keysym.sym == SDLK_UP) {
+        if(e->keysym.sym == SDLK_KP_MINUS) {
             zoom(true);
         }
 
-        if(e->keysym.sym == SDLK_DOWN) {
+        if(e->keysym.sym == SDLK_KP_PLUS) {
             zoom(false);
         }
 
@@ -787,14 +779,19 @@ void Gource::reset() {
     selectedFile = 0;
     hoverFile = 0;
 
-    camera_detached = false;
+    use_selection_bounds = false;
+    selection_bounds.reset();
+    
     manual_rotate   = false;
     manual_zoom     = false;
     rotation_remaining_angle = 0.0f;
 
+    cursor_move = vec2f(0.0f, 0.0f);
+  
     selectedUser = 0;
     hoverUser = 0;
-    backgroundSelected=false;
+
+    manual_camera = false;
 
     grab_mouse = false;
 
@@ -1255,16 +1252,29 @@ void Gource::updateCamera(float dt) {
 
     bool auto_rotate = !manual_rotate && !gGourceSettings.disable_auto_rotate;
 
-    if(backgroundSelected) {
+    
+    if(manual_camera) {
 
-        Bounds2D mousebounds;
-        mousebounds.update(backgroundPos);
+        if(cursor_move.length2() > 0.0f) {
 
-        auto_rotate = false;
+            float cam_rate = ( -camera.getPos().z ) / ( 5000.0f );
+            
+            vec3f cam_pos = camera.getPos();
+            
+            vec2f cursor_delta = cursor_move * cam_rate * 400.0f * dt;
+           
+            cam_pos.x += cursor_delta.x;
+            cam_pos.y += cursor_delta.y;
+        
+            camera.setPos(cam_pos, true);
+            camera.stop();           
 
-        camera.adjust(mousebounds, false);
+            auto_rotate = false;
 
-    } else if(!camera_detached) {
+            cursor_move = vec2f(0.0f, 0.0f);
+        }
+
+    } else {
 
         Bounds2D cambounds;
 
@@ -1353,6 +1363,28 @@ void Gource::logic(float t, float dt) {
 
     slider.logic(dt);
 
+    Uint8 *keystate = SDL_GetKeyState(0);
+
+    if(keystate[SDLK_RIGHT]) {
+        cursor_move.x = 10.0;
+        manual_camera = true;
+    }
+
+    if(keystate[SDLK_LEFT]) {
+        cursor_move.x = -10.0;
+        manual_camera = true;
+    }
+
+    if(keystate[SDLK_UP]) {
+        cursor_move.y = -10.0;
+        manual_camera = true;
+    }
+
+    if(keystate[SDLK_DOWN]) {
+        cursor_move.y = 10.0;
+        manual_camera = true;
+    }
+  
     //apply rotation
     if(rotate_angle != 0.0f) {
 
