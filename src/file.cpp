@@ -43,12 +43,7 @@ RFile::RFile(const std::string & name, const vec3f & colour, const vec2f & pos, 
 
     distance = 0;
 
-    this->fullpath = name;
-    this->name = name;
-
-    path_hash = 0;
-
-    setPath();
+    setFilename(name);
 
     namelist = glGenLists(1);
 
@@ -56,8 +51,6 @@ RFile::RFile(const std::string & name, const vec3f & colour, const vec2f & pos, 
     setSelected(false);
 
     dir = 0;
-
-    if(path.size()) path_hash = stringHash(path);
 }
 
 RFile::~RFile() {
@@ -73,10 +66,6 @@ void RFile::setDir(RDirNode* dir) {
     this->dir = dir;
 }
 
-const std::string & RFile::getFullPath() const {
-    return fullpath;
-}
-
 RDirNode* RFile::getDir() const{
     return dir;
 }
@@ -85,27 +74,25 @@ vec2f RFile::getAbsolutePos() const{
     return pos + dir->getPos();
 }
 
-int RFile::getPathHash() const{
-    return path_hash;
-}
+void RFile::setFilename(const std::string& abs_file_path) {
+    
+    fullpath = abs_file_path;
 
-void RFile::setPath() {
-
-    size_t pos = name.rfind('/');
+    size_t pos = fullpath.rfind('/');
 
     if(pos != std::string::npos) {
         path = name.substr(0,pos+1);
         name = name.substr(pos+1, std::string::npos);
     } else {
         path = std::string("");
+        name = abs_file_path;
     }
 
     //trim name to just extension
-    if(gGourceSettings.file_extensions) {
-        int dotsep=0;
-        if((dotsep=name.rfind(".")) != std::string::npos && dotsep != name.size()-1 && dotsep != 0) {
-            shortname = name.substr(dotsep+1);
-        }
+    int dotsep=0;
+
+    if((dotsep=name.rfind(".")) != std::string::npos && dotsep != name.size()-1 && dotsep != 0) {
+        ext = name.substr(dotsep+1);
     }
 }
 
@@ -259,6 +246,8 @@ void RFile::drawNameText(float alpha) const {
     //drawpos.x += 10.0;
     //drawpos.y -= 10.0;
 
+    bool show_file_ext = gGourceSettings.file_extensions;
+    
     glPushMatrix();
 
         glTranslatef(drawpos.x, drawpos.y, 0.0);
@@ -268,13 +257,13 @@ void RFile::drawNameText(float alpha) const {
             glTranslatef(1.0, 1.0, 0.0);
             glColor4f(0.0, 0.0, 0.0, name_alpha * 0.7f);
             //glCallList(namelist);
-            font.draw(0.0f, 0.0f, (selected || shortname.empty()) ? name : shortname);
+            font.draw(0.0f, 0.0f, (selected || !show_file_ext) ? name : ext);
         glPopMatrix();
 
         //draw name
         glColor4f(nameCol.x, nameCol.y, nameCol.z, name_alpha);
         //glCallList(namelist);
-        font.draw(0.0f, 0.0f, (selected || shortname.empty()) ? name : shortname);
+        font.draw(0.0f, 0.0f, (selected || !show_file_ext) ? name : ext);
 
     glPopMatrix();
 }

@@ -29,8 +29,6 @@ class RFile : public Pawn {
     vec3f file_colour;
     vec3f touch_colour;
 
-    int path_hash;
-
     RDirNode* dir;
 
     bool removing;
@@ -45,14 +43,14 @@ class RFile : public Pawn {
 
     GLuint namelist;
 
-    std::string shortname;
+    void setFilename(const std::string& abs_file_path);
 
-    void setPath();
     const vec3f& getNameColour() const;
     void drawNameText(float alpha) const;
 public:
     std::string path;
     std::string fullpath;
+    std::string ext;
 
     RFile(const std::string & name, const vec3f & colour, const vec2f & pos, int tagid);
     ~RFile();
@@ -66,9 +64,7 @@ public:
     float getAlpha() const;
 
     void touch(const vec3f & colour);
-
-    const std::string & getFullPath() const;
-
+   
     void setSelected(bool selected);
 
     void setHidden(bool hidden);
@@ -85,8 +81,6 @@ public:
 
     RDirNode* getDir() const;
     void setDir(RDirNode* dir);
-
-    int getPathHash() const;
 };
 
 extern float gGourceFileDiameter;

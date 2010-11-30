@@ -829,7 +829,7 @@ void Gource::reset() {
 }
 
 void Gource::deleteFile(RFile* file) {
-    debugLog("removing file %s\n", file->getFullPath().c_str());
+    debugLog("removing file %s\n", file->fullpath.c_str());
 
     root->removeFile(file);
 
@@ -848,10 +848,10 @@ void Gource::deleteFile(RFile* file) {
         user->fileRemoved(file);
     }
 
-    files.erase(file->getFullPath());
+    files.erase(file->fullpath);
     tagfilemap.erase(file->getTagID());
 
-    debugLog("removed file %s\n", file->getFullPath().c_str());
+    debugLog("removed file %s\n", file->fullpath.c_str());
 
     delete file;
 }
