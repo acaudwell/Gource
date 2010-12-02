@@ -197,6 +197,12 @@ RCommitLog* Gource::determineFormat(const std::string& logfile) {
             delete clog;
         }
 
+        if(gGourceSettings.log_format == "svn") {
+            clog = new SVNCommitLog(logfile);
+            if(clog->checkFormat()) return clog;
+            delete clog;
+        }
+
         return 0;
     }
 
@@ -235,6 +241,13 @@ RCommitLog* Gource::determineFormat(const std::string& logfile) {
 
     delete clog;
 
+    //svn
+    debugLog("tryin svn...\n");
+    clog = new SVNCommitLog(logfile);
+    if(clog->checkFormat()) return clog;
+
+    delete clog;
+    
     //custom
     debugLog("trying custom...\n");
     clog = new CustomLog(logfile);
@@ -785,6 +798,8 @@ void Gource::reset() {
     manual_rotate   = false;
     manual_zoom     = false;
     rotation_remaining_angle = 0.0f;
+
+    message_timer = 0.0f;
 
     cursor_move = vec2f(0.0f, 0.0f);
   

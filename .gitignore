@@ -19,5 +19,5 @@ logs/*
 /missing
 *.swp
 *.d
-/src/.deps/
-/src/.dirstamp
+.deps
+.dirstamp

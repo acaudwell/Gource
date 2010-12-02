@@ -44,6 +44,7 @@
 #include "cvs-exp.h"
 #include "custom.h"
 #include "apache.h"
+#include "svn.h"
 
 #include "slider.h"
 

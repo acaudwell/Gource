@@ -26,6 +26,7 @@
 #include "git.h"
 #include "bzr.h"
 #include "cvs-exp.h"
+#include "svn.h"
 
 #include "core/settings.h"
 #include "core/regex.h"

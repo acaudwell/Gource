@@ -45,6 +45,11 @@ gource_SOURCES = \
 	src/pawn.cpp src/pawn.h \
 	src/slider.cpp src/slider.h \
 	src/spline.cpp src/spline.h \
+	src/svn.cpp src/svn.h \
+	src/tinyxml/tinyxmlerror.cpp \
+	src/tinyxml/tinystr.cpp src/tinyxml/tinystr.h \
+	src/tinyxml/tinyxml.cpp src/tinyxml/tinyxml.h \
+	src/tinyxml/tinyxmlparser.cpp src/tinyxml/tinyxmlparser.h \
 	src/user.cpp src/user.h \
 	src/zoomcamera.cpp src/zoomcamera.h
 

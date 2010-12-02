@@ -63,8 +63,8 @@ void GourceSettings::help(bool extended_help) {
     printf("  --max-files NUMBER       Max number of active files (default: 1000)\n");
     printf("  --max-file-lag SECONDS   Max time files of a commit can take to appear\n\n");
 
-    printf("  --log-command VCS        Show the log command used by gource (git,cvs,hg,bzr)\n");
-    printf("  --log-format  VCS        Specify format of the log (git,cvs,hg,bzr,custom)\n");
+    printf("  --log-command VCS        Show the log command used by gource (git,svn,cvs,hg,bzr)\n");
+    printf("  --log-format  VCS        Specify format of the log (git,cvs,svn,hg,bzr,custom)\n");
     printf("  --git-branch             Get the git log of a particular branch\n\n");
 
     printf("  --load-config CONF_FILE  Load a config file\n");
@@ -172,6 +172,7 @@ GourceSettings::GourceSettings() {
     conf_sections["cvs-exp-command"] = "command-line";
     conf_sections["hg-log-command"]  = "command-line";
     conf_sections["bzr-log-command"] = "command-line";
+    conf_sections["svn-log-command"] = "command-line";
     conf_sections["load-config"]     = "command-line";
     conf_sections["save-config"]     = "command-line";
     conf_sections["output-custom-log"] = "command-line";
@@ -204,6 +205,7 @@ GourceSettings::GourceSettings() {
 
     arg_types["git-log-command"]= "bool";
     arg_types["cvs-exp-command"]= "bool";
+    arg_types["svn-log-command"]= "bool";
     arg_types["hg-log-command"] = "bool";
     arg_types["bzr-log-command"]= "bool";
 
@@ -382,6 +384,10 @@ void GourceSettings::commandLineOption(const std::string& name, const std::strin
         SDLAppInfo(gGourceCvsExpLogCommand);
     }
 
+    if(name == "svn-log-command" || log_command == "svn") {
+        SDLAppInfo(gGourceSVNLogCommand);
+    }
+
     if(name == "hg-log-command" || log_command == "hg") {
         std::string command = gGourceMercurialCommand();
         SDLAppInfo(command);
@@ -550,6 +556,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
         if(   log_format != "git"
            && log_format != "cvs"
+           && log_format != "svn"
            && log_format != "custom"
            && log_format != "hg"
            && log_format != "bzr"

@@ -208,7 +208,7 @@ Either a supported version control directory, a pre-generated log file (see log 
 
 If path is ommited, gource will attempt to read a log from the current directory.
 
-.SH GIT, BAZAAR AND MERCURIAL EXAMPLES
+.SH GIT, BAZAAR, MERCURIAL AND SVN EXAMPLES
 
 View the log of the respository in the current path:
 
@@ -220,25 +220,30 @@ View the log of a project in the specified directory:
 .ti 10
 \fIgource\fR my\-project\-dir
 
-Save a copy of the log using in a special log format and play it back (example is for Git):
+For large projects, generating a log of the project history may take a long time. For centralized VCS like SVN, generating the log will put load on the central VCS server.
+
+In these cases, you may like to save a copy of the log for later use.
+
+You can generate a log in the VCS specific log format using the \-\-log\-command VCS option:
 
 .ti 10
-cd my\-git\-project
+cd my\-svn\-project
 .ti 10
-\`\fIgource\fR \-\-git\-log\-command\` > my\-git\-project.log
+\`\fIgource\fR \-\-log\-command svn\` > my\-svn\-project.log
 .ti 10
-\fIgource\fR my\-git\-project.log
+\fIgource\fR my\-svn\-project.log
 
-NOTE: \-\-git-log-command assumes you have a recent version of git that supports all the options. You may need to modify the command line to work with an older version (changing %aN to %an for instance).
+You can also have Gource write a copy of the log file in its own format:
+
+.ti 10
+\fIgource\fR \-\-output\-custom\-log my\-project\-custom.log
 
 .SH OTHER VERSION CONTROL SYSTEMS
 
 The Gource homepage has guides and examples for using Gource with other version control systems:
 
 .ti 10
-CVS       - http://code.google.com/p/gource/wiki/CVS
-.ti 10
-SVN       - http://code.google.com/p/gource/wiki/SVN
+CVS       \- http://code.google.com/p/gource/wiki/CVS
 
 .SH CUSTOM LOG FORMAT
 

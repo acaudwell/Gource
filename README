@@ -242,7 +242,7 @@ options:
             If path is ommited, gource will attempt to read a log from the
             current directory.
 
-Git, Bazaar and Mercurial Examples:
+Git, Bazaar, Mercurial and SVN Examples:
 
 View the log of the respository in the current path:
 
@@ -252,16 +252,22 @@ View the log of a project in the specified directory:
 
     gource my-project-dir
 
-Save a copy of the log using in a special log format and play it back
-(example is for Git):
+For large projects, generating a log of the project history may take a long
+time. For centralized VCS like SVN, generating the log may also put load on
+the central VCS server.
 
-    cd my-git-project
-    `gource --git-log-command` > my-git-project.log
-    gource my-git-project.log
+In these cases, you may like to save a copy of the log for later use.
 
-NOTE: --git-log-command assumes you have a recent version git of that supports
-      all the options. You may need to modify the command line to work with an
-      older version (changing %aN to %an for instance).
+You can generate a log in the VCS specific log format using
+the --log-command VCS option:
+
+    cd my-svn-project
+    `gource --log-command svn` > my-svn-project.log
+    gource my-svn-project.log
+
+You can also have Gource write a copy of the log file in its own format:
+
+    gource --output-custom-log my-project-custom.log
 
 Other Version Control Systems:
 
@@ -269,7 +275,6 @@ Visit the Gource homepage for guides and examples of using Gource with other
 version control systems:
 
     CVS       - http://code.google.com/p/gource/wiki/CVS
-    SVN       - http://code.google.com/p/gource/wiki/SVN
 
 Custom Log Format:
 
