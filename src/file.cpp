@@ -105,7 +105,7 @@ void RFile::setSelected(bool selected) {
     if(selected) {
         font = fontmanager.grab("FreeSans.ttf", 18);
     } else {
-        font = fontmanager.grab("FreeSans.ttf", 11);
+        font = fontmanager.grab("FreeSans.ttf", 14);
     }
 
     font.dropShadow(false);

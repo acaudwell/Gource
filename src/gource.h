@@ -41,13 +41,14 @@
 #include "hg.h"
 #include "bzr.h"
 #include "gitraw.h"
+#include "cvs2cl.h"
 #include "cvs-exp.h"
 #include "custom.h"
 #include "apache.h"
 #include "svn.h"
 
 #include "slider.h"
-
+#include "textbox.h"
 #include "action.h"
 #include "file.h"
 #include "user.h"
@@ -113,6 +114,8 @@ class Gource : public SDLApp {
     TextureResource* logotex;
     TextureResource* backgroundtex;
 
+    TextBox textbox;
+    
     FXFont font, fontlarge, fontmedium;
 
     bool first_read;

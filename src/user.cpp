@@ -342,7 +342,7 @@ vec3f RUser::getColour() const{
     return usercol;
 }
 
-std::string RUser::getName() {
+const std::string& RUser::getName() const {
     return name;
 }
 

@@ -100,7 +100,11 @@ Gource::Gource(FrameExporter* exporter) {
     hoverUser = 0;
 
     date_x_offset = 0;
-
+    
+    textbox = TextBox(fontmanager.grab("FreeSans.ttf", 18));
+    textbox.show();
+    textbox.setText("Hello");
+    
     camera = ZoomCamera(vec3f(0,0, -300), vec3f(0.0, 0.0, 0.0), 250.0, 5000.0);
     camera.setPadding(gGourceSettings.padding);
 
@@ -203,6 +207,12 @@ RCommitLog* Gource::determineFormat(const std::string& logfile) {
             delete clog;
         }
 
+        if(gGourceSettings.log_format == "cvs2cl") {
+            clog = new CVS2CLCommitLog(logfile);
+            if(clog->checkFormat()) return clog;
+            delete clog;
+        }
+
         return 0;
     }
 
@@ -242,8 +252,15 @@ RCommitLog* Gource::determineFormat(const std::string& logfile) {
     delete clog;
 
     //svn
-    debugLog("tryin svn...\n");
+    debugLog("trying svn...\n");
     clog = new SVNCommitLog(logfile);
+    if(clog->checkFormat()) return clog;
+
+    delete clog;
+    
+    //cvs2cl
+    debugLog("trying cvs2cl...\n");
+    clog = new CVS2CLCommitLog(logfile);
     if(clog->checkFormat()) return clog;
 
     delete clog;
@@ -1852,6 +1869,15 @@ void Gource::draw(float t, float dt) {
 
     if(!gGourceSettings.hide_mouse && cursor.isVisible()) {
         mousetrace(frustum,dt);
+    } else {
+        if(hoverUser) {
+            hoverUser->setMouseOver(false);
+            hoverUser = 0;
+        }
+        if(hoverFile) {
+            hoverFile->setMouseOver(false);
+            hoverFile = 0;
+        }
     }
 
     trace_time = SDL_GetTicks() - trace_time;
@@ -2017,6 +2043,27 @@ void Gource::draw(float t, float dt) {
 
     if(message_timer>0.0f) {
          fontmedium.draw(1, 3, message);
+    }
+
+    // text box   
+    if(hoverFile && hoverFile != selectedFile) {
+        
+        std::string display_path = hoverFile->path;
+        display_path.erase(0,1);
+        
+        textbox.setText(hoverFile->getName());
+        if(display_path.size()) textbox.addLine(display_path);
+        textbox.setColour(hoverFile->getColour());
+
+        textbox.setPos(mousepos);
+        textbox.draw();
+    } else if(hoverUser && hoverUser != selectedUser) {
+
+        textbox.setText(hoverUser->getName());
+        textbox.setColour(hoverUser->getColour());
+        
+        textbox.setPos(mousepos);
+        textbox.draw();
     }
 
     // end text

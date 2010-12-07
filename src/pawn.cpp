@@ -93,7 +93,7 @@ void Pawn::setGraphic(TextureResource* graphic) {
 
 
 void Pawn::setMouseOver(bool over) {
-    showName();
+    //showName();
     this->mouseover = over;
 }
 

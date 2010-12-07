@@ -62,8 +62,7 @@ public:
 
     vec3f getColour() const;
 
-    std::string getName();
-    std::string getUsername();
+    const std::string& getName() const;
 
     void fileRemoved(RFile* f);
     void addAction(RAction* action);

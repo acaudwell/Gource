@@ -86,10 +86,10 @@ Offset position of the logo.
 Specify display date string (strftime format).
 .TP
 \fB\-\-log\-command VCS\fR
-Show the log command used by gource (git,cvs,hg,bzr).
+Show the log command used by gource (git,svn,hg,bzr,cvs2cl).
 .TP
 \fB\-\-log\-format VCS\fR
-Specify format of the log being read (git,cvs,hg,bzr,custom). Required when reading from STDIN.
+Specify format of the log being read (git,svn,hg,bzr,cvs2cl,custom). Required when reading from STDIN.
 .TP
 \fB\-\-git\-branch\fR
 Get the git log of a branch other than the current one.
@@ -204,7 +204,7 @@ Save a config file with the current options.
 \fB\-\-path PATH\fR
 .TP
 \fBpath\fR
-Either a supported version control directory, a pre-generated log file (see log commands or the custom log format), a gource conf file or '-' to read STDIN.
+Either a supported version control directory, a pre-generated log file (see log commands or the custom log format), a Gource conf file or '-' to read STDIN.
 
 If path is ommited, gource will attempt to read a log from the current directory.
 
@@ -238,12 +238,19 @@ You can also have Gource write a copy of the log file in its own format:
 .ti 10
 \fIgource\fR \-\-output\-custom\-log my\-project\-custom.log
 
-.SH OTHER VERSION CONTROL SYSTEMS
+.SH CVS SUPPORT
 
-The Gource homepage has guides and examples for using Gource with other version control systems:
+If 'cvs2cl' (a tool that produces chronological commit history from CVS
+repositories) is found, Gource will try and use this to support CVS
+directories.
+
+You can also use cvs2cl indirectly by first generating the log, and
+then passing it to gource:
 
 .ti 10
-CVS       \- http://code.google.com/p/gource/wiki/CVS
+cvs2cl \-\-chrono \-\-stdout \-\-xml \-g\-q > my\-cvs\-project.log
+.ti 10
+gource my\-cvs\-project.log
 
 .SH CUSTOM LOG FORMAT
 
@@ -266,6 +273,13 @@ See the guide on the homepage for examples of recording videos with Gource:
 
 .ti 10
 http://code.google.com/p/gource/wiki/Videos
+
+.SH MORE INFORMATION
+
+Visit the Gource homepage for guides and examples of using Gource with various version control systems:
+
+.ti 10
+http://code.google.com/p/gource/
 
 .SH INTERFACE
 The time shown in the top left of the screen is set initially from the first log entry read and is incremented according to the simulation speed (\-\-seconds\-per\-day).

@@ -63,8 +63,8 @@ void GourceSettings::help(bool extended_help) {
     printf("  --max-files NUMBER       Max number of active files (default: 1000)\n");
     printf("  --max-file-lag SECONDS   Max time files of a commit can take to appear\n\n");
 
-    printf("  --log-command VCS        Show the log command used by gource (git,svn,cvs,hg,bzr)\n");
-    printf("  --log-format  VCS        Specify format of the log (git,cvs,svn,hg,bzr,custom)\n");
+    printf("  --log-command VCS        Show the VCS log command (git,svn,hg,bzr,cvs2cl)\n");
+    printf("  --log-format  VCS        Specify the log format (git,svn,hg,bzr,cvs2cl,custom)\n");
     printf("  --git-branch             Get the git log of a particular branch\n\n");
 
     printf("  --load-config CONF_FILE  Load a config file\n");
@@ -170,6 +170,7 @@ GourceSettings::GourceSettings() {
     conf_sections["log-command"]     = "command-line";
     conf_sections["git-log-command"] = "command-line";
     conf_sections["cvs-exp-command"] = "command-line";
+    conf_sections["cvs2cl-command"]  = "command-line";
     conf_sections["hg-log-command"]  = "command-line";
     conf_sections["bzr-log-command"] = "command-line";
     conf_sections["svn-log-command"] = "command-line";
@@ -205,6 +206,7 @@ GourceSettings::GourceSettings() {
 
     arg_types["git-log-command"]= "bool";
     arg_types["cvs-exp-command"]= "bool";
+    arg_types["cvs2cl-command"] = "bool";
     arg_types["svn-log-command"]= "bool";
     arg_types["hg-log-command"] = "bool";
     arg_types["bzr-log-command"]= "bool";
@@ -380,8 +382,16 @@ void GourceSettings::commandLineOption(const std::string& name, const std::strin
         SDLAppInfo(gGourceGitLogCommand);
     }
 
-    if(name == "cvs-exp-command" || log_command == "cvs") {
+    if(name == "cvs-exp-command" || log_command == "cvs-exp") {
         SDLAppInfo(gGourceCvsExpLogCommand);
+    }
+
+    if(log_command == "cvs") {
+        throw ConfFileException("please use either 'cvs2cl' or 'cvs-exp'", "", 0);
+    }
+
+    if(name == "cvs2cl-command" || log_command == "cvs2cl") {
+        SDLAppInfo(gGourceCVS2CLLogCommand);
     }
 
     if(name == "svn-log-command" || log_command == "svn") {
@@ -554,8 +564,13 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
         log_format = entry->getString();
 
+        if(log_format == "cvs") {
+            conffile.entryException(entry, "please use either 'cvs2cl' or 'cvs-exp'");
+        }
+        
         if(   log_format != "git"
-           && log_format != "cvs"
+           && log_format != "cvs-exp"
+           && log_format != "cvs2cl"
            && log_format != "svn"
            && log_format != "custom"
            && log_format != "hg"

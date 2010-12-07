@@ -113,10 +113,11 @@ options:
             Specify display date string (strftime format).
 
     --log-command VCS
-            Show the log command used by gource (git,cvs,hg,bzr)
+            Show the VCS log command used by gource (git,svn,hg,bzr,cvs2cl).
 
     --log-format VCS
-            Specify format of the log being read (git,cvs,hg,bzr,custom).
+            Specify the log format (git,svn,hg,bzr,cvs2cl,custom).
+
             Required when reading from STDIN.
 
     --git-branch
@@ -236,7 +237,7 @@ options:
     --path PATH
 
     path    Either a supported version control directory, a pre-generated log
-            file (see log commands or the custom log format), a gource conf
+            file (see log commands or the custom log format), a Gource conf
             file or '-' to read STDIN.
 
             If path is ommited, gource will attempt to read a log from the
@@ -269,12 +270,17 @@ You can also have Gource write a copy of the log file in its own format:
 
     gource --output-custom-log my-project-custom.log
 
-Other Version Control Systems:
+CVS Support:
 
-Visit the Gource homepage for guides and examples of using Gource with other
-version control systems:
+If 'cvs2cl' (a script that produces chronological commit output for CVS
+repositories) is found, Gource will try and use this to support CVS
+directories.
 
-    CVS       - http://code.google.com/p/gource/wiki/CVS
+You can also use cvs2cl indirectly by first generating the log, and
+then passing it to gource:
+
+    cvs2cl --chrono --stdout --xml -g-q > my-cvs-project.log
+    gource my-cvs-project.log
 
 Custom Log Format:
 
@@ -292,6 +298,13 @@ Recording Videos:
 See the guide on the homepage for examples of recording videos with Gource:
 
     http://code.google.com/p/gource/wiki/Videos
+
+More Information:
+
+Visit the Gource homepage for guides and examples of using Gource with various
+version control systems:
+
+    http://code.google.com/p/gource/
 
 Interface:
 

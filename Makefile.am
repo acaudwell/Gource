@@ -33,6 +33,7 @@ gource_SOURCES = \
 	src/core/vectors.h \
 	src/custom.cpp src/custom.h \
 	src/cvs-exp.cpp src/cvs-exp.h \
+	src/cvs2cl.cpp src/cvs2cl.h \
 	src/dirnode.cpp src/dirnode.h \
 	src/file.cpp src/file.h \
 	src/git.cpp src/git.h \
@@ -46,6 +47,7 @@ gource_SOURCES = \
 	src/slider.cpp src/slider.h \
 	src/spline.cpp src/spline.h \
 	src/svn.cpp src/svn.h \
+	src/textbox.cpp src/textbox.h \
 	src/tinyxml/tinyxmlerror.cpp \
 	src/tinyxml/tinystr.cpp src/tinyxml/tinystr.h \
 	src/tinyxml/tinyxml.cpp src/tinyxml/tinyxml.h \
