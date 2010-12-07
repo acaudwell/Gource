@@ -329,6 +329,7 @@ Interactive keyboard commands:
     (C)   Displays Gource logo
     (M)   Toggle mouse visibility
     (N)   Jump forward in time to next log entry.
+    (S)   Randomize colours.
     (+-)  Adjust simulation speed.
     (<>)  Adjust time scale.
     (TAB) Cycle through visible users

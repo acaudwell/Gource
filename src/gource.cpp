@@ -727,6 +727,10 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             gGourceGravity = !gGourceGravity;
         }
 
+        if (e->keysym.sym == SDLK_s) {
+            recolour=true;
+        }
+
         if(e->keysym.unicode == SDLK_TAB) {
             selectNextUser();
         }
@@ -802,6 +806,8 @@ void Gource::reset() {
 
     if(userTree!=0) delete userTree;
     if(dirNodeTree!=0) delete dirNodeTree;
+
+    recolour = false;
 
     userTree = 0;
     dirNodeTree = 0;
@@ -1355,6 +1361,20 @@ void Gource::updateCamera(float dt) {
     }
 }
 
+//change the string hashing seed and recolour files and users
+void Gource::changeColours() {
+
+    gStringHashSeed = (rand() % 10000) + 1;
+    
+    for(std::map<std::string,RUser*>::iterator it = users.begin(); it != users.end(); it++) {
+        it->second->colourize();
+    }
+
+    for(std::map<std::string,RFile*>::iterator it = files.begin(); it != files.end(); it++) {
+        it->second->colourize();
+    }
+}
+
 void Gource::logic(float t, float dt) {
 
     if(draw_loading) return;
@@ -1434,6 +1454,11 @@ void Gource::logic(float t, float dt) {
         }
 
         rotate_angle = 0.0f;
+    }
+
+    if(recolour) {
+        changeColours();
+        recolour = false;
     }
 
     //still want to update camera while paused
@@ -2092,13 +2117,14 @@ void Gource::draw(float t, float dt) {
         font.print(1,340,"Dir Inner Loops: %d (QTree items = %d, nodes = %d)", gGourceDirNodeInnerLoops,
             dirNodeTree->item_count, dirNodeTree->node_count);
         font.print(1,360,"Dir Bounds Ratio: %.2f, %.5f", dir_bounds.width() / dir_bounds.height(), rotation_remaining_angle);
+        font.print(1,380,"String Hash Seed: %d", gStringHashSeed);
 
         if(selectedUser != 0) {
 
         }
 
         if(selectedFile != 0) {
-            font.print(1,360,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
+            font.print(1,400,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
                     selectedFile->getDir()->fileCount(), selectedFile->getDir()->visibleFileCount());
         }
 

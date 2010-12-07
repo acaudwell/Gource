@@ -4,7 +4,7 @@
  * Made camera behaviour when zooming and selecting objects more intuitive.
  * Added mouse-over tool tips.
  * Added --highlight-colour option.
- * Added --hash-seed option.
+ * Added --hash-seed option. The S key now randomizes colours.
  * Added --output-custom-log option.
  * Exposed --time-scale option (previously only available interactively).
  * Removed arbitrary 1024 maximum length limit for log lines.

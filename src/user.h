@@ -61,7 +61,8 @@ public:
     RUser(const std::string& name, vec2f pos, int tagid);
 
     vec3f getColour() const;
-
+    void colourize();
+    
     const std::string& getName() const;
 
     void fileRemoved(RFile* f);

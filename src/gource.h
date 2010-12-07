@@ -79,7 +79,10 @@ class Gource : public SDLApp {
     bool mouseclicked;
     bool mousedragged;
 
+    
     vec2f cursor_move;
+    
+    bool recolour;
     
     bool use_selection_bounds;
     Bounds2D selection_bounds;
@@ -208,6 +211,8 @@ class Gource : public SDLApp {
     void drawBloom(Frustum &frustum, float dt);
 
     void screenshot();
+
+    void changeColours();
 public:
     Gource(FrameExporter* frameExporter = 0);
     ~Gource();

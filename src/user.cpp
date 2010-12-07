@@ -173,10 +173,14 @@ void RUser::applyForceToActions() {
 
 }
 
+void RUser::colourize() {
+    usercol = colourHash(name);
+}
+
 void RUser::assignUserImage() {
     struct stat fileinfo;
 
-    usercol = colourHash(name);
+    colourize();
 
     TextureResource* graphic = 0;
 

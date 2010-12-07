@@ -60,6 +60,7 @@ public:
     
     const vec3f & getFileColour() const;
     vec3f getColour() const;
+    void colourize();
 
     float getAlpha() const;
 

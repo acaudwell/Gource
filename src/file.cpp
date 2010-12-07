@@ -119,6 +119,10 @@ void RFile::setSelected(bool selected) {
     //glEndList();
 }
 
+void RFile::colourize() {
+    file_colour = ext.size() ? colourHash(ext) : vec3f(1.0f, 1.0f, 1.0f);
+}
+
 const vec3f& RFile::getNameColour() const{
     return selected ? selectedcol : namecol;
 }
