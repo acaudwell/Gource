@@ -890,7 +890,13 @@ void RDirNode::drawDirName(const FXFont& dirfont) const{
 // project positions of files and directories on the display in 2d
 void RDirNode::calcScreenPos() {
 
-    screenpos = display.project(vec3f(pos.x, pos.y, 0.0));
+    if(parent!=0) {
+        vec2f mid = pos + (parent->getPos() - pos) * 0.5;
+    
+        screenpos = display.project(vec3f(mid.x,mid.y, 0.0));
+    } else {
+        screenpos = display.project(vec3f(pos.x,pos.y, 0.0));
+    }
 
     //first pass - calculate positions of names
     for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
