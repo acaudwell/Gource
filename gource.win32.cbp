@@ -81,6 +81,8 @@
 		<Unit filename="src\custom.h" />
 		<Unit filename="src\cvs-exp.cpp" />
 		<Unit filename="src\cvs-exp.h" />
+		<Unit filename="src\cvs2cl.cpp" />
+		<Unit filename="src\cvs2cl.h" />
 		<Unit filename="src\dirnode.cpp" />
 		<Unit filename="src\dirnode.h" />
 		<Unit filename="src\file.cpp" />
@@ -105,6 +107,16 @@
 		<Unit filename="src\slider.h" />
 		<Unit filename="src\spline.cpp" />
 		<Unit filename="src\spline.h" />
+		<Unit filename="src\svn.cpp" />
+		<Unit filename="src\svn.h" />
+		<Unit filename="src\textbox.cpp" />
+		<Unit filename="src\textbox.h" />
+		<Unit filename="src\tinyxml\tinystr.cpp" />
+		<Unit filename="src\tinyxml\tinystr.h" />
+		<Unit filename="src\tinyxml\tinyxml.cpp" />
+		<Unit filename="src\tinyxml\tinyxml.h" />
+		<Unit filename="src\tinyxml\tinyxmlerror.cpp" />
+		<Unit filename="src\tinyxml\tinyxmlparser.cpp" />
 		<Unit filename="src\user.cpp" />
 		<Unit filename="src\user.h" />
 		<Unit filename="src\zoomcamera.cpp" />
