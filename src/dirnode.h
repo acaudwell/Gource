@@ -43,8 +43,8 @@ class RDirNode : public QuadItem {
     std::list<RDirNode*> children;
     std::list<RFile*> files;
 
-    std::map<RDirNode*, SplineEdge> splines;
-
+    SplineEdge spline;
+    
     vec4f col;
 
     vec2f spos;
@@ -89,7 +89,7 @@ class RDirNode : public QuadItem {
     void setInitialPosition();
 
     void drawEdge(RDirNode* child) const;
-    void updateSpline(float dt);
+    void updateSplinePoint(float dt);
     void move(float dt);
 
     vec2f calcFileDest(int layer_no, int file_no);
@@ -129,7 +129,7 @@ public:
     bool noFiles() const;
 
     bool prefixedBy(const std::string & path) const;
-
+  
     const std::string & getPath() const;
 
     const vec2f & getNodeNormal() const;
@@ -187,10 +187,9 @@ public:
     void drawShadows(const Frustum & frustum, float dt) const;
     void drawFiles(const Frustum & frustum, float dt) const;
     void drawSimple(const Frustum & frustum, float dt) const;
+    void drawNames(const FXFont & dirfont, const Frustum & frustum);
 
     void calcScreenPos();
-
-    void drawNames(const FXFont & dirfont, const Frustum & frustum);
 
     void nodeCount() const;
 };

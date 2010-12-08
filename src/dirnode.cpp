@@ -62,7 +62,7 @@ RDirNode::RDirNode(RDirNode* parent, const std::string & abspath) {
     since_node_visible = 0.0;
     since_last_file_change = 0.0;
     since_last_node_change = 0.0;
-
+      
     calcRadius();
     calcColour();
 }
@@ -141,8 +141,6 @@ bool RDirNode::prefixedBy(const std::string & path) const {
 const std::string & RDirNode::getPath() const{
     return abspath;
 }
-
-
 
 RDirNode* RDirNode::getParent() const{
     return parent;
@@ -704,7 +702,7 @@ const std::list<RDirNode*> & RDirNode::getChildren() const{
     return children;
 }
 
-void RDirNode::updateSpline(float dt) {
+void RDirNode::updateSplinePoint(float dt) {
     if(parent == 0) return;
 
     //update the spline point
@@ -827,15 +825,14 @@ void RDirNode::calcEdges() {
 
     calcProjectedPos();
 
-    //calculate edges
-    splines.clear();
+    if(parent != 0) {
+        spline.update(parent->getProjectedPos(), parent->getColour(), projected_pos, col, projected_spos);
+    }
 
     for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = *it;
 
         child->calcEdges();
-
-        splines[child] = SplineEdge(projected_pos, col, child->getProjectedPos(), child->getColour(), child->getSPos());
     }
 }
 
@@ -843,7 +840,7 @@ void RDirNode::logic(float dt) {
 
     //move
     move(dt);
-    updateSpline(dt);
+    updateSplinePoint(dt);
 
     //update node normal
     if(parent != 0) {
@@ -875,6 +872,7 @@ void RDirNode::logic(float dt) {
 }
 
 void RDirNode::drawDirName(const FXFont& dirfont) const{
+    if(parent==0) return;
     if(gGourceSettings.hide_dirnames) return;
 
     if(!gGourceSettings.highlight_dirs && since_last_node_change > 5.0) return;
@@ -883,30 +881,24 @@ void RDirNode::drawDirName(const FXFont& dirfont) const{
 
     glColor4f(1.0, 1.0, 1.0, alpha);
 
-    dirfont.draw(screenpos.x, screenpos.y, path_token);
+    vec2f mid = spline.getMidPoint();
+    
+    dirfont.draw(mid.x, mid.y, path_token);
 }
 
 
 // project positions of files and directories on the display in 2d
 void RDirNode::calcScreenPos() {
 
-    if(parent!=0) {
-        vec2f mid = pos + (parent->getPos() - pos) * 0.5;
-    
-        screenpos = display.project(vec3f(mid.x,mid.y, 0.0));
-    } else {
-        screenpos = display.project(vec3f(pos.x,pos.y, 0.0));
-    }
-
     //first pass - calculate positions of names
     for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
-            RFile* f = *it;
+        RFile* f = *it;
 
-            // TODO: different offsets for selected/not selected
-            if(f->isSelected())
-                f->calcScreenPos(pos + vec2f(5.5f, -2.0f));
-            else
-                f->calcScreenPos(pos + vec2f(5.5f, -1.0f));
+        // TODO: different offsets for selected/not selected
+        if(f->isSelected())
+            f->calcScreenPos(pos + vec2f(5.5f, -2.0f));
+        else
+            f->calcScreenPos(pos + vec2f(5.5f, -1.0f));
     }
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
@@ -1006,14 +998,13 @@ void RDirNode::calcProjectedPos() {
 
 void RDirNode::drawEdgeShadows(float dt) const{
 
+    spline.drawShadow();
+    
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
 
         //draw edge - assumes calcEdges() called before hand so spline will exist
         if(child->isVisible()) {
-           std::map<RDirNode*, SplineEdge>::const_iterator it = splines.find(child);
-           if(it != splines.end()) it->second.drawShadow();
-
            child->drawEdgeShadows(dt);
         }
     }
@@ -1021,14 +1012,13 @@ void RDirNode::drawEdgeShadows(float dt) const{
 
 void RDirNode::drawEdges(float dt) const{
 
+    spline.draw();
+    
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
 
         //draw edge - assumes calcEdges() called before hand so spline will exist
         if(child->isVisible()) {
-           std::map<RDirNode*, SplineEdge>::const_iterator it = splines.find(child);
-           if(it != splines.end()) it->second.draw();
-
            child->drawEdges(dt);
         }
     }

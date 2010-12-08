@@ -31,10 +31,15 @@ class SplineEdge {
     std::vector<vec2f> spline_point;
     std::vector<vec4f> spline_colour;
 
+    vec2f midpoint;
+    
     void drawBeam(const vec2f & pos1, const vec4f & col1, const vec2f & pos2, const vec4f & col2, float radius, bool first) const;
 public:
     SplineEdge();
-    SplineEdge(vec2f pos1, vec4f col1, vec2f pos2, vec4f col2, vec2f spos);
+    
+    const vec2f& getMidPoint() const;
+    
+    void update(const vec2f& pos1, const vec4f& col1, const vec2f& pos2, const vec4f& col2, const vec2f& spos);
 
     void drawShadow() const;
     void draw() const;

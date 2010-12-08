@@ -20,7 +20,7 @@
 SplineEdge::SplineEdge() {
 }
 
-SplineEdge::SplineEdge(vec2f pos1, vec4f col1, vec2f pos2, vec4f col2, vec2f spos) {
+void SplineEdge::update(const vec2f& pos1, const vec4f& col1, const vec2f& pos2, const vec4f& col2, const vec2f& spos) {
 
     vec2f pt_last;
     vec4f col_last;
@@ -32,11 +32,12 @@ SplineEdge::SplineEdge(vec2f pos1, vec4f col1, vec2f pos2, vec4f col2, vec2f spo
 
     float ang = acos(dp) / PI;
 
-    // max 10,
-    int max_detail = 10;
+    int edge_detail = std::min(10, (int) (ang * 100.0));
 
-    int edge_detail = std::min(max_detail, (int) (ang * 100.0));
-    if(edge_detail<1.0) edge_detail = 1.0;
+    if(edge_detail<1) edge_detail = 1;
+
+    spline_point.clear();
+    spline_colour.clear();
 
     spline_point.reserve(edge_detail+1);
     spline_colour.reserve(edge_detail+1);
@@ -56,6 +57,12 @@ SplineEdge::SplineEdge(vec2f pos1, vec4f col1, vec2f pos2, vec4f col2, vec2f spo
         spline_point.push_back(pt);
         spline_colour.push_back(coln);
     }
+    
+    midpoint = pos1 * 0.25 + pos2 * 0.25 + spos * 0.5;
+}
+
+const vec2f& SplineEdge::getMidPoint() const {
+    return midpoint;
 }
 
 void SplineEdge::drawBeam(const vec2f & pos1, const vec4f & col1, const vec2f & pos2, const vec4f & col2, float radius, bool first) const{

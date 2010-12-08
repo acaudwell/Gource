@@ -1937,7 +1937,6 @@ void Gource::draw(float t, float dt) {
 
     name_calc_time = SDL_GetTicks() - name_calc_time;
 
-
     name_draw_time = SDL_GetTicks();
 
     //switch to 2D, preserve current state
