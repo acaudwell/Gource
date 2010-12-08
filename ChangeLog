@@ -10,6 +10,7 @@
  * Removed arbitrary 1024 maximum length limit for log lines.
  * Fixed two file colouring bugs (quoted files from git, period in file path).
  * Fix handling of avatars for UTF-8 usernames on MACOSX (Christian Köstlin).
+ * Recover from video mode failing to set due to multi-sampling (Siddhesh Poyarekar).
 
 0.28:
  * Bazaar support for merged commits (Nick Moffit).

@@ -147,7 +147,9 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    if(gGourceSettings.multisample) glEnable(GL_MULTISAMPLE_ARB);
+    if(display.multiSamplingEnabled()) {
+        glEnable(GL_MULTISAMPLE_ARB);
+    }
 
     GourceShell* gourcesh = 0;
 
