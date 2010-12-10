@@ -99,6 +99,8 @@
 		<Unit filename="src\gource_shell.h" />
 		<Unit filename="src\hg.cpp" />
 		<Unit filename="src\hg.h" />
+		<Unit filename="src\key.cpp" />
+		<Unit filename="src\key.h" />
 		<Unit filename="src\main.cpp" />
 		<Unit filename="src\main.h" />
 		<Unit filename="src\pawn.cpp" />
