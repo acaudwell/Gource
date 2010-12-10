@@ -20,7 +20,7 @@
 TextBox::TextBox() {
 }
 
-TextBox::TextBox(FXFont font) {
+TextBox::TextBox(const FXFont& font) {
     this->font   = font;
 
     shadow = vec2f(3.0f, 3.0f);
@@ -28,7 +28,7 @@ TextBox::TextBox(FXFont font) {
     colour = vec3f(0.7f, 0.7f, 0.7f);
     corner = vec2f(0.0f,0.0f);
     alpha  = 1.0f;
-    brightness = 0.5f;
+    brightness = 1.0f;
     max_width_chars = 1024;   
     rect_width = 0;
     rect_height = 0;
@@ -41,6 +41,10 @@ void TextBox::hide() {
 
 void TextBox::show() {
     visible = true;
+}
+
+void TextBox::setBrightness(float brightness) {
+    this->brightness = brightness;
 }
 
 void TextBox::setColour(const vec3f& colour) {
@@ -88,12 +92,14 @@ void TextBox::setText(const std::vector<std::string>& content) {
     }
 }
 
-void TextBox::setPos(const vec2f& pos) {
+void TextBox::setPos(const vec2f& pos, bool adjust) {
 
     corner = pos;
 
-    int fontheight = font.getHeight() + 4;
+    if(!adjust) return;
 
+    int fontheight = font.getHeight() + 4;
+    
     corner.y -= rect_height;
 
     if((corner.x + rect_width) > display.width) {
@@ -109,7 +115,7 @@ void TextBox::setPos(const vec2f& pos) {
 
 }
 
-void TextBox::draw() {
+void TextBox::draw() const {
     if(!visible) return;
 
     glDisable(GL_TEXTURE_2D);
@@ -140,11 +146,11 @@ void TextBox::draw() {
     glEnd();    
     
     glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glColor4f(1.0f, 1.0f, 1.0f, alpha);
 
     int yinc = 3;
 
-    std::vector<std::string>::iterator it;
+    std::vector<std::string>::const_iterator it;
     for(it = content.begin(); it != content.end(); it++) {
         font.draw((int)corner.x+2, (int)corner.y+yinc,  (*it).c_str());
         yinc += font.getHeight() + 4;

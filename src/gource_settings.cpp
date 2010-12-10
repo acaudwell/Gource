@@ -53,19 +53,19 @@ void GourceSettings::help(bool extended_help) {
     printf("  -c, --time-scale SCALE           Change simuation time scale (default: 1.0)\n");
     printf("  -e, --elasticity FLOAT           Elasticity of nodes\n\n");
 
+    printf("  --key                            Show file extension key\n\n");
+
     printf("  --user-image-dir DIRECTORY       Dir containing images to use as avatars\n");
     printf("  --default-user-image IMAGE       Default user image file\n");
     printf("  --colour-images                  Colourize user images\n\n");
 
-    printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)\n");
-    printf("      --file-extensions            Show filename extensions only\n\n");
+    printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)\n\n");
 
     printf("  --max-files NUMBER       Max number of active files (default: 1000)\n");
     printf("  --max-file-lag SECONDS   Max time files of a commit can take to appear\n\n");
 
     printf("  --log-command VCS        Show the VCS log command (git,svn,hg,bzr,cvs2cl)\n");
-    printf("  --log-format  VCS        Specify the log format (git,svn,hg,bzr,cvs2cl,custom)\n");
-    printf("  --git-branch             Get the git log of a particular branch\n\n");
+    printf("  --log-format  VCS        Specify the log format (git,svn,hg,bzr,cvs2cl,custom)\n\n");
 
     printf("  --load-config CONF_FILE  Load a config file\n");
     printf("  --save-config CONF_FILE  Save a config file with the current options\n\n");
@@ -94,6 +94,10 @@ if(extended_help) {
 
     printf("  --font-size SIZE         Font size\n");
     printf("  --font-colour FFFFFF     Font colour in hex\n\n");
+
+    printf("  --file-extensions        Show filename extensions only\n\n");
+
+    printf("  --git-branch             Get the git log of a particular branch\n\n");
 
     printf("  --hide DISPLAY_ELEMENT   bloom,date,dirnames,files,filenames,mouse,progress,\n");
     printf("                           tree,users,usernames\n\n");
@@ -198,8 +202,9 @@ GourceSettings::GourceSettings() {
     arg_types["hide-bloom"]      = "bool";
     arg_types["hide-mouse"]      = "bool";
     arg_types["highlight-all-users"] = "bool";
-    arg_types["highlight-dirs"] = "bool";
+    arg_types["highlight-dirs"]  = "bool";
     arg_types["file-extensions"] = "bool";
+    arg_types["key"]             = "bool";
 
     arg_types["disable-auto-rotate"] = "bool";
     arg_types["disable-auto-skip"]   = "bool";
@@ -281,6 +286,8 @@ void GourceSettings::setGourceDefaults() {
     stop_at_end    = false;
     dont_stop      = false;
 
+    show_key = false;
+    
     disable_auto_rotate = false;
 
     auto_skip_seconds = 3.0f;
@@ -884,6 +891,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(stop_at_time <= 0.0) {
             conffile.invalidValueException(entry);
         }
+    }
+
+    if(gource_settings->getBool("key")) {
+        show_key = true;
     }
 
     if(gource_settings->getBool("realtime")) {

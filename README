@@ -109,6 +109,9 @@ options:
     --font-colour FFFFFF
         Font colour in hex.
 
+    --key
+        Show file extension key.
+
     --date-format FORMAT
             Specify display date string (strftime format).
 
@@ -327,6 +330,7 @@ Interactive keyboard commands:
 
     (V)   Toggle camera mode
     (C)   Displays Gource logo
+    (K)   Toggle file extension key.
     (M)   Toggle mouse visibility
     (N)   Jump forward in time to next log entry.
     (S)   Randomize colours.

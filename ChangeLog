@@ -2,6 +2,7 @@
  * SVN built-in support.
  * CVS (when cvs2cl is installed) built-in support.
  * Made camera behaviour when zooming and selecting objects more intuitive.
+ * Added file extension key (--key or toggled with 'K').
  * Added mouse-over tool tips.
  * Added --highlight-colour option.
  * Added --hash-seed option. The S key now randomizes colours.

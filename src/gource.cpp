@@ -102,8 +102,10 @@ Gource::Gource(FrameExporter* exporter) {
     date_x_offset = 0;
     
     textbox = TextBox(fontmanager.grab("FreeSans.ttf", 18));
+    textbox.setBrightness(0.5f);
     textbox.show();
-    textbox.setText("Hello");
+    
+    file_key = FileKey(1.0f);
     
     camera = ZoomCamera(vec3f(0,0, -300), vec3f(0.0, 0.0, 0.0), 250.0, 5000.0);
     camera.setPadding(gGourceSettings.padding);
@@ -715,6 +717,10 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             gGourceSettings.hide_filenames = !gGourceSettings.hide_filenames;
         }
 
+        if (e->keysym.sym == SDLK_k) {
+            gGourceSettings.show_key = !gGourceSettings.show_key;
+        }
+
         if(e->keysym.sym == SDLK_c) {
             splash = 15.0f;
         }
@@ -858,6 +864,8 @@ void Gource::reset() {
 
     files.clear();
 
+    file_key.clear();
+    
     idle_time=0;
     currtime=0;
     lasttime=0;
@@ -888,6 +896,7 @@ void Gource::deleteFile(RFile* file) {
 
     files.erase(file->fullpath);
     tagfilemap.erase(file->getTagID());
+    file_key.dec(file);
 
     debugLog("removed file %s\n", file->fullpath.c_str());
 
@@ -1040,7 +1049,9 @@ void Gource::processCommit(RCommit& commit, float t) {
             tagfilemap[tagid]  = file;
 
             root->addFile(file);
-
+            
+            file_key.inc(file);
+            
             while(root->getParent() != 0) {
                 debugLog("parent changed to %s\n", root->getPath().c_str());
                 root = root->getParent();
@@ -1373,6 +1384,8 @@ void Gource::changeColours() {
     for(std::map<std::string,RFile*>::iterator it = files.begin(); it != files.end(); it++) {
         it->second->colourize();
     }
+    
+    file_key.colourize();
 }
 
 void Gource::logic(float t, float dt) {
@@ -1412,6 +1425,8 @@ void Gource::logic(float t, float dt) {
             seekTo(gGourceSettings.start_position);
         }
     }
+
+    file_key.logic(dt);
 
     slider.logic(dt);
 
@@ -2069,7 +2084,16 @@ void Gource::draw(float t, float dt) {
          fontmedium.draw(1, 3, message);
     }
 
-    // text box   
+    //file key
+    file_key.draw();
+    file_key.setShow(gGourceSettings.show_key);
+
+    //slider
+    if(canSeek()) {
+        slider.draw(dt);
+    }
+
+    //text box   
     if(hoverFile && hoverFile != selectedFile) {
         
         std::string display_path = hoverFile->path;
@@ -2079,22 +2103,27 @@ void Gource::draw(float t, float dt) {
         if(display_path.size()) textbox.addLine(display_path);
         textbox.setColour(hoverFile->getColour());
 
-        textbox.setPos(mousepos);
+        textbox.setPos(mousepos, true);
         textbox.draw();
     } else if(hoverUser && hoverUser != selectedUser) {
 
         textbox.setText(hoverUser->getName());
         textbox.setColour(hoverUser->getColour());
         
-        textbox.setPos(mousepos);
+        textbox.setPos(mousepos, true);
         textbox.draw();
     }
 
-    // end text
-
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    //debug info
 
     if(debug) {
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glEnable(GL_TEXTURE_2D);
+
+        
         font.print(1,20, "FPS: %.2f", fps);
         font.print(1,40,"Days Per Second: %.2f",
             gGourceSettings.days_per_second);
@@ -2126,12 +2155,7 @@ void Gource::draw(float t, float dt) {
             font.print(1,400,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
                     selectedFile->getDir()->fileCount(), selectedFile->getDir()->visibleFileCount());
         }
-
     }
-
-    glDisable(GL_TEXTURE_2D);
-
-    if(canSeek()) slider.draw(dt);
 
     mousemoved=false;
     mouseclicked=false;

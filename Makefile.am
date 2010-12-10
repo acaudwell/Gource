@@ -42,6 +42,7 @@ gource_SOURCES = \
 	src/gource_shell.cpp src/gource_shell.h \
 	src/gource_settings.cpp src/gource_settings.h \
 	src/hg.cpp src/hg.h \
+	src/key.cpp src/key.h \
 	src/main.cpp src/main.h \
 	src/pawn.cpp src/pawn.h \
 	src/slider.cpp src/slider.h \

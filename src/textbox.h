@@ -41,23 +41,24 @@ class TextBox {
     
 public:
     TextBox();
-    TextBox(FXFont font);
+    TextBox(const FXFont& font);
 
     void hide();
     void show();
     
     void clear();
 
-    void setPos(const vec2f& pos);
+    void setPos(const vec2f& pos, bool adjust = false);
     void setColour(const vec3f& colour);
     void setAlpha(float alpha);
+    void setBrightness(float brightness);
     
     void addLine(std::string str);
 
     void setText(const std::string& str);
     void setText(const std::vector<std::string>& content);
 
-    void draw();
+    void draw() const;
 };
 
 #endif

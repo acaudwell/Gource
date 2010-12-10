@@ -54,6 +54,7 @@
 #include "user.h"
 #include "dirnode.h"
 #include "zoomcamera.h"
+#include "key.h"
 
 class Gource : public SDLApp {
     std::string logfile;
@@ -63,6 +64,8 @@ class Gource : public SDLApp {
     RCommitLog* commitlog;
     PositionSlider slider;
     ZoomCamera camera;
+
+    FileKey file_key;
 
     bool debug, trace_debug;
 
