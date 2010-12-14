@@ -41,7 +41,7 @@ class RFile : public Pawn {
     vec2f dest;
     float distance;
 
-    GLuint namelist;
+    //GLuint namelist;
 
     void setFilename(const std::string& abs_file_path);
 

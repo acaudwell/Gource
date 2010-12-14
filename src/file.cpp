@@ -45,7 +45,7 @@ RFile::RFile(const std::string & name, const vec3f & colour, const vec2f & pos, 
 
     setFilename(name);
 
-    namelist = glGenLists(1);
+    //namelist = glGenLists(1);
 
     font = 0;
     setSelected(false);
@@ -54,7 +54,7 @@ RFile::RFile(const std::string & name, const vec3f & colour, const vec2f & pos, 
 }
 
 RFile::~RFile() {
-    glDeleteLists(namelist, 1);
+    //glDeleteLists(namelist, 1);
 }
 
 void RFile::remove(bool force) {
