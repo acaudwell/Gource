@@ -706,15 +706,49 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
         }
 
         if (e->keysym.sym == SDLK_u) {
-            gGourceSettings.hide_usernames = !gGourceSettings.hide_usernames;
+            
+            if(gGourceSettings.hide_usernames && !gGourceSettings.highlight_all_users) {
+                gGourceSettings.hide_usernames      = false;
+                gGourceSettings.highlight_all_users = true;
+
+            } else if (gGourceSettings.highlight_all_users && !gGourceSettings.hide_usernames) {
+                gGourceSettings.hide_usernames      = false;
+                gGourceSettings.highlight_all_users = false;
+            } else {
+                gGourceSettings.hide_usernames      = true;
+                gGourceSettings.highlight_all_users = false;
+            }
+           
         }
 
         if (e->keysym.sym == SDLK_d) {
-            gGourceSettings.hide_dirnames = ! gGourceSettings.hide_dirnames;
+            if(gGourceSettings.hide_dirnames && !gGourceSettings.highlight_dirs) {
+            
+                gGourceSettings.hide_dirnames  = false;
+                gGourceSettings.highlight_dirs = true;
+
+            } else if(gGourceSettings.highlight_dirs && !gGourceSettings.hide_dirnames) {
+
+                gGourceSettings.hide_dirnames  = false;
+                gGourceSettings.highlight_dirs = false;
+
+            } else {
+                gGourceSettings.hide_dirnames  = true;
+                gGourceSettings.highlight_dirs = false;
+            }
         }
 
         if (e->keysym.sym == SDLK_f) {
-            gGourceSettings.hide_filenames = !gGourceSettings.hide_filenames;
+            
+            if(gGourceSettings.hide_filenames && !gGourceSettings.file_extensions) {
+                gGourceSettings.hide_filenames  = false;
+            } else if(!gGourceSettings.hide_filenames && gGourceSettings.file_extensions) {
+                gGourceSettings.file_extensions = false;
+                gGourceSettings.hide_filenames = true;
+            } else {
+                gGourceSettings.file_extensions = true;
+                gGourceSettings.hide_filenames  = false;           
+            }
         }
 
         if (e->keysym.sym == SDLK_k) {
@@ -1077,18 +1111,13 @@ void Gource::processCommit(RCommit& commit, float t) {
             users[commit.username] = user;
             tagusermap[tagid]     = user;
 
-            if(gGourceSettings.highlight_all_users) {
-                user->setHighlighted(true);
-            } else {
+            // set the highlighted flag if name matches a highlighted user
+            for(std::vector<std::string>::iterator hi = gGourceSettings.highlight_users.begin(); hi != gGourceSettings.highlight_users.end(); hi++) {
+                std::string highlight = *hi;
 
-                // set the highlighted flag if name matches a highlighted user
-                for(std::vector<std::string>::iterator hi = gGourceSettings.highlight_users.begin(); hi != gGourceSettings.highlight_users.end(); hi++) {
-                    std::string highlight = *hi;
-
-                    if(highlight.size() && user->getName() == highlight) {
-                        user->setHighlighted(true);
-                        break;
-                    }
+                if(highlight.size() && user->getName() == highlight) {
+                    user->setHighlighted(true);
+                    break;
                 }
             }
 

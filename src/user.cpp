@@ -201,8 +201,6 @@ void RUser::assignUserImage() {
             if(!gGourceSettings.colour_user_images) usercol = vec3f(1.0, 1.0, 1.0);
 
             graphic = texturemanager.grabFile(imagefile);
-
-            setHighlighted(true);
         }
     }
 
@@ -373,7 +371,7 @@ bool RUser::isInactive() {
 }
 
 bool RUser::nameVisible() const {
-    return (Pawn::nameVisible() || highlighted) ? true : false;
+    return (Pawn::nameVisible() || gGourceSettings.highlight_all_users || highlighted) ? true : false;
 }
 
 void RUser::drawNameText(float alpha) const {
@@ -381,7 +379,7 @@ void RUser::drawNameText(float alpha) const {
 
     float user_alpha = getAlpha();
 
-    if(highlighted || selected || alpha>0.0) {
+    if(gGourceSettings.highlight_all_users || highlighted || selected || alpha>0.0) {
         vec3f nameCol = getNameColour();
 
         glEnable(GL_TEXTURE_2D);
@@ -393,7 +391,7 @@ void RUser::drawNameText(float alpha) const {
         screenpos.x -= namewidth * 0.5;
         screenpos.y -= font.getHeight();
 
-        glColor4f(nameCol.x, nameCol.y, nameCol.z, (selected||highlighted) ? user_alpha : alpha);
+        glColor4f(nameCol.x, nameCol.y, nameCol.z, (selected||highlighted||gGourceSettings.highlight_all_users) ? user_alpha : alpha);
 
         display.push2D();
 
