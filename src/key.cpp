@@ -14,7 +14,7 @@ FileKeyEntry::FileKeyEntry(const FXFont& font, const std::string& ext, const vec
     
     shadow      = vec2f(3.0, 3.0);
     
-    width       = 80.0f;
+    width       = 90.0f;
     height      = 18.0f;
     left_margin = 20.0f;
     count       = 0;
@@ -23,6 +23,7 @@ FileKeyEntry::FileKeyEntry(const FXFont& font, const std::string& ext, const vec
 
     move_elapsed = 1.0f;
     src_y        = -1.0f;
+    dest_y       = -1.0f;
 
     show = true;
 }
@@ -133,7 +134,7 @@ void FileKeyEntry::draw() {
     font.draw((int)pos.x+2, (int)pos.y+3,  ext.c_str());   
 
     font.dropShadow(true);
-    font.print((int)pos.x+84, (int)pos.y+3, "%d", count);
+    font.print((int)pos.x+width+4, (int)pos.y+3, "%d", count);
 }
 
 // Key
@@ -151,6 +152,7 @@ FileKey::FileKey(float update_interval) {
     font = fontmanager.grab("FreeSans.ttf", 16);
     font.dropShadow(false);
     font.roundCoordinates(false);
+    show = true;
 }
 
 FileKey::~FileKey() {
