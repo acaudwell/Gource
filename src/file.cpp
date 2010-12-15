@@ -91,7 +91,7 @@ void RFile::setFilename(const std::string& abs_file_path) {
     //trim name to just extension
     int dotsep=0;
 
-    if((dotsep=name.rfind(".")) != std::string::npos && dotsep != name.size()-1 && dotsep != 0) {
+    if((dotsep=name.rfind(".")) != std::string::npos && dotsep != name.size()-1) {
         ext = name.substr(dotsep+1);
     }
 }
