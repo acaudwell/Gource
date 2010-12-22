@@ -838,6 +838,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
 void Gource::reset() {
     camera.reset();
     user_bounds.reset();
+    active_user_bounds.reset();
     dir_bounds.reset();
     commitqueue.clear();
     tagfilemap.clear();
@@ -1194,9 +1195,11 @@ void Gource::updateBounds() {
     for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
         RUser* user = it->second;
 
+        user->updateQuadItemBounds();
+        user_bounds.update(user->quadItemBounds);
+
         if(!user->isIdle()) {
-            user->updateQuadItemBounds();
-            user_bounds.update(user->quadItemBounds);
+            active_user_bounds.update(user->quadItemBounds);
         }
     }
 
@@ -1366,7 +1369,7 @@ void Gource::updateCamera(float dt) {
 
             cambounds = focusbounds;
         } else {
-            if(track_users && idle_time==0) cambounds = user_bounds;
+            if(track_users && idle_time==0) cambounds = active_user_bounds;
             else cambounds = dir_bounds;
         }
 
@@ -1508,6 +1511,7 @@ void Gource::logic(float t, float dt) {
     //still want to update camera while paused
     if(paused) {
         updateBounds();
+        interactUsers();
         interactDirs();
         updateCamera(dt);
         return;
@@ -1591,73 +1595,77 @@ void Gource::logic(float t, float dt) {
 }
 
 void Gource::mousetrace(Frustum& frustum, float dt) {
-    GLuint	buffer[512];
-	GLint	viewport[4];
-
-	glGetIntegerv(GL_VIEWPORT, viewport);
-	glSelectBuffer(512, buffer);
-
-    glDepthFunc(GL_LEQUAL);
-    glEnable(GL_DEPTH_TEST);
-
-    (void) glRenderMode(GL_SELECT);
-
-    glInitNames();
-    glPushName(0);
-
+    //fprintf(stderr, "start trace\n");
+    //projected mouse pos
     glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
     glLoadIdentity();
-
-    gluPickMatrix((GLdouble) mousepos.x, (GLdouble) (viewport[3]-mousepos.y), 1.0f, 1.0f, viewport);
-    gluPerspective(90.0f, (GLfloat)display.width/(GLfloat)display.height, 0.1f, camera.getZFar());
+    gluPerspective(camera.getFov(), (GLfloat)display.width/(GLfloat)display.height, camera.getZNear(), -camera.getPos().z);
     camera.look();
 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    vec2f projected_mouse = display.unproject(mousepos).truncate();
+    glPopMatrix();
 
-    for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
-        it->second->drawSimple(dt);
-    }
-
-    glDisable(GL_TEXTURE_2D);
-    glColor4f(1.0, 1.0, 1.0, 1.0);
-
-    root->drawSimple(frustum, dt);
-
-    glMatrixMode(GL_MODELVIEW);
-
-    mouse_hits = glRenderMode(GL_RENDER);
-
+    //find user/file under mouse
+    
     RFile* fileSelection = 0;
     RUser* userSelection = 0;
 
-    if (mouse_hits > 0) {
-        int choice   = buffer[3];
-        GLuint depth = buffer[1];
+    std::set<QuadItem*> userset;
 
-        for (int loop = 1; loop < mouse_hits; loop++) {
-            if (buffer[loop*4+1] < depth) {
-                choice = buffer[loop*4+3];
-                depth  = buffer[loop*4+1];
-            }
+    //fprintf(stderr, "user tree has %d items\n", userTree->unique_item_count);
+    
+    userTree->getItemsAt(userset, projected_mouse);
+
+    if(!userset.empty()) {
+        //fprintf(stderr,"overlaps %d users\n", userset.size());
+    }
+    
+    for(std::set<QuadItem*>::iterator it = userset.begin(); it != userset.end(); it++) {
+        RUser* user = (RUser*) *it;
+        if(user->quadItemBounds.contains(projected_mouse)) {
+            userSelection = user;
+            break;
         }
-
-        if(choice != 0) {
-            selectionDepth = depth;
-
-            std::map<int, RFile*>::iterator filetest;
-            std::map<int, RUser*>::iterator usertest;
-
-            if((filetest = tagfilemap.find(choice)) != tagfilemap.end()) {
-                fileSelection = filetest->second;
-            }
-            else if((usertest = tagusermap.find(choice)) != tagusermap.end()) {
-                userSelection = usertest->second;
-            }
-		}
     }
 
-    glDisable(GL_DEPTH_TEST);
+    userset.clear();
+    userTree->getItemsInBounds(userset, user_bounds);
+
+    for(std::set<QuadItem*>::iterator it = userset.begin(); it != userset.end(); it++) {
+        RUser* user = (RUser*) *it;
+        //fprintf(stderr, "user %s found in tree\n", user->getName().c_str());
+    }
+    
+      
+
+    if(!userSelection) {
+    
+        std::set<QuadItem*> dirset;
+
+        dirNodeTree->getItemsAt(dirset, projected_mouse);
+        
+        if(!dirset.empty()) {
+            //fprintf(stderr,"overlaps %d dirs\n", dirset.size());
+        }
+        
+        for(std::set<QuadItem*>::iterator it = dirset.begin(); it != dirset.end(); it++) {
+
+            RDirNode* dir = (RDirNode*) *it;
+            
+            const std::list<RFile*>* files = dir->getFiles(); 
+           
+            for(std::list<RFile*>::const_iterator fi = files->begin(); fi != files->end(); fi++) {
+            
+                RFile* file = *fi;                              
+                
+                if(file->overlaps(projected_mouse)) {
+                    fileSelection = file;
+                    break;
+                }
+            }
+        }
+    }
 
     // is over a file
     if(fileSelection != 0) {
@@ -1711,6 +1719,8 @@ void Gource::mousetrace(Frustum& frustum, float dt) {
             selectBackground();
         }
     }
+    
+    //fprintf(stderr, "end trace\n");   
 }
 
 void Gource::loadingScreen() {
@@ -2018,14 +2028,20 @@ void Gource::draw(float t, float dt) {
 
     if(gGourceQuadTreeDebug) {
         glDisable(GL_TEXTURE_2D);
-        glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
 
         glLineWidth(1.0);
+
+        glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+
         dirNodeTree->outline();
 
         glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
 
         userTree->outline();
+
+        glColor4f(0.0f, 1.0f, 0.5f, 1.0f);
+
+        userTree->outlineItems();
     }
 
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -2171,8 +2187,8 @@ void Gource::draw(float t, float dt) {
         font.print(1,280,"Draw Time: %u ms (Names: Calc Time = %u ms, Draw Time = %u ms)", SDL_GetTicks() - draw_time, name_calc_time, name_draw_time);
         font.print(1,300,"File Inner Loops: %d", gGourceFileInnerLoops);
         font.print(1,320,"User Inner Loops: %d", gGourceUserInnerLoops);
-        font.print(1,340,"Dir Inner Loops: %d (QTree items = %d, nodes = %d)", gGourceDirNodeInnerLoops,
-            dirNodeTree->item_count, dirNodeTree->node_count);
+        font.print(1,340,"Dir Inner Loops: %d (QTree items = %d, nodes = %d, max node depth = %d)", gGourceDirNodeInnerLoops,
+            dirNodeTree->item_count, dirNodeTree->node_count, dirNodeTree->max_node_depth);
         font.print(1,360,"Dir Bounds Ratio: %.2f, %.5f", dir_bounds.width() / dir_bounds.height(), rotation_remaining_angle);
         font.print(1,380,"String Hash Seed: %d", gStringHashSeed);
 

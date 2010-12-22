@@ -154,6 +154,7 @@ class Gource : public SDLApp {
 
     Bounds2D dir_bounds;
     Bounds2D user_bounds;
+    Bounds2D active_user_bounds;
 
     std::deque<RCommit> commitqueue;
     std::map<std::string, RUser*> users;

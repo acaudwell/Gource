@@ -74,6 +74,18 @@ vec2f RFile::getAbsolutePos() const{
     return pos + dir->getPos();
 }
 
+bool RFile::overlaps(const vec2f& pos) const {
+
+    vec2f abs_pos = getAbsolutePos();
+
+    float halfsize_x = size * 0.5f;
+    vec2f halfsize ( halfsize_x, halfsize_x * graphic_ratio );
+
+    Bounds2D file_bounds(abs_pos - halfsize, abs_pos + halfsize);
+
+    return file_bounds.contains(pos);
+}
+
 void RFile::setFilename(const std::string& abs_file_path) {
     
     fullpath = abs_file_path;

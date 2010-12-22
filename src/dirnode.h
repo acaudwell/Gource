@@ -149,6 +149,8 @@ public:
     float getRadius() const;
     float getRadiusSqrt() const;
 
+    const std::list<RFile*>* getFiles() const { return &files; };
+    
     vec3f averageFileColour() const;
 
     const vec4f & getColour() const;

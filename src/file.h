@@ -58,6 +58,8 @@ public:
     bool isExpiring() const { return expiring; }
     bool isRemoving() const { return removing; }
     
+    bool overlaps(const vec2f& pos) const; 
+    
     const vec3f & getFileColour() const;
     vec3f getColour() const;
     void colourize();
