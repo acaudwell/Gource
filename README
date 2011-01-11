@@ -275,12 +275,7 @@ You can also have Gource write a copy of the log file in its own format:
 
 CVS Support:
 
-If 'cvs2cl' (a script that produces chronological commit output for CVS
-repositories) is found, Gource will try and use this to support CVS
-directories.
-
-You can also use cvs2cl indirectly by first generating the log, and
-then passing it to gource:
+Use 'cvs2cl' to generate the log and then pass it to Gource:
 
     cvs2cl --chrono --stdout --xml -g-q > my-cvs-project.log
     gource my-cvs-project.log

@@ -25,64 +25,6 @@ Regex cvs2cl_logentry_timestamp("(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\
 std::string gGourceCVS2CLLogCommand = "cvs2cl --chrono --stdout --xml -g-q";
 
 CVS2CLCommitLog::CVS2CLCommitLog(const std::string& logfile) : RCommitLog(logfile, '<') {
-
-    log_command = gGourceCVS2CLLogCommand;
-
-    //can generate log from directory
-    if(!logf && is_dir) {
-        logf = generateLog(logfile);
-
-        if(logf) {
-            success  = true;
-            seekable = true;
-        }
-    }
-
-    logentry.reserve(1024);
-}
-
-
-BaseLog* CVS2CLCommitLog::generateLog(const std::string& dir) {
-    //get working directory
-    char cwd_buff[1024];
-
-    if(getcwd(cwd_buff, 1024) != cwd_buff) {
-        return 0;
-    }
-
-    //does directory have a CVS?
-    std::string gitdir = dir + std::string("/CVS");
-    struct stat dirinfo;
-    int stat_rc = stat(gitdir.c_str(), &dirinfo);
-    if(stat_rc!=0 || !(dirinfo.st_mode & S_IFDIR)) {
-        return 0;
-    }
-
-    std::string command = getLogCommand();
-
-    //create temp file
-    createTempLog();
-
-    if(temp_file.size()==0) return 0;
-
-    if(chdir(dir.c_str()) != 0) {
-        return 0;
-    }
-
-    char cmd_buff[2048];
-    sprintf(cmd_buff, "%s > %s", command.c_str(), temp_file.c_str());
-
-    int command_rc = system(cmd_buff);
-
-    chdir(cwd_buff);
-
-    if(command_rc != 0) {
-        return 0;
-    }
-
-    BaseLog* seeklog = new SeekLog(temp_file);
-
-    return seeklog;
 }
 
 bool CVS2CLCommitLog::parseCommit(RCommit& commit) {

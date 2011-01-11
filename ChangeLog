@@ -1,6 +1,6 @@
 0.29:
  * SVN built-in support.
- * CVS (when cvs2cl is installed) built-in support.
+ * cvs2cl log support (cvs-exp support is now deprecated).
  * Made camera behaviour when zooming and selecting objects more intuitive.
  * Improved interactive performance.
  * Added file extension key (--key or toggled with 'K').

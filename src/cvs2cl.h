@@ -33,7 +33,6 @@ extern std::string gGourceCVS2CLLogCommand;
 class CVS2CLCommitLog : public RCommitLog {
 protected:
     bool parseCommit(RCommit& commit);
-    BaseLog* generateLog(const std::string& dir);
 
     std::string logentry;
 public:
