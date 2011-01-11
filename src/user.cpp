@@ -389,7 +389,7 @@ void RUser::drawNameText(float alpha) const {
 
         vec3f screenpos = display.project(drawpos - vec3f(0.0, 0.5 * size * graphic_ratio, 0.0f ));
         screenpos.x -= namewidth * 0.5;
-        screenpos.y -= font.getHeight();
+        screenpos.y -= font.getMaxHeight();
 
         glColor4f(nameCol.x, nameCol.y, nameCol.z, (selected||highlighted||gGourceSettings.highlight_all_users) ? user_alpha : alpha);
 

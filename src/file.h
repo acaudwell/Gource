@@ -41,6 +41,8 @@ class RFile : public Pawn {
     vec2f dest;
     float distance;
 
+    FXLabel* label;
+    
     //GLuint namelist;
 
     void setFilename(const std::string& abs_file_path);
@@ -69,7 +71,9 @@ public:
     void touch(const vec3f & colour);
 
     void setSelected(bool selected);
-
+    
+    void updateLabel();
+    
     void setHidden(bool hidden);
 
     void setDest(const vec2f & dest){ this->dest = dest; }

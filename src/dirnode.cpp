@@ -930,7 +930,7 @@ void RDirNode::calcScreenPos() {
     }
 }
 
-void RDirNode::drawNames(const FXFont & dirfont, const Frustum & frustum){
+void RDirNode::drawNames(const FXFont& dirfont) {
 
     if(!gGourceSettings.hide_dirnames && isVisible()) {
         drawDirName(dirfont);
@@ -938,7 +938,7 @@ void RDirNode::drawNames(const FXFont & dirfont, const Frustum & frustum){
 
     if(!gGourceSettings.hide_filenames) {
 
-        if(!(gGourceSettings.hide_filenames || gGourceSettings.hide_files) && frustum.intersects(quadItemBounds)) {
+        if(!(gGourceSettings.hide_filenames || gGourceSettings.hide_files) && in_frustum) {
             for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
                 RFile* f = *it;
                 f->drawName();
@@ -949,13 +949,23 @@ void RDirNode::drawNames(const FXFont & dirfont, const Frustum & frustum){
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
-        node->drawNames(dirfont,frustum);
+        node->drawNames(dirfont);
     }
 }
 
-void RDirNode::drawShadows(const Frustum & frustum, float dt) const{
+void RDirNode::checkFrustum(const Frustum& frustum) {
 
-    if(frustum.intersects(quadItemBounds)) {
+    in_frustum = frustum.intersects(quadItemBounds);
+
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
+        RDirNode* node = (*it);
+        node->checkFrustum(frustum);
+    }
+}
+
+void RDirNode::drawShadows(float dt) const{
+
+    if(in_frustum) {
 
         glPushMatrix();
         glTranslatef(pos.x, pos.y, 0.0);
@@ -973,13 +983,13 @@ void RDirNode::drawShadows(const Frustum & frustum, float dt) const{
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
-        node->drawShadows(frustum, dt);
+        node->drawShadows(dt);
     }
 }
 
-void RDirNode::updateFilesVBO(const Frustum & frustum, qbuf2f& buffer, float dt) const{
+void RDirNode::updateFilesVBO(qbuf2f& buffer, float dt) const{
 
-    if(frustum.intersects(quadItemBounds)) {
+    if(in_frustum) {
 
         for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
             RFile* f = *it;
@@ -993,13 +1003,13 @@ void RDirNode::updateFilesVBO(const Frustum & frustum, qbuf2f& buffer, float dt)
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
-        node->updateFilesVBO(frustum,buffer,dt);
+        node->updateFilesVBO(buffer,dt);
     }
 }
 
-void RDirNode::drawFiles(const Frustum & frustum, float dt) const{
+void RDirNode::drawFiles(float dt) const{
 
-    if(frustum.intersects(quadItemBounds)) {
+    if(in_frustum) {
 
         vec4f col = getColour();
 
@@ -1020,7 +1030,7 @@ void RDirNode::drawFiles(const Frustum & frustum, float dt) const{
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
-        node->drawFiles(frustum,dt);
+        node->drawFiles(dt);
     }
 }
 
@@ -1065,9 +1075,9 @@ void RDirNode::drawEdges(float dt) const{
     }
 }
 
-void RDirNode::drawBloom(const Frustum & frustum, float dt){
+void RDirNode::drawBloom(float dt){
 
-    if(isVisible() && frustum.intersects(quadItemBounds)) {
+    if(in_frustum && isVisible()) {
 
         float bloom_radius = dir_radius * 2.0 * gGourceSettings.bloom_multiplier;
 
@@ -1089,12 +1099,11 @@ void RDirNode::drawBloom(const Frustum & frustum, float dt){
                 glVertex2f(-bloom_radius,bloom_radius);
             glEnd();
         glPopMatrix();
-
     }
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
-        node->drawBloom(frustum,dt);
+        node->drawBloom(dt);
     }
 }
 

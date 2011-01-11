@@ -716,6 +716,10 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             gGourceQuadTreeDebug = !gGourceQuadTreeDebug;
         }
 
+        if (e->keysym.sym == SDLK_y) {
+            gGourceSettings.hide_tree = !gGourceSettings.hide_tree;
+        }
+
         if (e->keysym.sym == SDLK_g) {
             gGourceSettings.hide_users = !gGourceSettings.hide_users;
         }
@@ -764,6 +768,8 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
                 gGourceSettings.file_extensions = true;
                 gGourceSettings.hide_filenames  = false;
             }
+
+            update_file_labels = true;
         }
 
         if (e->keysym.sym == SDLK_r) {
@@ -874,6 +880,7 @@ void Gource::reset() {
     if(dirNodeTree!=0) delete dirNodeTree;
 
     recolour = false;
+    update_file_labels = false;
 
     userTree = 0;
     dirNodeTree = 0;
@@ -1586,6 +1593,13 @@ void Gource::logic(float t, float dt) {
         recolour = false;
     }
 
+    if(update_file_labels) {
+        for(std::map<std::string,RFile*>::iterator it = files.begin(); it != files.end(); it++) {
+            it->second->updateLabel();
+        }
+        update_file_labels = false;
+    }
+
     //still want to update camera while paused
     if(paused) {
         updateBounds();
@@ -1672,7 +1686,7 @@ void Gource::logic(float t, float dt) {
     updateTime(commitqueue.size() > 0 ? currtime : lasttime);
 }
 
-void Gource::mousetrace(Frustum& frustum, float dt) {
+void Gource::mousetrace(float dt) {
     //fprintf(stderr, "start trace\n");
     //projected mouse pos
     glMatrixMode(GL_PROJECTION);
@@ -1834,7 +1848,7 @@ void Gource::drawBackground(float dt) {
     }
 }
 
-void Gource::drawTree(Frustum& frustum, float dt) {
+void Gource::drawTree(float dt) {
     draw_tree_time = SDL_GetTicks();
 
     root->calcEdges();
@@ -1869,7 +1883,7 @@ void Gource::drawTree(Frustum& frustum, float dt) {
     glPopMatrix();
 
     //update file and user vbos
-    updateVBOs(frustum, dt);
+    updateVBOs(dt);
 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
@@ -1877,13 +1891,13 @@ void Gource::drawTree(Frustum& frustum, float dt) {
 
     //draw shadows
 
-    drawUserShadows(frustum, dt);
+    drawUserShadows(dt);
 
-    drawFileShadows(frustum, dt);
+    drawFileShadows(dt);
 
     drawActions(dt);
 
-    drawFiles(frustum, dt);
+    drawFiles(dt);
 
     draw_tree_time = SDL_GetTicks() - draw_tree_time;
 }
@@ -1903,7 +1917,7 @@ void Gource::drawActions(float dt) {
     }
 }
 
-void Gource::drawBloom(Frustum &frustum, float dt) {
+void Gource::drawBloom(float dt) {
     if(gGourceSettings.hide_bloom) return;
 
     glEnable(GL_TEXTURE_2D);
@@ -1913,7 +1927,7 @@ void Gource::drawBloom(Frustum &frustum, float dt) {
     glBindTexture(GL_TEXTURE_2D, bloomtex->textureid);
     glBlendFunc (GL_ONE, GL_ONE);
 
-    root->drawBloom(frustum, dt);
+    root->drawBloom(dt);
 }
 
 void Gource::setMessage(const char* str, ...) {
@@ -1976,7 +1990,7 @@ void Gource::screenshot() {
     setMessage("Wrote screenshot %s", tganame);
 }
 
-void Gource::updateVBOs(const Frustum& frustum, float dt) {
+void Gource::updateVBOs(float dt) {
     if(gGourceSettings.ffp) return;
 
     for(std::map<GLuint, qbuf2f*>::iterator it = user_vbos.begin(); it!= user_vbos.end(); it++) {
@@ -2004,11 +2018,11 @@ void Gource::updateVBOs(const Frustum& frustum, float dt) {
     }
 
     file_vbo.reset();
-    root->updateFilesVBO(frustum, file_vbo, dt);
+    root->updateFilesVBO(file_vbo, dt);
     file_vbo.update();
 }
 
-void Gource::drawFileShadows(const Frustum& frustum, float dt) {
+void Gource::drawFileShadows(float dt) {
     if(gGourceSettings.hide_files) return;
    
     glEnable(GL_BLEND);
@@ -2027,11 +2041,11 @@ void Gource::drawFileShadows(const Frustum& frustum, float dt) {
 
         glUseProgramObjectARB(0);
     } else {
-        root->drawShadows(frustum, dt);
+        root->drawShadows(dt);
     }
 }
 
-void Gource::drawUserShadows(const Frustum& frustum, float dt) {
+void Gource::drawUserShadows(float dt) {
     if(gGourceSettings.hide_users) return;
    
     glEnable(GL_BLEND);
@@ -2061,7 +2075,7 @@ void Gource::drawUserShadows(const Frustum& frustum, float dt) {
     }
 }
 
-void Gource::drawFiles(const Frustum& frustum, float dt) {
+void Gource::drawFiles(float dt) {
     if(gGourceSettings.hide_files) return;
 
 
@@ -2079,7 +2093,7 @@ void Gource::drawFiles(const Frustum& frustum, float dt) {
 
         file_vbo.draw();
     } else {
-        root->drawFiles(frustum, dt);
+        root->drawFiles(dt);
     }
 }
 
@@ -2128,7 +2142,7 @@ void Gource::draw(float t, float dt) {
     trace_time = SDL_GetTicks();
 
     if(!gGourceSettings.hide_mouse && cursor.isVisible()) {
-        mousetrace(frustum,dt);
+        mousetrace(dt);
     } else {
         if(hoverUser) {
             hoverUser->setMouseOver(false);
@@ -2150,8 +2164,11 @@ void Gource::draw(float t, float dt) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    //check visibility
+    root->checkFrustum(frustum);
+
     //draw tree
-    drawTree(frustum, dt);
+    drawTree(dt);
 
     drawUsers(dt);
 
@@ -2159,7 +2176,7 @@ void Gource::draw(float t, float dt) {
     glEnable(GL_BLEND);
 
     //draw bloom
-    drawBloom(frustum, dt);
+    drawBloom(dt);
 
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -2173,8 +2190,8 @@ void Gource::draw(float t, float dt) {
 
     //switch to 2D, preserve current state
     display.push2D();
-
-    root->drawNames(font,frustum);
+    
+    root->drawNames(font);
 
     //switch back
     display.pop2D();

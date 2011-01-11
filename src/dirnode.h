@@ -60,6 +60,7 @@ class RDirNode : public QuadItem {
     float dir_area;
 
     bool visible;
+    bool in_frustum;
     bool position_initialized;
 
     float since_node_visible;
@@ -187,13 +188,15 @@ public:
     void drawEdges(float dt) const;
     void drawEdgeShadows(float dt) const;
 
-    void drawBloom(const Frustum & frustum, float dt);
+    void checkFrustum(const Frustum & frustum);
 
-    void updateFilesVBO(const Frustum & frustum, qbuf2f& buffer, float dt) const;
+    void updateFilesVBO(qbuf2f& buffer, float dt) const;
 
-    void drawShadows(const Frustum & frustum, float dt) const;
-    void drawFiles(const Frustum & frustum, float dt) const;
-    void drawNames(const FXFont & dirfont, const Frustum & frustum);
+    void drawShadows(float dt) const;
+    void drawFiles(float dt) const;
+    void drawBloom(float dt);
+
+    void drawNames(const FXFont& dirfont);
 
     void calcScreenPos();
 

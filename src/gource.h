@@ -88,6 +88,8 @@ class Gource : public SDLApp {
 
     bool recolour;
 
+    bool update_file_labels;
+    
     bool use_selection_bounds;
     Bounds2D selection_bounds;
 
@@ -172,7 +174,7 @@ class Gource : public SDLApp {
 
     QuadTree* dirNodeTree;
     QuadTree* userTree;
-
+    
     std::string message;
     float message_timer;
 
@@ -214,7 +216,7 @@ class Gource : public SDLApp {
 
     void updateTime(time_t display_time);
 
-    void mousetrace(Frustum& frustum, float dt);
+    void mousetrace(float dt);
 
     bool canSeek();
     void seekTo(float percent);
@@ -224,14 +226,14 @@ class Gource : public SDLApp {
     void loadingScreen();
     void drawBackground(float dt);
     void drawActions(float dt);
-    void drawTree(Frustum &frustum, float dt);
-    void drawBloom(Frustum &frustum, float dt);
-    void drawFileShadows(const Frustum& frustum, float dt);
-    void drawUserShadows(const Frustum& frustum, float dt);
-    void drawFiles(const Frustum& frustum, float dt);
-    void updateVBOs(const Frustum& frustum, float dt);
 
+    void drawTree(float dt);
+    void drawBloom(float dt);
+    void drawFileShadows(float dt);
+    void drawUserShadows(float dt);
+    void drawFiles(float dt);
     void drawUsers(float dt);
+    void updateVBOs(float dt);
 
     void screenshot();
 
