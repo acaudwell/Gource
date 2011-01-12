@@ -1095,7 +1095,18 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             throw ConfFileException("log-format required when reading from STDIN", "", 0);
         }
 
+#ifdef _WIN32
+        DWORD available_bytes;
+        HANDLE stdin_handle = GetStdHandle(STD_INPUT_HANDLE);
+
+        while(PeekNamedPipe(stdin_handle, 0, 0, 0,
+            &available_bytes, 0) && available_bytes==0 && !std::cin.fail()) {
+            SDL_Delay(100);
+        }
+#else
         while(std::cin.peek() == EOF && !std::cin.fail()) SDL_Delay(100);
+#endif
+
         std::cin.clear();
     }
 
