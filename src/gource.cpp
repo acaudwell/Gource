@@ -1612,43 +1612,23 @@ void Gource::mousetrace(Frustum& frustum, float dt) {
     RUser* userSelection = 0;
 
     std::set<QuadItem*> userset;
-
-    //fprintf(stderr, "user tree has %d items\n", userTree->unique_item_count);
     
     userTree->getItemsAt(userset, projected_mouse);
-
-    if(!userset.empty()) {
-        //fprintf(stderr,"overlaps %d users\n", userset.size());
-    }
     
     for(std::set<QuadItem*>::iterator it = userset.begin(); it != userset.end(); it++) {
         RUser* user = (RUser*) *it;
-        if(user->quadItemBounds.contains(projected_mouse)) {
+        if(!user->isFading() && user->quadItemBounds.contains(projected_mouse)) {
             userSelection = user;
             break;
         }
     }
-
-    userset.clear();
-    userTree->getItemsInBounds(userset, user_bounds);
-
-    for(std::set<QuadItem*>::iterator it = userset.begin(); it != userset.end(); it++) {
-        RUser* user = (RUser*) *it;
-        //fprintf(stderr, "user %s found in tree\n", user->getName().c_str());
-    }
-    
-      
 
     if(!userSelection) {
     
         std::set<QuadItem*> dirset;
 
         dirNodeTree->getItemsAt(dirset, projected_mouse);
-        
-        if(!dirset.empty()) {
-            //fprintf(stderr,"overlaps %d dirs\n", dirset.size());
-        }
-        
+                
         for(std::set<QuadItem*>::iterator it = dirset.begin(); it != dirset.end(); it++) {
 
             RDirNode* dir = (RDirNode*) *it;
@@ -1659,7 +1639,7 @@ void Gource::mousetrace(Frustum& frustum, float dt) {
             
                 RFile* file = *fi;                              
                 
-                if(file->overlaps(projected_mouse)) {
+                if(!file->isHidden() && file->overlaps(projected_mouse)) {
                     fileSelection = file;
                     break;
                 }
