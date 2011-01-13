@@ -26,7 +26,7 @@ void GourceSettings::help(bool extended_help) {
     SDLAppCreateWindowsConsole();
 
     //resize window to fit help message
-    SDLAppResizeWindowsConsole(790);
+    SDLAppResizeWindowsConsole(800);
 #endif
 
     printf("Gource v%s\n", GOURCE_VERSION);
@@ -77,7 +77,7 @@ if(extended_help) {
     printf("Extended Options:\n\n");
 
     printf("  --output-custom-log FILE  Output a custom format log file ('-' for STDOUT).\n\n");
-    
+
     printf("  -b, --background-colour  FFFFFF    Background colour in hex\n");
     printf("      --background-image   IMAGE     Set a background image\n\n");
 
@@ -123,7 +123,7 @@ if(extended_help) {
     printf("  --highlight-colour       Font colour for highlighted text\n\n");
 
     printf("  --hash-seed SEED         Change the seed of hash function.\n\n");
-    
+
     printf("  --path PATH\n\n");
 }
 
@@ -287,7 +287,7 @@ void GourceSettings::setGourceDefaults() {
     dont_stop      = false;
 
     show_key = false;
-    
+
     disable_auto_rotate = false;
 
     auto_skip_seconds = 3.0f;
@@ -344,7 +344,7 @@ void GourceSettings::setGourceDefaults() {
     highlight_dirs = false;
 
     gStringHashSeed = 31;
-    
+
     //delete file filters
     for(std::vector<Regex*>::iterator it = file_filters.begin(); it != file_filters.end(); it++) {
         delete (*it);
@@ -574,7 +574,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(log_format == "cvs") {
             conffile.entryException(entry, "please use either 'cvs2cl' or 'cvs-exp'");
         }
-        
+
         if(   log_format != "git"
            && log_format != "cvs-exp"
            && log_format != "cvs2cl"
@@ -691,13 +691,13 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             conffile.invalidValueException(entry);
         }
     }
-    
+
     if((entry = gource_settings->getEntry("hash-seed")) != 0) {
 
         if(!entry->hasValue()) conffile.entryException(entry, "specify hash seed (integer)");
 
         gStringHashSeed = entry->getInt();
-    }    
+    }
 
     if((entry = gource_settings->getEntry("font-colour")) != 0) {
 
@@ -734,7 +734,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             conffile.invalidValueException(entry);
         }
     }
-    
+
     if((entry = gource_settings->getEntry("highlight-colour")) != 0) {
 
         if(!entry->hasValue()) conffile.entryException(entry, "specify highlight colour (FFFFFF)");
