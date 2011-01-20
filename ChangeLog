@@ -1,3 +1,6 @@
+0.30:
+ * Nothing much.
+
 0.29:
  * SVN built-in support.
  * cvs2cl log support (cvs-exp support is now deprecated).
