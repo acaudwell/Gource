@@ -146,7 +146,7 @@ void Gource::writeCustomLog(const std::string& logfile, const std::string& outpu
     while(commitlog->nextCommit(commit)) {
         for(std::list<RCommitFile>::iterator it = commit.files.begin(); it != commit.files.end(); it++) {
             RCommitFile& cf = *it;
-            fprintf(fh, "%d|%s|%s|%s\n", commit.timestamp, commit.username.c_str(), cf.action.c_str(), cf.filename.c_str());
+            fprintf(fh, "%lld|%s|%s|%s\n", (long long int) commit.timestamp, commit.username.c_str(), cf.action.c_str(), cf.filename.c_str());
         }
         commit.files.clear();
     }
