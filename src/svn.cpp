@@ -189,6 +189,9 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
 
     TiXmlElement* pathsE = leE->FirstChildElement( "paths" );
 
+    //log entries sometimes dont have any paths
+    if(!pathsE) return true;
+
     //parse changes
     
     for(TiXmlElement* pathE = pathsE->FirstChildElement("path"); pathE != 0; pathE = pathE->NextSiblingElement()) {

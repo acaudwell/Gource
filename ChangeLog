@@ -1,5 +1,5 @@
 0.30:
- * Nothing much.
+ * Fixed crash when SVN log entry contains no 'paths' element.
 
 0.29:
  * SVN built-in support.
