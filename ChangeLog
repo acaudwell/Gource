@@ -1,5 +1,6 @@
 0.30:
  * Fixed crash when SVN log entry contains no 'paths' element.
+ * Handle directory deletion (happens in SVN logs).
 
 0.29:
  * SVN built-in support.

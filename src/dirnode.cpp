@@ -146,6 +146,29 @@ RDirNode* RDirNode::getParent() const{
     return parent;
 }
 
+RDirNode* RDirNode::findDir(const std::string& path) const {
+
+    if(abspath == path) return (RDirNode*) this;
+    
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
+        RDirNode* match = (*it)->findDir(path);
+        
+        if(match) return match;
+    }
+    
+    return 0;
+}
+
+void RDirNode::getFilesRecursive(std::list<RFile*>& files) const {
+
+    //add this dirs files
+    files.insert(files.begin(), this->files.begin(), this->files.end());
+
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
+        (*it)->getFilesRecursive(files);
+    }
+}
+
 int RDirNode::getDepth() const{
     return depth;
 }

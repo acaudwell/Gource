@@ -150,13 +150,15 @@ public:
     float getRadiusSqrt() const;
 
     const std::list<RFile*>* getFiles() const { return &files; };
+    void getFilesRecursive(std::list<RFile*>& files) const;
     
     vec3f averageFileColour() const;
 
     const vec4f & getColour() const;
 
     RDirNode* getParent() const;
-
+    RDirNode* findDir(const std::string& path) const;
+    
     const vec2f & getPos() const;
 
     void calcEdges();

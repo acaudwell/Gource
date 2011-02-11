@@ -1021,17 +1021,8 @@ void Gource::readLog() {
 
 void Gource::processCommit(RCommit& commit, float t) {
 
-    //find user of this commit or create them
-    RUser* user = 0;
-
-    //see if user already exists but if not wait until
-    //we actually use one of their files before adding them
-    std::map<std::string, RUser*>::iterator seen_user = users.find(commit.username);
-    if(seen_user != users.end()) user = seen_user->second;
-
-
     //check user against filters, if found, discard commit
-    if(user == 0 && !gGourceSettings.user_filters.empty()) {
+    if(!gGourceSettings.user_filters.empty()) {
         for(std::vector<Regex*>::iterator ri = gGourceSettings.user_filters.begin(); ri != gGourceSettings.user_filters.end(); ri++) {
             Regex* r = *ri;
 
@@ -1045,9 +1036,53 @@ void Gource::processCommit(RCommit& commit, float t) {
     for(std::list<RCommitFile>::iterator it = commit.files.begin(); it != commit.files.end(); it++) {
 
         RCommitFile& cf = *it;
+        RFile* file = 0;     
 
-        RFile* file = 0;
+        //check filename against filters
+        if(!gGourceSettings.file_filters.empty()) {
 
+            bool filtered_filename = false;
+
+            for(std::vector<Regex*>::iterator ri = gGourceSettings.file_filters.begin(); ri != gGourceSettings.file_filters.end(); ri++) {
+                Regex* r = *ri;
+
+                if(r->match(cf.filename)) {
+                    filtered_filename = true;
+                    break;
+                }
+            }
+
+            if(filtered_filename) continue;
+        }
+        
+        //is this a directory (ends in slash)
+        //deleting a directory - find directory: then for each file, remove each file
+                
+        if(!cf.filename.empty() && cf.filename[cf.filename.size()-1] == '/') {
+
+            //ignore unless it is a delete: we cannot 'add' or 'modify' a directory
+            //as its not a physical entity in Gource, only files are.
+
+            if(cf.action != "D") continue;
+            
+            RDirNode* dir = root->findDir(cf.filename);
+
+            if(!dir) continue;
+            
+            //foreach dir files
+            std::list<RFile*> dir_files;
+
+            dir->getFilesRecursive(dir_files);
+            
+            for(std::list<RFile*>::iterator it = dir_files.begin(); it != dir_files.end(); it++) {
+                RFile* file = *it;
+                
+                addFileAction(commit.username, cf.action, file, t);
+            }
+            
+            return;
+        }       
+        
         std::map<std::string, RFile*>::iterator seen_file = files.find(cf.filename);
         if(seen_file != files.end()) file = seen_file->second;
 
@@ -1057,24 +1092,6 @@ void Gource::processCommit(RCommit& commit, float t) {
             //we cant add any more
             if(gGourceSettings.max_files > 0 && files.size() >= gGourceSettings.max_files)
                 continue;
-
-            //check filename against filters
-            if(!gGourceSettings.file_filters.empty()) {
-
-                bool filtered_filename = false;
-
-                for(std::vector<Regex*>::iterator ri = gGourceSettings.file_filters.begin(); ri != gGourceSettings.file_filters.end(); ri++) {
-                    Regex* r = *ri;
-
-                    if(r->match(cf.filename)) {
-                        filtered_filename = true;
-                        break;
-                    }
-                }
-
-                if(filtered_filename) continue;
-
-            }
 
             int tagid = tag_seq++;
 
@@ -1093,56 +1110,67 @@ void Gource::processCommit(RCommit& commit, float t) {
             }
         }
 
-        //create user if havent yet. do it here to ensure at least one of there files
-        //was added (incase we hit gGourceSettings.max_files)
-
-        if(user == 0) {
-            vec2f pos;
-
-            if(dir_bounds.area() > 0) {
-                pos = dir_bounds.centre();
-            } else {
-                pos = vec2f(0,0);
-            }
-
-            int tagid = tag_seq++;
-
-            user = new RUser(commit.username, pos, tagid);
-
-            users[commit.username] = user;
-            tagusermap[tagid]     = user;
-
-            // set the highlighted flag if name matches a highlighted user
-            for(std::vector<std::string>::iterator hi = gGourceSettings.highlight_users.begin(); hi != gGourceSettings.highlight_users.end(); hi++) {
-                std::string highlight = *hi;
-
-                if(highlight.size() && user->getName() == highlight) {
-                    user->setHighlighted(true);
-                    break;
-                }
-            }
-
-            debugLog("added user %s, tagid = %d\n", commit.username.c_str(), tagid);
-        }
-
-        //create action
-
-        RAction* action = 0;
-
-        int commitNo = commit_seq++;
-
-        if(cf.action == "D") {
-            action = new RemoveAction(user, file, t);
-        } else {
-            if(cf.action == "A") {
-                action = new CreateAction(user, file, t);
-            } else {
-                action = new ModifyAction(user, file, t);
-            }
-        }
-
-        user->addAction(action);
+        addFileAction(commit.username, cf.action, file, t);
     }
+}
+
+void Gource::addFileAction(const std::string& username, const std::string& action, RFile* file, float t) {
+    //create user if havent yet. do it here to ensure at least one of there files
+    //was added (incase we hit gGourceSettings.max_files)
+
+    //find user of this commit or create them
+    RUser* user = 0;
+
+    //see if user already exists
+    std::map<std::string, RUser*>::iterator seen_user = users.find(username);
+    if(seen_user != users.end()) user = seen_user->second;
+
+    if(user == 0) {
+        vec2f pos;
+
+        if(dir_bounds.area() > 0) {
+            pos = dir_bounds.centre();
+        } else {
+            pos = vec2f(0,0);
+        }
+
+        int tagid = tag_seq++;
+
+        user = new RUser(username, pos, tagid);
+
+        users[username] = user;
+        tagusermap[tagid]     = user;
+
+        // set the highlighted flag if name matches a highlighted user
+        for(std::vector<std::string>::iterator hi = gGourceSettings.highlight_users.begin(); hi != gGourceSettings.highlight_users.end(); hi++) {
+            std::string highlight = *hi;
+
+            if(highlight.size() && user->getName() == highlight) {
+                user->setHighlighted(true);
+                break;
+            }
+        }
+
+        debugLog("added user %s, tagid = %d\n", username.c_str(), tagid);
+    }
+
+    //create action
+
+    RAction* userAction = 0;
+
+    int commitNo = commit_seq++;
+
+    if(action == "D") {
+        userAction = new RemoveAction(user, file, t);
+    } else {
+        if(action == "A") {
+            userAction = new CreateAction(user, file, t);
+        } else {
+            userAction = new ModifyAction(user, file, t);
+        }
+    }
+
+    user->addAction(userAction);
 }
 
 void Gource::interactUsers() {
