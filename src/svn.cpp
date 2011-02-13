@@ -203,16 +203,28 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
         //check for action
         if(action == 0) continue;
 
-        //if has the 'kind' attribute (old versions of svn dont have this), check it is not a dir
-        if(kind != 0 && strcmp(kind,"dir") == 0)
-            continue;
+        bool is_dir = false;
+
+        //if has the 'kind' attribute (old versions of svn dont have this), check if it is a dir
+        if(kind != 0 && strcmp(kind,"dir") == 0) {
+
+            //accept only deletes for directories
+            if(strcmp(action, "D") != 0) continue;
+
+            is_dir = true;
+        }
 
         std::string file(pathE->GetText());
         std::string status(action);       
-
+        
         if(file.empty()) continue;
         if(status.empty()) continue;
-        
+
+        //append trailing slash if is directory
+        if(is_dir && file[file.size()-1] != '/') {
+            file = file + std::string("/");
+        }
+
         commit.addFile(file, status);
     }
     
