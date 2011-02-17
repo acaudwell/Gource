@@ -24,7 +24,12 @@
 
 #include <sstream>
 
+#ifdef HAVE_LIBTINYXML
+#include <tinyxml.h>
+#else
 #include "tinyxml/tinyxml.h"
+#endif
+
 
 #include <unistd.h>
 

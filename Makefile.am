@@ -49,10 +49,6 @@ gource_SOURCES = \
 	src/spline.cpp src/spline.h \
 	src/svn.cpp src/svn.h \
 	src/textbox.cpp src/textbox.h \
-	src/tinyxml/tinyxmlerror.cpp \
-	src/tinyxml/tinystr.cpp src/tinyxml/tinystr.h \
-	src/tinyxml/tinyxml.cpp src/tinyxml/tinyxml.h \
-	src/tinyxml/tinyxmlparser.cpp src/tinyxml/tinyxmlparser.h \
 	src/user.cpp src/user.h \
 	src/zoomcamera.cpp src/zoomcamera.h
 
@@ -66,6 +62,15 @@ install-data-hook:
 
 uninstall-hook:
 	rm -f $(DESTDIR)$(mandir)/man1/gource.1.gz
+
+
+if USE_BUNDLED_TINYXML
+gource_SOURCES += \
+	src/tinyxml/tinyxmlerror.cpp \
+	src/tinyxml/tinystr.cpp src/tinyxml/tinystr.h \
+	src/tinyxml/tinyxml.cpp src/tinyxml/tinyxml.h \
+	src/tinyxml/tinyxmlparser.cpp src/tinyxml/tinyxmlparser.h
+endif
 
 if FONTDIR
 CPPFLAGS += -DSDLAPP_FONT_DIR=\"$(gourcefontdir)\"

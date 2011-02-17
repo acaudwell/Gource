@@ -3,7 +3,7 @@
 
 AC_PREREQ(2.61)
 
-AC_INIT(Gource, 0.30, [acaudwell@gmail.com])
+AC_INIT(Gource, 0.31, [acaudwell@gmail.com])
 AC_CONFIG_SRCDIR([src/main.h])
 
 AM_INIT_AUTOMAKE([dist-bzip2 foreign subdir-objects])
@@ -77,6 +77,15 @@ AC_CHECK_HEADER([GL/glew.h],, AC_MSG_ERROR(glew.h is required. Please see INSTAL
 AC_ARG_ENABLE(ttf-font-dir,[AS_HELP_STRING([--enable-ttf-font-dir=DIR],[directory containing GNU FreeFont TTF fonts])],[gourcefontdir="$enableval"],[gourcefontdir=""])
 AM_CONDITIONAL([FONTDIR], [test "x$gourcefontdir" != "x"])
 AC_SUBST(gourcefontdir)
+
+
+#see if building against system TinyXML library
+use_tinyxml_system_library=no
+AC_ARG_WITH(tinyxml, AC_HELP_STRING([--with-tinyxml], [Use system installed TinyXML library]), use_tinyxml_system_library=$withval)
+if test "x$use_tinyxml_system_library" = "xyes"; then
+    AC_HAVE_LIBRARY(tinyxml,, AC_MSG_ERROR([TinyXML library was requested but not found]))
+fi
+AM_CONDITIONAL(USE_BUNDLED_TINYXML, test "x$use_tinyxml_system_library" != "xyes")
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

@@ -1,3 +1,6 @@
+0.31:
+ * Added --with-tinyxml option to configure (use the system TinyXML library).
+
 0.30:
  * Fixed crash when SVN log entry contains no 'paths' element.
  * Handle directory deletion (happens in SVN logs).

@@ -20,6 +20,10 @@ Gource requires the following libraries to compile:
     JPEG library (libjpeg62-dev)
     GLEW (libglew1.5-dev)
 
+Optional:
+
+   TinyXML (libtinyxml-dev)
+
 2. Building
 ===========
 
@@ -54,3 +58,9 @@ By default Gource will install some GNU FreeFont TTF Fonts on your system.
 If you already have these fonts, you can configure Gource to use them with:
 
     ./configure --enable-ttf-font-dir=/path/to/freefont/
+
+Gource includes a copy of the TinyXML library. To make Gource build against
+the system library of TinyXML use:
+
+    ./configure --with-tinyxml
+
