@@ -1,3 +1,6 @@
+0.32:
+ * Fixed behaviour of user camera tracking.
+
 0.31:
  * Added --with-tinyxml option to configure (use the system TinyXML library).
 

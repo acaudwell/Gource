@@ -1219,6 +1219,7 @@ void Gource::interactUsers() {
 void Gource::updateBounds() {
 
     user_bounds.reset();
+    active_user_bounds.reset();
 
     for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
         RUser* user = it->second;
@@ -1229,6 +1230,7 @@ void Gource::updateBounds() {
         if(!user->isIdle()) {
             active_user_bounds.update(user->quadItemBounds);
         }
+        
     }
 
     dir_bounds.reset();
@@ -2031,7 +2033,7 @@ void Gource::draw(float t, float dt) {
         glLineWidth(2.0);
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-        track_users ? user_bounds.draw() : dir_bounds.draw();
+        track_users ? active_user_bounds.draw() : dir_bounds.draw();
     }
 
     if(gGourceQuadTreeDebug) {
