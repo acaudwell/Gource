@@ -148,16 +148,26 @@ void Gource::writeCustomLog(const std::string& logfile, const std::string& outpu
         if(!fh) return;
     }
 
-    while(commitlog->nextCommit(commit)) {
+    while(!commitlog->isFinished()) {
+
+        RCommit commit;
+
+        if(!commitlog->nextCommit(commit)) {           
+             if(!commitlog->isSeekable()) {
+                 break;
+             }
+            continue;
+        }
+
         for(std::list<RCommitFile>::iterator it = commit.files.begin(); it != commit.files.end(); it++) {
             RCommitFile& cf = *it;
             fprintf(fh, "%lld|%s|%s|%s\n", (long long int) commit.timestamp, commit.username.c_str(), cf.action.c_str(), cf.filename.c_str());
         }
+
         commit.files.clear();
     }
 
     if(output_file != "-") fclose(fh);
-
 }
 
 RCommitLog* Gource::determineFormat(const std::string& logfile) {
