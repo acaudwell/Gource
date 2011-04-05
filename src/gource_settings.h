@@ -48,6 +48,7 @@ public:
     bool hide_progress;
     bool hide_bloom;
     bool hide_mouse;
+    bool hide_root;
 
     bool disable_auto_rotate;
 
