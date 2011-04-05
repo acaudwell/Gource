@@ -1,3 +1,7 @@
+0.33:
+ * Fixed log parsing of Bazaar merges and tagged commits.
+ * --output-custom-log now skips unparsed log entries instead of exiting.
+
 0.32:
  * Fixed behaviour of user camera tracking.
 
