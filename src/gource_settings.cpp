@@ -100,7 +100,7 @@ if(extended_help) {
     printf("  --git-branch             Get the git log of a particular branch\n\n");
 
     printf("  --hide DISPLAY_ELEMENT   bloom,date,dirnames,files,filenames,mouse,progress,\n");
-    printf("                           tree,users,usernames\n\n");
+    printf("                           root,tree,users,usernames\n\n");
 
     printf("  --logo IMAGE             Logo to display in the foreground\n");
     printf("  --logo-offset XxY        Offset position of the logo\n\n");
@@ -201,6 +201,7 @@ GourceSettings::GourceSettings() {
     arg_types["hide-progress"]   = "bool";
     arg_types["hide-bloom"]      = "bool";
     arg_types["hide-mouse"]      = "bool";
+    arg_types["hide-root"]       = "bool";
     arg_types["highlight-all-users"] = "bool";
     arg_types["highlight-dirs"]  = "bool";
     arg_types["file-extensions"] = "bool";
@@ -278,9 +279,10 @@ void GourceSettings::setGourceDefaults() {
     hide_usernames = false;
     hide_filenames = false;
     hide_dirnames  = false;
-    hide_progress = false;
-    hide_bloom    = false;
-    hide_mouse    = false;
+    hide_progress  = false;
+    hide_bloom     = false;
+    hide_mouse     = false;
+    hide_root      = false;
 
     start_position = 0.0f;
     stop_position  = 0.0f;
@@ -484,7 +486,8 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
                && hide_field != "dirnames"
                && hide_field != "bloom"
                && hide_field != "progress"
-               && hide_field != "mouse") {
+               && hide_field != "mouse"
+               && hide_field != "root") {
                 std::string unknown_hide_option = std::string("unknown option hide ") + hide_field;
                 conffile.entryException(entry, unknown_hide_option);
             }
@@ -516,6 +519,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             else if(hidestr == "dirnames")  hide_dirnames  = true;
             else if(hidestr == "bloom")     hide_bloom     = true;
             else if(hidestr == "progress")  hide_progress  = true;
+            else if(hidestr == "root")      hide_root      = true;
             else if(hidestr == "mouse")     {
                 hide_mouse     = true;
                 hide_progress  = true;

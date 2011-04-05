@@ -210,6 +210,7 @@ options:
             filenames - names of files
             mouse     - mouse cursor
             progress  - progress bar widget
+            root      - root directory of tree
             tree      - animated tree structure
             users     - user avatars
             usernames - names of users

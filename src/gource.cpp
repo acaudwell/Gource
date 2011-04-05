@@ -766,6 +766,10 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             }
         }
 
+        if (e->keysym.sym == SDLK_r) {
+            gGourceSettings.hide_root = !gGourceSettings.hide_root;
+        }
+
         if (e->keysym.sym == SDLK_k) {
             gGourceSettings.show_key = !gGourceSettings.show_key;
         }

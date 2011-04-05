@@ -1,4 +1,5 @@
 0.33:
+ * Added --hide root option to not draw branches from the root directory.
  * Fixed log parsing of Bazaar merges and tagged commits.
  * --output-custom-log now skips unparsed log entries instead of exiting.
 

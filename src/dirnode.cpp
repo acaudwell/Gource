@@ -1039,8 +1039,8 @@ void RDirNode::calcProjectedPos() {
 
 void RDirNode::drawEdgeShadows(float dt) const{
 
-    spline.drawShadow();
-
+    if(parent!=0 && (!gGourceSettings.hide_root || parent->parent !=0)) spline.drawShadow();
+    
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
 
@@ -1053,8 +1053,8 @@ void RDirNode::drawEdgeShadows(float dt) const{
 
 void RDirNode::drawEdges(float dt) const{
 
-    spline.draw();
-
+   if(parent!=0 && (!gGourceSettings.hide_root || parent->parent !=0)) spline.draw();
+   
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
 
