@@ -33,6 +33,8 @@
 			<Add library="glu32" />
 			<Add library="glew32" />
 		</Linker>
+		<Unit filename="data\shaders\shadow.frag" />
+		<Unit filename="data\shaders\shadow.vert" />
 		<Unit filename="src\action.cpp" />
 		<Unit filename="src\action.h" />
 		<Unit filename="src\apache.cpp" />
@@ -73,12 +75,12 @@
 		<Unit filename="src\core\seeklog.h" />
 		<Unit filename="src\core\settings.cpp" />
 		<Unit filename="src\core\settings.h" />
+		<Unit filename="src\core\shader.cpp" />
+		<Unit filename="src\core\shader.h" />
 		<Unit filename="src\core\stringhash.cpp" />
 		<Unit filename="src\core\stringhash.h" />
 		<Unit filename="src\core\texture.cpp" />
 		<Unit filename="src\core\texture.h" />
-		<Unit filename="src\core\vbo.cpp" />
-		<Unit filename="src\core\vbo.h" />
 		<Unit filename="src\core\vectors.h" />
 		<Unit filename="src\custom.cpp" />
 		<Unit filename="src\custom.h" />
@@ -124,6 +126,8 @@
 		<Unit filename="src\tinyxml\tinyxmlparser.cpp" />
 		<Unit filename="src\user.cpp" />
 		<Unit filename="src\user.h" />
+		<Unit filename="src\vbo.cpp" />
+		<Unit filename="src\vbo.h" />
 		<Unit filename="src\zoomcamera.cpp" />
 		<Unit filename="src\zoomcamera.h" />
 		<Extensions>
