@@ -24,6 +24,7 @@ gource_SOURCES = \
 	src/core/sdlapp.cpp src/core/sdlapp.h \
 	src/core/seeklog.cpp src/core/seeklog.h \
 	src/core/settings.cpp src/core/settings.h \
+	src/core/shader.cpp src/core/shader.h \
 	src/core/stringhash.cpp src/core/stringhash.h \
 	src/core/texture.cpp src/core/texture.h \
 	src/core/utf8/checked.h \
@@ -50,6 +51,7 @@ gource_SOURCES = \
 	src/svn.cpp src/svn.h \
 	src/textbox.cpp src/textbox.h \
 	src/user.cpp src/user.h \
+	src/vbo.cpp src/vbo.h \
 	src/zoomcamera.cpp src/zoomcamera.h
 
 CPPFLAGS = -DSDLAPP_RESOURCE_DIR=\"$(pkgdatadir)\"
