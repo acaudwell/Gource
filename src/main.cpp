@@ -91,12 +91,12 @@ int main(int argc, char *argv[]) {
             conf.save(gGourceSettings.save_config);
             exit(0);
         }
-        
+
         //write custom log file
         if(gGourceSettings.output_custom_filename.size() > 0 && gGourceSettings.path.size() > 0) {
 
             Gource::writeCustomLog(gGourceSettings.path, gGourceSettings.output_custom_filename);
-            exit(0);           
+            exit(0);
         }
 
     } catch(ConfFileException& exception) {
@@ -120,6 +120,9 @@ int main(int argc, char *argv[]) {
     try {
 
         display.init("Gource", gGourceSettings.display_width, gGourceSettings.display_height, gGourceSettings.fullscreen);
+
+        //disable OpenGL 2.0 functions if not supported
+        if(!GLEW_VERSION_2_0) gGourceSettings.ffp = true;
 
     } catch(SDLInitException& exception) {
 

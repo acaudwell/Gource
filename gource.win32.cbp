@@ -23,6 +23,7 @@
 		</Compiler>
 		<Linker>
 			<Add option="ftgl.dll" />
+			<Add option="glew32.dll" />
 			<Add library="mingw32" />
 			<Add library="pcre" />
 			<Add library="SDLmain" />
@@ -76,6 +77,8 @@
 		<Unit filename="src\core\stringhash.h" />
 		<Unit filename="src\core\texture.cpp" />
 		<Unit filename="src\core\texture.h" />
+		<Unit filename="src\core\vbo.cpp" />
+		<Unit filename="src\core\vbo.h" />
 		<Unit filename="src\core\vectors.h" />
 		<Unit filename="src\custom.cpp" />
 		<Unit filename="src\custom.h" />

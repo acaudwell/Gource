@@ -122,7 +122,7 @@ if(extended_help) {
     printf("  --highlight-dirs         Highlight the names of all directories\n");
     printf("  --highlight-colour       Font colour for highlighted text\n\n");
 
-    printf("  --hash-seed SEED         Change the seed of hash function.\n\n");
+    printf("  --hash-seed SEED         Change the seed of hash function\n\n");
 
     printf("  --path PATH\n\n");
 }
@@ -205,6 +205,7 @@ GourceSettings::GourceSettings() {
     arg_types["highlight-dirs"]  = "bool";
     arg_types["file-extensions"] = "bool";
     arg_types["key"]             = "bool";
+    arg_types["ffp"]             = "bool";
 
     arg_types["disable-auto-rotate"] = "bool";
     arg_types["disable-auto-skip"]   = "bool";
@@ -268,6 +269,8 @@ void GourceSettings::setGourceDefaults() {
 
     path = ".";
 
+    ffp = false;
+
     hide_date      = false;
     hide_users     = false;
     hide_tree      = false;
@@ -330,7 +333,7 @@ void GourceSettings::setGourceDefaults() {
     log_format  = "";
     date_format = "%A, %d %B, %Y %X";
 
-    max_files      = 1000;
+    max_files      = 0;
     max_user_speed = 500.0f;
     max_file_lag   = 5.0f;
 
@@ -895,6 +898,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if(gource_settings->getBool("key")) {
         show_key = true;
+    }
+
+    if(gource_settings->getBool("ffp")) {
+        ffp = true;
     }
 
     if(gource_settings->getBool("realtime")) {

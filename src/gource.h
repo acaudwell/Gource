@@ -26,6 +26,7 @@
 #include <fstream>
 
 #include "core/display.h"
+#include "core/shader.h"
 #include "core/sdlapp.h"
 #include "core/fxfont.h"
 #include "core/bounds.h"
@@ -47,6 +48,7 @@
 #include "apache.h"
 #include "svn.h"
 
+#include "vbo.h"
 #include "slider.h"
 #include "textbox.h"
 #include "action.h"
@@ -82,14 +84,13 @@ class Gource : public SDLApp {
     bool mouseclicked;
     bool mousedragged;
 
-    
     vec2f cursor_move;
-    
+
     bool recolour;
-    
+
     bool use_selection_bounds;
     Bounds2D selection_bounds;
-    
+
     float rotate_angle;
 
     vec2f mousepos;
@@ -108,6 +109,9 @@ class Gource : public SDLApp {
     RUser* hoverUser;
     RUser* selectedUser;
 
+    qbuf2f user_vbo;
+    qbuf2f file_vbo;
+
     GLuint selectionDepth;
 
     RDirNode* root;
@@ -119,9 +123,12 @@ class Gource : public SDLApp {
     TextureResource* beamtex;
     TextureResource* logotex;
     TextureResource* backgroundtex;
+    TextureResource* usertex;
+    Shader*          shadow_shader;
+
 
     TextBox textbox;
-    
+
     FXFont font, fontlarge, fontmedium;
 
     bool first_read;
@@ -172,6 +179,9 @@ class Gource : public SDLApp {
 
     void reset();
 
+    RUser* addUser(const std::string& username);
+    RFile* addFile(const RCommitFile& cf);
+
     void deleteUser(RUser* user);
     void deleteFile(RFile* file);
 
@@ -215,6 +225,12 @@ class Gource : public SDLApp {
     void drawActions(float dt);
     void drawTree(Frustum &frustum, float dt);
     void drawBloom(Frustum &frustum, float dt);
+    void drawFileShadows(const Frustum& frustum, float dt);
+    void drawUserShadows(const Frustum& frustum, float dt);
+    void drawFiles(const Frustum& frustum, float dt);
+    void updateVBOs(const Frustum& frustum, float dt);
+
+    void drawUsers(float dt);
 
     void screenshot();
 

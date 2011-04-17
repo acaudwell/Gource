@@ -62,7 +62,7 @@ public:
 
     vec3f getColour() const;
     void colourize();
-    
+
     const std::string& getName() const;
 
     void fileRemoved(RFile* f);

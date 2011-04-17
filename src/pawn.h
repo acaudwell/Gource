@@ -36,7 +36,6 @@ protected:
 
     std::string name;
     float namewidth;
-    float size;
     vec2f accel;
     float speed;
 
@@ -56,7 +55,6 @@ protected:
 
     FXFont font;
 
-    float graphic_ratio;
     TextureResource* graphic;
 
     bool mouseover;
@@ -68,6 +66,9 @@ protected:
 protected:
     bool selected;
 public:
+    float size;
+    float graphic_ratio;
+
     Pawn(const std::string& name, vec2f pos, int tagid);
     const vec2f & getPos() const { return pos; }
     void setPos(vec2f pos);

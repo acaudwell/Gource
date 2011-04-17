@@ -62,7 +62,7 @@ RDirNode::RDirNode(RDirNode* parent, const std::string & abspath) {
     since_node_visible = 0.0;
     since_last_file_change = 0.0;
     since_last_node_change = 0.0;
-      
+
     calcRadius();
     calcColour();
 }
@@ -97,7 +97,7 @@ int RDirNode::getTokenOffset() const{
 void RDirNode::fileUpdated(bool userInitiated) {
     calcRadius();
 
-    if(userInitiated) since_last_file_change = 0.0;
+    since_last_file_change = 0.0;
 
     nodeUpdated(userInitiated);
 }
@@ -149,13 +149,13 @@ RDirNode* RDirNode::getParent() const{
 RDirNode* RDirNode::findDir(const std::string& path) const {
 
     if(abspath == path) return (RDirNode*) this;
-    
+
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* match = (*it)->findDir(path);
-        
+
         if(match) return match;
     }
-    
+
     return 0;
 }
 
@@ -905,7 +905,7 @@ void RDirNode::drawDirName(const FXFont& dirfont) const{
     glColor4f(1.0, 1.0, 1.0, alpha);
 
     vec2f mid = spline.getMidPoint();
-    
+
     dirfont.draw(mid.x, mid.y, path_token);
 }
 
@@ -938,7 +938,7 @@ void RDirNode::drawNames(const FXFont & dirfont, const Frustum & frustum){
 
     if(!gGourceSettings.hide_filenames) {
 
-        if(!(gGourceSettings.hide_filenames || gGourceSettings.hide_files) && frustum.boundsInFrustum(quadItemBounds)) {
+        if(!(gGourceSettings.hide_filenames || gGourceSettings.hide_files) && frustum.intersects(quadItemBounds)) {
             for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
                 RFile* f = *it;
                 f->drawName();
@@ -955,7 +955,7 @@ void RDirNode::drawNames(const FXFont & dirfont, const Frustum & frustum){
 
 void RDirNode::drawShadows(const Frustum & frustum, float dt) const{
 
-    if(frustum.boundsInFrustum(quadItemBounds)) {
+    if(frustum.intersects(quadItemBounds)) {
 
         glPushMatrix();
         glTranslatef(pos.x, pos.y, 0.0);
@@ -977,9 +977,29 @@ void RDirNode::drawShadows(const Frustum & frustum, float dt) const{
     }
 }
 
+void RDirNode::updateFilesVBO(const Frustum & frustum, qbuf2f& buffer, float dt) const{
+
+    if(frustum.intersects(quadItemBounds)) {
+
+        for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
+            RFile* f = *it;
+
+            vec3f col   = f->getColour();
+            float alpha = f->getAlpha();
+
+            buffer.add(f->getAbsolutePos(), vec2f(f->size, f->graphic_ratio*f->size), vec4f(col.x, col.y, col.z, alpha));
+        }
+    }
+
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
+        RDirNode* node = (*it);
+        node->updateFilesVBO(frustum,buffer,dt);
+    }
+}
+
 void RDirNode::drawFiles(const Frustum & frustum, float dt) const{
 
-    if(frustum.boundsInFrustum(quadItemBounds)) {
+    if(frustum.intersects(quadItemBounds)) {
 
         vec4f col = getColour();
 
@@ -1022,7 +1042,7 @@ void RDirNode::calcProjectedPos() {
 void RDirNode::drawEdgeShadows(float dt) const{
 
     spline.drawShadow();
-    
+
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
 
@@ -1036,7 +1056,7 @@ void RDirNode::drawEdgeShadows(float dt) const{
 void RDirNode::drawEdges(float dt) const{
 
     spline.draw();
-    
+
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
 
@@ -1049,7 +1069,7 @@ void RDirNode::drawEdges(float dt) const{
 
 void RDirNode::drawBloom(const Frustum & frustum, float dt){
 
-    if(isVisible() && frustum.boundsInFrustum(quadItemBounds)) {
+    if(isVisible() && frustum.intersects(quadItemBounds)) {
 
         float bloom_radius = dir_radius * 2.0 * gGourceSettings.bloom_multiplier;
 
@@ -1084,7 +1104,7 @@ void RDirNode::drawSimple(const Frustum & frustum, float dt) const{
 
     glDisable(GL_TEXTURE_2D);
 
-    if(frustum.boundsInFrustum(quadItemBounds)) {
+    if(frustum.intersects(quadItemBounds)) {
         glPushMatrix();
             glTranslatef(pos.x, pos.y, 0.0);
             for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {

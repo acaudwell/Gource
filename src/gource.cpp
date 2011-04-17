@@ -50,6 +50,13 @@ Gource::Gource(FrameExporter* exporter) {
 
     bloomtex = texturemanager.grab(bloom_tga);
     beamtex  = texturemanager.grab("beam.png");
+    usertex  = texturemanager.grab("no_photo.png");
+
+    shadow_shader = 0;
+
+    if(!gGourceSettings.ffp) {
+        shadow_shader = shadermanager.grab("shadow");
+    }
 
     logotex = 0;
     backgroundtex = 0;
@@ -75,10 +82,8 @@ Gource::Gource(FrameExporter* exporter) {
     mousedragged = false;
     mouseclicked = false;
 
-    if(1) {
-        cursor.setCursorTexture(texturemanager.grab("cursor.png"));
-        cursor.useSystemCursor(false);
-    }
+    cursor.setCursorTexture(texturemanager.grab("cursor.png"));
+    cursor.useSystemCursor(false);
 
     if(gGourceSettings.hide_mouse) {
         cursor.showCursor(false);
@@ -100,13 +105,13 @@ Gource::Gource(FrameExporter* exporter) {
     hoverUser = 0;
 
     date_x_offset = 0;
-    
+
     textbox = TextBox(fontmanager.grab("FreeSans.ttf", 18));
     textbox.setBrightness(0.5f);
     textbox.show();
-    
+
     file_key = FileKey(1.0f);
-    
+
     camera = ZoomCamera(vec3f(0,0, -300), vec3f(0.0, 0.0, 0.0), 250.0, 5000.0);
     camera.setPadding(gGourceSettings.padding);
 
@@ -259,14 +264,14 @@ RCommitLog* Gource::determineFormat(const std::string& logfile) {
     if(clog->checkFormat()) return clog;
 
     delete clog;
-    
+
     //cvs2cl
     debugLog("trying cvs2cl...\n");
     clog = new CVS2CLCommitLog(logfile);
     if(clog->checkFormat()) return clog;
 
     delete clog;
-    
+
     //custom
     debugLog("trying custom...\n");
     clog = new CustomLog(logfile);
@@ -706,7 +711,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
         }
 
         if (e->keysym.sym == SDLK_u) {
-            
+
             if(gGourceSettings.hide_usernames && !gGourceSettings.highlight_all_users) {
                 gGourceSettings.hide_usernames      = false;
                 gGourceSettings.highlight_all_users = true;
@@ -718,12 +723,12 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
                 gGourceSettings.hide_usernames      = true;
                 gGourceSettings.highlight_all_users = false;
             }
-           
+
         }
 
         if (e->keysym.sym == SDLK_d) {
             if(gGourceSettings.hide_dirnames && !gGourceSettings.highlight_dirs) {
-            
+
                 gGourceSettings.hide_dirnames  = false;
                 gGourceSettings.highlight_dirs = true;
 
@@ -739,7 +744,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
         }
 
         if (e->keysym.sym == SDLK_f) {
-            
+
             if(gGourceSettings.hide_filenames && !gGourceSettings.file_extensions) {
                 gGourceSettings.hide_filenames  = false;
             } else if(!gGourceSettings.hide_filenames && gGourceSettings.file_extensions) {
@@ -747,7 +752,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
                 gGourceSettings.hide_filenames = true;
             } else {
                 gGourceSettings.file_extensions = true;
-                gGourceSettings.hide_filenames  = false;           
+                gGourceSettings.hide_filenames  = false;
             }
         }
 
@@ -761,6 +766,12 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
 
         if (e->keysym.sym == SDLK_v) {
             toggleCameraMode();
+        }
+
+        if (e->keysym.sym == SDLK_p) {
+            if(GLEW_VERSION_2_0) {
+                gGourceSettings.ffp = !gGourceSettings.ffp;
+            }
         }
 
         if (e->keysym.sym == SDLK_z) {
@@ -858,7 +869,7 @@ void Gource::reset() {
 
     use_selection_bounds = false;
     selection_bounds.reset();
-    
+
     manual_rotate   = false;
     manual_zoom     = false;
     rotation_remaining_angle = 0.0f;
@@ -866,7 +877,7 @@ void Gource::reset() {
     message_timer = 0.0f;
 
     cursor_move = vec2f(0.0f, 0.0f);
-  
+
     selectedUser = 0;
     hoverUser = 0;
 
@@ -900,7 +911,7 @@ void Gource::reset() {
     files.clear();
 
     file_key.clear();
-    
+
     idle_time=0;
     currtime=0;
     lasttime=0;
@@ -936,6 +947,50 @@ void Gource::deleteFile(RFile* file) {
     debugLog("removed file %s\n", file->fullpath.c_str());
 
     delete file;
+}
+
+
+RFile* Gource::addFile(const RCommitFile& cf) {
+
+    int tagid = tag_seq++;
+
+    RFile* file = new RFile(cf.filename, cf.colour, vec2f(0.0,0.0), tagid);
+
+    files[cf.filename] = file;
+    tagfilemap[tagid]  = file;
+
+    root->addFile(file);
+
+    file_key.inc(file);
+
+    while(root->getParent() != 0) {
+        debugLog("parent changed to %s\n", root->getPath().c_str());
+        root = root->getParent();
+    }
+
+    return file;
+}
+
+RUser* Gource::addUser(const std::string& username) {
+
+    vec2f pos;
+
+    if(dir_bounds.area() > 0) {
+        pos = dir_bounds.centre();
+    } else {
+        pos = vec2f(0,0);
+    }
+
+    int tagid = tag_seq++;
+
+    RUser* user = new RUser(username, pos, tagid);
+
+    users[username]   = user;
+    tagusermap[tagid] = user;
+
+    debugLog("added user %s, tagid = %d\n", username.c_str(), tagid);
+
+    return user;
 }
 
 void Gource::deleteUser(RUser* user) {
@@ -1036,7 +1091,7 @@ void Gource::processCommit(RCommit& commit, float t) {
     for(std::list<RCommitFile>::iterator it = commit.files.begin(); it != commit.files.end(); it++) {
 
         RCommitFile& cf = *it;
-        RFile* file = 0;     
+        RFile* file = 0;
 
         //check filename against filters
         if(!gGourceSettings.file_filters.empty()) {
@@ -1054,35 +1109,35 @@ void Gource::processCommit(RCommit& commit, float t) {
 
             if(filtered_filename) continue;
         }
-        
+
         //is this a directory (ends in slash)
         //deleting a directory - find directory: then for each file, remove each file
-                
+
         if(!cf.filename.empty() && cf.filename[cf.filename.size()-1] == '/') {
 
             //ignore unless it is a delete: we cannot 'add' or 'modify' a directory
             //as its not a physical entity in Gource, only files are.
 
             if(cf.action != "D") continue;
-            
+
             RDirNode* dir = root->findDir(cf.filename);
 
             if(!dir) continue;
-            
+
             //foreach dir files
             std::list<RFile*> dir_files;
 
             dir->getFilesRecursive(dir_files);
-            
+
             for(std::list<RFile*>::iterator it = dir_files.begin(); it != dir_files.end(); it++) {
                 RFile* file = *it;
-                
+
                 addFileAction(commit.username, cf.action, file, t);
             }
-            
+
             return;
-        }       
-        
+        }
+
         std::map<std::string, RFile*>::iterator seen_file = files.find(cf.filename);
         if(seen_file != files.end()) file = seen_file->second;
 
@@ -1093,21 +1148,7 @@ void Gource::processCommit(RCommit& commit, float t) {
             if(gGourceSettings.max_files > 0 && files.size() >= gGourceSettings.max_files)
                 continue;
 
-            int tagid = tag_seq++;
-
-            file = new RFile(cf.filename, cf.colour, vec2f(0.0,0.0), tagid);
-
-            files[cf.filename] = file;
-            tagfilemap[tagid]  = file;
-
-            root->addFile(file);
-            
-            file_key.inc(file);
-            
-            while(root->getParent() != 0) {
-                debugLog("parent changed to %s\n", root->getPath().c_str());
-                root = root->getParent();
-            }
+            file = addFile(cf);
         }
 
         addFileAction(commit.username, cf.action, file, t);
@@ -1126,20 +1167,7 @@ void Gource::addFileAction(const std::string& username, const std::string& actio
     if(seen_user != users.end()) user = seen_user->second;
 
     if(user == 0) {
-        vec2f pos;
-
-        if(dir_bounds.area() > 0) {
-            pos = dir_bounds.centre();
-        } else {
-            pos = vec2f(0,0);
-        }
-
-        int tagid = tag_seq++;
-
-        user = new RUser(username, pos, tagid);
-
-        users[username] = user;
-        tagusermap[tagid]     = user;
+        user = addUser(username);
 
         // set the highlighted flag if name matches a highlighted user
         for(std::vector<std::string>::iterator hi = gGourceSettings.highlight_users.begin(); hi != gGourceSettings.highlight_users.end(); hi++) {
@@ -1150,8 +1178,6 @@ void Gource::addFileAction(const std::string& username, const std::string& actio
                 break;
             }
         }
-
-        debugLog("added user %s, tagid = %d\n", username.c_str(), tagid);
     }
 
     //create action
@@ -1230,7 +1256,7 @@ void Gource::updateBounds() {
         if(!user->isIdle()) {
             active_user_bounds.update(user->quadItemBounds);
         }
-        
+
     }
 
     dir_bounds.reset();
@@ -1363,22 +1389,22 @@ void Gource::updateCamera(float dt) {
 
     bool auto_rotate = !manual_rotate && !gGourceSettings.disable_auto_rotate;
 
-    
+
     if(manual_camera) {
 
         if(cursor_move.length2() > 0.0f) {
 
             float cam_rate = ( -camera.getPos().z ) / ( 5000.0f );
-            
+
             vec3f cam_pos = camera.getPos();
-            
+
             vec2f cursor_delta = cursor_move * cam_rate * 400.0f * dt;
-           
+
             cam_pos.x += cursor_delta.x;
             cam_pos.y += cursor_delta.y;
-        
+
             camera.setPos(cam_pos, true);
-            camera.stop();           
+            camera.stop();
 
             auto_rotate = false;
 
@@ -1438,7 +1464,7 @@ void Gource::updateCamera(float dt) {
 void Gource::changeColours() {
 
     gStringHashSeed = (rand() % 10000) + 1;
-    
+
     for(std::map<std::string,RUser*>::iterator it = users.begin(); it != users.end(); it++) {
         it->second->colourize();
     }
@@ -1446,7 +1472,7 @@ void Gource::changeColours() {
     for(std::map<std::string,RFile*>::iterator it = files.begin(); it != files.end(); it++) {
         it->second->colourize();
     }
-    
+
     file_key.colourize();
 }
 
@@ -1513,7 +1539,7 @@ void Gource::logic(float t, float dt) {
         cursor_move.y = 10.0;
         manual_camera = true;
     }
-  
+
     //apply rotation
     if(rotate_angle != 0.0f) {
 
@@ -1637,14 +1663,14 @@ void Gource::mousetrace(Frustum& frustum, float dt) {
     glPopMatrix();
 
     //find user/file under mouse
-    
+
     RFile* fileSelection = 0;
     RUser* userSelection = 0;
 
     std::set<QuadItem*> userset;
-    
+
     userTree->getItemsAt(userset, projected_mouse);
-    
+
     for(std::set<QuadItem*>::iterator it = userset.begin(); it != userset.end(); it++) {
         RUser* user = (RUser*) *it;
         if(!user->isFading() && user->quadItemBounds.contains(projected_mouse)) {
@@ -1654,21 +1680,21 @@ void Gource::mousetrace(Frustum& frustum, float dt) {
     }
 
     if(!userSelection) {
-    
+
         std::set<QuadItem*> dirset;
 
         dirNodeTree->getItemsAt(dirset, projected_mouse);
-                
+
         for(std::set<QuadItem*>::iterator it = dirset.begin(); it != dirset.end(); it++) {
 
             RDirNode* dir = (RDirNode*) *it;
-            
-            const std::list<RFile*>* files = dir->getFiles(); 
-           
+
+            const std::list<RFile*>* files = dir->getFiles();
+
             for(std::list<RFile*>::const_iterator fi = files->begin(); fi != files->end(); fi++) {
-            
-                RFile* file = *fi;                              
-                
+
+                RFile* file = *fi;
+
                 if(!file->isHidden() && file->overlaps(projected_mouse)) {
                     fileSelection = file;
                     break;
@@ -1729,8 +1755,8 @@ void Gource::mousetrace(Frustum& frustum, float dt) {
             selectBackground();
         }
     }
-    
-    //fprintf(stderr, "end trace\n");   
+
+    //fprintf(stderr, "end trace\n");
 }
 
 void Gource::loadingScreen() {
@@ -1820,34 +1846,22 @@ void Gource::drawTree(Frustum& frustum, float dt) {
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
 
+    //update file and user vbos
+    updateVBOs(frustum, dt);
+
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
-
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     //draw shadows
 
-    if(!gGourceSettings.hide_users) {
-        for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
-            it->second->drawShadow(dt);
-        }
-    }
+    drawUserShadows(frustum, dt);
 
-    if(!gGourceSettings.hide_files) {
-        root->drawShadows(frustum, dt);
-    }
+    drawFileShadows(frustum, dt);
 
     drawActions(dt);
 
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    if(!trace_debug) {
-        if(!gGourceSettings.hide_files) {
-            root->drawFiles(frustum,dt);
-        }
-    } else {
-        root->drawSimple(frustum,dt);
-    }
+    drawFiles(frustum, dt);
 
     draw_tree_time = SDL_GetTicks() - draw_tree_time;
 }
@@ -1940,6 +1954,118 @@ void Gource::screenshot() {
     setMessage("Wrote screenshot %s", tganame);
 }
 
+void Gource::updateVBOs(const Frustum& frustum, float dt) {
+    if(gGourceSettings.ffp) return;
+
+    user_vbo.reset();
+    for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
+        RUser* user = it->second;
+
+        float alpha = user->getAlpha();
+        vec3f col   = user->getColour();
+
+        user_vbo.add(user->getPos(), vec2f(user->size, user->graphic_ratio*user->size), vec4f(col.x, col.y, col.z, alpha));
+    }
+    user_vbo.update();
+
+    file_vbo.reset();
+    root->updateFilesVBO(frustum, file_vbo, dt);
+    file_vbo.update();
+}
+
+void Gource::drawFileShadows(const Frustum& frustum, float dt) {
+    if(gGourceSettings.hide_files) return;
+
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    if(!gGourceSettings.ffp) {
+
+        shadow_shader->use();
+
+        glBindTexture(GL_TEXTURE_2D, gGourceSettings.file_graphic->textureid);
+
+        glPushMatrix();
+            glTranslatef(2.0f, 2.0f, 0.0f);
+            file_vbo.draw();
+        glPopMatrix();
+
+        glUseProgramObjectARB(0);
+    } else {
+        root->drawShadows(frustum, dt);
+    }
+}
+
+void Gource::drawUserShadows(const Frustum& frustum, float dt) {
+    if(gGourceSettings.hide_users) return;
+
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    if(!gGourceSettings.ffp) {
+
+        shadow_shader->use();
+
+        glBindTexture(GL_TEXTURE_2D, usertex->textureid);
+
+        vec2f shadow_offset = vec2f(2.0, 2.0) * gGourceSettings.user_scale;
+
+        glPushMatrix();
+            glTranslatef(shadow_offset.x, shadow_offset.y, 0.0f);
+            user_vbo.draw();
+        glPopMatrix();
+
+        glUseProgramObjectARB(0);
+    } else {
+        for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
+            it->second->drawShadow(dt);
+        }
+    }
+}
+
+void Gource::drawFiles(const Frustum& frustum, float dt) {
+    if(gGourceSettings.hide_files) return;
+
+    if(trace_debug) {
+        root->drawSimple(frustum,dt);
+        return;
+    }
+
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    if(!gGourceSettings.ffp) {
+        glBindTexture(GL_TEXTURE_2D, gGourceSettings.file_graphic->textureid);
+
+        file_vbo.draw();
+    } else {
+        root->drawFiles(frustum, dt);
+    }
+}
+
+void Gource::drawUsers(float dt) {
+
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+
+    if(!gGourceSettings.ffp) {
+
+        glBindTexture(GL_TEXTURE_2D, usertex->textureid);
+
+        user_vbo.draw();
+
+    } else {
+
+        for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
+            trace_debug ? it->second->drawSimple(dt) : it->second->draw(dt);
+        }
+    }
+
+}
+
 void Gource::draw(float t, float dt) {
 
     display.mode2D();
@@ -1982,10 +2108,7 @@ void Gource::draw(float t, float dt) {
     //draw tree
     drawTree(frustum, dt);
 
-    glColor4f(1.0, 1.0, 0.0, 1.0);
-    for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
-        trace_debug ? it->second->drawSimple(dt) : it->second->draw(dt);
-    }
+    drawUsers(dt);
 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
@@ -2148,12 +2271,12 @@ void Gource::draw(float t, float dt) {
         slider.draw(dt);
     }
 
-    //text box   
+    //text box
     if(hoverFile && hoverFile != selectedFile) {
-        
+
         std::string display_path = hoverFile->path;
         display_path.erase(0,1);
-        
+
         textbox.setText(hoverFile->getName());
         if(display_path.size()) textbox.addLine(display_path);
         textbox.setColour(hoverFile->getColour());
@@ -2164,7 +2287,7 @@ void Gource::draw(float t, float dt) {
 
         textbox.setText(hoverUser->getName());
         textbox.setColour(hoverUser->getColour());
-        
+
         textbox.setPos(mousepos, true);
         textbox.draw();
     }
@@ -2178,7 +2301,7 @@ void Gource::draw(float t, float dt) {
         glEnable(GL_BLEND);
         glEnable(GL_TEXTURE_2D);
 
-        
+
         font.print(1,20, "FPS: %.2f", fps);
         font.print(1,40,"Days Per Second: %.2f",
             gGourceSettings.days_per_second);
@@ -2201,6 +2324,7 @@ void Gource::draw(float t, float dt) {
             dirNodeTree->item_count, dirNodeTree->node_count, dirNodeTree->max_node_depth);
         font.print(1,360,"Dir Bounds Ratio: %.2f, %.5f", dir_bounds.width() / dir_bounds.height(), rotation_remaining_angle);
         font.print(1,380,"String Hash Seed: %d", gStringHashSeed);
+        font.print(1,400,"File VBO %d/%d vertices", file_vbo.size() , file_vbo.capacity());
 
         if(selectedUser != 0) {
 

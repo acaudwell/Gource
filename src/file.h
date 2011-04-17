@@ -57,9 +57,9 @@ public:
 
     bool isExpiring() const { return expiring; }
     bool isRemoving() const { return removing; }
-    
-    bool overlaps(const vec2f& pos) const; 
-    
+
+    bool overlaps(const vec2f& pos) const;
+
     const vec3f & getFileColour() const;
     vec3f getColour() const;
     void colourize();
@@ -67,7 +67,7 @@ public:
     float getAlpha() const;
 
     void touch(const vec3f & colour);
-   
+
     void setSelected(bool selected);
 
     void setHidden(bool hidden);

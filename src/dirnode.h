@@ -27,6 +27,7 @@
 
 #include "spline.h"
 #include "file.h"
+#include "vbo.h"
 
 #include <list>
 #include <set>
@@ -44,7 +45,7 @@ class RDirNode : public QuadItem {
     std::list<RFile*> files;
 
     SplineEdge spline;
-    
+
     vec4f col;
 
     vec2f spos;
@@ -102,7 +103,7 @@ public:
     ~RDirNode();
 
     void printFiles();
-    
+
     bool empty() const;
 
     bool isAnchor(RDirNode* node) const;
@@ -129,7 +130,7 @@ public:
     bool noFiles() const;
 
     bool prefixedBy(const std::string & path) const;
-  
+
     const std::string & getPath() const;
 
     const vec2f & getNodeNormal() const;
@@ -151,14 +152,14 @@ public:
 
     const std::list<RFile*>* getFiles() const { return &files; };
     void getFilesRecursive(std::list<RFile*>& files) const;
-    
+
     vec3f averageFileColour() const;
 
     const vec4f & getColour() const;
 
     RDirNode* getParent() const;
     RDirNode* findDir(const std::string& path) const;
-    
+
     const vec2f & getPos() const;
 
     void calcEdges();
@@ -187,6 +188,8 @@ public:
     void drawEdgeShadows(float dt) const;
 
     void drawBloom(const Frustum & frustum, float dt);
+
+    void updateFilesVBO(const Frustum & frustum, qbuf2f& buffer, float dt) const;
 
     void drawShadows(const Frustum & frustum, float dt) const;
     void drawFiles(const Frustum & frustum, float dt) const;
