@@ -25,7 +25,7 @@ qbuf2f_vertex::qbuf2f_vertex() {
 qbuf2f::qbuf2f() {
     bufferid   = 0;
     item_count = 0;
-    fprintf(stderr, "size of qbuf2f_vertex = %d\n", sizeof(qbuf2f_vertex));
+    //fprintf(stderr, "size of qbuf2f_vertex = %d\n", sizeof(qbuf2f_vertex));
 }
 
 qbuf2f::~qbuf2f() {
