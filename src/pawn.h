@@ -54,9 +54,7 @@ protected:
     int tagid;
 
     FXFont font;
-
-    TextureResource* graphic;
-
+   
     bool mouseover;
 
     virtual bool nameVisible() const;
@@ -68,6 +66,7 @@ protected:
 public:
     float size;
     float graphic_ratio;
+    TextureResource* graphic;
 
     Pawn(const std::string& name, vec2f pos, int tagid);
     const vec2f & getPos() const { return pos; }
@@ -99,7 +98,6 @@ public:
     void logic(float dt);
     void draw(float dt);
     void drawShadow(float dt);
-    void drawSimple(float dt);
 
     void drawName() const;
 };

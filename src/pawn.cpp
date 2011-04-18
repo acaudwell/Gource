@@ -146,38 +146,6 @@ void Pawn::drawName() const {
     }
 }
 
-void Pawn::drawSimple(float dt) {
-    if(isHidden()) return;
-
-    glLoadName(tagid);
-
-    float halfsize = size * 0.5f;
-    vec2f offsetpos = pos - vec2f(halfsize, halfsize*graphic_ratio);
-
-    float alpha = getAlpha();
-    vec3f col = getColour();
-
-    glColor4f(col.x, col.y, col.z, alpha);
-
-    glPushMatrix();
-        glTranslatef(offsetpos.x, offsetpos.y, 0.0f);
-
-        glBegin(GL_QUADS);
-            glTexCoord2f(0.0f,0.0f);
-            glVertex2f(0.0f, 0.0f);
-
-            glTexCoord2f(1.0f,0.0f);
-            glVertex2f(size, 0.0f);
-
-            glTexCoord2f(1.0f,1.0f);
-            glVertex2f(size, size*graphic_ratio);
-
-            glTexCoord2f(0.0f,1.0f);
-            glVertex2f(0.0f, size*graphic_ratio);
-        glEnd();
-
-    glPopMatrix();
-}
 void Pawn::drawShadow(float dt) {
     if(isHidden() || !shadow) return;
 
@@ -211,9 +179,6 @@ void Pawn::drawShadow(float dt) {
 
 void Pawn::draw(float dt) {
     if(hidden) return;
-
-    glEnable(GL_BLEND);
-    glEnable(GL_TEXTURE_2D);
 
     float halfsize = size * 0.5f;
     vec2f offsetpos = pos - vec2f(halfsize, halfsize*graphic_ratio);

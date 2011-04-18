@@ -193,7 +193,6 @@ public:
 
     void drawShadows(const Frustum & frustum, float dt) const;
     void drawFiles(const Frustum & frustum, float dt) const;
-    void drawSimple(const Frustum & frustum, float dt) const;
     void drawNames(const FXFont & dirfont, const Frustum & frustum);
 
     void calcScreenPos();

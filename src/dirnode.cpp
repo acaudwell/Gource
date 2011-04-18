@@ -1018,8 +1018,6 @@ void RDirNode::drawFiles(const Frustum & frustum, float dt) const{
         glPopMatrix();
     }
 
-    glDisable(GL_TEXTURE_2D);
-
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
         node->drawFiles(frustum,dt);
@@ -1097,43 +1095,6 @@ void RDirNode::drawBloom(const Frustum & frustum, float dt){
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
         node->drawBloom(frustum,dt);
-    }
-}
-
-void RDirNode::drawSimple(const Frustum & frustum, float dt) const{
-
-    glDisable(GL_TEXTURE_2D);
-
-    if(frustum.intersects(quadItemBounds)) {
-        glPushMatrix();
-            glTranslatef(pos.x, pos.y, 0.0);
-            for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
-                RFile* f = *it;
-                f->drawSimple(dt);
-            }
-        glPopMatrix();
-    }
-
-    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
-        RDirNode* node = (*it);
-        node->drawSimple(frustum,dt);
-    }
-
-    if(gGourceNodeDebug) {
-        glColor4f(1.0, 1.0, 1.0, 1.0);
-
-        vec2f vel_offset = pos + vel.normal() * 10.0;
-
-        glBegin(GL_LINES);
-            glVertex2fv(pos);
-            glVertex2fv(vel_offset);
-        glEnd();
-
-        glColor4f(1.0, 1.0, 0.0, 1.0);
-
-        glLineWidth(1.0);
-
-        quadItemBounds.draw();
     }
 }
 
