@@ -27,7 +27,7 @@
 //note this should be 32 bytes (8x4 bytes)
 class qbuf2f_vertex {
 public:
-    qbuf2f_vertex();
+    qbuf2f_vertex() {};
     qbuf2f_vertex(const vec2f& pos, const vec4f& colour, const vec2f& texcoord) : pos(pos), colour(colour), texcoord(texcoord) {};
 
     vec2f pos;
@@ -35,24 +35,40 @@ public:
     vec2f texcoord;
 };
 
+//maintain ranges corresponding to each texture
+class qbuf2f_tex {
+public:
+    qbuf2f_tex() {};
+    qbuf2f_tex(int start_index, GLuint textureid) : start_index(start_index), textureid(textureid) {};
+    int start_index;
+    GLuint textureid;
+};
+
 class qbuf2f {
 
-    std::vector<qbuf2f_vertex> data;
+    qbuf2f_vertex* data;
+    int data_size;
 
+    std::vector<qbuf2f_tex> textures;
+    
     GLuint bufferid;
+    int buffer_size;
 
-    int item_count;
+    int vertex_count;
+    
+    void resize(int new_size);
 public:
-    qbuf2f();
+    qbuf2f(int data_size = 1);
     ~qbuf2f();
 
     void reset();
 
-    size_t size();
+    size_t vertices();
     size_t capacity();
-
-    void add(const vec2f& pos, const vec2f& dims, const vec4f& colour);
-    void add(const vec2f& pos, const vec2f& dims, const vec4f& colour, const vec4f& texcoord);
+    size_t texture_changes();
+    
+    void add(GLuint textureid, const vec2f& pos, const vec2f& dims, const vec4f& colour);
+    void add(GLuint textureid, const vec2f& pos, const vec2f& dims, const vec4f& colour, const vec4f& texcoord);
 
     void update();
     void draw();
