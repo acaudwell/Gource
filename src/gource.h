@@ -109,7 +109,8 @@ class Gource : public SDLApp {
     RUser* hoverUser;
     RUser* selectedUser;
 
-    qbuf2f user_vbo;
+    std::map<GLuint, qbuf2f*> user_vbos;
+
     qbuf2f file_vbo;
 
     GLuint selectionDepth;

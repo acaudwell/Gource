@@ -855,7 +855,7 @@ void Gource::reset() {
     tagfilemap.clear();
     tagusermap.clear();
     gGourceRemovedFiles.clear();
-
+   
     if(userTree!=0) delete userTree;
     if(dirNodeTree!=0) delete dirNodeTree;
 
@@ -901,6 +901,14 @@ void Gource::reset() {
 
     users.clear();
 
+    //delete user vbos
+    for(std::map<GLuint, qbuf2f*>::iterator it = user_vbos.begin(); it!= user_vbos.end(); it++) {
+        delete it->second;
+    }
+    
+    user_vbos.clear();
+    
+    
     //delete
     for(std::map<std::string,RFile*>::iterator it = files.begin(); it != files.end(); it++) {
         delete it->second;
@@ -1957,16 +1965,29 @@ void Gource::screenshot() {
 void Gource::updateVBOs(const Frustum& frustum, float dt) {
     if(gGourceSettings.ffp) return;
 
-    user_vbo.reset();
+    for(std::map<GLuint, qbuf2f*>::iterator it = user_vbos.begin(); it!= user_vbos.end(); it++) {
+        it->second->reset();
+    }
+
+    //use a separate vbo for each user texture
     for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
         RUser* user = it->second;
 
+        qbuf2f* user_vbo = user_vbos[user->graphic->textureid];
+
+        if(!user_vbo) {
+            user_vbos[user->graphic->textureid] = user_vbo = new qbuf2f();
+        }
+        
         float alpha = user->getAlpha();
         vec3f col   = user->getColour();
 
-        user_vbo.add(user->getPos(), vec2f(user->size, user->graphic_ratio*user->size), vec4f(col.x, col.y, col.z, alpha));
+        user_vbo->add(user->getPos(), vec2f(user->size, user->graphic_ratio*user->size), vec4f(col.x, col.y, col.z, alpha));
     }
-    user_vbo.update();
+
+    for(std::map<GLuint, qbuf2f*>::iterator it = user_vbos.begin(); it!= user_vbos.end(); it++) {
+        it->second->update();
+    }
 
     file_vbo.reset();
     root->updateFilesVBO(frustum, file_vbo, dt);
@@ -1975,8 +1996,7 @@ void Gource::updateVBOs(const Frustum& frustum, float dt) {
 
 void Gource::drawFileShadows(const Frustum& frustum, float dt) {
     if(gGourceSettings.hide_files) return;
-
-    glEnable(GL_TEXTURE_2D);
+   
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -1999,8 +2019,7 @@ void Gource::drawFileShadows(const Frustum& frustum, float dt) {
 
 void Gource::drawUserShadows(const Frustum& frustum, float dt) {
     if(gGourceSettings.hide_users) return;
-
-    glEnable(GL_TEXTURE_2D);
+   
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -2008,13 +2027,16 @@ void Gource::drawUserShadows(const Frustum& frustum, float dt) {
 
         shadow_shader->use();
 
-        glBindTexture(GL_TEXTURE_2D, usertex->textureid);
-
         vec2f shadow_offset = vec2f(2.0, 2.0) * gGourceSettings.user_scale;
-
+            
         glPushMatrix();
             glTranslatef(shadow_offset.x, shadow_offset.y, 0.0f);
-            user_vbo.draw();
+
+            for(std::map<GLuint, qbuf2f*>::iterator it = user_vbos.begin(); it!= user_vbos.end(); it++) {
+                glBindTexture(GL_TEXTURE_2D, it->first);
+                it->second->draw();
+            }
+
         glPopMatrix();
 
         glUseProgramObjectARB(0);
@@ -2028,12 +2050,13 @@ void Gource::drawUserShadows(const Frustum& frustum, float dt) {
 void Gource::drawFiles(const Frustum& frustum, float dt) {
     if(gGourceSettings.hide_files) return;
 
+
     if(trace_debug) {
-        root->drawSimple(frustum,dt);
-        return;
+        glDisable(GL_TEXTURE_2D);
+    } else {
+        glEnable(GL_TEXTURE_2D);
     }
 
-    glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -2047,20 +2070,28 @@ void Gource::drawFiles(const Frustum& frustum, float dt) {
 }
 
 void Gource::drawUsers(float dt) {
+    if(gGourceSettings.hide_users) return;
 
-    glEnable(GL_TEXTURE_2D);
+    if(trace_debug) {
+        glDisable(GL_TEXTURE_2D);
+    } else {
+        glEnable(GL_TEXTURE_2D);
+    }
+    
     glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     if(!gGourceSettings.ffp) {
-
-        glBindTexture(GL_TEXTURE_2D, usertex->textureid);
-
-        user_vbo.draw();
+               
+        for(std::map<GLuint, qbuf2f*>::iterator it = user_vbos.begin(); it!= user_vbos.end(); it++) {
+            glBindTexture(GL_TEXTURE_2D, it->first);
+            it->second->draw();
+        }
 
     } else {
 
         for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
-            trace_debug ? it->second->drawSimple(dt) : it->second->draw(dt);
+            it->second->draw(dt);
         }
     }
 
@@ -2324,7 +2355,8 @@ void Gource::draw(float t, float dt) {
             dirNodeTree->item_count, dirNodeTree->node_count, dirNodeTree->max_node_depth);
         font.print(1,360,"Dir Bounds Ratio: %.2f, %.5f", dir_bounds.width() / dir_bounds.height(), rotation_remaining_angle);
         font.print(1,380,"String Hash Seed: %d", gStringHashSeed);
-        font.print(1,400,"File VBO %d/%d vertices", file_vbo.size() , file_vbo.capacity());
+        font.print(1,400,"File VBO: %d/%d vertices", file_vbo.size() , file_vbo.capacity());
+        font.print(1,420,"User VBOs: %d", user_vbos.size());
 
         if(selectedUser != 0) {
 
