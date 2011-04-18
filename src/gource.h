@@ -111,8 +111,7 @@ class Gource : public SDLApp {
     RUser* hoverUser;
     RUser* selectedUser;
 
-    std::map<GLuint, qbuf2f*> user_vbos;
-
+    qbuf2f user_vbo;
     qbuf2f file_vbo;
 
     GLuint selectionDepth;
@@ -151,10 +150,16 @@ class Gource : public SDLApp {
 
     float idle_time;
 
-    Uint32 draw_tree_time;
+    Uint32 draw_edges_time;
+    Uint32 draw_shadows_time;
+    Uint32 draw_actions_time;
+    Uint32 draw_files_time;
+    Uint32 draw_users_time;
+    Uint32 draw_bloom_time;
+    Uint32 update_vbos_time;
     Uint32 update_dir_tree_time;
     Uint32 update_user_tree_time;
-    Uint32 draw_time;
+    Uint32 draw_scene_time;
     Uint32 logic_time;
     Uint32 trace_time;
     Uint32 name_calc_time;
@@ -225,15 +230,16 @@ class Gource : public SDLApp {
 
     void loadingScreen();
     void drawBackground(float dt);
-    void drawActions(float dt);
 
-    void drawTree(float dt);
-    void drawBloom(float dt);
+    void drawScene(float dt);
+
+    void updateVBOs(float dt);
     void drawFileShadows(float dt);
     void drawUserShadows(float dt);
+    void drawActions(float dt);
     void drawFiles(float dt);
     void drawUsers(float dt);
-    void updateVBOs(float dt);
+    void drawBloom(float dt);
 
     void screenshot();
 

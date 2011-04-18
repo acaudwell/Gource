@@ -335,8 +335,6 @@ void Gource::update(float t, float dt) {
 
     logic_time = SDL_GetTicks() - logic_time;
 
-    draw_time = SDL_GetTicks();
-
     draw(runtime, scaled_dt);
 
     //extract frames based on frameskip setting if frameExporter defined
@@ -920,15 +918,7 @@ void Gource::reset() {
         delete it->second;
     }
 
-    users.clear();
-
-    //delete user vbos
-    for(std::map<GLuint, qbuf2f*>::iterator it = user_vbos.begin(); it!= user_vbos.end(); it++) {
-        delete it->second;
-    }
-    
-    user_vbos.clear();
-    
+    users.clear();   
     
     //delete
     for(std::map<std::string,RFile*>::iterator it = files.begin(); it != files.end(); it++) {
@@ -1848,8 +1838,10 @@ void Gource::drawBackground(float dt) {
     }
 }
 
-void Gource::drawTree(float dt) {
-    draw_tree_time = SDL_GetTicks();
+void Gource::drawScene(float dt) {
+
+    //draw edges
+    draw_edges_time = SDL_GetTicks();
 
     root->calcEdges();
 
@@ -1882,24 +1874,50 @@ void Gource::drawTree(float dt) {
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
 
-    //update file and user vbos
-    updateVBOs(dt);
-
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    draw_edges_time = SDL_GetTicks() - draw_edges_time;
 
     //draw shadows
+    
+    draw_shadows_time = SDL_GetTicks();
 
     drawUserShadows(dt);
 
     drawFileShadows(dt);
 
+    draw_shadows_time = SDL_GetTicks() - draw_shadows_time;
+    
+    //draw actions
+    
+    draw_actions_time = SDL_GetTicks();
+    
     drawActions(dt);
 
+    draw_actions_time = SDL_GetTicks() - draw_actions_time;
+
+    //draw files
+    
+    draw_files_time = SDL_GetTicks();
+    
     drawFiles(dt);
 
-    draw_tree_time = SDL_GetTicks() - draw_tree_time;
+    draw_files_time = SDL_GetTicks() - draw_files_time;
+    
+    //draw users
+
+    draw_users_time = SDL_GetTicks();
+
+    drawUsers(dt);
+
+    draw_users_time = SDL_GetTicks() - draw_users_time;
+   
+    //draw bloom
+    
+    draw_bloom_time = SDL_GetTicks();
+
+    drawBloom(dt);
+
+    draw_bloom_time = SDL_GetTicks() - draw_bloom_time;
+
 }
 
 void Gource::drawActions(float dt) {
@@ -1922,10 +1940,10 @@ void Gource::drawBloom(float dt) {
 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
+    glBlendFunc (GL_ONE, GL_ONE);
 
     //draw 'gourceian blur' around dirnodes
     glBindTexture(GL_TEXTURE_2D, bloomtex->textureid);
-    glBlendFunc (GL_ONE, GL_ONE);
 
     root->drawBloom(dt);
 }
@@ -1993,29 +2011,18 @@ void Gource::screenshot() {
 void Gource::updateVBOs(float dt) {
     if(gGourceSettings.ffp) return;
 
-    for(std::map<GLuint, qbuf2f*>::iterator it = user_vbos.begin(); it!= user_vbos.end(); it++) {
-        it->second->reset();
-    }
+    user_vbo.reset();
 
     //use a separate vbo for each user texture
     for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
         RUser* user = it->second;
 
-        qbuf2f* user_vbo = user_vbos[user->graphic->textureid];
-
-        if(!user_vbo) {
-            user_vbos[user->graphic->textureid] = user_vbo = new qbuf2f();
-        }
-        
         float alpha = user->getAlpha();
         vec3f col   = user->getColour();
 
-        user_vbo->add(user->getPos(), vec2f(user->size, user->graphic_ratio*user->size), vec4f(col.x, col.y, col.z, alpha));
+        user_vbo.add(user->graphic->textureid, user->getPos(), vec2f(user->size, user->graphic_ratio*user->size), vec4f(col.x, col.y, col.z, alpha));
     }
-
-    for(std::map<GLuint, qbuf2f*>::iterator it = user_vbos.begin(); it!= user_vbos.end(); it++) {
-        it->second->update();
-    }
+    user_vbo.update();
 
     file_vbo.reset();
     root->updateFilesVBO(file_vbo, dt);
@@ -2024,7 +2031,8 @@ void Gource::updateVBOs(float dt) {
 
 void Gource::drawFileShadows(float dt) {
     if(gGourceSettings.hide_files) return;
-   
+
+    glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -2048,6 +2056,7 @@ void Gource::drawFileShadows(float dt) {
 void Gource::drawUserShadows(float dt) {
     if(gGourceSettings.hide_users) return;
    
+    glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -2060,10 +2069,7 @@ void Gource::drawUserShadows(float dt) {
         glPushMatrix();
             glTranslatef(shadow_offset.x, shadow_offset.y, 0.0f);
 
-            for(std::map<GLuint, qbuf2f*>::iterator it = user_vbos.begin(); it!= user_vbos.end(); it++) {
-                glBindTexture(GL_TEXTURE_2D, it->first);
-                it->second->draw();
-            }
+            user_vbo.draw();
 
         glPopMatrix();
 
@@ -2111,10 +2117,7 @@ void Gource::drawUsers(float dt) {
 
     if(!gGourceSettings.ffp) {
                
-        for(std::map<GLuint, qbuf2f*>::iterator it = user_vbos.begin(); it!= user_vbos.end(); it++) {
-            glBindTexture(GL_TEXTURE_2D, it->first);
-            it->second->draw();
-        }
+        user_vbo.draw();
 
     } else {
 
@@ -2167,23 +2170,30 @@ void Gource::draw(float t, float dt) {
     //check visibility
     root->checkFrustum(frustum);
 
-    //draw tree
-    drawTree(dt);
+    //update file and user vbos
 
-    drawUsers(dt);
+    update_vbos_time = SDL_GetTicks();
+    
+    updateVBOs(dt);
 
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
+    update_vbos_time = SDL_GetTicks() - update_vbos_time;    
+    
+    //draw scene
 
-    //draw bloom
-    drawBloom(dt);
+    draw_scene_time = SDL_GetTicks();   
+    
+    drawScene(dt);
+
+    draw_scene_time = SDL_GetTicks() - draw_scene_time;
 
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     name_calc_time = SDL_GetTicks();
 
-    root->calcScreenPos();
-
+    if(!gGourceSettings.hide_filenames) {
+        root->calcScreenPos();
+    }
+    
     name_calc_time = SDL_GetTicks() - name_calc_time;
 
     name_draw_time = SDL_GetTicks();
@@ -2195,8 +2205,6 @@ void Gource::draw(float t, float dt) {
 
     //switch back
     display.pop2D();
-
-    name_draw_time = SDL_GetTicks() - name_draw_time;
 
     if(!(gGourceSettings.hide_usernames || gGourceSettings.hide_users)) {
         for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
@@ -2212,6 +2220,8 @@ void Gource::draw(float t, float dt) {
             selectedFile->drawName();
         display.pop2D();
     }
+
+    name_draw_time = SDL_GetTicks() - name_draw_time;
 
     if(debug) {
         glDisable(GL_TEXTURE_2D);
@@ -2376,25 +2386,37 @@ void Gource::draw(float t, float dt) {
         font.print(1,160,"Camera: (%.2f, %.2f, %.2f)", campos.x, campos.y, campos.z);
         font.print(1,180,"Gravity: %.2f", gGourceForceGravity);
         font.print(1,200,"Update Tree: %u ms", update_dir_tree_time);
-        font.print(1,220,"Draw Tree: %u ms", draw_tree_time);
-        font.print(1,240,"Mouse Trace: %u ms", trace_time);
-        font.print(1,260,"Logic Time: %u ms", logic_time);
-        font.print(1,280,"Draw Time: %u ms (Names: Calc Time = %u ms, Draw Time = %u ms)", SDL_GetTicks() - draw_time, name_calc_time, name_draw_time);
-        font.print(1,300,"File Inner Loops: %d", gGourceFileInnerLoops);
-        font.print(1,320,"User Inner Loops: %d", gGourceUserInnerLoops);
-        font.print(1,340,"Dir Inner Loops: %d (QTree items = %d, nodes = %d, max node depth = %d)", gGourceDirNodeInnerLoops,
+        font.print(1,220,"Update VBOs: %u ms", update_vbos_time);
+        font.print(1,240,"Draw Scene: %u ms",  draw_scene_time);
+        font.print(1,260," - Edges: %u ms",   draw_edges_time);
+        font.print(1,280," - Shadows: %u ms", draw_shadows_time);
+        font.print(1,300," - Actions: %u ms", draw_actions_time);
+        font.print(1,320," - Files: %u ms",   draw_files_time);        
+        font.print(1,340," - Users: %u ms",   draw_users_time);        
+        font.print(1,360," - Bloom: %u ms",   draw_bloom_time);
+        font.print(1,380,"Text: %u ms",       name_calc_time + name_draw_time);       
+        font.print(1,400," - Calc Time: %u ms",    name_calc_time);       
+        font.print(1,420," - Draw Time: %u ms",    name_draw_time);       
+        font.print(1,440,"Mouse Trace: %u ms", trace_time);
+        font.print(1,460,"Logic Time: %u ms", logic_time);
+        font.print(1,480,"File Inner Loops: %d", gGourceFileInnerLoops);
+        font.print(1,500,"User Inner Loops: %d", gGourceUserInnerLoops);
+        font.print(1,520,"Dir Inner Loops: %d (QTree items = %d, nodes = %d, max node depth = %d)", gGourceDirNodeInnerLoops,
             dirNodeTree->item_count, dirNodeTree->node_count, dirNodeTree->max_node_depth);
-        font.print(1,360,"Dir Bounds Ratio: %.2f, %.5f", dir_bounds.width() / dir_bounds.height(), rotation_remaining_angle);
-        font.print(1,380,"String Hash Seed: %d", gStringHashSeed);
-        font.print(1,400,"File VBO: %d/%d vertices", file_vbo.size() , file_vbo.capacity());
-        font.print(1,420,"User VBOs: %d", user_vbos.size());
-
+        font.print(1,540,"Dir Bounds Ratio: %.2f, %.5f", dir_bounds.width() / dir_bounds.height(), rotation_remaining_angle);
+        font.print(1,560,"String Hash Seed: %d", gStringHashSeed);
+        
+        if(!gGourceSettings.ffp) {
+            font.print(1,580,"File VBO: %d/%d vertices, %d texture changes", file_vbo.vertices(), file_vbo.capacity(), file_vbo.texture_changes());
+            font.print(1,600,"User VBO: %d/%d vertices, %d texture changes", user_vbo.vertices(), user_vbo.capacity(), user_vbo.texture_changes());
+        }
+    
         if(selectedUser != 0) {
 
         }
 
         if(selectedFile != 0) {
-            font.print(1,400,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
+            font.print(1,620,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
                     selectedFile->getDir()->fileCount(), selectedFile->getDir()->visibleFileCount());
         }
     }
