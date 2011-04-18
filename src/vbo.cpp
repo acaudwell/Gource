@@ -71,9 +71,9 @@ void qbuf2f::add(const vec2f& pos, const vec2f& dims, const vec4f& colour, const
     data[i+3] = v4;
 }
 
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
-
 void qbuf2f::update() {
+    if(data.empty()) return;
+
     //note possibly better to have a queue and cycle them here
     if(bufferid==0) {
         glGenBuffers(1, &bufferid);
@@ -93,9 +93,9 @@ void qbuf2f::draw() {
     glEnableClientState(GL_COLOR_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-    glVertexPointer(2,   GL_FLOAT, sizeof(qbuf2f_vertex), BUFFER_OFFSET(0));  // stride over colour (4) + texcoord (2)
-    glColorPointer(4,    GL_FLOAT, sizeof(qbuf2f_vertex), BUFFER_OFFSET(8)); // stride over texcoord (2) + pos (2), offset pos(2)
-    glTexCoordPointer(2, GL_FLOAT, sizeof(qbuf2f_vertex), BUFFER_OFFSET(24)); // stride over pos (2) + colour (4), offset pos(2) + colour(4)
+    glVertexPointer(2,   GL_FLOAT, sizeof(qbuf2f_vertex), 0);  
+    glColorPointer(4,    GL_FLOAT, sizeof(qbuf2f_vertex), (GLvoid*)8);  // offset pos (2x4 bytes)
+    glTexCoordPointer(2, GL_FLOAT, sizeof(qbuf2f_vertex), (GLvoid*)24); // offset pos + colour (2x4 + 4x4 bytes)
 
     glDrawArrays(GL_QUADS, 0, data.size());
 
