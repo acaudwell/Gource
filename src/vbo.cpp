@@ -106,9 +106,7 @@ void qbuf2f::update() {
     if(bufferid==0) {
         glGenBuffers(1, &bufferid);
     }
-
-    //TODO: use glBufferSubData
-    
+   
     glBindBuffer(GL_ARRAY_BUFFER, bufferid);
 
     //recreate buffer if less than the vertex_count
