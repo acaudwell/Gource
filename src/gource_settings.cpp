@@ -26,7 +26,7 @@ void GourceSettings::help(bool extended_help) {
     SDLAppCreateWindowsConsole();
 
     //resize window to fit help message
-    SDLAppResizeWindowsConsole(800);
+    SDLAppResizeWindowsConsole(820);
 #endif
 
     printf("Gource v%s\n", GOURCE_VERSION);
