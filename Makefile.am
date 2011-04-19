@@ -5,6 +5,7 @@ bin_PROGRAMS = gource
 gource_SOURCES = \
 	src/action.cpp src/action.h \
 	src/apache.cpp src/apache.h \
+        src/bloom.cpp src/bloom.h \
         src/bzr.cpp src/bzr.h \
 	src/commitlog.cpp src/commitlog.h \
 	src/core/bounds.h \
