@@ -1,3 +1,8 @@
+0.34:
+ * Now using VBOs and shaders for faster rendering when OpenGL 2.0 is available.
+ * New font rendering library derived from FTGL (FTGL no longer required).
+ * Added --no-vsync option.
+
 0.33:
  * Added --hide root option to not draw branches from the root directory.
  * Fixed log parsing of Bazaar merges and tagged commits.
