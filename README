@@ -169,7 +169,10 @@ options:
     --multi-sampling
             Enable multi-sampling.
 
-    --bloom-multiplier FLOAT
+    --no-vsync
+            Disable vsync.
+
+     --bloom-multiplier FLOAT
             Adjust the amount of bloom.
 
     --bloom-intensity FLOAT

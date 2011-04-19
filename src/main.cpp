@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
     }
 
     //enable vsync
-    display.enableVsync(true);
+    display.enableVsync(gGourceSettings.vsync);
 
     try {
 

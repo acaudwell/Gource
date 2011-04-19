@@ -36,7 +36,8 @@ void GourceSettings::help(bool extended_help) {
     printf("  -h, --help                       Help\n\n");
     printf("  -WIDTHxHEIGHT, --viewport        Set viewport size\n");
     printf("  -f, --fullscreen                 Fullscreen\n");
-    printf("      --multi-sampling             Enable multi-sampling\n\n");
+    printf("      --multi-sampling             Enable multi-sampling\n");
+    printf("      --no-vsync                   Disable vsync\n\n");
 
     printf("  -p, --start-position POSITION    Begin at some position (0.0-1.0 or 'random')\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
