@@ -276,17 +276,10 @@ void RFile::drawNameText(float alpha) const {
 
     vec3f nameCol    = getNameColour();
     float name_alpha = selected ? 1.0 : alpha;
-
-    vec3f drawpos = screenpos;
-
-    //drawpos.x += 10.0;
-    //drawpos.y -= 10.0;
-
-    bool show_file_ext = gGourceSettings.file_extensions;
     
     glPushMatrix();
 
-        glTranslatef(drawpos.x, drawpos.y, 0.0);
+        glTranslatef(screenpos.x, screenpos.y, 0.0);
 
         //hard coded drop shadow
         glPushMatrix();

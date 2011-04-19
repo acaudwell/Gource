@@ -2170,6 +2170,20 @@ void Gource::draw(float t, float dt) {
     //check visibility
     root->checkFrustum(frustum);
 
+    screen_project_time = SDL_GetTicks();
+        
+    GLint viewport[4];
+    GLdouble modelview[16];
+    GLdouble projection[16];
+
+    glGetIntegerv( GL_VIEWPORT, viewport );
+    glGetDoublev( GL_MODELVIEW_MATRIX, modelview );
+    glGetDoublev( GL_PROJECTION_MATRIX, projection );
+       
+    root->calcScreenPos(viewport, modelview, projection);
+    
+    screen_project_time = SDL_GetTicks() - screen_project_time;   
+    
     //update file and user vbos
 
     update_vbos_time = SDL_GetTicks();
@@ -2187,14 +2201,6 @@ void Gource::draw(float t, float dt) {
     draw_scene_time = SDL_GetTicks() - draw_scene_time;
 
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    name_calc_time = SDL_GetTicks();
-
-    if(!gGourceSettings.hide_filenames) {
-        root->calcScreenPos();
-    }
-    
-    name_calc_time = SDL_GetTicks() - name_calc_time;
 
     name_draw_time = SDL_GetTicks();
 
@@ -2387,28 +2393,27 @@ void Gource::draw(float t, float dt) {
         font.print(1,180,"Gravity: %.2f", gGourceForceGravity);
         font.print(1,200,"Update Tree: %u ms", update_dir_tree_time);
         font.print(1,220,"Update VBOs: %u ms", update_vbos_time);
-        font.print(1,240,"Draw Scene: %u ms",  draw_scene_time);
-        font.print(1,260," - Edges: %u ms",   draw_edges_time);
-        font.print(1,280," - Shadows: %u ms", draw_shadows_time);
-        font.print(1,300," - Actions: %u ms", draw_actions_time);
-        font.print(1,320," - Files: %u ms",   draw_files_time);        
-        font.print(1,340," - Users: %u ms",   draw_users_time);        
-        font.print(1,360," - Bloom: %u ms",   draw_bloom_time);
-        font.print(1,380,"Text: %u ms",       name_calc_time + name_draw_time);       
-        font.print(1,400," - Calc Time: %u ms",    name_calc_time);       
-        font.print(1,420," - Draw Time: %u ms",    name_draw_time);       
-        font.print(1,440,"Mouse Trace: %u ms", trace_time);
-        font.print(1,460,"Logic Time: %u ms", logic_time);
-        font.print(1,480,"File Inner Loops: %d", gGourceFileInnerLoops);
-        font.print(1,500,"User Inner Loops: %d", gGourceUserInnerLoops);
-        font.print(1,520,"Dir Inner Loops: %d (QTree items = %d, nodes = %d, max node depth = %d)", gGourceDirNodeInnerLoops,
+        font.print(1,240,"Projection: %u ms",  screen_project_time);
+        font.print(1,260,"Draw Scene: %u ms",  draw_scene_time);
+        font.print(1,280," - Edges: %u ms",   draw_edges_time);
+        font.print(1,300," - Shadows: %u ms", draw_shadows_time);
+        font.print(1,320," - Actions: %u ms", draw_actions_time);
+        font.print(1,340," - Files: %u ms",   draw_files_time);        
+        font.print(1,360," - Users: %u ms",   draw_users_time);        
+        font.print(1,380," - Bloom: %u ms",   draw_bloom_time);
+        font.print(1,400,"Text: %u ms",       name_draw_time);
+        font.print(1,420,"Mouse Trace: %u ms", trace_time);
+        font.print(1,440,"Logic Time: %u ms", logic_time);
+        font.print(1,460,"File Inner Loops: %d", gGourceFileInnerLoops);
+        font.print(1,480,"User Inner Loops: %d", gGourceUserInnerLoops);
+        font.print(1,500,"Dir Inner Loops: %d (QTree items = %d, nodes = %d, max node depth = %d)", gGourceDirNodeInnerLoops,
             dirNodeTree->item_count, dirNodeTree->node_count, dirNodeTree->max_node_depth);
-        font.print(1,540,"Dir Bounds Ratio: %.2f, %.5f", dir_bounds.width() / dir_bounds.height(), rotation_remaining_angle);
-        font.print(1,560,"String Hash Seed: %d", gStringHashSeed);
+        font.print(1,520,"Dir Bounds Ratio: %.2f, %.5f", dir_bounds.width() / dir_bounds.height(), rotation_remaining_angle);
+        font.print(1,540,"String Hash Seed: %d", gStringHashSeed);
         
         if(!gGourceSettings.ffp) {
-            font.print(1,580,"File VBO: %d/%d vertices, %d texture changes", file_vbo.vertices(), file_vbo.capacity(), file_vbo.texture_changes());
-            font.print(1,600,"User VBO: %d/%d vertices, %d texture changes", user_vbo.vertices(), user_vbo.capacity(), user_vbo.texture_changes());
+            font.print(1,560,"File VBO: %d/%d vertices, %d texture changes", file_vbo.vertices(), file_vbo.capacity(), file_vbo.texture_changes());
+            font.print(1,580,"User VBO: %d/%d vertices, %d texture changes", user_vbo.vertices(), user_vbo.capacity(), user_vbo.texture_changes());
         }
     
         if(selectedUser != 0) {
@@ -2416,7 +2421,7 @@ void Gource::draw(float t, float dt) {
         }
 
         if(selectedFile != 0) {
-            font.print(1,620,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
+            font.print(1,600,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
                     selectedFile->getDir()->fileCount(), selectedFile->getDir()->visibleFileCount());
         }
     }

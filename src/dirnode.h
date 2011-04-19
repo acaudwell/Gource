@@ -86,8 +86,6 @@ class RDirNode : public QuadItem {
 
     void changePath(const std::string & abspath);
 
-    void calcProjectedPos();
-
     void setInitialPosition();
 
     void drawEdge(RDirNode* child) const;
@@ -198,7 +196,7 @@ public:
 
     void drawNames(const FXFont& dirfont);
 
-    void calcScreenPos();
+    void calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection);
 
     void nodeCount() const;
 };

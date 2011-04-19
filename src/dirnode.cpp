@@ -846,8 +846,6 @@ void RDirNode::updateFilePositions() {
 
 void RDirNode::calcEdges() {
 
-    calcProjectedPos();
-
     if(parent != 0) {
         spline.update(parent->getProjectedPos(), parent->getColour(), projected_pos, col, projected_spos);
     }
@@ -909,24 +907,47 @@ void RDirNode::drawDirName(const FXFont& dirfont) const{
     dirfont.draw(mid.x, mid.y, path_token);
 }
 
+void RDirNode::calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection) {
 
-// project positions of files and directories on the display in 2d
-void RDirNode::calcScreenPos() {
+    static GLdouble screen_x, screen_y, screen_z;
+ 
+    gluProject( pos.x, pos.y, 0.0f, modelview, projection, viewport, &screen_x, &screen_y, &screen_z);
+    screen_y = (float)viewport[3] - screen_y;   
+    projected_pos.x = screen_x;
+    projected_pos.y = screen_y;
 
-    //first pass - calculate positions of names
-    for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
-        RFile* f = *it;
+    gluProject( spos.x, spos.y, 0.0f, modelview, projection, viewport, &screen_x, &screen_y, &screen_z);
+    screen_y = (float)viewport[3] - screen_y;   
+    projected_spos.x = screen_x;
+    projected_spos.y = screen_y;
 
-        // TODO: different offsets for selected/not selected
-        if(f->isSelected())
-            f->calcScreenPos(pos + vec2f(5.5f, -2.0f));
-        else
-            f->calcScreenPos(pos + vec2f(5.5f, -1.0f));
+    static vec2f selected_offset(5.5f, -2.0f);
+    static vec2f unselected_offset(5.5f, -1.0f);
+    
+    if(!gGourceSettings.hide_filenames) {
+    
+        //first pass - calculate positions of names
+        for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
+            RFile* f = *it;
+            
+            vec2f text_pos = f->getAbsolutePos();
+            text_pos.x += 5.5f;
+            
+            if(f->isSelected())
+                text_pos.y -= 2.0f;
+            else
+                text_pos.y -= 1.0f;
+            
+            gluProject( text_pos.x, text_pos.y, 0.0f, modelview, projection, viewport, &screen_x, &screen_y, &screen_z);
+            screen_y = (float)viewport[3] - screen_y;   
+            f->screenpos.x = screen_x;
+            f->screenpos.y = screen_y;
+        }
     }
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
-        node->calcScreenPos();
+        node->calcScreenPos(viewport, modelview, projection);
     }
 }
 
@@ -1040,11 +1061,6 @@ const vec2f & RDirNode::getSPos() const{
 
 const vec2f & RDirNode::getProjectedPos() const{
     return projected_pos;
-}
-
-void RDirNode::calcProjectedPos() {
-    projected_pos  = display.project(vec3f(pos.x, pos.y, 0.0)).truncate();
-    projected_spos = display.project(vec3f(spos.x, spos.y, 0.0)).truncate();
 }
 
 void RDirNode::drawEdgeShadows(float dt) const{

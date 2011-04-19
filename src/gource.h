@@ -150,6 +150,7 @@ class Gource : public SDLApp {
 
     float idle_time;
 
+    Uint32 screen_project_time;
     Uint32 draw_edges_time;
     Uint32 draw_shadows_time;
     Uint32 draw_actions_time;
@@ -162,7 +163,6 @@ class Gource : public SDLApp {
     Uint32 draw_scene_time;
     Uint32 logic_time;
     Uint32 trace_time;
-    Uint32 name_calc_time;
     Uint32 name_draw_time;
 
     bool track_users;

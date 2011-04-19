@@ -32,8 +32,6 @@ protected:
     vec2f pos;
     vec2f shadowOffset;
 
-    vec3f screenpos;
-
     std::string name;
     float namewidth;
     vec2f accel;
@@ -67,6 +65,7 @@ public:
     float size;
     float graphic_ratio;
     TextureResource* graphic;
+    vec3f screenpos;
 
     Pawn(const std::string& name, vec2f pos, int tagid);
     const vec2f & getPos() const { return pos; }
