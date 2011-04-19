@@ -997,7 +997,7 @@ void RDirNode::updateFilesVBO(qbuf2f& buffer, float dt) const{
             vec3f col   = f->getColour();
             float alpha = f->getAlpha();
 
-            buffer.add(f->getAbsolutePos(), vec2f(f->size, f->graphic_ratio*f->size), vec4f(col.x, col.y, col.z, alpha));
+            buffer.add(f->graphic->textureid, f->getAbsolutePos(), vec2f(f->size, f->graphic_ratio*f->size), vec4f(col.x, col.y, col.z, alpha));
         }
     }
 
