@@ -33,12 +33,16 @@
 			<Add library="glew32" />
 			<Add library="freetype" />
 		</Linker>
+		<Unit filename="data\shaders\bloom.frag" />
+		<Unit filename="data\shaders\bloom.vert" />
 		<Unit filename="data\shaders\shadow.frag" />
 		<Unit filename="data\shaders\shadow.vert" />
 		<Unit filename="src\action.cpp" />
 		<Unit filename="src\action.h" />
 		<Unit filename="src\apache.cpp" />
 		<Unit filename="src\apache.h" />
+		<Unit filename="src\bloom.cpp" />
+		<Unit filename="src\bloom.h" />
 		<Unit filename="src\bzr.cpp" />
 		<Unit filename="src\bzr.h" />
 		<Unit filename="src\commitlog.cpp" />
