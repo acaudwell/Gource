@@ -2434,6 +2434,7 @@ void Gource::draw(float t, float dt) {
         if(!gGourceSettings.ffp) {
             font.print(1,560,"File VBO: %d/%d vertices, %d texture changes", file_vbo.vertices(), file_vbo.capacity(), file_vbo.texture_changes());
             font.print(1,580,"User VBO: %d/%d vertices, %d texture changes", user_vbo.vertices(), user_vbo.capacity(), user_vbo.texture_changes());
+            font.print(1,600,"Bloom VBO: %d/%d vertices", bloom_vbo.vertices(), bloom_vbo.capacity());
         }
 
         if(selectedUser != 0) {
@@ -2441,7 +2442,7 @@ void Gource::draw(float t, float dt) {
         }
 
         if(selectedFile != 0) {
-            font.print(1,600,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
+            font.print(1,620,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
                     selectedFile->getDir()->fileCount(), selectedFile->getDir()->visibleFileCount());
         }
     }
