@@ -49,6 +49,7 @@
 #include "svn.h"
 
 #include "vbo.h"
+#include "bloom.h"
 #include "slider.h"
 #include "textbox.h"
 #include "action.h"
@@ -89,7 +90,7 @@ class Gource : public SDLApp {
     bool recolour;
 
     bool update_file_labels;
-    
+
     bool use_selection_bounds;
     Bounds2D selection_bounds;
 
@@ -111,8 +112,9 @@ class Gource : public SDLApp {
     RUser* hoverUser;
     RUser* selectedUser;
 
-    qbuf2f user_vbo;
-    qbuf2f file_vbo;
+    qbuf2f    user_vbo;
+    qbuf2f    file_vbo;
+    bloom_buf bloom_vbo;
 
     GLuint selectionDepth;
 
@@ -127,7 +129,7 @@ class Gource : public SDLApp {
     TextureResource* backgroundtex;
     TextureResource* usertex;
     Shader*          shadow_shader;
-
+    Shader*          bloom_shader;
 
     TextBox textbox;
 
@@ -179,7 +181,7 @@ class Gource : public SDLApp {
 
     QuadTree* dirNodeTree;
     QuadTree* userTree;
-    
+
     std::string message;
     float message_timer;
 

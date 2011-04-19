@@ -52,10 +52,11 @@ Gource::Gource(FrameExporter* exporter) {
     beamtex  = texturemanager.grab("beam.png");
     usertex  = texturemanager.grab("no_photo.png");
 
-    shadow_shader = 0;
+    shadow_shader = bloom_shader = 0;
 
     if(!gGourceSettings.ffp) {
         shadow_shader = shadermanager.grab("shadow");
+        bloom_shader  = shadermanager.grab("bloom");
     }
 
     logotex = 0;
@@ -152,7 +153,7 @@ void Gource::writeCustomLog(const std::string& logfile, const std::string& outpu
 
         RCommit commit;
 
-        if(!commitlog->nextCommit(commit)) {           
+        if(!commitlog->nextCommit(commit)) {
              if(!commitlog->isSeekable()) {
                  break;
              }
@@ -873,7 +874,7 @@ void Gource::reset() {
     tagfilemap.clear();
     tagusermap.clear();
     gGourceRemovedFiles.clear();
-   
+
     if(userTree!=0) delete userTree;
     if(dirNodeTree!=0) delete dirNodeTree;
 
@@ -918,8 +919,8 @@ void Gource::reset() {
         delete it->second;
     }
 
-    users.clear();   
-    
+    users.clear();
+
     //delete
     for(std::map<std::string,RFile*>::iterator it = files.begin(); it != files.end(); it++) {
         delete it->second;
@@ -1877,7 +1878,7 @@ void Gource::drawScene(float dt) {
     draw_edges_time = SDL_GetTicks() - draw_edges_time;
 
     //draw shadows
-    
+
     draw_shadows_time = SDL_GetTicks();
 
     drawUserShadows(dt);
@@ -1885,23 +1886,23 @@ void Gource::drawScene(float dt) {
     drawFileShadows(dt);
 
     draw_shadows_time = SDL_GetTicks() - draw_shadows_time;
-    
+
     //draw actions
-    
+
     draw_actions_time = SDL_GetTicks();
-    
+
     drawActions(dt);
 
     draw_actions_time = SDL_GetTicks() - draw_actions_time;
 
     //draw files
-    
+
     draw_files_time = SDL_GetTicks();
-    
+
     drawFiles(dt);
 
     draw_files_time = SDL_GetTicks() - draw_files_time;
-    
+
     //draw users
 
     draw_users_time = SDL_GetTicks();
@@ -1909,9 +1910,9 @@ void Gource::drawScene(float dt) {
     drawUsers(dt);
 
     draw_users_time = SDL_GetTicks() - draw_users_time;
-   
+
     //draw bloom
-    
+
     draw_bloom_time = SDL_GetTicks();
 
     drawBloom(dt);
@@ -1942,10 +1943,21 @@ void Gource::drawBloom(float dt) {
     glEnable(GL_BLEND);
     glBlendFunc (GL_ONE, GL_ONE);
 
-    //draw 'gourceian blur' around dirnodes
-    glBindTexture(GL_TEXTURE_2D, bloomtex->textureid);
+    if(!gGourceSettings.ffp) {
 
-    root->drawBloom(dt);
+        bloom_shader->use();
+
+        bloom_vbo.draw();
+
+        glUseProgramObjectARB(0);
+
+    } else {
+
+        //draw 'gourceian blur' around dirnodes
+        glBindTexture(GL_TEXTURE_2D, bloomtex->textureid);
+
+        root->drawBloom(dt);
+    }
 }
 
 void Gource::setMessage(const char* str, ...) {
@@ -2024,6 +2036,10 @@ void Gource::updateVBOs(float dt) {
     }
     user_vbo.update();
 
+    bloom_vbo.reset();
+    root->updateBloomVBO(bloom_vbo, dt);
+    bloom_vbo.update();
+
     file_vbo.reset();
     root->updateFilesVBO(file_vbo, dt);
     file_vbo.update();
@@ -2055,7 +2071,7 @@ void Gource::drawFileShadows(float dt) {
 
 void Gource::drawUserShadows(float dt) {
     if(gGourceSettings.hide_users) return;
-   
+
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -2065,7 +2081,7 @@ void Gource::drawUserShadows(float dt) {
         shadow_shader->use();
 
         vec2f shadow_offset = vec2f(2.0, 2.0) * gGourceSettings.user_scale;
-            
+
         glPushMatrix();
             glTranslatef(shadow_offset.x, shadow_offset.y, 0.0f);
 
@@ -2111,12 +2127,12 @@ void Gource::drawUsers(float dt) {
     } else {
         glEnable(GL_TEXTURE_2D);
     }
-    
+
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     if(!gGourceSettings.ffp) {
-               
+
         user_vbo.draw();
 
     } else {
@@ -2171,7 +2187,7 @@ void Gource::draw(float t, float dt) {
     root->checkFrustum(frustum);
 
     screen_project_time = SDL_GetTicks();
-        
+
     GLint viewport[4];
     GLdouble modelview[16];
     GLdouble projection[16];
@@ -2179,24 +2195,28 @@ void Gource::draw(float t, float dt) {
     glGetIntegerv( GL_VIEWPORT, viewport );
     glGetDoublev( GL_MODELVIEW_MATRIX, modelview );
     glGetDoublev( GL_PROJECTION_MATRIX, projection );
-       
+
     root->calcScreenPos(viewport, modelview, projection);
-    
-    screen_project_time = SDL_GetTicks() - screen_project_time;   
-    
+
+    screen_project_time = SDL_GetTicks() - screen_project_time;
+
     //update file and user vbos
 
     update_vbos_time = SDL_GetTicks();
-    
+
     updateVBOs(dt);
 
-    update_vbos_time = SDL_GetTicks() - update_vbos_time;    
-    
+    update_vbos_time = SDL_GetTicks() - update_vbos_time;
+
     //draw scene
 
-    draw_scene_time = SDL_GetTicks();   
-    
+    draw_scene_time = SDL_GetTicks();
+
     drawScene(dt);
+
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glEnable(GL_TEXTURE_2D);
 
     draw_scene_time = SDL_GetTicks() - draw_scene_time;
 
@@ -2206,7 +2226,7 @@ void Gource::draw(float t, float dt) {
 
     //switch to 2D, preserve current state
     display.push2D();
-    
+
     root->drawNames(font);
 
     //switch back
@@ -2398,8 +2418,8 @@ void Gource::draw(float t, float dt) {
         font.print(1,280," - Edges: %u ms",   draw_edges_time);
         font.print(1,300," - Shadows: %u ms", draw_shadows_time);
         font.print(1,320," - Actions: %u ms", draw_actions_time);
-        font.print(1,340," - Files: %u ms",   draw_files_time);        
-        font.print(1,360," - Users: %u ms",   draw_users_time);        
+        font.print(1,340," - Files: %u ms",   draw_files_time);
+        font.print(1,360," - Users: %u ms",   draw_users_time);
         font.print(1,380," - Bloom: %u ms",   draw_bloom_time);
         font.print(1,400,"Text: %u ms",       name_draw_time);
         font.print(1,420,"Mouse Trace: %u ms", trace_time);
@@ -2410,12 +2430,12 @@ void Gource::draw(float t, float dt) {
             dirNodeTree->item_count, dirNodeTree->node_count, dirNodeTree->max_node_depth);
         font.print(1,520,"Dir Bounds Ratio: %.2f, %.5f", dir_bounds.width() / dir_bounds.height(), rotation_remaining_angle);
         font.print(1,540,"String Hash Seed: %d", gStringHashSeed);
-        
+
         if(!gGourceSettings.ffp) {
             font.print(1,560,"File VBO: %d/%d vertices, %d texture changes", file_vbo.vertices(), file_vbo.capacity(), file_vbo.texture_changes());
             font.print(1,580,"User VBO: %d/%d vertices, %d texture changes", user_vbo.vertices(), user_vbo.capacity(), user_vbo.texture_changes());
         }
-    
+
         if(selectedUser != 0) {
 
         }

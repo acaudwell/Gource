@@ -910,36 +910,36 @@ void RDirNode::drawDirName(const FXFont& dirfont) const{
 void RDirNode::calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection) {
 
     static GLdouble screen_x, screen_y, screen_z;
- 
+
     gluProject( pos.x, pos.y, 0.0f, modelview, projection, viewport, &screen_x, &screen_y, &screen_z);
-    screen_y = (float)viewport[3] - screen_y;   
+    screen_y = (float)viewport[3] - screen_y;
     projected_pos.x = screen_x;
     projected_pos.y = screen_y;
 
     gluProject( spos.x, spos.y, 0.0f, modelview, projection, viewport, &screen_x, &screen_y, &screen_z);
-    screen_y = (float)viewport[3] - screen_y;   
+    screen_y = (float)viewport[3] - screen_y;
     projected_spos.x = screen_x;
     projected_spos.y = screen_y;
 
     static vec2f selected_offset(5.5f, -2.0f);
     static vec2f unselected_offset(5.5f, -1.0f);
-    
+
     if(!gGourceSettings.hide_filenames) {
-    
+
         //first pass - calculate positions of names
         for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
             RFile* f = *it;
-            
+
             vec2f text_pos = f->getAbsolutePos();
             text_pos.x += 5.5f;
-            
+
             if(f->isSelected())
                 text_pos.y -= 2.0f;
             else
                 text_pos.y -= 1.0f;
-            
+
             gluProject( text_pos.x, text_pos.y, 0.0f, modelview, projection, viewport, &screen_x, &screen_y, &screen_z);
-            screen_y = (float)viewport[3] - screen_y;   
+            screen_y = (float)viewport[3] - screen_y;
             f->screenpos.x = screen_x;
             f->screenpos.y = screen_y;
         }
@@ -1028,6 +1028,25 @@ void RDirNode::updateFilesVBO(qbuf2f& buffer, float dt) const{
     }
 }
 
+void RDirNode::updateBloomVBO(bloom_buf& buffer, float dt) {
+
+    if(in_frustum && isVisible()) {
+
+        float bloom_radius   = dir_radius * 2.0 * gGourceSettings.bloom_multiplier;
+        float bloom_diameter = bloom_radius * 2.0;
+        vec4f bloom_col      = col * gGourceSettings.bloom_intensity;
+
+        vec4f bloom_texcoords(bloom_radius, pos.x, pos.y, 0.0f);
+
+        buffer.add(0, pos, vec2f(bloom_diameter, bloom_diameter), vec4f(bloom_col.x, bloom_col.y, bloom_col.z, 1.0f), bloom_texcoords);
+    }
+
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
+        RDirNode* node = (*it);
+        node->updateBloomVBO(buffer,dt);
+    }
+}
+
 void RDirNode::drawFiles(float dt) const{
 
     if(in_frustum) {
@@ -1066,7 +1085,7 @@ const vec2f & RDirNode::getProjectedPos() const{
 void RDirNode::drawEdgeShadows(float dt) const{
 
     if(parent!=0 && (!gGourceSettings.hide_root || parent->parent !=0)) spline.drawShadow();
-    
+
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
 
@@ -1080,7 +1099,7 @@ void RDirNode::drawEdgeShadows(float dt) const{
 void RDirNode::drawEdges(float dt) const{
 
    if(parent!=0 && (!gGourceSettings.hide_root || parent->parent !=0)) spline.draw();
-   
+
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
 
@@ -1105,13 +1124,13 @@ void RDirNode::drawBloom(float dt){
             glTranslatef(pos.x, pos.y, 0.0);
 
             glBegin(GL_QUADS);
-            glTexCoord2f(1.0, 1.0);
+                glTexCoord2f(1.0f, 1.0f);
                 glVertex2f(bloom_radius,bloom_radius);
-                glTexCoord2f(1.0, 0.0);
+                glTexCoord2f(1.0f, 0.0f);
                 glVertex2f(bloom_radius,-bloom_radius);
-                glTexCoord2f(0.0, 0.0);
+                glTexCoord2f(0.0f, 0.0f);
                 glVertex2f(-bloom_radius,-bloom_radius);
-                glTexCoord2f(0.0, 1.0);
+                glTexCoord2f(0.0f, 1.0f);
                 glVertex2f(-bloom_radius,bloom_radius);
             glEnd();
         glPopMatrix();

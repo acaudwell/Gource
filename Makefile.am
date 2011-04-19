@@ -59,7 +59,7 @@ CPPFLAGS = -DSDLAPP_RESOURCE_DIR=\"$(pkgdatadir)\"
 dist_pkgdata_DATA = data/beam.png data/bloom.tga data/bloom_alpha.tga data/cursor.png data/file.png data/no_photo.png data/gource.style
 
 shadersdir = $(pkgdatadir)/shaders
-dist_shaders_DATA = data/shaders/shadow.vert data/shaders/shadow.frag
+dist_shaders_DATA = data/shaders/shadow.vert data/shaders/shadow.frag data/shaders/bloom.vert data/shaders/bloom.frag
 
 install-data-hook:
 	mkdir -p -m 755 ${DESTDIR}/$(mandir)/man1

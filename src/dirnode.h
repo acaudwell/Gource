@@ -28,6 +28,7 @@
 #include "spline.h"
 #include "file.h"
 #include "vbo.h"
+#include "bloom.h"
 
 #include <list>
 #include <set>
@@ -189,6 +190,7 @@ public:
     void checkFrustum(const Frustum & frustum);
 
     void updateFilesVBO(qbuf2f& buffer, float dt) const;
+    void updateBloomVBO(bloom_buf& buffer, float dt);
 
     void drawShadows(float dt) const;
     void drawFiles(float dt) const;
