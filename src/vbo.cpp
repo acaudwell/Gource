@@ -156,8 +156,6 @@ void qbuf2f::draw() {
         if(end_index==last_index) break;
     }
     
-    glDrawArrays(GL_QUADS, 0, vertex_count);
-
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
