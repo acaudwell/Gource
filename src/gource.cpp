@@ -2198,6 +2198,12 @@ void Gource::draw(float t, float dt) {
 
     root->calcScreenPos(viewport, modelview, projection);
 
+    //need to calc screen pos of selected file if hiding other
+    //file names
+    if(selectedFile!=0 && gGourceSettings.hide_filenames) {
+        selectedFile->calcScreenPos(selectedFile->getDir()->getPos()+vec2f(5.5f, -2.0f));
+    }
+
     screen_project_time = SDL_GetTicks() - screen_project_time;
 
     //update file and user vbos
