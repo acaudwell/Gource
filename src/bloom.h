@@ -36,7 +36,7 @@ public:
     char padding[22];
 };
 
-class bloom_buf {
+class bloombuf {
 
     bloom_vertex* data;
     int data_size;
@@ -48,8 +48,8 @@ class bloom_buf {
 
     void resize(int new_size);
 public:
-    bloom_buf(int data_size = 1);
-    ~bloom_buf();
+    bloombuf(int data_size = 1);
+    ~bloombuf();
 
     void reset();
 

@@ -17,9 +17,9 @@
 
 #include "bloom.h"
 
-//bloom_buf
+//bloombuf
 
-bloom_buf::bloom_buf(int data_size) : data_size(data_size) {
+bloombuf::bloombuf(int data_size) : data_size(data_size) {
     bufferid     = 0;
     buffer_size  = 0;
     vertex_count = 0;
@@ -29,12 +29,12 @@ bloom_buf::bloom_buf(int data_size) : data_size(data_size) {
     //fprintf(stderr, "size of bloom_vertex = %d\n", sizeof(bloom_vertex));
 }
 
-bloom_buf::~bloom_buf() {
+bloombuf::~bloombuf() {
     if(bufferid !=0) glDeleteBuffers(1, &bufferid);
     delete[] data;
 }
 
-void bloom_buf::resize(int new_size) {
+void bloombuf::resize(int new_size) {
 
     bloom_vertex* _data = data;
 
@@ -49,26 +49,24 @@ void bloom_buf::resize(int new_size) {
     delete[] _data;
 }
 
-void bloom_buf::reset() {
+void bloombuf::reset() {
     vertex_count = 0;
 }
 
-size_t bloom_buf::vertices() {
+size_t bloombuf::vertices() {
     return vertex_count;
 }
 
-size_t bloom_buf::capacity() {
+size_t bloombuf::capacity() {
     return data_size;
 }
 
-void bloom_buf::add(GLuint textureid, const vec2f& pos, const vec2f& dims, const vec4f& colour, const vec4f& texcoord) {
+void bloombuf::add(GLuint textureid, const vec2f& pos, const vec2f& dims, const vec4f& colour, const vec4f& texcoord) {
 
-    vec2f offset = pos - dims * 0.5;
-
-    bloom_vertex v1(offset,                       colour, texcoord);
-    bloom_vertex v2(offset + vec2f(dims.x, 0.0f), colour, texcoord);
-    bloom_vertex v3(offset + dims,                colour, texcoord);
-    bloom_vertex v4(offset + vec2f(0.0f, dims.y), colour, texcoord);
+    bloom_vertex v1(pos,                       colour, texcoord);
+    bloom_vertex v2(pos + vec2f(dims.x, 0.0f), colour, texcoord);
+    bloom_vertex v3(pos + dims,                colour, texcoord);
+    bloom_vertex v4(pos + vec2f(0.0f, dims.y), colour, texcoord);
 
     int i = vertex_count;
 
@@ -84,7 +82,7 @@ void bloom_buf::add(GLuint textureid, const vec2f& pos, const vec2f& dims, const
     data[i+3] = v4;
 }
 
-void bloom_buf::update() {
+void bloombuf::update() {
     if(vertex_count==0) return;
 
     //note possibly better to have a queue and cycle them here
@@ -105,7 +103,7 @@ void bloom_buf::update() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void bloom_buf::draw() {
+void bloombuf::draw() {
     if(vertex_count==0 || bufferid==0) return;
 
     glBindBuffer(GL_ARRAY_BUFFER, bufferid);
