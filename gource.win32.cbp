@@ -37,6 +37,8 @@
 		<Unit filename="data\shaders\bloom.vert" />
 		<Unit filename="data\shaders\shadow.frag" />
 		<Unit filename="data\shaders\shadow.vert" />
+		<Unit filename="data\shaders\text.frag" />
+		<Unit filename="data\shaders\text.vert" />
 		<Unit filename="src\action.cpp" />
 		<Unit filename="src\action.h" />
 		<Unit filename="src\apache.cpp" />
@@ -58,6 +60,7 @@
 		<Unit filename="src\core\frustum.h" />
 		<Unit filename="src\core\fxfont.cpp" />
 		<Unit filename="src\core\fxfont.h" />
+		<Unit filename="src\core\gl.h" />
 		<Unit filename="src\core\logger.cpp" />
 		<Unit filename="src\core\logger.h" />
 		<Unit filename="src\core\mousecursor.cpp" />
@@ -83,8 +86,12 @@
 		<Unit filename="src\core\shader.h" />
 		<Unit filename="src\core\stringhash.cpp" />
 		<Unit filename="src\core\stringhash.h" />
+		<Unit filename="src\core\text_vbo.cpp" />
+		<Unit filename="src\core\text_vbo.h" />
 		<Unit filename="src\core\texture.cpp" />
 		<Unit filename="src\core\texture.h" />
+		<Unit filename="src\core\vbo.cpp" />
+		<Unit filename="src\core\vbo.h" />
 		<Unit filename="src\core\vectors.h" />
 		<Unit filename="src\custom.cpp" />
 		<Unit filename="src\custom.h" />
@@ -130,8 +137,6 @@
 		<Unit filename="src\tinyxml\tinyxmlparser.cpp" />
 		<Unit filename="src\user.cpp" />
 		<Unit filename="src\user.h" />
-		<Unit filename="src\vbo.cpp" />
-		<Unit filename="src\vbo.h" />
 		<Unit filename="src\zoomcamera.cpp" />
 		<Unit filename="src\zoomcamera.h" />
 		<Extensions>

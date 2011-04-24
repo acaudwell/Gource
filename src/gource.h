@@ -48,7 +48,7 @@
 #include "apache.h"
 #include "svn.h"
 
-#include "vbo.h"
+#include "core/vbo.h"
 #include "bloom.h"
 #include "slider.h"
 #include "textbox.h"
@@ -112,9 +112,9 @@ class Gource : public SDLApp {
     RUser* hoverUser;
     RUser* selectedUser;
 
-    qbuf2f    user_vbo;
-    qbuf2f    file_vbo;
-    bloom_buf bloom_vbo;
+    quadbuf  user_vbo;
+    quadbuf  file_vbo;
+    bloombuf bloom_vbo;
 
     GLuint selectionDepth;
 
@@ -128,8 +128,12 @@ class Gource : public SDLApp {
     TextureResource* logotex;
     TextureResource* backgroundtex;
     TextureResource* usertex;
+
     Shader*          shadow_shader;
+    Shader*          text_shader;
     Shader*          bloom_shader;
+
+    float font_texel_size;
 
     TextBox textbox;
 
@@ -165,7 +169,10 @@ class Gource : public SDLApp {
     Uint32 draw_scene_time;
     Uint32 logic_time;
     Uint32 trace_time;
-    Uint32 name_draw_time;
+    Uint32 text_time;
+    Uint32 text_update_time;
+    Uint32 text_vbo_commit_time;
+    Uint32 text_vbo_draw_time;
 
     bool track_users;
 

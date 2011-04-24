@@ -1,7 +1,8 @@
 0.34:
  * Now using VBOs and shaders for faster rendering when OpenGL 2.0 is available.
- * Eliminated most bloom colour banding artifacts (requires OpenGL 2.0).
+ * Eliminated bloom colour banding artifacts (requires OpenGL 2.0).
  * New font rendering library derived from FTGL (FTGL no longer required).
+ * Single pass font/shadow rendering (with lots of help from Chris Forbes).
  * Added --no-vsync option.
 
 0.33:

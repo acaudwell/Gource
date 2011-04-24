@@ -52,12 +52,18 @@ Gource::Gource(FrameExporter* exporter) {
     beamtex  = texturemanager.grab("beam.png");
     usertex  = texturemanager.grab("no_photo.png");
 
-    shadow_shader = bloom_shader = 0;
+    shadow_shader = text_shader = bloom_shader = 0;
 
     if(!gGourceSettings.ffp) {
-        shadow_shader = shadermanager.grab("shadow");
-        bloom_shader  = shadermanager.grab("bloom");
+        shadow_shader      = shadermanager.grab("shadow");
+        bloom_shader       = shadermanager.grab("bloom");
+        text_shader        = shadermanager.grab("text");
     }
+
+    //calculate once
+    GLint max_texture_size;
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
+    font_texel_size = 1.0f / (float) std::min( 512, max_texture_size );
 
     logotex = 0;
     backgroundtex = 0;
@@ -2032,7 +2038,7 @@ void Gource::updateVBOs(float dt) {
         float alpha = user->getAlpha();
         vec3f col   = user->getColour();
 
-        user_vbo.add(user->graphic->textureid, user->getPos(), vec2f(user->size, user->graphic_ratio*user->size), vec4f(col.x, col.y, col.z, alpha));
+        user_vbo.add(user->graphic->textureid, user->getPos() - user->dims*0.5f, user->dims, vec4f(col.x, col.y, col.z, alpha));
     }
     user_vbo.update();
 
@@ -2055,6 +2061,7 @@ void Gource::drawFileShadows(float dt) {
     if(!gGourceSettings.ffp) {
 
         shadow_shader->use();
+        shadow_shader->setFloat("shadow_strength", 0.5);
 
         glBindTexture(GL_TEXTURE_2D, gGourceSettings.file_graphic->textureid);
 
@@ -2079,6 +2086,7 @@ void Gource::drawUserShadows(float dt) {
     if(!gGourceSettings.ffp) {
 
         shadow_shader->use();
+        shadow_shader->setFloat("shadow_strength", 0.5);
 
         vec2f shadow_offset = vec2f(2.0, 2.0) * gGourceSettings.user_scale;
 
@@ -2198,10 +2206,14 @@ void Gource::draw(float t, float dt) {
 
     root->calcScreenPos(viewport, modelview, projection);
 
+    for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
+        it->second->calcScreenPos(viewport, modelview, projection);
+    }
+
     //need to calc screen pos of selected file if hiding other
     //file names
     if(selectedFile!=0 && gGourceSettings.hide_filenames) {
-        selectedFile->calcScreenPos(selectedFile->getDir()->getPos()+vec2f(5.5f, -2.0f));
+        selectedFile->calcScreenPos(viewport, modelview, projection);
     }
 
     screen_project_time = SDL_GetTicks() - screen_project_time;
@@ -2228,21 +2240,53 @@ void Gource::draw(float t, float dt) {
 
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    name_draw_time = SDL_GetTicks();
+    text_time = text_update_time = SDL_GetTicks();
 
     //switch to 2D, preserve current state
     display.push2D();
 
+    if(!gGourceSettings.ffp) {
+        fontmanager.startBuffer();
+    }
+
+    font.roundCoordinates(false);
+
     root->drawNames(font);
 
-    //switch back
-    display.pop2D();
-
-    if(!(gGourceSettings.hide_usernames || gGourceSettings.hide_users)) {
+   if(!(gGourceSettings.hide_usernames || gGourceSettings.hide_users)) {
         for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
             it->second->drawName();
         }
     }
+
+    text_update_time = SDL_GetTicks() - text_update_time;
+
+    text_vbo_commit_time = 0;
+    text_vbo_draw_time   = 0;
+
+    if(!gGourceSettings.ffp) {
+
+        text_vbo_commit_time = SDL_GetTicks();
+
+        fontmanager.commitBuffer();
+
+        text_vbo_commit_time = SDL_GetTicks() - text_vbo_commit_time;
+
+        text_vbo_draw_time = SDL_GetTicks();
+
+        text_shader->use();
+        text_shader->setFloat("shadow_strength", 0.7);
+        text_shader->setFloat("texel_size", font_texel_size);
+
+        fontmanager.drawBuffer();
+
+        glUseProgramObjectARB(0);
+
+        text_vbo_draw_time = SDL_GetTicks() - text_vbo_draw_time;
+    }
+
+    //switch back
+    display.pop2D();
 
     //draw selected item names again so they are over the top
     if(selectedUser !=0) selectedUser->drawName();
@@ -2253,7 +2297,7 @@ void Gource::draw(float t, float dt) {
         display.pop2D();
     }
 
-    name_draw_time = SDL_GetTicks() - name_draw_time;
+    text_time = SDL_GetTicks() - text_time;
 
     if(debug) {
         glDisable(GL_TEXTURE_2D);
@@ -2322,6 +2366,8 @@ void Gource::draw(float t, float dt) {
 
         glPopMatrix();
     }
+
+    font.roundCoordinates(true);
 
     if(splash>0.0f) {
         int logowidth = fontlarge.getWidth("Gource");
@@ -2399,7 +2445,7 @@ void Gource::draw(float t, float dt) {
     //debug info
 
     if(debug) {
-        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        font.setAlpha(1.0f);
 
         glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
@@ -2427,20 +2473,24 @@ void Gource::draw(float t, float dt) {
         font.print(1,340," - Files: %u ms",   draw_files_time);
         font.print(1,360," - Users: %u ms",   draw_users_time);
         font.print(1,380," - Bloom: %u ms",   draw_bloom_time);
-        font.print(1,400,"Text: %u ms",       name_draw_time);
-        font.print(1,420,"Mouse Trace: %u ms", trace_time);
-        font.print(1,440,"Logic Time: %u ms", logic_time);
-        font.print(1,460,"File Inner Loops: %d", gGourceFileInnerLoops);
-        font.print(1,480,"User Inner Loops: %d", gGourceUserInnerLoops);
-        font.print(1,500,"Dir Inner Loops: %d (QTree items = %d, nodes = %d, max node depth = %d)", gGourceDirNodeInnerLoops,
+        font.print(1,400,"Text: %u ms",       text_time);
+        font.print(1,420,"- Update: %u ms",   text_update_time);
+        font.print(1,440,"- VBO Commit: %u ms", text_vbo_commit_time);
+        font.print(1,460,"- VBO Draw: %u ms",   text_vbo_draw_time);
+        font.print(1,480,"Mouse Trace: %u ms", trace_time);
+        font.print(1,500,"Logic Time: %u ms", logic_time);
+        font.print(1,520,"File Inner Loops: %d", gGourceFileInnerLoops);
+        font.print(1,540,"User Inner Loops: %d", gGourceUserInnerLoops);
+        font.print(1,560,"Dir Inner Loops: %d (QTree items = %d, nodes = %d, max node depth = %d)", gGourceDirNodeInnerLoops,
             dirNodeTree->item_count, dirNodeTree->node_count, dirNodeTree->max_node_depth);
-        font.print(1,520,"Dir Bounds Ratio: %.2f, %.5f", dir_bounds.width() / dir_bounds.height(), rotation_remaining_angle);
-        font.print(1,540,"String Hash Seed: %d", gStringHashSeed);
+        font.print(1,580,"Dir Bounds Ratio: %.2f, %.5f", dir_bounds.width() / dir_bounds.height(), rotation_remaining_angle);
+        font.print(1,600,"String Hash Seed: %d", gStringHashSeed);
 
         if(!gGourceSettings.ffp) {
-            font.print(1,560,"File VBO: %d/%d vertices, %d texture changes", file_vbo.vertices(), file_vbo.capacity(), file_vbo.texture_changes());
-            font.print(1,580,"User VBO: %d/%d vertices, %d texture changes", user_vbo.vertices(), user_vbo.capacity(), user_vbo.texture_changes());
-            font.print(1,600,"Bloom VBO: %d/%d vertices", bloom_vbo.vertices(), bloom_vbo.capacity());
+            font.print(1,620,"Text VBO: %d/%d vertices, %d texture changes", fontmanager.font_vbo.vertices(), fontmanager.font_vbo.capacity(), fontmanager.font_vbo.texture_changes());
+            font.print(1,640,"File VBO: %d/%d vertices, %d texture changes", file_vbo.vertices(), file_vbo.capacity(), file_vbo.texture_changes());
+            font.print(1,660,"User VBO: %d/%d vertices, %d texture changes", user_vbo.vertices(), user_vbo.capacity(), user_vbo.texture_changes());
+            font.print(1,680,"Bloom VBO: %d/%d vertices", bloom_vbo.vertices(), bloom_vbo.capacity());
         }
 
         if(selectedUser != 0) {
@@ -2448,7 +2498,7 @@ void Gource::draw(float t, float dt) {
         }
 
         if(selectedFile != 0) {
-            font.print(1,620,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
+            font.print(1,700,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
                     selectedFile->getDir()->fileCount(), selectedFile->getDir()->visibleFileCount());
         }
     }
