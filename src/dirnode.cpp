@@ -892,7 +892,7 @@ void RDirNode::logic(float dt) {
     since_last_node_change += dt;
 }
 
-void RDirNode::drawDirName(const FXFont& dirfont) const{
+void RDirNode::drawDirName(FXFont& dirfont) const{
     if(parent==0) return;
     if(gGourceSettings.hide_dirnames) return;
 
@@ -900,10 +900,11 @@ void RDirNode::drawDirName(const FXFont& dirfont) const{
 
     float alpha = gGourceSettings.highlight_dirs ? 1.0 : std::max(0.0f, 5.0f - since_last_node_change) / 5.0f;
 
-    glColor4f(1.0, 1.0, 1.0, alpha);
+    //glColor4f(1.0, 1.0, 1.0, alpha);
 
     vec2f mid = spline.getMidPoint();
 
+    dirfont.setAlpha(alpha);
     dirfont.draw(mid.x, mid.y, path_token);
 }
 
@@ -929,19 +930,7 @@ void RDirNode::calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* pro
         //first pass - calculate positions of names
         for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
             RFile* f = *it;
-
-            vec2f text_pos = f->getAbsolutePos();
-            text_pos.x += 5.5f;
-
-            if(f->isSelected())
-                text_pos.y -= 2.0f;
-            else
-                text_pos.y -= 1.0f;
-
-            gluProject( text_pos.x, text_pos.y, 0.0f, modelview, projection, viewport, &screen_x, &screen_y, &screen_z);
-            screen_y = (float)viewport[3] - screen_y;
-            f->screenpos.x = screen_x;
-            f->screenpos.y = screen_y;
+            f->calcScreenPos(viewport, modelview, projection);
         }
     }
 
@@ -951,7 +940,7 @@ void RDirNode::calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* pro
     }
 }
 
-void RDirNode::drawNames(const FXFont& dirfont) {
+void RDirNode::drawNames(FXFont& dirfont) {
 
     if(!gGourceSettings.hide_dirnames && isVisible()) {
         drawDirName(dirfont);
@@ -962,7 +951,7 @@ void RDirNode::drawNames(const FXFont& dirfont) {
         if(!(gGourceSettings.hide_filenames || gGourceSettings.hide_files) && in_frustum) {
             for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
                 RFile* f = *it;
-                f->drawName();
+                if(!f->isSelected()) f->drawName();
             }
         }
 
@@ -1008,7 +997,7 @@ void RDirNode::drawShadows(float dt) const{
     }
 }
 
-void RDirNode::updateFilesVBO(qbuf2f& buffer, float dt) const{
+void RDirNode::updateFilesVBO(quadbuf& buffer, float dt) const{
 
     if(in_frustum) {
 
@@ -1018,7 +1007,7 @@ void RDirNode::updateFilesVBO(qbuf2f& buffer, float dt) const{
             vec3f col   = f->getColour();
             float alpha = f->getAlpha();
 
-            buffer.add(f->graphic->textureid, f->getAbsolutePos(), vec2f(f->size, f->graphic_ratio*f->size), vec4f(col.x, col.y, col.z, alpha));
+            buffer.add(f->graphic->textureid, f->getAbsolutePos() - f->dims*0.5f, f->dims, vec4f(col.x, col.y, col.z, alpha));
         }
     }
 
@@ -1028,7 +1017,7 @@ void RDirNode::updateFilesVBO(qbuf2f& buffer, float dt) const{
     }
 }
 
-void RDirNode::updateBloomVBO(bloom_buf& buffer, float dt) {
+void RDirNode::updateBloomVBO(bloombuf& buffer, float dt) {
 
     if(in_frustum && isVisible()) {
 
@@ -1038,7 +1027,9 @@ void RDirNode::updateBloomVBO(bloom_buf& buffer, float dt) {
 
         vec4f bloom_texcoords(bloom_radius, pos.x, pos.y, 0.0f);
 
-        buffer.add(0, pos, vec2f(bloom_diameter, bloom_diameter), vec4f(bloom_col.x, bloom_col.y, bloom_col.z, 1.0f), bloom_texcoords);
+        vec2f bloom_dims(bloom_diameter, bloom_diameter);
+
+        buffer.add(0, pos - bloom_dims*0.5f,bloom_dims, vec4f(bloom_col.x, bloom_col.y, bloom_col.z, 1.0f), bloom_texcoords);
     }
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {

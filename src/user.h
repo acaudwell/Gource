@@ -56,7 +56,7 @@ class RUser : public Pawn {
 
     void updateFont();
     const vec3f& getNameColour() const;
-    void drawNameText(float alpha) const;
+    void drawNameText(float alpha);
 public:
     RUser(const std::string& name, vec2f pos, int tagid);
 
@@ -83,6 +83,9 @@ public:
     void applyForceToActions();
     void applyForceAction(RAction* action);
     void applyForceUser(RUser* u);
+
+    void calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection);
+
     void logic(float t, float dt);
 
     void drawActions(float dt);

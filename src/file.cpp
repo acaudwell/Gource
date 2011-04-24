@@ -50,18 +50,20 @@ RFile::RFile(const std::string & name, const vec3f & colour, const vec2f & pos, 
 
     if(!file_selected_font.initialized()) {
         file_selected_font = fontmanager.grab("FreeSans.ttf", 18);
-        file_selected_font.dropShadow(false);
-        file_selected_font.roundCoordinates(true);        
+        file_selected_font.dropShadow(true);
+        file_selected_font.roundCoordinates(false);
+        file_selected_font.setColour(vec4f(1.0f, 1.0f, 0.0f, 1.0f));
     }
-    
+
     if(!file_font.initialized()) {
         file_font = fontmanager.grab("FreeSans.ttf", 14);
-        file_font.dropShadow(false);
-        file_font.roundCoordinates(true);
+        file_font.dropShadow(true);
+        file_font.roundCoordinates(false);
+        file_font.setColour(vec4f(1.0f, 1.0f, 1.0f, 1.0f));
     }
-    
+
     //namelist = glGenLists(1);
-    label = 0;
+    //label = 0;
     setSelected(false);
 
     dir = 0;
@@ -101,7 +103,7 @@ bool RFile::overlaps(const vec2f& pos) const {
 }
 
 void RFile::setFilename(const std::string& abs_file_path) {
-    
+
     fullpath = abs_file_path;
 
     size_t pos = fullpath.rfind('/');
@@ -127,13 +129,13 @@ int call_count = 0;
 
 void RFile::setSelected(bool selected) {
 //    if(font.getFTFont()!=0 && this->selected==selected) return;
-    if(label && this->selected==selected) return;
+    //if(label && this->selected==selected) return;
 
-    if(!label) label = new FXLabel();
-   
+//    if(!label) label = new FXLabel();
+
     Pawn::setSelected(selected);
 
-    updateLabel();
+//    updateLabel();
 
     //pre-compile name display list
     //glNewList(namelist, GL_COMPILE);
@@ -142,13 +144,13 @@ void RFile::setSelected(bool selected) {
 }
 
 void RFile::updateLabel() {
-    bool show_file_ext = gGourceSettings.file_extensions;
+/*    bool show_file_ext = gGourceSettings.file_extensions;
 
     if(selected) {
         label->setText(file_selected_font, (selected || !show_file_ext) ? name : ext);
     } else {
         label->setText(file_font,          (selected || !show_file_ext) ? name : ext);
-    }
+    }*/
 }
 
 void RFile::colourize() {
@@ -270,31 +272,36 @@ void RFile::setHidden(bool hidden) {
     Pawn::setHidden(hidden);
 }
 
-void RFile::drawNameText(float alpha) const {
+void RFile::calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection) {
 
+    static GLdouble screen_x, screen_y, screen_z;
+
+    vec2f text_pos = getAbsolutePos();
+    text_pos.x += 5.5f;
+
+    if(selected)
+        text_pos.y -= 2.0f;
+    else
+        text_pos.y -= 1.0f;
+
+    gluProject( text_pos.x, text_pos.y, 0.0f, modelview, projection, viewport, &screen_x, &screen_y, &screen_z);
+    screen_y = (float)viewport[3] - screen_y;
+
+    screenpos.x = screen_x;
+    screenpos.y = screen_y;
+}
+
+void RFile::drawNameText(float alpha) {
     if(!selected && alpha <= 0.01) return;
 
-    vec3f nameCol    = getNameColour();
     float name_alpha = selected ? 1.0 : alpha;
-    
-    glPushMatrix();
 
-        glTranslatef(screenpos.x, screenpos.y, 0.0);
-
-        //hard coded drop shadow
-        glPushMatrix();
-            glTranslatef(1.0, 1.0, 0.0);
-            glColor4f(0.0, 0.0, 0.0, name_alpha * 0.7f);
-            //glCallList(namelist);
-            label->draw();
-        glPopMatrix();
-
-        //draw name
-        glColor4f(nameCol.x, nameCol.y, nameCol.z, name_alpha);
-        //glCallList(namelist);
-        label->draw();
-
-    glPopMatrix();
+    if(selected) {
+        file_selected_font.draw(screenpos.x, screenpos.y, name);
+    } else {
+        file_font.setAlpha(name_alpha);
+        file_font.draw(screenpos.x, screenpos.y, gGourceSettings.file_extensions ? ext : name);
+    }
 }
 
 void RFile::draw(float dt) {

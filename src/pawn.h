@@ -52,12 +52,12 @@ protected:
     int tagid;
 
     FXFont font;
-   
+
     bool mouseover;
 
     virtual bool nameVisible() const;
 
-    virtual void drawNameText(float alpha) const;
+    virtual void drawNameText(float alpha) {};
     virtual const vec3f& getNameColour() const;
 protected:
     bool selected;
@@ -66,6 +66,7 @@ public:
     float graphic_ratio;
     TextureResource* graphic;
     vec3f screenpos;
+    vec2f dims;
 
     Pawn(const std::string& name, vec2f pos, int tagid);
     const vec2f & getPos() const { return pos; }
@@ -98,7 +99,7 @@ public:
     void draw(float dt);
     void drawShadow(float dt);
 
-    void drawName() const;
+    void drawName();
 };
 
 extern float gGourceShadowStrength;

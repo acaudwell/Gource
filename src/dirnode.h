@@ -22,12 +22,12 @@
 #include "core/bounds.h"
 #include "core/quadtree.h"
 #include "core/pi.h"
+#include "core/vbo.h"
 
 #include "gource_settings.h"
 
 #include "spline.h"
 #include "file.h"
-#include "vbo.h"
 #include "bloom.h"
 
 #include <list>
@@ -97,7 +97,7 @@ class RDirNode : public QuadItem {
     void updateFilePositions();
 
     void adjustPath();
-    void drawDirName(const FXFont& dirfont) const;
+    void drawDirName(FXFont& dirfont) const;
 public:
     RDirNode(RDirNode* parent, const std::string & abspath);
     ~RDirNode();
@@ -189,14 +189,14 @@ public:
 
     void checkFrustum(const Frustum & frustum);
 
-    void updateFilesVBO(qbuf2f& buffer, float dt) const;
-    void updateBloomVBO(bloom_buf& buffer, float dt);
+    void updateFilesVBO(quadbuf& buffer, float dt) const;
+    void updateBloomVBO(bloombuf& buffer, float dt);
 
     void drawShadows(float dt) const;
     void drawFiles(float dt) const;
     void drawBloom(float dt);
 
-    void drawNames(const FXFont& dirfont);
+    void drawNames(FXFont& dirfont);
 
     void calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection);
 

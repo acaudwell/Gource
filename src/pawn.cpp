@@ -89,6 +89,7 @@ void Pawn::setGraphic(TextureResource* graphic) {
     }
 
     this->graphic = graphic;
+    this->dims = vec2f(size, size*graphic_ratio);
 }
 
 
@@ -113,26 +114,11 @@ void Pawn::calcScreenPos(const vec2f& offset) {
     screenpos = display.project(vec3f(pos.x+offset.x, pos.y+offset.y, 0.0f));
 }
 
-void Pawn::drawNameText(float alpha) const {
-
-    if(alpha>0.0) {
-        vec3f nameCol = getNameColour();
-
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-
-        glColor4f(nameCol.x, nameCol.y, nameCol.z, alpha);
-
-        font.draw(pos.x - ((float)namewidth/2.0), pos.y - size*1.2, name.c_str()); // above player
-    }
-}
-
-
 bool Pawn::nameVisible() const {
     return (!selected && name_interval < 0.0 || isHidden()) ? false : true;
 }
 
-void Pawn::drawName() const {
+void Pawn::drawName() {
     if(!nameVisible()) return;
 
     float done = nametime - name_interval;
