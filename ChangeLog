@@ -4,6 +4,8 @@
  * New font rendering library derived from FTGL (FTGL no longer required).
  * Single pass font/shadow rendering (with lots of help from Chris Forbes).
  * Added --no-vsync option.
+ * Fixed bug where tree is out of alignment with object positions in windowed
+   mode due to using the wrong display dimensions internally.
 
 0.33:
  * Added --hide root option to not draw branches from the root directory.
