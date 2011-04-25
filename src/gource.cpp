@@ -26,8 +26,10 @@ int gGourceUserInnerLoops = 0;
 Gource::Gource(FrameExporter* exporter) {
 
     this->logfile = gGourceSettings.path;
-
     commitlog = 0;
+
+    //disable OpenGL 2.0 functions if not supported
+    if(!GLEW_VERSION_2_0) gGourceSettings.ffp = true;
 
     if(!gGourceSettings.file_graphic) {
         gGourceSettings.file_graphic = texturemanager.grab("file.png");
@@ -794,7 +796,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
         }
 
         if (e->keysym.sym == SDLK_p) {
-            if(GLEW_VERSION_2_0) {
+            if(GLEW_VERSION_2_0 && bloom_shader != 0) {
                 gGourceSettings.ffp = !gGourceSettings.ffp;
             }
         }
@@ -2466,6 +2468,7 @@ void Gource::draw(float t, float dt) {
         font.print(1,200,"Update Tree: %u ms", update_dir_tree_time);
         font.print(1,220,"Update VBOs: %u ms", update_vbos_time);
         font.print(1,240,"Projection: %u ms",  screen_project_time);
+
         font.print(1,260,"Draw Scene: %u ms",  draw_scene_time);
         font.print(1,280," - Edges: %u ms",   draw_edges_time);
         font.print(1,300," - Shadows: %u ms", draw_shadows_time);
@@ -2481,8 +2484,10 @@ void Gource::draw(float t, float dt) {
         font.print(1,500,"Logic Time: %u ms", logic_time);
         font.print(1,520,"File Inner Loops: %d", gGourceFileInnerLoops);
         font.print(1,540,"User Inner Loops: %d", gGourceUserInnerLoops);
+
         font.print(1,560,"Dir Inner Loops: %d (QTree items = %d, nodes = %d, max node depth = %d)", gGourceDirNodeInnerLoops,
             dirNodeTree->item_count, dirNodeTree->node_count, dirNodeTree->max_node_depth);
+
         font.print(1,580,"Dir Bounds Ratio: %.2f, %.5f", dir_bounds.width() / dir_bounds.height(), rotation_remaining_angle);
         font.print(1,600,"String Hash Seed: %d", gStringHashSeed);
 

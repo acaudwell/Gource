@@ -121,9 +121,6 @@ int main(int argc, char *argv[]) {
 
         display.init("Gource", gGourceSettings.display_width, gGourceSettings.display_height, gGourceSettings.fullscreen);
 
-        //disable OpenGL 2.0 functions if not supported
-        if(!GLEW_VERSION_2_0) gGourceSettings.ffp = true;
-
     } catch(SDLInitException& exception) {
 
         char errormsg[1024];
