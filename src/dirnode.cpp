@@ -1004,6 +1004,8 @@ void RDirNode::updateFilesVBO(quadbuf& buffer, float dt) const{
         for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
             RFile* f = *it;
 
+            if(f->isHidden()) continue;
+
             vec3f col   = f->getColour();
             float alpha = f->getAlpha();
 
