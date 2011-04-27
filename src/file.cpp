@@ -109,11 +109,11 @@ void RFile::setFilename(const std::string& abs_file_path) {
     size_t pos = fullpath.rfind('/');
 
     if(pos != std::string::npos) {
-        path = name.substr(0,pos+1);
-        name = name.substr(pos+1, std::string::npos);
+        path = fullpath.substr(0,pos+1);
+        name = fullpath.substr(pos+1, std::string::npos);
     } else {
         path = std::string("");
-        name = abs_file_path;
+        name = fullpath;
     }
 
     //trim name to just extension
@@ -237,6 +237,23 @@ void RFile::logic(float dt) {
     }
 
     if(isHidden() && !removing) elapsed = 0.0;
+}
+
+void RFile::rename(const std::string& rename_to) {
+    setFilename(rename_to);
+
+    if(path != dir->getPath()) {
+        //debugLog("remove from this dir\n");
+        dir->removeFile(this);
+
+        //debugLog("add to root\n");
+
+        vec2f old_dir_pos = dir->getPos();
+
+        dir->getRoot()->addFile(this);
+
+        pos += old_dir_pos - dir->getPos();
+    }
 }
 
 void RFile::touch(const vec3f & colour) {

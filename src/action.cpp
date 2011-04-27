@@ -113,3 +113,23 @@ void RemoveAction::logic(float dt) {
 ModifyAction::ModifyAction(RUser* source, RFile* target, float addedtime) : RAction(source, target, addedtime) {
     colour = vec3f(1.0, 0.7, 0.3);
 }
+
+RenameAction::RenameAction(RUser* source, RFile* target, const std::string& rename_to, float addedtime): RAction(source, target, addedtime) {
+    colour = vec3f(0.0, 1.0, 1.0);
+    this->rename_to = rename_to;
+}
+
+void RenameAction::logic(float dt) {
+    float old_progress = progress;
+
+    if(progress == 0.0) {
+
+        if(rename_to[rename_to.size()-1] == '/') {
+            rename_to += target->getName();
+        }
+
+        target->rename(rename_to);
+    }
+
+    RAction::logic(dt);
+}

@@ -68,7 +68,8 @@ public:
 
     float getAlpha() const;
 
-    void touch(const vec3f & colour);
+    void touch(const vec3f& colour);
+    void rename(const std::string& rename_to);
 
     void setSelected(bool selected);
 

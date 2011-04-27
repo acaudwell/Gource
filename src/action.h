@@ -63,5 +63,13 @@ public:
     ModifyAction(RUser* source, RFile* target, float addedtime);
 };
 
+class RenameAction : public RAction {
+    std::string rename_to;
+public:
+    RenameAction(RUser* source, RFile* target, const std::string& rename_to, float addedtime);
+
+    void logic(float dt);
+};
+
 #endif
 

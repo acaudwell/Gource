@@ -23,6 +23,7 @@
 #include "commitlog.h"
 
 #include <sstream>
+#include <set>
 
 #ifdef HAVE_LIBTINYXML
 #include <tinyxml.h>

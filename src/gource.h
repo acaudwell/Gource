@@ -213,7 +213,7 @@ class Gource : public SDLApp {
     void readLog();
 
     void processCommit(RCommit& commit, float t);
-    void addFileAction(const std::string& username, const std::string& action, RFile* file, float t);
+    void addFileAction(const std::string& username, const RCommitFile& cf, RFile* file, float t);
 
     std::string dateAtPosition(float percent);
 

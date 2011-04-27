@@ -34,10 +34,12 @@
 class RCommitFile {
 public:
     std::string filename;
+    std::string rename_to;
     std::string action;
     vec3f colour;
 
-    RCommitFile(const std::string& filename, const std::string& action, vec3f colour);
+    RCommitFile(const std::string& filename, const std::string& action,  const vec3f& colour);
+    RCommitFile(const std::string& rename_from, const std::string& rename_to, const std::string& action, const vec3f& colour);
 };
 
 class RCommit {
@@ -51,7 +53,10 @@ public:
     bool isValid();
 
     void addFile(const std::string& filename, const std::string& action);
-    void addFile(const std::string& filename, const std::string& action, vec3f colour);
+    void addFile(const std::string& filename, const std::string& action,  const vec3f& colour);
+
+    void addFile(const std::string& rename_from, const std::string& renamed_to, const std::string& action);
+    void addFile(const std::string& rename_from, const std::string& renamed_to, const std::string& action, const vec3f& colour);
 
     RCommit();
     void debug();

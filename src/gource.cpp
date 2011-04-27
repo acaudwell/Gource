@@ -1156,7 +1156,7 @@ void Gource::processCommit(RCommit& commit, float t) {
             //ignore unless it is a delete: we cannot 'add' or 'modify' a directory
             //as its not a physical entity in Gource, only files are.
 
-            if(cf.action != "D") continue;
+            if(cf.action != "D" && cf.action != "R") continue;
 
             std::list<RDirNode*> dirs;
 
@@ -1176,7 +1176,7 @@ void Gource::processCommit(RCommit& commit, float t) {
                 for(std::list<RFile*>::iterator it = dir_files.begin(); it != dir_files.end(); it++) {
                     RFile* file = *it;
 
-                    addFileAction(commit.username, cf.action, file, t);
+                    addFileAction(commit.username, cf, file, t);
                 }
             }
 
@@ -1193,11 +1193,11 @@ void Gource::processCommit(RCommit& commit, float t) {
             if(!file) continue;
         }
 
-        addFileAction(commit.username, cf.action, file, t);
+        addFileAction(commit.username, cf, file, t);
     }
 }
 
-void Gource::addFileAction(const std::string& username, const std::string& action, RFile* file, float t) {
+void Gource::addFileAction(const std::string& username, const RCommitFile& cf, RFile* file, float t) {
     //create user if havent yet. do it here to ensure at least one of there files
     //was added (incase we hit gGourceSettings.max_files)
 
@@ -1228,14 +1228,17 @@ void Gource::addFileAction(const std::string& username, const std::string& actio
 
     int commitNo = commit_seq++;
 
-    if(action == "D") {
+    if(cf.action == "A") {
+        userAction = new CreateAction(user, file, t);
+    } else if(cf.action == "M") {
+        userAction = new ModifyAction(user, file, t);
+    } else if(cf.action == "D") {
         userAction = new RemoveAction(user, file, t);
+    } else if(cf.action == "R" && !cf.rename_to.empty()) {
+        debugLog("Rename %s\n", file->getName().c_str() );
+        userAction = new RenameAction(user, file, cf.rename_to, t);
     } else {
-        if(action == "A") {
-            userAction = new CreateAction(user, file, t);
-        } else {
-            userAction = new ModifyAction(user, file, t);
-        }
+        userAction = new ModifyAction(user, file, t);
     }
 
     user->addAction(userAction);
@@ -1690,6 +1693,14 @@ void Gource::logic(float t, float dt) {
 
     interactUsers();
     updateUsers(t, dt);
+
+    //updating users can potentially change the root directory
+    //(eg file renamed to directory above previous parent)
+    RDirNode* new_root;
+    if((new_root = root->getRoot()) != root) {
+        debugLog("parent changed to %s\n", new_root->getPath().c_str());
+        root = new_root;
+    }
 
     interactDirs();
     updateDirs(dt);

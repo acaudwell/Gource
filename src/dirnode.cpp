@@ -261,7 +261,7 @@ bool RDirNode::removeFile(RFile* f) {
         return false;
     }
 
-    //is this dir - add to this node
+    //is this dir - remove from this node
     if(f->path.compare(abspath) == 0) {
 
         for(std::list<RFile*>::iterator it = files.begin(); it != files.end(); it++) {

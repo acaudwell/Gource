@@ -242,7 +242,8 @@ void RCommitLog::createTempLog() {
 
 // RCommitFile
 
-RCommitFile::RCommitFile(const std::string& filename, const std::string& action, vec3f colour) {
+RCommitFile::RCommitFile(const std::string& filename, const std::string& action, const vec3f& colour)
+    : action(action), colour(colour) {
 
     this->filename = munge_utf8(filename);
 
@@ -250,10 +251,25 @@ RCommitFile::RCommitFile(const std::string& filename, const std::string& action,
     if(this->filename[0] != '/') {
         this->filename.insert(0, 1, '/');
     }
-
-    this->action   = action;
-    this->colour   = colour;
 }
+
+RCommitFile::RCommitFile(const std::string& rename_from, const std::string& rename_to, const std::string& action, const vec3f& colour)
+    : action(action), colour(colour) {
+
+    this->filename  = munge_utf8(rename_from);
+    this->rename_to = munge_utf8(rename_to);
+
+    //prepend a root slash
+    if(this->filename[0] != '/') {
+        this->filename.insert(0, 1, '/');
+    }
+
+    if(this->rename_to[0] != '/') {
+        this->rename_to.insert(0, 1, '/');
+    }
+}
+
+//RCommit
 
 RCommit::RCommit() {
     timestamp = 0;
@@ -277,8 +293,16 @@ void RCommit::addFile(const std::string& filename, const std::string& action) {
     files.push_back(RCommitFile(filename, action, fileColour(filename)));
 }
 
-void RCommit::addFile(const std::string& filename, const  std::string& action, vec3f colour) {
+void RCommit::addFile(const std::string& filename, const  std::string& action, const vec3f& colour) {
     files.push_back(RCommitFile(filename, action, colour));
+}
+
+void RCommit::addFile(const std::string& rename_from, const std::string& renamed_to, const std::string& action) {
+    files.push_back(RCommitFile(rename_from, renamed_to, action, fileColour(renamed_to)));
+}
+
+void RCommit::addFile(const std::string& rename_from, const std::string& renamed_to, const  std::string& action, const vec3f& colour) {
+    files.push_back(RCommitFile(rename_from, renamed_to, action, colour));
 }
 
 bool RCommit::isValid() {
