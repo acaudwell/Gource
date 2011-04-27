@@ -82,7 +82,8 @@ public:
 
     float getSize();
     int getTagID();
-    std::string getName();
+
+    const std::string& getName() const { return name; }
 
     virtual void setSelected(bool selected);
     bool isSelected() { return selected; };

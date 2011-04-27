@@ -102,10 +102,6 @@ void Pawn::setSelected(bool selected) {
     this->selected = selected;
 }
 
-std::string Pawn::getName() {
-    return name;
-}
-
 const vec3f& Pawn::getNameColour() const {
     return namecol;
 }
