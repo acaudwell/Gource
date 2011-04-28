@@ -65,8 +65,9 @@ public:
 
 class RenameAction : public RAction {
     std::string rename_to;
+    vec3f rename_colour;
 public:
-    RenameAction(RUser* source, RFile* target, const std::string& rename_to, float addedtime);
+    RenameAction(RUser* source, RFile* target, const std::string& rename_to, const vec3f& rename_colour, float addedtime);
 
     void logic(float dt);
 };

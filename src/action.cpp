@@ -114,9 +114,10 @@ ModifyAction::ModifyAction(RUser* source, RFile* target, float addedtime) : RAct
     colour = vec3f(1.0, 0.7, 0.3);
 }
 
-RenameAction::RenameAction(RUser* source, RFile* target, const std::string& rename_to, float addedtime): RAction(source, target, addedtime) {
-    colour = vec3f(0.0, 1.0, 1.0);
-    this->rename_to = rename_to;
+RenameAction::RenameAction(RUser* source, RFile* target, const std::string& rename_to, const vec3f& rename_colour, float addedtime): RAction(source, target, addedtime) {
+    colour            = vec3f(0.0, 0.5, 0.5);
+    this->rename_to   = rename_to;
+    this->rename_colour = rename_colour;
 }
 
 void RenameAction::logic(float dt) {
@@ -128,7 +129,7 @@ void RenameAction::logic(float dt) {
             rename_to += target->getName();
         }
 
-        target->rename(rename_to);
+        target->rename(rename_to, rename_colour);
     }
 
     RAction::logic(dt);

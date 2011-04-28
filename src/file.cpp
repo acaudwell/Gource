@@ -239,9 +239,11 @@ void RFile::logic(float dt) {
     if(isHidden() && !removing) elapsed = 0.0;
 }
 
-void RFile::rename(const std::string& rename_to) {
+void RFile::rename(const std::string& rename_to, const vec3f& rename_colour) {
     setFilename(rename_to);
 
+    file_colour = rename_colour;
+    
     if(path != dir->getPath()) {
         //debugLog("remove from this dir\n");
         dir->removeFile(this);

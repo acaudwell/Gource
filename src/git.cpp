@@ -27,7 +27,7 @@
 std::string gGourceGitLogCommand = "git log "
     "--pretty=format:user:%aN%n%ct "
     "--reverse --raw --encoding=UTF-8 "
-    "--no-renames";
+    "-M";
 
 GitCommitLog::GitCommitLog(const std::string& logfile) : RCommitLog(logfile, 'u') {
 
@@ -144,10 +144,35 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
         //incorrect log format
         if(tab == std::string::npos || tab == 0 || tab == line.size()-1) continue;
 
-        std::string status = line.substr(tab - 1, 1);
+        size_t space_before_tab = line.rfind(' ', tab);
+
+        if(space_before_tab == std::string::npos) continue;
+        
+        std::string status = line.substr(space_before_tab+1, 1);                
+        
         std::string file   = line.substr(tab + 1);
 
         if(file.empty()) continue;
+
+        std::string rename_to;       
+       
+        if(status=="R") {
+            size_t file_tab = file.find('\t');
+
+            if(file_tab != std::string::npos) {
+                rename_to = file.substr(file_tab+1);
+                file      = file.substr(0, file_tab);
+            }
+            
+            fprintf(stderr, "git rename: %s to %s\n", file.c_str(), rename_to.c_str());
+        }
+
+        //check for and remove double quotes in rename_to
+        if(!rename_to.empty() && rename_to.find('"') == 0 && rename_to.rfind('"') == rename_to.size()-1) {
+            if(rename_to.size()<=2) continue;
+
+            rename_to = rename_to.substr(1,rename_to.size()-2);
+        }
 
         //check for and remove double quotes
         if(file.find('"') == 0 && file.rfind('"') == file.size()-1) {
@@ -156,7 +181,12 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
             file = file.substr(1,file.size()-2);
         }
 
-        commit.addFile(file, status);
+        if(status=="R") {
+            if(rename_to.empty()) continue;
+            commit.addFile(file, rename_to, status);
+        } else {
+            commit.addFile(file, status);
+        }
     }
 
     //check we at least got a username
