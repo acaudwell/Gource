@@ -88,6 +88,8 @@ public:
 
     void logic(float t, float dt);
 
+    void updateActionsVBO(quadbuf& buffer);
+
     void drawActions(float dt);
     void draw(float dt);
 };

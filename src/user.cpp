@@ -401,8 +401,15 @@ void RUser::drawNameText(float alpha) {
     }
 }
 
+void RUser::updateActionsVBO(quadbuf& buffer) {
+
+    for(std::list<RAction*>::iterator it = activeActions.begin(); it != activeActions.end(); it++) {
+        RAction* action = *it;
+        action->drawToVBO(buffer);
+    }
+}
+
 void RUser::drawActions(float dt) {
-    if(gGourceSettings.hide_users) return;
 
     for(std::list<RAction*>::iterator it = activeActions.begin(); it != activeActions.end(); it++) {
         RAction* action = *it;

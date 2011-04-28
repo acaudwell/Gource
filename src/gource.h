@@ -112,8 +112,10 @@ class Gource : public SDLApp {
     RUser* hoverUser;
     RUser* selectedUser;
 
-    quadbuf  user_vbo;
     quadbuf  file_vbo;
+    quadbuf  user_vbo;
+    quadbuf  action_vbo;
+
     bloombuf bloom_vbo;
 
     GLuint selectionDepth;

@@ -642,7 +642,7 @@ void Gource::selectFile(RFile* file) {
 
 
 void Gource::selectNextUser() {
-    debugLog("selectNextUser()\n");
+    //debugLog("selectNextUser()\n");
 
     int currTagId = -1;
 
@@ -949,7 +949,7 @@ void Gource::reset() {
 }
 
 void Gource::deleteFile(RFile* file) {
-    debugLog("removing file %s\n", file->fullpath.c_str());
+    //debugLog("removing file %s\n", file->fullpath.c_str());
 
     root->removeFile(file);
 
@@ -972,7 +972,7 @@ void Gource::deleteFile(RFile* file) {
     tagfilemap.erase(file->getTagID());
     file_key.dec(file);
 
-    debugLog("removed file %s\n", file->fullpath.c_str());
+    //debugLog("removed file %s\n", file->fullpath.c_str());
 
     delete file;
 }
@@ -1016,7 +1016,7 @@ RUser* Gource::addUser(const std::string& username) {
     users[username]   = user;
     tagusermap[tagid] = user;
 
-    debugLog("added user %s, tagid = %d\n", username.c_str(), tagid);
+    //debugLog("added user %s, tagid = %d\n", username.c_str(), tagid);
 
     return user;
 }
@@ -1034,7 +1034,7 @@ void Gource::deleteUser(RUser* user) {
     users.erase(user->getName());
     tagusermap.erase(user->getTagID());
 
-    debugLog("deleted user %s, tagid = %d\n", user->getName().c_str(), user->getTagID());
+    //debugLog("deleted user %s, tagid = %d\n", user->getName().c_str(), user->getTagID());
 
     delete user;
 }
@@ -1046,7 +1046,7 @@ bool Gource::canSeek() {
 }
 
 void Gource::seekTo(float percent) {
-    debugLog("seekTo(%.2f)\n", percent);
+    //debugLog("seekTo(%.2f)\n", percent);
 
     if(commitlog == 0 || !commitlog->isSeekable()) return;
 
@@ -1689,19 +1689,19 @@ void Gource::mousetrace(float dt) {
 
     vec3f cam_pos = camera.getPos();
 
-    vec2f projected_mouse = vec2f( -(mousepos.x * 2.0f - ((float)display.width)) / ((float)display.height), 
+    vec2f projected_mouse = vec2f( -(mousepos.x * 2.0f - ((float)display.width)) / ((float)display.height),
                                    (1.0f - (2.0f * mousepos.y) / ((float)display.height)))
                                    * cam_pos.z;
     projected_mouse.x += cam_pos.x;
     projected_mouse.y += cam_pos.y;
-    
+
     //find user/file under mouse
 
     RFile* fileSelection = 0;
     RUser* userSelection = 0;
 
     if(!gGourceSettings.hide_users) {
-    
+
         std::set<QuadItem*> userset;
 
         userTree->getItemsAt(userset, projected_mouse);
@@ -1719,9 +1719,9 @@ void Gource::mousetrace(float dt) {
     if(!userSelection && !gGourceSettings.hide_files) {
 
         std::set<QuadItem*> dirset;
-                
+
         dirNodeTree->getItemsAt(dirset, projected_mouse);
-        
+
         for(std::set<QuadItem*>::iterator it = dirset.begin(); it != dirset.end(); it++) {
 
             RDirNode* dir = (RDirNode*) *it;
@@ -1737,7 +1737,7 @@ void Gource::mousetrace(float dt) {
                     break;
                 }
             }
-        }               
+        }
     }
 
     // is over a file
@@ -1934,15 +1934,22 @@ void Gource::drawScene(float dt) {
 void Gource::drawActions(float dt) {
     if(gGourceSettings.hide_users) return;
 
-    glBindTexture(GL_TEXTURE_2D, beamtex->textureid);
     glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
+    glBindTexture(GL_TEXTURE_2D, beamtex->textureid);
 
+    glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    //draw actions
-    for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
-        it->second->drawActions(dt);
+    if(!gGourceSettings.ffp) {
+
+        action_vbo.draw();
+
+    } else {
+
+        //draw actions
+        for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
+            it->second->drawActions(dt);
+        }
     }
 }
 
@@ -2033,26 +2040,39 @@ void Gource::screenshot() {
 void Gource::updateVBOs(float dt) {
     if(gGourceSettings.ffp) return;
 
-    user_vbo.reset();
+    if(!gGourceSettings.hide_users) {
 
-    //use a separate vbo for each user texture
-    for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
-        RUser* user = it->second;
+        user_vbo.reset();
+        action_vbo.reset();
 
-        float alpha = user->getAlpha();
-        vec3f col   = user->getColour();
+        //use a separate vbo for each user texture
+        for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
+            RUser* user = it->second;
 
-        user_vbo.add(user->graphic->textureid, user->getPos() - user->dims*0.5f, user->dims, vec4f(col.x, col.y, col.z, alpha));
+            float alpha = user->getAlpha();
+            vec3f col   = user->getColour();
+
+            user_vbo.add(user->graphic->textureid, user->getPos() - user->dims*0.5f, user->dims, vec4f(col.x, col.y, col.z, alpha));
+
+            //draw actions
+            user->updateActionsVBO(action_vbo);
+        }
+
+        user_vbo.update();
+        action_vbo.update();
     }
-    user_vbo.update();
 
-    bloom_vbo.reset();
-    root->updateBloomVBO(bloom_vbo, dt);
-    bloom_vbo.update();
+    if(!gGourceSettings.hide_bloom) {
+        bloom_vbo.reset();
+        root->updateBloomVBO(bloom_vbo, dt);
+        bloom_vbo.update();
+    }
 
-    file_vbo.reset();
-    root->updateFilesVBO(file_vbo, dt);
-    file_vbo.update();
+    if(!gGourceSettings.hide_files) {
+        file_vbo.reset();
+        root->updateFilesVBO(file_vbo, dt);
+        file_vbo.update();
+    }
 }
 
 void Gource::drawFileShadows(float dt) {
@@ -2497,7 +2517,8 @@ void Gource::draw(float t, float dt) {
             font.print(1,620,"Text VBO: %d/%d vertices, %d texture changes", fontmanager.font_vbo.vertices(), fontmanager.font_vbo.capacity(), fontmanager.font_vbo.texture_changes());
             font.print(1,640,"File VBO: %d/%d vertices, %d texture changes", file_vbo.vertices(), file_vbo.capacity(), file_vbo.texture_changes());
             font.print(1,660,"User VBO: %d/%d vertices, %d texture changes", user_vbo.vertices(), user_vbo.capacity(), user_vbo.texture_changes());
-            font.print(1,680,"Bloom VBO: %d/%d vertices", bloom_vbo.vertices(), bloom_vbo.capacity());
+            font.print(1,680,"Action VBO: %d/%d vertices", action_vbo.vertices(), action_vbo.capacity());
+            font.print(1,700,"Bloom VBO: %d/%d vertices", bloom_vbo.vertices(), bloom_vbo.capacity());
         }
 
         if(selectedUser != 0) {
@@ -2505,7 +2526,7 @@ void Gource::draw(float t, float dt) {
         }
 
         if(selectedFile != 0) {
-            font.print(1,700,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
+            font.print(1,720,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
                     selectedFile->getDir()->fileCount(), selectedFile->getDir()->visibleFileCount());
         }
     }
