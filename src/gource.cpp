@@ -1686,40 +1686,42 @@ void Gource::logic(float t, float dt) {
 }
 
 void Gource::mousetrace(float dt) {
-    //fprintf(stderr, "start trace\n");
-    //projected mouse pos
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    gluPerspective(camera.getFov(), (GLfloat)display.width/(GLfloat)display.height, camera.getZNear(), -camera.getPos().z);
-    camera.look();
 
-    vec2f projected_mouse = display.unproject(mousepos).truncate();
-    glPopMatrix();
+    vec3f cam_pos = camera.getPos();
 
+    vec2f projected_mouse = vec2f( -(mousepos.x * 2.0f - ((float)display.width)) / ((float)display.height), 
+                                   (1.0f - (2.0f * mousepos.y) / ((float)display.height)))
+                                   * cam_pos.z;
+    projected_mouse.x += cam_pos.x;
+    projected_mouse.y += cam_pos.y;
+    
     //find user/file under mouse
 
     RFile* fileSelection = 0;
     RUser* userSelection = 0;
 
-    std::set<QuadItem*> userset;
+    if(!gGourceSettings.hide_users) {
+    
+        std::set<QuadItem*> userset;
 
-    userTree->getItemsAt(userset, projected_mouse);
+        userTree->getItemsAt(userset, projected_mouse);
 
-    for(std::set<QuadItem*>::iterator it = userset.begin(); it != userset.end(); it++) {
-        RUser* user = (RUser*) *it;
-        if(!user->isFading() && user->quadItemBounds.contains(projected_mouse)) {
-            userSelection = user;
-            break;
+        for(std::set<QuadItem*>::iterator it = userset.begin(); it != userset.end(); it++) {
+            RUser* user = (RUser*) *it;
+            if(!user->isFading() && user->quadItemBounds.contains(projected_mouse)) {
+                userSelection = user;
+                break;
+            }
         }
+
     }
 
-    if(!userSelection) {
+    if(!userSelection && !gGourceSettings.hide_files) {
 
         std::set<QuadItem*> dirset;
-
+                
         dirNodeTree->getItemsAt(dirset, projected_mouse);
-
+        
         for(std::set<QuadItem*>::iterator it = dirset.begin(); it != dirset.end(); it++) {
 
             RDirNode* dir = (RDirNode*) *it;
@@ -1735,7 +1737,7 @@ void Gource::mousetrace(float dt) {
                     break;
                 }
             }
-        }
+        }               
     }
 
     // is over a file
