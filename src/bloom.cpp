@@ -24,14 +24,14 @@ bloombuf::bloombuf(int data_size) : data_size(data_size) {
     buffer_size  = 0;
     vertex_count = 0;
 
-    data = new bloom_vertex[data_size];
+    data = data_size > 0 ? new bloom_vertex[data_size] : 0;
 
     //fprintf(stderr, "size of bloom_vertex = %d\n", sizeof(bloom_vertex));
 }
 
 bloombuf::~bloombuf() {
     if(bufferid !=0) glDeleteBuffers(1, &bufferid);
-    delete[] data;
+    if(data != 0) delete[] data;
 }
 
 void bloombuf::resize(int new_size) {
@@ -46,7 +46,7 @@ void bloombuf::resize(int new_size) {
 
     data_size = new_size;
 
-    delete[] _data;
+    if(_data != 0) delete[] _data;
 }
 
 void bloombuf::reset() {

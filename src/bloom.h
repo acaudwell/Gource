@@ -48,7 +48,7 @@ class bloombuf {
 
     void resize(int new_size);
 public:
-    bloombuf(int data_size = 1);
+    bloombuf(int data_size = 0);
     ~bloombuf();
 
     void reset();
