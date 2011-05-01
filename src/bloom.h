@@ -28,12 +28,13 @@
 class bloom_vertex {
 public:
     bloom_vertex() {};
-    bloom_vertex(const vec2f& pos, const vec4f& colour, const vec4f& texcoord) : pos(pos), colour(colour), texcoord(texcoord) {};
+    bloom_vertex(const vec2f& pos, const vec4f& colour, const vec4f& texcoord) :
+        pos(pos), colour(colour), texcoord(texcoord) {};
 
     vec2f pos;
     vec4f colour;
     vec4f texcoord;
-    char padding[22];
+    char padding[24];
 };
 
 class bloombuf {
