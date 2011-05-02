@@ -89,6 +89,7 @@ void Pawn::setGraphic(TextureResource* graphic) {
     }
 
     this->graphic = graphic;
+    this->dims = vec2f(size, size*graphic_ratio);
 }
 
 
@@ -101,10 +102,6 @@ void Pawn::setSelected(bool selected) {
     this->selected = selected;
 }
 
-std::string Pawn::getName() {
-    return name;
-}
-
 const vec3f& Pawn::getNameColour() const {
     return namecol;
 }
@@ -113,26 +110,11 @@ void Pawn::calcScreenPos(const vec2f& offset) {
     screenpos = display.project(vec3f(pos.x+offset.x, pos.y+offset.y, 0.0f));
 }
 
-void Pawn::drawNameText(float alpha) const {
-
-    if(alpha>0.0) {
-        vec3f nameCol = getNameColour();
-
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-
-        glColor4f(nameCol.x, nameCol.y, nameCol.z, alpha);
-
-        font.draw(pos.x - ((float)namewidth/2.0), pos.y - size*1.2, name.c_str()); // above player
-    }
-}
-
-
 bool Pawn::nameVisible() const {
     return (!selected && name_interval < 0.0 || isHidden()) ? false : true;
 }
 
-void Pawn::drawName() const {
+void Pawn::drawName() {
     if(!nameVisible()) return;
 
     float done = nametime - name_interval;
@@ -146,38 +128,6 @@ void Pawn::drawName() const {
     }
 }
 
-void Pawn::drawSimple(float dt) {
-    if(isHidden()) return;
-
-    glLoadName(tagid);
-
-    float halfsize = size * 0.5f;
-    vec2f offsetpos = pos - vec2f(halfsize, halfsize*graphic_ratio);
-
-    float alpha = getAlpha();
-    vec3f col = getColour();
-
-    glColor4f(col.x, col.y, col.z, alpha);
-
-    glPushMatrix();
-        glTranslatef(offsetpos.x, offsetpos.y, 0.0f);
-
-        glBegin(GL_QUADS);
-            glTexCoord2f(0.0f,0.0f);
-            glVertex2f(0.0f, 0.0f);
-
-            glTexCoord2f(1.0f,0.0f);
-            glVertex2f(size, 0.0f);
-
-            glTexCoord2f(1.0f,1.0f);
-            glVertex2f(size, size*graphic_ratio);
-
-            glTexCoord2f(0.0f,1.0f);
-            glVertex2f(0.0f, size*graphic_ratio);
-        glEnd();
-
-    glPopMatrix();
-}
 void Pawn::drawShadow(float dt) {
     if(isHidden() || !shadow) return;
 
@@ -211,9 +161,6 @@ void Pawn::drawShadow(float dt) {
 
 void Pawn::draw(float dt) {
     if(hidden) return;
-
-    glEnable(GL_BLEND);
-    glEnable(GL_TEXTURE_2D);
 
     float halfsize = size * 0.5f;
     vec2f offsetpos = pos - vec2f(halfsize, halfsize*graphic_ratio);

@@ -32,11 +32,8 @@ protected:
     vec2f pos;
     vec2f shadowOffset;
 
-    vec3f screenpos;
-
     std::string name;
     float namewidth;
-    float size;
     vec2f accel;
     float speed;
 
@@ -56,18 +53,21 @@ protected:
 
     FXFont font;
 
-    float graphic_ratio;
-    TextureResource* graphic;
-
     bool mouseover;
 
     virtual bool nameVisible() const;
 
-    virtual void drawNameText(float alpha) const;
+    virtual void drawNameText(float alpha) {};
     virtual const vec3f& getNameColour() const;
 protected:
     bool selected;
 public:
+    float size;
+    float graphic_ratio;
+    TextureResource* graphic;
+    vec3f screenpos;
+    vec2f dims;
+
     Pawn(const std::string& name, vec2f pos, int tagid);
     const vec2f & getPos() const { return pos; }
     void setPos(vec2f pos);
@@ -82,7 +82,8 @@ public:
 
     float getSize();
     int getTagID();
-    std::string getName();
+
+    const std::string& getName() const { return name; }
 
     virtual void setSelected(bool selected);
     bool isSelected() { return selected; };
@@ -98,9 +99,8 @@ public:
     void logic(float dt);
     void draw(float dt);
     void drawShadow(float dt);
-    void drawSimple(float dt);
 
-    void drawName() const;
+    void drawName();
 };
 
 extern float gGourceShadowStrength;

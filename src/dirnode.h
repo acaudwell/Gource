@@ -22,11 +22,13 @@
 #include "core/bounds.h"
 #include "core/quadtree.h"
 #include "core/pi.h"
+#include "core/vbo.h"
 
 #include "gource_settings.h"
 
 #include "spline.h"
 #include "file.h"
+#include "bloom.h"
 
 #include <list>
 #include <set>
@@ -44,7 +46,7 @@ class RDirNode : public QuadItem {
     std::list<RFile*> files;
 
     SplineEdge spline;
-    
+
     vec4f col;
 
     vec2f spos;
@@ -59,6 +61,7 @@ class RDirNode : public QuadItem {
     float dir_area;
 
     bool visible;
+    bool in_frustum;
     bool position_initialized;
 
     float since_node_visible;
@@ -84,8 +87,6 @@ class RDirNode : public QuadItem {
 
     void changePath(const std::string & abspath);
 
-    void calcProjectedPos();
-
     void setInitialPosition();
 
     void drawEdge(RDirNode* child) const;
@@ -96,13 +97,13 @@ class RDirNode : public QuadItem {
     void updateFilePositions();
 
     void adjustPath();
-    void drawDirName(const FXFont& dirfont) const;
+    void drawDirName(FXFont& dirfont) const;
 public:
     RDirNode(RDirNode* parent, const std::string & abspath);
     ~RDirNode();
 
     void printFiles();
-    
+
     bool empty() const;
 
     bool isAnchor(RDirNode* node) const;
@@ -129,7 +130,7 @@ public:
     bool noFiles() const;
 
     bool prefixedBy(const std::string & path) const;
-  
+
     const std::string & getPath() const;
 
     const vec2f & getNodeNormal() const;
@@ -151,14 +152,14 @@ public:
 
     const std::list<RFile*>* getFiles() const { return &files; };
     void getFilesRecursive(std::list<RFile*>& files) const;
-    
+
     vec3f averageFileColour() const;
 
     const vec4f & getColour() const;
 
     RDirNode* getParent() const;
     RDirNode* findDir(const std::string& path) const;
-    
+
     const vec2f & getPos() const;
 
     void calcEdges();
@@ -186,14 +187,18 @@ public:
     void drawEdges(float dt) const;
     void drawEdgeShadows(float dt) const;
 
-    void drawBloom(const Frustum & frustum, float dt);
+    void checkFrustum(const Frustum & frustum);
 
-    void drawShadows(const Frustum & frustum, float dt) const;
-    void drawFiles(const Frustum & frustum, float dt) const;
-    void drawSimple(const Frustum & frustum, float dt) const;
-    void drawNames(const FXFont & dirfont, const Frustum & frustum);
+    void updateFilesVBO(quadbuf& buffer, float dt) const;
+    void updateBloomVBO(bloombuf& buffer, float dt);
 
-    void calcScreenPos();
+    void drawShadows(float dt) const;
+    void drawFiles(float dt) const;
+    void drawBloom(float dt);
+
+    void drawNames(FXFont& dirfont);
+
+    void calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection);
 
     void nodeCount() const;
 };

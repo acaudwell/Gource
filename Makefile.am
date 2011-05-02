@@ -5,6 +5,7 @@ bin_PROGRAMS = gource
 gource_SOURCES = \
 	src/action.cpp src/action.h \
 	src/apache.cpp src/apache.h \
+        src/bloom.cpp src/bloom.h \
         src/bzr.cpp src/bzr.h \
 	src/commitlog.cpp src/commitlog.h \
 	src/core/bounds.h \
@@ -13,6 +14,7 @@ gource_SOURCES = \
 	src/core/display.cpp src/core/display.h \
 	src/core/frustum.cpp src/core/frustum.h \
 	src/core/fxfont.cpp src/core/fxfont.h \
+	src/core/gl.h \
 	src/core/logger.cpp src/core/logger.h \
 	src/core/mousecursor.cpp src/core/mousecursor.h \
 	src/core/pi.h \
@@ -24,12 +26,14 @@ gource_SOURCES = \
 	src/core/sdlapp.cpp src/core/sdlapp.h \
 	src/core/seeklog.cpp src/core/seeklog.h \
 	src/core/settings.cpp src/core/settings.h \
+	src/core/shader.cpp src/core/shader.h \
 	src/core/stringhash.cpp src/core/stringhash.h \
 	src/core/texture.cpp src/core/texture.h \
 	src/core/utf8/checked.h \
 	src/core/utf8/core.h \
 	src/core/utf8/unchecked.h \
 	src/core/utf8/utf8.h \
+	src/core/vbo.cpp src/core/vbo.h \
 	src/core/vectors.h \
 	src/custom.cpp src/custom.h \
 	src/cvs-exp.cpp src/cvs-exp.h \
@@ -55,6 +59,9 @@ gource_SOURCES = \
 CPPFLAGS = -DSDLAPP_RESOURCE_DIR=\"$(pkgdatadir)\"
 
 dist_pkgdata_DATA = data/beam.png data/bloom.tga data/bloom_alpha.tga data/cursor.png data/file.png data/no_photo.png data/gource.style
+
+shadersdir = $(pkgdatadir)/shaders
+dist_shaders_DATA = data/shaders/shadow.vert data/shaders/shadow.frag data/shaders/bloom.vert data/shaders/bloom.frag data/shaders/text.vert data/shaders/text.frag
 
 install-data-hook:
 	mkdir -p -m 755 ${DESTDIR}/$(mandir)/man1

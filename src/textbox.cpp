@@ -71,7 +71,7 @@ void TextBox::addLine(std::string str) {
 
     if(width > rect_width) rect_width = width;
     
-    rect_height += (font.getHeight()+4);
+    rect_height += (font.getFontSize()+4);
     
     content.push_back(str);   
 }
@@ -98,7 +98,7 @@ void TextBox::setPos(const vec2f& pos, bool adjust) {
 
     if(!adjust) return;
 
-    int fontheight = font.getHeight() + 4;
+    int fontheight = font.getFontSize() + 4;
     
     corner.y -= rect_height;
 
@@ -153,6 +153,6 @@ void TextBox::draw() const {
     std::vector<std::string>::const_iterator it;
     for(it = content.begin(); it != content.end(); it++) {
         font.draw((int)corner.x+2, (int)corner.y+yinc,  (*it).c_str());
-        yinc += font.getHeight() + 4;
+        yinc += font.getFontSize() + 4;
     }
 }

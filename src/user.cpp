@@ -374,35 +374,42 @@ bool RUser::nameVisible() const {
     return (Pawn::nameVisible() || gGourceSettings.highlight_all_users || highlighted) ? true : false;
 }
 
-void RUser::drawNameText(float alpha) const {
-    if(gGourceSettings.hide_users) return;
+void RUser::calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection) {
 
+    static GLdouble screen_x, screen_y, screen_z;
+
+    vec2f text_pos = pos;
+    text_pos.y -= dims.y * 0.5f;
+
+    gluProject( text_pos.x, text_pos.y, 0.0f, modelview, projection, viewport, &screen_x, &screen_y, &screen_z);
+
+    screen_y = (float)viewport[3] - screen_y;
+
+    screenpos.x = screen_x - namewidth * 0.5;
+    screenpos.y = screen_y - font.getMaxHeight();
+}
+
+void RUser::drawNameText(float alpha) {
     float user_alpha = getAlpha();
 
     if(gGourceSettings.highlight_all_users || highlighted || selected || alpha>0.0) {
-        vec3f nameCol = getNameColour();
+        vec3f name_col  = getNameColour();
+        float name_alpha = (selected||highlighted||gGourceSettings.highlight_all_users) ? user_alpha : alpha;
 
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
+        font.setColour(vec4f(name_col.x, name_col.y, name_col.z, name_alpha));
+        font.draw(screenpos.x, screenpos.y, name);
+    }
+}
 
-        vec3f drawpos = vec3f(pos.x, pos.y, 0.0);
+void RUser::updateActionsVBO(quadbuf& buffer) {
 
-        vec3f screenpos = display.project(drawpos - vec3f(0.0, 0.5 * size * graphic_ratio, 0.0f ));
-        screenpos.x -= namewidth * 0.5;
-        screenpos.y -= font.getHeight();
-
-        glColor4f(nameCol.x, nameCol.y, nameCol.z, (selected||highlighted||gGourceSettings.highlight_all_users) ? user_alpha : alpha);
-
-        display.push2D();
-
-        font.draw(screenpos.x, screenpos.y, name); // above user
-
-        display.pop2D();
+    for(std::list<RAction*>::iterator it = activeActions.begin(); it != activeActions.end(); it++) {
+        RAction* action = *it;
+        action->drawToVBO(buffer);
     }
 }
 
 void RUser::drawActions(float dt) {
-    if(gGourceSettings.hide_users) return;
 
     for(std::list<RAction*>::iterator it = activeActions.begin(); it != activeActions.end(); it++) {
         RAction* action = *it;

@@ -56,13 +56,13 @@ class RUser : public Pawn {
 
     void updateFont();
     const vec3f& getNameColour() const;
-    void drawNameText(float alpha) const;
+    void drawNameText(float alpha);
 public:
     RUser(const std::string& name, vec2f pos, int tagid);
 
     vec3f getColour() const;
     void colourize();
-    
+
     const std::string& getName() const;
 
     void fileRemoved(RFile* f);
@@ -83,7 +83,12 @@ public:
     void applyForceToActions();
     void applyForceAction(RAction* action);
     void applyForceUser(RUser* u);
+
+    void calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection);
+
     void logic(float t, float dt);
+
+    void updateActionsVBO(quadbuf& buffer);
 
     void drawActions(float dt);
     void draw(float dt);

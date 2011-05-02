@@ -39,6 +39,7 @@ doit("rm -rf $WINBUILD");
 doit("mkdir -p $WINBUILD");
 doit("mkdir -p $WINBUILD/data/");
 doit("mkdir -p $WINBUILD/data/fonts/");
+doit("mkdir -p $WINBUILD/data/shaders/");
 
 doit("cp gource.exe $WINBUILD");
 doit("cp data/beam.png $WINBUILD/data/");
@@ -49,6 +50,12 @@ doit("cp data/bloom.tga $WINBUILD/data/");
 doit("cp data/bloom_alpha.tga $WINBUILD/data/");
 doit("cp data/gource.style $WINBUILD/data/");
 doit("cp data/fonts/FreeSans.ttf $WINBUILD/data/fonts/");
+doit("cp data/shaders/bloom.frag $WINBUILD/data/shaders/");
+doit("cp data/shaders/bloom.vert $WINBUILD/data/shaders/");
+doit("cp data/shaders/shadow.frag $WINBUILD/data/shaders/");
+doit("cp data/shaders/shadow.vert $WINBUILD/data/shaders/");
+doit("cp data/shaders/text.frag $WINBUILD/data/shaders/");
+doit("cp data/shaders/text.vert $WINBUILD/data/shaders/");
 
 dosify('README',    "$WINBUILD/README.txt");
 dosify('ChangeLog',    "$WINBUILD/ChangeLog.txt");
@@ -60,11 +67,11 @@ dosify('THANKS',    "$WINBUILD/THANKS.txt");
 doit("cp dev/win32/SDL.dll $WINBUILD");
 doit("cp dev/win32/SDL_image.dll $WINBUILD");
 doit("cp dev/win32/pcre3.dll $WINBUILD");
-doit("cp dev/win32/ftgl.dll $WINBUILD");
 doit("cp dev/win32/jpeg.dll $WINBUILD");
 doit("cp dev/win32/libpng12-0.dll $WINBUILD");
 doit("cp dev/win32/zlib1.dll $WINBUILD");
 doit("cp dev/win32/glew32.dll $WINBUILD");
+doit("cp dev/win32/freetype6.dll $WINBUILD");
 
 chdir($WINBUILD);
 doit("zip -r gource-$VERSION.win32.zip *");

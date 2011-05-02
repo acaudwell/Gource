@@ -22,7 +22,7 @@
 			<Add option="-Dmain=SDL_main" />
 		</Compiler>
 		<Linker>
-			<Add option="ftgl.dll" />
+			<Add option="glew32.dll" />
 			<Add library="mingw32" />
 			<Add library="pcre" />
 			<Add library="SDLmain" />
@@ -31,11 +31,20 @@
 			<Add library="SDL_image" />
 			<Add library="glu32" />
 			<Add library="glew32" />
+			<Add library="freetype" />
 		</Linker>
+		<Unit filename="data\shaders\bloom.frag" />
+		<Unit filename="data\shaders\bloom.vert" />
+		<Unit filename="data\shaders\shadow.frag" />
+		<Unit filename="data\shaders\shadow.vert" />
+		<Unit filename="data\shaders\text.frag" />
+		<Unit filename="data\shaders\text.vert" />
 		<Unit filename="src\action.cpp" />
 		<Unit filename="src\action.h" />
 		<Unit filename="src\apache.cpp" />
 		<Unit filename="src\apache.h" />
+		<Unit filename="src\bloom.cpp" />
+		<Unit filename="src\bloom.h" />
 		<Unit filename="src\bzr.cpp" />
 		<Unit filename="src\bzr.h" />
 		<Unit filename="src\commitlog.cpp" />
@@ -51,6 +60,7 @@
 		<Unit filename="src\core\frustum.h" />
 		<Unit filename="src\core\fxfont.cpp" />
 		<Unit filename="src\core\fxfont.h" />
+		<Unit filename="src\core\gl.h" />
 		<Unit filename="src\core\logger.cpp" />
 		<Unit filename="src\core\logger.h" />
 		<Unit filename="src\core\mousecursor.cpp" />
@@ -72,10 +82,14 @@
 		<Unit filename="src\core\seeklog.h" />
 		<Unit filename="src\core\settings.cpp" />
 		<Unit filename="src\core\settings.h" />
+		<Unit filename="src\core\shader.cpp" />
+		<Unit filename="src\core\shader.h" />
 		<Unit filename="src\core\stringhash.cpp" />
 		<Unit filename="src\core\stringhash.h" />
 		<Unit filename="src\core\texture.cpp" />
 		<Unit filename="src\core\texture.h" />
+		<Unit filename="src\core\vbo.cpp" />
+		<Unit filename="src\core\vbo.h" />
 		<Unit filename="src\core\vectors.h" />
 		<Unit filename="src\custom.cpp" />
 		<Unit filename="src\custom.h" />

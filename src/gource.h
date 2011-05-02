@@ -26,6 +26,7 @@
 #include <fstream>
 
 #include "core/display.h"
+#include "core/shader.h"
 #include "core/sdlapp.h"
 #include "core/fxfont.h"
 #include "core/bounds.h"
@@ -47,6 +48,8 @@
 #include "apache.h"
 #include "svn.h"
 
+#include "core/vbo.h"
+#include "bloom.h"
 #include "slider.h"
 #include "textbox.h"
 #include "action.h"
@@ -82,14 +85,15 @@ class Gource : public SDLApp {
     bool mouseclicked;
     bool mousedragged;
 
-    
     vec2f cursor_move;
-    
+
     bool recolour;
-    
+
+    bool update_file_labels;
+
     bool use_selection_bounds;
     Bounds2D selection_bounds;
-    
+
     float rotate_angle;
 
     vec2f mousepos;
@@ -108,6 +112,12 @@ class Gource : public SDLApp {
     RUser* hoverUser;
     RUser* selectedUser;
 
+    quadbuf  file_vbo;
+    quadbuf  user_vbo;
+    quadbuf  action_vbo;
+
+    bloombuf bloom_vbo;
+
     GLuint selectionDepth;
 
     RDirNode* root;
@@ -119,9 +129,16 @@ class Gource : public SDLApp {
     TextureResource* beamtex;
     TextureResource* logotex;
     TextureResource* backgroundtex;
+    TextureResource* usertex;
+
+    Shader*          shadow_shader;
+    Shader*          text_shader;
+    Shader*          bloom_shader;
+
+    float font_texel_size;
 
     TextBox textbox;
-    
+
     FXFont font, fontlarge, fontmedium;
 
     bool first_read;
@@ -141,14 +158,23 @@ class Gource : public SDLApp {
 
     float idle_time;
 
-    Uint32 draw_tree_time;
+    Uint32 screen_project_time;
+    Uint32 draw_edges_time;
+    Uint32 draw_shadows_time;
+    Uint32 draw_actions_time;
+    Uint32 draw_files_time;
+    Uint32 draw_users_time;
+    Uint32 draw_bloom_time;
+    Uint32 update_vbos_time;
     Uint32 update_dir_tree_time;
     Uint32 update_user_tree_time;
-    Uint32 draw_time;
+    Uint32 draw_scene_time;
     Uint32 logic_time;
     Uint32 trace_time;
-    Uint32 name_calc_time;
-    Uint32 name_draw_time;
+    Uint32 text_time;
+    Uint32 text_update_time;
+    Uint32 text_vbo_commit_time;
+    Uint32 text_vbo_draw_time;
 
     bool track_users;
 
@@ -171,6 +197,9 @@ class Gource : public SDLApp {
     void setMessage(const char* str, ...);
 
     void reset();
+
+    RUser* addUser(const std::string& username);
+    RFile* addFile(const RCommitFile& cf);
 
     void deleteUser(RUser* user);
     void deleteFile(RFile* file);
@@ -203,7 +232,7 @@ class Gource : public SDLApp {
 
     void updateTime(time_t display_time);
 
-    void mousetrace(Frustum& frustum, float dt);
+    void mousetrace(float dt);
 
     bool canSeek();
     void seekTo(float percent);
@@ -212,9 +241,16 @@ class Gource : public SDLApp {
 
     void loadingScreen();
     void drawBackground(float dt);
+
+    void drawScene(float dt);
+
+    void updateVBOs(float dt);
+    void drawFileShadows(float dt);
+    void drawUserShadows(float dt);
     void drawActions(float dt);
-    void drawTree(Frustum &frustum, float dt);
-    void drawBloom(Frustum &frustum, float dt);
+    void drawFiles(float dt);
+    void drawUsers(float dt);
+    void drawBloom(float dt);
 
     void screenshot();
 

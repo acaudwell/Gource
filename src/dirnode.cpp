@@ -62,7 +62,7 @@ RDirNode::RDirNode(RDirNode* parent, const std::string & abspath) {
     since_node_visible = 0.0;
     since_last_file_change = 0.0;
     since_last_node_change = 0.0;
-      
+
     calcRadius();
     calcColour();
 }
@@ -97,7 +97,7 @@ int RDirNode::getTokenOffset() const{
 void RDirNode::fileUpdated(bool userInitiated) {
     calcRadius();
 
-    if(userInitiated) since_last_file_change = 0.0;
+    since_last_file_change = 0.0;
 
     nodeUpdated(userInitiated);
 }
@@ -149,13 +149,13 @@ RDirNode* RDirNode::getParent() const{
 RDirNode* RDirNode::findDir(const std::string& path) const {
 
     if(abspath == path) return (RDirNode*) this;
-    
+
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* match = (*it)->findDir(path);
-        
+
         if(match) return match;
     }
-    
+
     return 0;
 }
 
@@ -846,8 +846,6 @@ void RDirNode::updateFilePositions() {
 
 void RDirNode::calcEdges() {
 
-    calcProjectedPos();
-
     if(parent != 0) {
         spline.update(parent->getProjectedPos(), parent->getColour(), projected_pos, col, projected_spos);
     }
@@ -894,7 +892,7 @@ void RDirNode::logic(float dt) {
     since_last_node_change += dt;
 }
 
-void RDirNode::drawDirName(const FXFont& dirfont) const{
+void RDirNode::drawDirName(FXFont& dirfont) const{
     if(parent==0) return;
     if(gGourceSettings.hide_dirnames) return;
 
@@ -902,35 +900,47 @@ void RDirNode::drawDirName(const FXFont& dirfont) const{
 
     float alpha = gGourceSettings.highlight_dirs ? 1.0 : std::max(0.0f, 5.0f - since_last_node_change) / 5.0f;
 
-    glColor4f(1.0, 1.0, 1.0, alpha);
+    //glColor4f(1.0, 1.0, 1.0, alpha);
 
     vec2f mid = spline.getMidPoint();
-    
+
+    dirfont.setAlpha(alpha);
     dirfont.draw(mid.x, mid.y, path_token);
 }
 
+void RDirNode::calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection) {
 
-// project positions of files and directories on the display in 2d
-void RDirNode::calcScreenPos() {
+    static GLdouble screen_x, screen_y, screen_z;
 
-    //first pass - calculate positions of names
-    for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
-        RFile* f = *it;
+    gluProject( pos.x, pos.y, 0.0f, modelview, projection, viewport, &screen_x, &screen_y, &screen_z);
+    screen_y = (float)viewport[3] - screen_y;
+    projected_pos.x = screen_x;
+    projected_pos.y = screen_y;
 
-        // TODO: different offsets for selected/not selected
-        if(f->isSelected())
-            f->calcScreenPos(pos + vec2f(5.5f, -2.0f));
-        else
-            f->calcScreenPos(pos + vec2f(5.5f, -1.0f));
+    gluProject( spos.x, spos.y, 0.0f, modelview, projection, viewport, &screen_x, &screen_y, &screen_z);
+    screen_y = (float)viewport[3] - screen_y;
+    projected_spos.x = screen_x;
+    projected_spos.y = screen_y;
+
+    static vec2f selected_offset(5.5f, -2.0f);
+    static vec2f unselected_offset(5.5f, -1.0f);
+
+    if(!gGourceSettings.hide_filenames) {
+
+        //first pass - calculate positions of names
+        for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
+            RFile* f = *it;
+            f->calcScreenPos(viewport, modelview, projection);
+        }
     }
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
-        node->calcScreenPos();
+        node->calcScreenPos(viewport, modelview, projection);
     }
 }
 
-void RDirNode::drawNames(const FXFont & dirfont, const Frustum & frustum){
+void RDirNode::drawNames(FXFont& dirfont) {
 
     if(!gGourceSettings.hide_dirnames && isVisible()) {
         drawDirName(dirfont);
@@ -938,10 +948,10 @@ void RDirNode::drawNames(const FXFont & dirfont, const Frustum & frustum){
 
     if(!gGourceSettings.hide_filenames) {
 
-        if(!(gGourceSettings.hide_filenames || gGourceSettings.hide_files) && frustum.boundsInFrustum(quadItemBounds)) {
+        if(!(gGourceSettings.hide_filenames || gGourceSettings.hide_files) && in_frustum) {
             for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
                 RFile* f = *it;
-                f->drawName();
+                if(!f->isSelected()) f->drawName();
             }
         }
 
@@ -949,13 +959,23 @@ void RDirNode::drawNames(const FXFont & dirfont, const Frustum & frustum){
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
-        node->drawNames(dirfont,frustum);
+        node->drawNames(dirfont);
     }
 }
 
-void RDirNode::drawShadows(const Frustum & frustum, float dt) const{
+void RDirNode::checkFrustum(const Frustum& frustum) {
 
-    if(frustum.boundsInFrustum(quadItemBounds)) {
+    in_frustum = frustum.intersects(quadItemBounds);
+
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
+        RDirNode* node = (*it);
+        node->checkFrustum(frustum);
+    }
+}
+
+void RDirNode::drawShadows(float dt) const{
+
+    if(in_frustum) {
 
         glPushMatrix();
         glTranslatef(pos.x, pos.y, 0.0);
@@ -973,13 +993,56 @@ void RDirNode::drawShadows(const Frustum & frustum, float dt) const{
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
-        node->drawShadows(frustum, dt);
+        node->drawShadows(dt);
     }
 }
 
-void RDirNode::drawFiles(const Frustum & frustum, float dt) const{
+void RDirNode::updateFilesVBO(quadbuf& buffer, float dt) const{
 
-    if(frustum.boundsInFrustum(quadItemBounds)) {
+    if(in_frustum) {
+
+        for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
+            RFile* f = *it;
+
+            if(f->isHidden()) continue;
+
+            vec3f col   = f->getColour();
+            float alpha = f->getAlpha();
+
+            buffer.add(f->graphic->textureid, f->getAbsolutePos() - f->dims*0.5f, f->dims, vec4f(col.x, col.y, col.z, alpha));
+        }
+    }
+
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
+        RDirNode* node = (*it);
+        node->updateFilesVBO(buffer,dt);
+    }
+}
+
+void RDirNode::updateBloomVBO(bloombuf& buffer, float dt) {
+
+    if(in_frustum && isVisible()) {
+
+        float bloom_radius   = dir_radius * 2.0 * gGourceSettings.bloom_multiplier;
+        float bloom_diameter = bloom_radius * 2.0;
+        vec4f bloom_col      = col * gGourceSettings.bloom_intensity;
+
+        vec4f bloom_texcoords(bloom_radius, pos.x, pos.y, 0.0f);
+
+        vec2f bloom_dims(bloom_diameter, bloom_diameter);
+
+        buffer.add(0, pos - bloom_dims*0.5f,bloom_dims, vec4f(bloom_col.x, bloom_col.y, bloom_col.z, 1.0f), bloom_texcoords);
+    }
+
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
+        RDirNode* node = (*it);
+        node->updateBloomVBO(buffer,dt);
+    }
+}
+
+void RDirNode::drawFiles(float dt) const{
+
+    if(in_frustum) {
 
         vec4f col = getColour();
 
@@ -998,11 +1061,9 @@ void RDirNode::drawFiles(const Frustum & frustum, float dt) const{
         glPopMatrix();
     }
 
-    glDisable(GL_TEXTURE_2D);
-
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
-        node->drawFiles(frustum,dt);
+        node->drawFiles(dt);
     }
 }
 
@@ -1014,15 +1075,10 @@ const vec2f & RDirNode::getProjectedPos() const{
     return projected_pos;
 }
 
-void RDirNode::calcProjectedPos() {
-    projected_pos  = display.project(vec3f(pos.x, pos.y, 0.0)).truncate();
-    projected_spos = display.project(vec3f(spos.x, spos.y, 0.0)).truncate();
-}
-
 void RDirNode::drawEdgeShadows(float dt) const{
 
     if(parent!=0 && (!gGourceSettings.hide_root || parent->parent !=0)) spline.drawShadow();
-    
+
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
 
@@ -1036,7 +1092,7 @@ void RDirNode::drawEdgeShadows(float dt) const{
 void RDirNode::drawEdges(float dt) const{
 
    if(parent!=0 && (!gGourceSettings.hide_root || parent->parent !=0)) spline.draw();
-   
+
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
 
@@ -1047,9 +1103,9 @@ void RDirNode::drawEdges(float dt) const{
     }
 }
 
-void RDirNode::drawBloom(const Frustum & frustum, float dt){
+void RDirNode::drawBloom(float dt){
 
-    if(isVisible() && frustum.boundsInFrustum(quadItemBounds)) {
+    if(in_frustum && isVisible()) {
 
         float bloom_radius = dir_radius * 2.0 * gGourceSettings.bloom_multiplier;
 
@@ -1061,59 +1117,21 @@ void RDirNode::drawBloom(const Frustum & frustum, float dt){
             glTranslatef(pos.x, pos.y, 0.0);
 
             glBegin(GL_QUADS);
-            glTexCoord2f(1.0, 1.0);
+                glTexCoord2f(1.0f, 1.0f);
                 glVertex2f(bloom_radius,bloom_radius);
-                glTexCoord2f(1.0, 0.0);
+                glTexCoord2f(1.0f, 0.0f);
                 glVertex2f(bloom_radius,-bloom_radius);
-                glTexCoord2f(0.0, 0.0);
+                glTexCoord2f(0.0f, 0.0f);
                 glVertex2f(-bloom_radius,-bloom_radius);
-                glTexCoord2f(0.0, 1.0);
+                glTexCoord2f(0.0f, 1.0f);
                 glVertex2f(-bloom_radius,bloom_radius);
             glEnd();
         glPopMatrix();
-
     }
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
-        node->drawBloom(frustum,dt);
-    }
-}
-
-void RDirNode::drawSimple(const Frustum & frustum, float dt) const{
-
-    glDisable(GL_TEXTURE_2D);
-
-    if(frustum.boundsInFrustum(quadItemBounds)) {
-        glPushMatrix();
-            glTranslatef(pos.x, pos.y, 0.0);
-            for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
-                RFile* f = *it;
-                f->drawSimple(dt);
-            }
-        glPopMatrix();
-    }
-
-    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
-        RDirNode* node = (*it);
-        node->drawSimple(frustum,dt);
-    }
-
-    if(gGourceNodeDebug) {
-        glColor4f(1.0, 1.0, 1.0, 1.0);
-
-        vec2f vel_offset = pos + vel.normal() * 10.0;
-
-        glBegin(GL_LINES);
-            glVertex2fv(pos);
-            glVertex2fv(vel_offset);
-        glEnd();
-
-        glColor4f(1.0, 1.0, 0.0, 1.0);
-
-        glLineWidth(1.0);
-
-        quadItemBounds.draw();
+        node->drawBloom(dt);
     }
 }
 

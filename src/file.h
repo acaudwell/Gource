@@ -41,12 +41,14 @@ class RFile : public Pawn {
     vec2f dest;
     float distance;
 
+   // FXLabel* label;
+
     //GLuint namelist;
 
     void setFilename(const std::string& abs_file_path);
 
     const vec3f& getNameColour() const;
-    void drawNameText(float alpha) const;
+    void drawNameText(float alpha);
 public:
     std::string path;
     std::string fullpath;
@@ -57,9 +59,9 @@ public:
 
     bool isExpiring() const { return expiring; }
     bool isRemoving() const { return removing; }
-    
-    bool overlaps(const vec2f& pos) const; 
-    
+
+    bool overlaps(const vec2f& pos) const;
+
     const vec3f & getFileColour() const;
     vec3f getColour() const;
     void colourize();
@@ -67,13 +69,17 @@ public:
     float getAlpha() const;
 
     void touch(const vec3f & colour);
-   
+
     void setSelected(bool selected);
+
+    void updateLabel();
 
     void setHidden(bool hidden);
 
     void setDest(const vec2f & dest){ this->dest = dest; }
     void setDistance(float distance){ this->distance = distance; }
+
+    void calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection);
 
     void logic(float dt);
     void draw(float dt);

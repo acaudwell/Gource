@@ -27,10 +27,6 @@ RAction::RAction(RUser* source, RFile* target, float addedtime) {
     rate = 0.5;
 }
 
-bool RAction::isFinished() {
-    return (progress >= 1.0) ? true : false;
-}
-
 void RAction::logic(float dt) {
     if(progress >= 1.0) return;
 
@@ -41,6 +37,29 @@ void RAction::logic(float dt) {
     float action_rate = std::min(10.0f, rate * std::max(1.0f, ((float)source->getPendingActionCount())));
 
     progress = std::min(progress + action_rate * dt, 1.0f);
+}
+
+void RAction::drawToVBO(quadbuf& buffer) const {
+    if(isFinished()) return;
+
+    vec2f src  = source->getPos();
+    vec2f dest = target->getAbsolutePos();
+
+    vec2f offset     = (dest - src).normal().perpendicular() * target->getSize() * 0.5;
+    vec2f offset_src = offset * 0.3f;
+
+    float alpha = 1.0 - progress;
+    float alpha2 = alpha * 0.1;
+
+    vec4f col1 = vec4f(colour, alpha);
+    vec4f col2 = vec4f(colour, alpha2);
+
+    quadbuf_vertex v1(src  - offset_src,  col1, vec2f(0.0f, 0.0f));
+    quadbuf_vertex v2(src  + offset_src,  col1, vec2f(0.0f, 1.0f));
+    quadbuf_vertex v3(dest + offset,      col2, vec2f(1.0f, 1.0f));
+    quadbuf_vertex v4(dest - offset,      col2, vec2f(1.0f, 0.0f));
+
+    buffer.add(0, v1, v2, v3, v4);
 }
 
 void RAction::draw(float dt) {
@@ -71,22 +90,6 @@ void RAction::draw(float dt) {
         glTexCoord2f(1.0,0.0);
        glVertex2f(dest.x - offset.x, dest.y - offset.y);
     glEnd();
-
-/*
-    glBegin(GL_QUADS);
-        glColor4fv(col2);
-        glTexCoord2f(0.0,0.0);
-        glVertex2f(src.x - offset_src.x, src.y - offset_src.y);
-        glTexCoord2f(1.0,0.0);
-        glVertex2f(src.x + offset_src.x, src.y + offset_src.y);
-
-        glColor4fv(col1);
-        glTexCoord2f(0.0,0.0);
-        glVertex2f(dest.x + offset.x, dest.y + offset.y);
-        glTexCoord2f(1.0,0.0);
-       glVertex2f(dest.x - offset.x, dest.y - offset.y);
-    glEnd();
-*/
 }
 
 CreateAction::CreateAction(RUser* source, RFile* target, float addedtime) : RAction(source, target, addedtime) {

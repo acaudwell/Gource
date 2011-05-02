@@ -91,12 +91,12 @@ int main(int argc, char *argv[]) {
             conf.save(gGourceSettings.save_config);
             exit(0);
         }
-        
+
         //write custom log file
         if(gGourceSettings.output_custom_filename.size() > 0 && gGourceSettings.path.size() > 0) {
 
             Gource::writeCustomLog(gGourceSettings.path, gGourceSettings.output_custom_filename);
-            exit(0);           
+            exit(0);
         }
 
     } catch(ConfFileException& exception) {
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
     }
 
     //enable vsync
-    display.enableVsync(true);
+    display.enableVsync(gGourceSettings.vsync);
 
     try {
 
