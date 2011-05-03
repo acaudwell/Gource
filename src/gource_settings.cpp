@@ -164,10 +164,10 @@ GourceSettings::GourceSettings() {
     arg_aliases["H"] = "extended-help";
     arg_aliases["b"] = "background-colour";
     arg_aliases["c"] = "time-scale";
-    arg_aliases["background"] = "background-colour";
-    arg_aliases["disable-bloom"]    = "hide-bloom";
-    arg_aliases["disable-progress"] = "hide-progress";
-    arg_aliases["highlight-users"] = "highlight-all-users";
+    arg_aliases["background"]          = "background-colour";
+    arg_aliases["disable-bloom"]       = "hide-bloom";
+    arg_aliases["disable-progress"]    = "hide-progress";
+    arg_aliases["highlight-all-users"] = "highlight-users";
 
     //command line only options
     conf_sections["help"]            = "command-line";
@@ -203,7 +203,7 @@ GourceSettings::GourceSettings() {
     arg_types["hide-bloom"]      = "bool";
     arg_types["hide-mouse"]      = "bool";
     arg_types["hide-root"]       = "bool";
-    arg_types["highlight-all-users"] = "bool";
+    arg_types["highlight-users"] = "bool";
     arg_types["highlight-dirs"]  = "bool";
     arg_types["file-extensions"] = "bool";
     arg_types["key"]             = "bool";
@@ -983,7 +983,8 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         }
     }
 
-    if(gource_settings->getBool("highlight-all-users")) {
+    if(   gource_settings->getBool("highlight-users")
+       || gource_settings->getBool("highlight-all-users")) {
         highlight_all_users = true;
     }
 
