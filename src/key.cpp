@@ -11,9 +11,9 @@ FileKeyEntry::FileKeyEntry(const FXFont& font, const std::string& ext, const vec
 
     this->font = font;
     this->font.dropShadow(false);
-    
+
     shadow      = vec2f(3.0, 3.0);
-    
+
     width       = 90.0f;
     height      = 18.0f;
     left_margin = 20.0f;
@@ -75,7 +75,7 @@ void FileKeyEntry::setDestY(float dest_y) {
 
 
 void FileKeyEntry::logic(float dt) {
-   
+
     if(count<=0 || !show) {
         alpha = std::max(0.0f, alpha - dt);
     } else if(alpha < 1.0f) {
@@ -94,7 +94,7 @@ void FileKeyEntry::logic(float dt) {
         }
     }
 
-    pos = vec2f(alpha * left_margin, pos_y);                        
+    pos = vec2f(alpha * left_margin, pos_y);
 }
 
 void FileKeyEntry::draw() {
@@ -104,12 +104,12 @@ void FileKeyEntry::draw() {
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
+
     glColor4f(0.0f, 0.0f, 0.0f, alpha * 0.333f);
-    
+
     glPushMatrix();
         glTranslatef(shadow.x, shadow.y, 0.0f);
-    
+
         glBegin(GL_QUADS);
             glVertex2f(pos.x,       pos.y);
             glVertex2f(pos.x,       pos.y + height);
@@ -117,7 +117,7 @@ void FileKeyEntry::draw() {
             glVertex2f(pos.x+width, pos.y);
         glEnd();
     glPopMatrix();
-        
+
     glBegin(GL_QUADS);
         glColor4f(colour.x * 0.5f, colour.y * 0.5f, colour.z * 0.5f, alpha);
         glVertex2f(pos.x,         pos.y);
@@ -126,12 +126,13 @@ void FileKeyEntry::draw() {
         glVertex2f(pos.x + width, pos.y + height);
         glVertex2f(pos.x + width, pos.y);
     glEnd();
-    
+
     glEnable(GL_TEXTURE_2D);
-    glColor4f(1.0f, 1.0f, 1.0f, alpha);
+
+    font.setColour(vec4f(1.0f, 1.0f, 1.0f, alpha));
 
     font.dropShadow(false);
-    font.draw((int)pos.x+2, (int)pos.y+3,  ext.c_str());   
+    font.draw((int)pos.x+2, (int)pos.y+3,  ext.c_str());
 
     font.dropShadow(true);
     font.print((int)pos.x+width+4, (int)pos.y+3, "%d", count);
@@ -157,13 +158,13 @@ FileKey::FileKey(float update_interval) {
 
 FileKey::~FileKey() {
     active_keys.clear();
-    
+
     for(std::map<std::string, FileKeyEntry*>::iterator it = keymap.begin(); it != keymap.end(); it++) {
         FileKeyEntry* entry = it->second;
         delete entry;
     }
     keymap.clear();
-    
+
 }
 
 void FileKey::setShow(bool show) {
@@ -196,11 +197,11 @@ void FileKey::clear() {
 }
 
 void FileKey::inc(RFile* file) {
-    
+
     FileKeyEntry* entry = 0;
 
     std::map<std::string, FileKeyEntry*>::iterator result = keymap.find(file->ext);
-    
+
     if(result != keymap.end()) {
         entry = result->second;
     } else {
@@ -208,7 +209,7 @@ void FileKey::inc(RFile* file) {
         keymap[file->ext] = entry;
     }
 
-    entry->inc();   
+    entry->inc();
 }
 
 
@@ -216,7 +217,7 @@ void FileKey::inc(RFile* file) {
 void FileKey::dec(RFile* file) {
 
     std::map<std::string, FileKeyEntry*>::iterator result = keymap.find(file->ext);
-    
+
     if(result == keymap.end()) return;
 
     FileKeyEntry* entry = result->second;
@@ -229,7 +230,7 @@ bool file_key_entry_sort (const FileKeyEntry* a, const FileKeyEntry* b) {
     //sort by count
     if(a->getCount() != b->getCount())
         return (a->getCount() > b->getCount());
-        
+
     //then by name (tie breaker)
     return a->getExt().compare(b->getExt()) < 0;
 }
@@ -260,13 +261,13 @@ void FileKey::logic(float dt) {
 
             //limit to entries we can put onto the screen
             int max_visible_entries = (display.height - 150.0f) / 20.0f;
-            
+
             if (active_keys.size() > max_visible_entries) {
                 active_keys.resize(max_visible_entries);
             }
 
             //set position
-            
+
             float key_y = 20.0f;
 
             for(std::vector<FileKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
@@ -287,21 +288,21 @@ void FileKey::logic(float dt) {
 
         interval_remaining = update_interval;
     }
-        
+
     for(std::vector<FileKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
 
         FileKeyEntry* entry = *it;
 
         entry->logic(dt);
-    }    
+    }
 }
 
 void FileKey::draw() {
-    
+
     for(std::vector<FileKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
         FileKeyEntry* entry = *it;
 
         entry->draw();
-    }       
+    }
 
 }
