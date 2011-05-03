@@ -54,10 +54,10 @@ void RAction::drawToVBO(quadbuf& buffer) const {
     vec4f col1 = vec4f(colour, alpha);
     vec4f col2 = vec4f(colour, alpha2);
 
-    quadbuf_vertex v1(src  - offset_src,  col1, vec2f(0.0f, 0.0f));
-    quadbuf_vertex v2(src  + offset_src,  col1, vec2f(0.0f, 1.0f));
-    quadbuf_vertex v3(dest + offset,      col2, vec2f(1.0f, 1.0f));
-    quadbuf_vertex v4(dest - offset,      col2, vec2f(1.0f, 0.0f));
+    quadbuf_vertex v1(src  - offset_src,  col2, vec2f(0.0f, 0.0f));
+    quadbuf_vertex v2(src  + offset_src,  col2, vec2f(0.0f, 1.0f));
+    quadbuf_vertex v3(dest + offset,      col1, vec2f(1.0f, 1.0f));
+    quadbuf_vertex v4(dest - offset,      col1, vec2f(1.0f, 0.0f));
 
     buffer.add(0, v1, v2, v3, v4);
 }
