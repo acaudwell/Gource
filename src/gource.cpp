@@ -2279,7 +2279,10 @@ void Gource::draw(float t, float dt) {
 
    if(!(gGourceSettings.hide_usernames || gGourceSettings.hide_users)) {
         for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
-            it->second->drawName();
+            RUser* user = it->second;
+            if(!user->isSelected()) {
+                user->drawName();
+            }
         }
     }
 
@@ -2309,17 +2312,15 @@ void Gource::draw(float t, float dt) {
         text_vbo_draw_time = SDL_GetTicks() - text_vbo_draw_time;
     }
 
-    //switch back
-    display.pop2D();
-
     //draw selected item names again so they are over the top
     if(selectedUser !=0) selectedUser->drawName();
 
     if(selectedFile !=0) {
-        display.push2D();
             selectedFile->drawName();
-        display.pop2D();
     }
+
+    //switch back
+    display.pop2D();
 
     text_time = SDL_GetTicks() - text_time;
 
