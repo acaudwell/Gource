@@ -41,7 +41,7 @@ void FileKeyEntry::setShow(bool show) {
 }
 
 bool FileKeyEntry::isFinished() const {
-    return (pos_y > 0.0f && count<=0 && alpha <= 0.0f);
+    return (count<=0 && alpha <= 0.0f);
 }
 
 void FileKeyEntry::colourize() {
