@@ -1,4 +1,4 @@
-0.34-rc2:
+0.34:
  * Now using VBOs and shaders for faster rendering when OpenGL 2.0 is available.
  * Eliminated bloom colour banding artifacts (requires OpenGL 2.0).
  * New font rendering library derived from FTGL (FTGL no longer required).
