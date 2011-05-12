@@ -900,10 +900,6 @@ void RDirNode::drawDirName(FXFont& dirfont) const{
 
     float alpha = gGourceSettings.highlight_dirs ? 1.0 : std::max(0.0f, 5.0f - since_last_node_change) / 5.0f;
 
-    alpha *= std::min(since_node_visible*3.0f, 1.0f);
-
-    //glColor4f(1.0, 1.0, 1.0, alpha);
-
     vec2f mid = spline.getMidPoint();
 
     dirfont.setAlpha(alpha);
