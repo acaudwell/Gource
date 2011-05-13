@@ -41,6 +41,8 @@ public:
     
     void update(const vec2f& pos1, const vec4f& col1, const vec2f& pos2, const vec4f& col2, const vec2f& spos);
 
+    void drawToVBO(quadbuf& buffer) const;
+
     void drawShadow() const;
     void draw() const;
 };

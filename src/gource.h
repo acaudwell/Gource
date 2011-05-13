@@ -114,6 +114,7 @@ class Gource : public SDLApp {
 
     quadbuf  file_vbo;
     quadbuf  user_vbo;
+    quadbuf  edge_vbo;
     quadbuf  action_vbo;
 
     bloombuf bloom_vbo;
@@ -243,8 +244,11 @@ class Gource : public SDLApp {
     void drawBackground(float dt);
 
     void drawScene(float dt);
-
+    
     void updateVBOs(float dt);
+
+    void updateAndDrawEdges();
+    
     void drawFileShadows(float dt);
     void drawUserShadows(float dt);
     void drawActions(float dt);

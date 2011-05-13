@@ -65,6 +65,23 @@ const vec2f& SplineEdge::getMidPoint() const {
     return midpoint;
 }
 
+void SplineEdge::drawToVBO(quadbuf& buffer) const {
+
+    int edges_count = spline_point.size() - 1;
+
+    for(int i=0; i < edges_count; i++) {
+
+        vec2f perp = (spline_point[i] - spline_point[i+1]).perpendicular().normal() * 2.5f;        
+        
+        quadbuf_vertex v1(spline_point[i]   + perp, spline_colour[i],   vec2f(1.0f, 0.0f));
+        quadbuf_vertex v2(spline_point[i]   - perp, spline_colour[i],   vec2f(0.0f, 0.0f));
+        quadbuf_vertex v3(spline_point[i+1] - perp, spline_colour[i+1], vec2f(0.0f, 0.0f));
+        quadbuf_vertex v4(spline_point[i+1] + perp, spline_colour[i+1], vec2f(1.0f, 0.0f));
+
+        buffer.add(0, v1, v2, v3, v4);       
+    }
+}
+
 void SplineEdge::drawBeam(const vec2f & pos1, const vec4f & col1, const vec2f & pos2, const vec4f & col2, float radius, bool first) const{
 
     vec2f perp = (pos1 - pos2).perpendicular().normal() * radius;

@@ -1852,40 +1852,12 @@ void Gource::drawBackground(float dt) {
 void Gource::drawScene(float dt) {
 
     //draw edges
+
     draw_edges_time = SDL_GetTicks();
 
-    root->calcEdges();
+    updateAndDrawEdges();
 
-    //switch to 2d
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    glOrtho(0, display.width, display.height, 0, -1.0, 1.0);
-
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-    glLoadIdentity();
-
-    glEnable(GL_BLEND);
-    glEnable(GL_TEXTURE_2D);
-
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    if(!gGourceSettings.hide_tree) {
-        glBindTexture(GL_TEXTURE_2D, beamtex->textureid);
-
-        root->drawEdgeShadows(dt);
-        root->drawEdges(dt);
-    }
-
-    //switch back
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-
-    glMatrixMode(GL_MODELVIEW);
-    glPopMatrix();
-
-    draw_edges_time = SDL_GetTicks() - draw_edges_time;
+    draw_edges_time = SDL_GetTicks() - draw_edges_time;  
 
     //draw shadows
 
@@ -1929,6 +1901,62 @@ void Gource::drawScene(float dt) {
 
     draw_bloom_time = SDL_GetTicks() - draw_bloom_time;
 
+}
+
+void Gource::updateAndDrawEdges() {
+    if(gGourceSettings.hide_tree) return;
+        
+    root->calcEdges();
+
+    //switch to 2d
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, display.width, display.height, 0, -1.0, 1.0);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glEnable(GL_BLEND);
+    glEnable(GL_TEXTURE_2D);
+
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBindTexture(GL_TEXTURE_2D, beamtex->textureid);
+
+    if(!gGourceSettings.ffp) {
+
+        edge_vbo.reset();
+
+        root->updateEdgeVBO(edge_vbo);
+
+        edge_vbo.update();
+
+        shadow_shader->use();
+        shadow_shader->setFloat("shadow_strength", 0.5);
+
+        vec2f shadow_offset = vec2f(2.0, 2.0);
+
+        glPushMatrix();
+            glTranslatef(shadow_offset.x, shadow_offset.y, 0.0f);
+            edge_vbo.draw();
+        glPopMatrix();
+
+        glUseProgramObjectARB(0);
+
+        edge_vbo.draw();
+    
+    } else {
+        root->drawEdgeShadows();
+        root->drawEdges();
+    }
+
+    //switch back
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
 }
 
 void Gource::drawActions(float dt) {
@@ -2520,6 +2548,7 @@ void Gource::draw(float t, float dt) {
             font.print(1,660,"User VBO: %d/%d vertices, %d texture changes", user_vbo.vertices(), user_vbo.capacity(), user_vbo.texture_changes());
             font.print(1,680,"Action VBO: %d/%d vertices", action_vbo.vertices(), action_vbo.capacity());
             font.print(1,700,"Bloom VBO: %d/%d vertices", bloom_vbo.vertices(), bloom_vbo.capacity());
+            font.print(1,720,"Edge VBO: %d/%d vertices",  edge_vbo.vertices(), edge_vbo.capacity());
         }
 
         if(selectedUser != 0) {
@@ -2527,7 +2556,7 @@ void Gource::draw(float t, float dt) {
         }
 
         if(selectedFile != 0) {
-            font.print(1,720,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
+            font.print(1,740,"%s: %d files (%d visible)", selectedFile->getDir()->getPath().c_str(),
                     selectedFile->getDir()->fileCount(), selectedFile->getDir()->visibleFileCount());
         }
     }

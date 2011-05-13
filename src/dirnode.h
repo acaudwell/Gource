@@ -184,8 +184,10 @@ public:
 
     void logic(float dt);
 
-    void drawEdges(float dt) const;
-    void drawEdgeShadows(float dt) const;
+    void updateEdgeVBO(quadbuf& buffer) const;
+    
+    void drawEdges() const;
+    void drawEdgeShadows() const;
 
     void checkFrustum(const Frustum & frustum);
 

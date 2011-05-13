@@ -1073,7 +1073,20 @@ const vec2f & RDirNode::getProjectedPos() const{
     return projected_pos;
 }
 
-void RDirNode::drawEdgeShadows(float dt) const{
+void RDirNode::updateEdgeVBO(quadbuf& buffer) const {
+
+    if(parent!=0 && (!gGourceSettings.hide_root || parent->parent !=0)) spline.drawToVBO(buffer);
+
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
+        RDirNode* child = (*it);
+
+        if(child->isVisible()) {
+            child->updateEdgeVBO(buffer);
+        }
+    }
+}
+
+void RDirNode::drawEdgeShadows() const{
 
     if(parent!=0 && (!gGourceSettings.hide_root || parent->parent !=0)) spline.drawShadow();
 
@@ -1082,12 +1095,12 @@ void RDirNode::drawEdgeShadows(float dt) const{
 
         //draw edge - assumes calcEdges() called before hand so spline will exist
         if(child->isVisible()) {
-           child->drawEdgeShadows(dt);
+           child->drawEdgeShadows();
         }
     }
 }
 
-void RDirNode::drawEdges(float dt) const{
+void RDirNode::drawEdges() const{
 
    if(parent!=0 && (!gGourceSettings.hide_root || parent->parent !=0)) spline.draw();
 
@@ -1096,7 +1109,7 @@ void RDirNode::drawEdges(float dt) const{
 
         //draw edge - assumes calcEdges() called before hand so spline will exist
         if(child->isVisible()) {
-           child->drawEdges(dt);
+           child->drawEdges();
         }
     }
 }
