@@ -1857,7 +1857,7 @@ void Gource::drawScene(float dt) {
 
     updateAndDrawEdges();
 
-    draw_edges_time = SDL_GetTicks() - draw_edges_time;  
+    draw_edges_time = SDL_GetTicks() - draw_edges_time;
 
     //draw shadows
 
@@ -1905,7 +1905,7 @@ void Gource::drawScene(float dt) {
 
 void Gource::updateAndDrawEdges() {
     if(gGourceSettings.hide_tree) return;
-        
+
     root->calcEdges();
 
     //switch to 2d
@@ -1945,7 +1945,7 @@ void Gource::updateAndDrawEdges() {
         glUseProgramObjectARB(0);
 
         edge_vbo.draw();
-    
+
     } else {
         root->drawEdgeShadows();
         root->drawEdges();
@@ -2239,9 +2239,6 @@ void Gource::draw(float t, float dt) {
     glLoadIdentity();
 
     camera.focus();
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
 
     //check visibility
     root->checkFrustum(frustum);
