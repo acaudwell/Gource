@@ -1,3 +1,6 @@
+0.35:
+ * Fixed --font-colour option.
+
 0.34:
  * Now using VBOs and shaders for faster rendering when OpenGL 2.0 is available.
  * Eliminated bloom colour banding artifacts (requires OpenGL 2.0).

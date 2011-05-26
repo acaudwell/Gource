@@ -2446,8 +2446,8 @@ void Gource::draw(float t, float dt) {
 
     // text using the specified font goes here
 
-    glColor4f(gGourceSettings.font_colour.x, gGourceSettings.font_colour.y, gGourceSettings.font_colour.z, 1.0f);
-
+    fontmedium.setColour(vec4f(gGourceSettings.font_colour, 1.0f));
+    
     if(!gGourceSettings.hide_date) {
         fontmedium.draw(display.width/2 - date_x_offset, 20, displaydate);
     }
