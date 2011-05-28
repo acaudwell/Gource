@@ -1,4 +1,5 @@
 0.35:
+ * Fixed handling of spaces in directory names with Mercurial.
  * Fixed --font-colour option.
 
 0.34:
