@@ -25,7 +25,7 @@ std::string gGourceMercurialCommand() {
 
     std::string gource_style_path = gSDLAppResourceDir + std::string("gource.style");
 
-    return std::string("hg log -r 0:tip --style ") + gource_style_path;
+    return std::string("hg log -r 0:tip --style \"") + gource_style_path + std::string("\"");
 }
 
 MercurialLog::MercurialLog(const std::string& logfile) : RCommitLog(logfile) {
@@ -60,7 +60,7 @@ BaseLog* MercurialLog::generateLog(const std::string& dir) {
     if(temp_file.size()==0) return 0;
 
     char cmd_buff[2048];
-    sprintf(cmd_buff, "%s -R %s > %s", command.c_str(), dir.c_str(), temp_file.c_str());
+    sprintf(cmd_buff, "%s -R \"%s\" > %s", command.c_str(), dir.c_str(), temp_file.c_str());
 
     int command_rc = system(cmd_buff);
 
@@ -97,7 +97,7 @@ bool MercurialLog::parseCommit(RCommit& commit) {
     bool has_colour = false;
     vec3f colour;
 
-//    debugLog("file = %s, timestamp=%d, username=%s, action=%s\n",  entries[3].c_str(), 
+//    debugLog("file = %s, timestamp=%d, username=%s, action=%s\n",  entries[3].c_str(),
 //        commit.timestamp, commit.username.c_str(), action.c_str());
 
     if(has_colour) {
