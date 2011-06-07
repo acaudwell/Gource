@@ -26,6 +26,19 @@ FileKeyEntry::FileKeyEntry(const FXFont& font, const std::string& ext, const vec
     dest_y       = -1.0f;
 
     show = true;
+
+    display_ext = ext;
+    
+    bool truncated = false;
+    
+    while(font.getWidth(display_ext) > width - 15.0f) {
+        display_ext.resize(display_ext.size()-1);
+        truncated = true;
+    }
+    
+    if(truncated) {
+        display_ext += std::string("...");
+    }
 }
 
 const vec3f& FileKeyEntry::getColour() const {
@@ -132,7 +145,7 @@ void FileKeyEntry::draw() {
     font.setColour(vec4f(1.0f, 1.0f, 1.0f, alpha));
 
     font.dropShadow(false);
-    font.draw((int)pos.x+2, (int)pos.y+3,  ext.c_str());
+    font.draw((int)pos.x+2, (int)pos.y+3,  display_ext.c_str());
 
     font.dropShadow(true);
     font.print((int)pos.x+width+4, (int)pos.y+3, "%d", count);

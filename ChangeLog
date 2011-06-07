@@ -1,4 +1,5 @@
 0.35:
+ * Added long file extension truncation handling to file key (--key).
  * Treat changes in Mercurial log files with the same time/user as one commit.
  * Fixed handling of spaces in directory names with Mercurial.
  * Fixed --font-colour option.

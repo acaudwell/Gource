@@ -31,6 +31,7 @@ class FileKeyEntry {
     FXFont font;
     vec3f colour;
     std::string ext;
+    std::string display_ext;
     float alpha;
     float brightness;
     int count;
