@@ -22,11 +22,9 @@
 
 class CustomLog : public RCommitLog {
 protected:
-
-    bool readCustomCommit(RCommit& commit);
-
-    vec3f parseColour(const std::string& cstr);
     bool parseCommit(RCommit& commit);
+    bool parseCommitEntry(RCommit& commit);
+    vec3f parseColour(const std::string& cstr);
 public:
     CustomLog(const std::string& logfile);
 };

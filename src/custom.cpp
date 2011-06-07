@@ -42,12 +42,12 @@ vec3f CustomLog::parseColour(const std::string& cstr) {
 
 bool CustomLog::parseCommit(RCommit& commit) {
 
-    while(readCustomCommit(commit));
+    while(parseCommitEntry(commit));
 
-    return commit.files.size() > 0;
+    return !commit.files.empty();
 }
 
-bool CustomLog::readCustomCommit(RCommit& commit) {
+bool CustomLog::parseCommitEntry(RCommit& commit) {
 
     std::string line;
     std::vector<std::string> entries;
@@ -62,27 +62,25 @@ bool CustomLog::readCustomCommit(RCommit& commit) {
     std::string username = (entries[1].size()>0) ? entries[1] : "Unknown";
     std::string action   = (entries[2].size()>0) ? entries[2] : "A";
 
+    //if this file is for the same person and timestamp
+    //we add to the commit, else we save the lastline
+    //and return false
+    if(commit.files.empty()) {
+        commit.timestamp = timestamp;
+        commit.username  = username;
+    } else {
+        if(commit.timestamp != timestamp || commit.username  != username) {
+            lastline = line;
+            return false;
+        }
+    }
+
     bool has_colour = false;
     vec3f colour;
 
     if(entries.size()>=5 && entries[4].size()>0) {
         has_colour = true;
         colour = parseColour(entries[4]);
-    }
-
-    //if this file is for the same person and timestamp
-    //we add to the commit, else we save the lastline
-    //and return false
-    if(commit.files.size() > 0
-       && (commit.timestamp != timestamp
-           || commit.username  != username)) {
-        lastline = line;
-        return false;
-    }
-
-    if(commit.files.size() == 0) {
-        commit.timestamp = timestamp;
-        commit.username  = username;
     }
 
     if(has_colour) {

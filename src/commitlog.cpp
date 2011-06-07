@@ -80,7 +80,7 @@ RCommitLog::RCommitLog(const std::string& logfile, int firstChar) {
 RCommitLog::~RCommitLog() {
     if(logf!=0) delete logf;
 
-    if(temp_file.size()) {
+    if(!temp_file.empty()) {
         remove(temp_file.c_str());
     }
 }
@@ -147,7 +147,7 @@ bool RCommitLog::getCommitAt(float percent, RCommit& commit) {
 }
 
 bool RCommitLog::getNextLine(std::string& line) {
-    if(lastline.size()>0) {
+    if(!lastline.empty()) {
         line = lastline;
         lastline = std::string("");
         return true;
