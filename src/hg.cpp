@@ -45,7 +45,7 @@ MercurialLog::MercurialLog(const std::string& logfile) : RCommitLog(logfile) {
 
 BaseLog* MercurialLog::generateLog(const std::string& dir) {
 
-    //does directory have a .git ?
+    //does directory have a .hg ?
     std::string hgdir = dir + std::string("/.hg");
     struct stat dirinfo;
     int stat_rc = stat(hgdir.c_str(), &dirinfo);
@@ -76,6 +76,13 @@ BaseLog* MercurialLog::generateLog(const std::string& dir) {
 
 bool MercurialLog::parseCommit(RCommit& commit) {
 
+    while(parseCommitEntry(commit));
+    
+    return !commit.files.empty();
+}
+
+bool MercurialLog::parseCommitEntry(RCommit& commit) {
+    
     std::string line;
     std::vector<std::string> entries;
 
@@ -84,27 +91,29 @@ bool MercurialLog::parseCommit(RCommit& commit) {
     //custom line
     if(!hg_regex.match(line, &entries)) return false;
 
-    commit.timestamp = atol(entries[0].c_str());
+    time_t timestamp     = atol(entries[0].c_str());
+    std::string username = entries[1];
 
-    commit.username = entries[1];
-
+    //if this file is for the same person and timestamp
+    //we add to the commit, else we save the lastline
+    //and return false
+    if(commit.files.empty()) {
+        commit.timestamp = timestamp;
+        commit.username  = username;
+    } else {
+        if(commit.timestamp != timestamp || commit.username  != username) {
+            lastline = line;
+            return false;
+        }
+    }
+    
     std::string action = "A";
 
-    if(entries[2].size()>0) {
+    if(!entries[2].empty()) {
         action = entries[2];
     }
 
-    bool has_colour = false;
-    vec3f colour;
-
-//    debugLog("file = %s, timestamp=%d, username=%s, action=%s\n",  entries[3].c_str(),
-//        commit.timestamp, commit.username.c_str(), action.c_str());
-
-    if(has_colour) {
-        commit.addFile(entries[3], action, colour);
-    } else {
-        commit.addFile(entries[3], action);
-    }
+    commit.addFile(entries[3], action);
 
     //commit.debug();
 
