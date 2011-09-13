@@ -173,7 +173,7 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
     time_str.tm_sec   = atoi(entries[5].c_str());
     time_str.tm_isdst = -1;
 
-    commit.timestamp = mktime(&time_str);            
+    commit.timestamp = timegm(&time_str);            
    
     //parse author
     TiXmlElement* authorE = leE->FirstChildElement("author");
