@@ -1148,21 +1148,28 @@ void Gource::processCommit(RCommit& commit, float t) {
 
             if(cf.action != "D") continue;
 
-            RDirNode* dir = root->findDir(cf.filename);
+            std::list<RDirNode*> dirs;
 
-            if(!dir) continue;
+            root->findDirs(cf.filename, dirs);
 
-            //foreach dir files
-            std::list<RFile*> dir_files;
+            for(std::list<RDirNode*>::iterator it = dirs.begin(); it != dirs.end(); it++) {
 
-            dir->getFilesRecursive(dir_files);
+                RDirNode* dir = (*it);
+                
+                //fprintf(stderr, "deleting everything under %s because of %s\n", dir->getPath().c_str(), cf.filename.c_str());
 
-            for(std::list<RFile*>::iterator it = dir_files.begin(); it != dir_files.end(); it++) {
-                RFile* file = *it;
+                //foreach dir files
+                std::list<RFile*> dir_files;
 
-                addFileAction(commit.username, cf.action, file, t);
+                dir->getFilesRecursive(dir_files);
+
+                for(std::list<RFile*>::iterator it = dir_files.begin(); it != dir_files.end(); it++) {
+                    RFile* file = *it;
+
+                    addFileAction(commit.username, cf.action, file, t);
+                }
             }
-
+                
             return;
         }
 

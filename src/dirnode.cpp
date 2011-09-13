@@ -146,17 +146,18 @@ RDirNode* RDirNode::getParent() const{
     return parent;
 }
 
-RDirNode* RDirNode::findDir(const std::string& path) const {
 
-    if(abspath == path) return (RDirNode*) this;
+//finds directories closest to the root directory prefixed by path (eg foo/ may match just foo/ or could also match foo/bar1, foo/bar2, ... if foo/ doesn't exist).
+void RDirNode::findDirs(const std::string& path, std::list<RDirNode*>& dirs) {
 
-    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
-        RDirNode* match = (*it)->findDir(path);
-
-        if(match) return match;
+    if(prefixedBy(path)) {
+        dirs.push_back(this);
+        return;
     }
-
-    return 0;
+ 
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
+        (*it)->findDirs(path, dirs);
+    }
 }
 
 void RDirNode::getFilesRecursive(std::list<RFile*>& files) const {

@@ -158,7 +158,8 @@ public:
     const vec4f & getColour() const;
 
     RDirNode* getParent() const;
-    RDirNode* findDir(const std::string& path) const;
+
+    void findDirs(const std::string& path, std::list<RDirNode*>& dirs);
 
     const vec2f & getPos() const;
 
