@@ -1,3 +1,7 @@
+0.36:
+ * Fixed SVN log GMT timestamp conversion.
+ * Fixed issue with sub-dirs of deleted dir not being removed in some cases.
+
 0.35:
  * Added long file extension truncation handling to file key (--key).
  * Treat changes in Mercurial log files with the same time/user as one commit.
