@@ -1,3 +1,6 @@
+0.37:
+ * Made SVN log GMT timestamp conversion fix portable.
+
 0.36:
  * Fixed SVN log GMT timestamp conversion.
  * Fixed issue with sub-dirs of deleted dir not being removed in some cases.

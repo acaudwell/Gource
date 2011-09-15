@@ -85,6 +85,43 @@ BaseLog* SVNCommitLog::generateLog(const std::string& dir) {
     return seeklog;
 }
 
+#ifndef HAVE_TIMEGM
+
+std::string system_tz;
+bool system_tz_init = false;
+
+time_t __timegm_hack(struct tm* tm) {
+
+    if(!system_tz_init) {
+        char* current_tz_env = getenv("TZ");
+
+        if(current_tz_env != 0) {
+            system_tz  = std::string("TZ=") + current_tz_env;
+        }
+
+        system_tz_init = true;
+    }
+
+    putenv("TZ=UTC");
+    tzset();
+
+    time_t timestamp = mktime(tm);
+
+    if(!system_tz.empty()) {
+        putenv(system_tz.c_str());
+    } else {
+#ifdef HAVE_UNSETENV
+        unsetenv("TZ");
+#else
+        putenv("TZ=");
+#endif
+    }
+    tzset();
+
+    return timestamp;
+}
+#endif
+
 bool SVNCommitLog::parseCommit(RCommit& commit) {
 
     //fprintf(stderr,"parsing svn log\n");
@@ -104,7 +141,7 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
         //if so find the first logentry tag
 
         bool found_logentry = false;
-        
+
         while(getNextLine(line)) {
             if(svn_logentry_start.match(line)) {
                 found_logentry = true;
@@ -112,7 +149,7 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
             }
         }
 
-        if(!found_logentry) return false;   
+        if(!found_logentry) return false;
     }
 
     //fprintf(stderr,"found logentry\n");
@@ -125,7 +162,7 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
     //fprintf(stderr,"found opening tag\n");
 
     bool endfound = false;
-    
+
     while(getNextLine(line)) {
         logentry.append(line);
         logentry.append("\n");
@@ -146,11 +183,11 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
     if(!doc.Parse(logentry.c_str())) return false;
 
     //fprintf(stderr,"try to parse logentry: %s\n", logentry.c_str());
-    
+
     TiXmlElement* leE = doc.FirstChildElement( "logentry" );
-    
+
     std::vector<std::string> entries;
-    
+
     if(!leE) return false;
 
     //parse date
@@ -162,7 +199,7 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
 
     if(!svn_logentry_timestamp.match(timestamp_str, &entries))
         return false;
-                    
+
     struct tm time_str;
 
     time_str.tm_year  = atoi(entries[0].c_str()) - 1900;
@@ -173,17 +210,21 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
     time_str.tm_sec   = atoi(entries[5].c_str());
     time_str.tm_isdst = -1;
 
-    commit.timestamp = timegm(&time_str);            
-   
+#ifdef HAVE_TIMEGM
+    commit.timestamp = timegm(&time_str);
+#else
+    commit.timestamp = __timegm_hack(&time_str);
+#endif
+
     //parse author
     TiXmlElement* authorE = leE->FirstChildElement("author");
-    
+
     if(authorE != 0) {
-    
+
         std::string author(authorE->GetText());
 
         if(author.empty()) author = "Unknown";
-    
+
         commit.username = author;
     }
 
@@ -193,10 +234,10 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
     if(!pathsE) return true;
 
     //parse changes
-    
+
     for(TiXmlElement* pathE = pathsE->FirstChildElement("path"); pathE != 0; pathE = pathE->NextSiblingElement()) {
         //parse path
-        
+
         const char* kind   = pathE->Attribute("kind");
         const char* action = pathE->Attribute("action");
 
@@ -215,8 +256,8 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
         }
 
         std::string file(pathE->GetText());
-        std::string status(action);       
-        
+        std::string status(action);
+
         if(file.empty()) continue;
         if(status.empty()) continue;
 
@@ -227,10 +268,10 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
 
         commit.addFile(file, status);
     }
-    
+
     //fprintf(stderr,"parsed logentry\n");
 
     //read files
-    
+
     return true;
 }
