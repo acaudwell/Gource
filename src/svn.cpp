@@ -102,18 +102,18 @@ time_t __timegm_hack(struct tm* tm) {
         system_tz_init = true;
     }
 
-    putenv("TZ=UTC");
+    putenv((char*)"TZ=UTC");
     tzset();
 
     time_t timestamp = mktime(tm);
 
     if(!system_tz.empty()) {
-        putenv(system_tz.c_str());
+        putenv((char*)system_tz.c_str());
     } else {
 #ifdef HAVE_UNSETENV
         unsetenv("TZ");
 #else
-        putenv("TZ=");
+        putenv((char*)"TZ=");
 #endif
     }
     tzset();
