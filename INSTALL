@@ -16,7 +16,7 @@ Gource requires the following libraries to compile:
     SDL Image 1.2 (libsdl-image1.2-dev)
     PCRE3 (libpcre3-dev)
     Freetype 2 (libfreetype6-dev)
-    GLEW (libglew1.5-dev)
+    GLEW (libglew-dev)
 
 Optional:
 
