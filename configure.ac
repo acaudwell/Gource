@@ -17,6 +17,9 @@ AC_LANG(C++)
 AC_CHECK_FUNC(timegm,AC_DEFINE(HAVE_TIMEGM))
 AC_SUBST(HAVE_TIMEGM)
 
+AC_CHECK_FUNC(unsetenv,AC_DEFINE(HAVE_UNSETENV))
+AC_SUBST(HAVE_UNSETENV)
+
 #Disable X11 on Macs unless required
 AS_IF([test "$with_x" != yes], [
     case "$host_os" in
