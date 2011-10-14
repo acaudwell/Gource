@@ -56,7 +56,7 @@ gource_SOURCES = \
 	src/user.cpp src/user.h \
 	src/zoomcamera.cpp src/zoomcamera.h
 
-CPPFLAGS = -DSDLAPP_RESOURCE_DIR=\"$(pkgdatadir)\"
+AM_CPPFLAGS = -DSDLAPP_RESOURCE_DIR=\"$(pkgdatadir)\"
 
 dist_pkgdata_DATA = data/beam.png data/bloom.tga data/bloom_alpha.tga data/cursor.png data/file.png data/no_photo.png data/gource.style
 
@@ -80,7 +80,7 @@ gource_SOURCES += \
 endif
 
 if FONTDIR
-CPPFLAGS += -DSDLAPP_FONT_DIR=\"$(gourcefontdir)\"
+AM_CPPFLAGS += -DSDLAPP_FONT_DIR=\"$(gourcefontdir)\"
 else
 fontsdir = $(pkgdatadir)/fonts
 dist_fonts_DATA = data/fonts/README data/fonts/FreeSans.ttf

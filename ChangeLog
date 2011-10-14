@@ -1,3 +1,6 @@
+0.38:
+ * Use AM_CPPFLAGS in Makefile.am to allow passing custom CPPFLAGS.
+
 0.37:
  * Made SVN log GMT timestamp conversion fix portable.
 
