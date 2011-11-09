@@ -1,7 +1,12 @@
+*.avi
+*.mpg
+*.mkv
+*.mp4
+.objs
 gource
 gource.exe
-gource.depend
-gource.layout
+gource.win32.depend
+gource.win32.layout
 debug.log
 Makefile
 Makefile.in
