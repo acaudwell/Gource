@@ -164,3 +164,33 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
 
     return true;
 }
+
+const std::string GitCommitLog::searchGitDirectory( const std::string& actualdir )
+{
+        struct stat st;
+
+        std::string d = actualdir;
+
+        while( true )
+        {
+                std::string s = d + "/.git";
+
+                if( 0 == stat( s.c_str(), &st ) )
+                {
+                        return d;
+                }
+                if( 0 != stat( d.c_str(), &st ) )
+                {
+                        return actualdir;
+                }
+
+                d = std::string( "../" ) + d;
+
+                // just to be sure :/
+                if( d.length() > 1024 )
+                        return actualdir;
+        }
+
+        return actualdir;
+}
+
