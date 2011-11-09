@@ -159,6 +159,8 @@ public:
 
     RDirNode* getParent() const;
 
+    void removeChildIfEmpty(RDirNode* child);
+   
     bool isDir(const std::string& path) const;
     void findDirs(const std::string& path, std::list<RDirNode*>& dirs);
 

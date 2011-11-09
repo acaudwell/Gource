@@ -210,15 +210,11 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
     time_str.tm_sec   = atoi(entries[5].c_str());
     time_str.tm_isdst = -1;
 
-<<<<<<< HEAD
 #ifdef HAVE_TIMEGM
     commit.timestamp = timegm(&time_str);
 #else
     commit.timestamp = __timegm_hack(&time_str);
 #endif
-=======
-    commit.timestamp = mktime(&time_str);
->>>>>>> Work in progress support for renames.
 
     //parse author
     TiXmlElement* authorE = leE->FirstChildElement("author");
@@ -257,8 +253,8 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
         if(kind != 0 && strcmp(kind,"dir") == 0) {
 
             //accept only deletes for directories or directory renames
-            if(strcmp(action, "D") != 0 || strcmp(action, "A") != 0 && copy_from != 0) continue;
-
+            if(!(strcmp(action, "D") == 0 || strcmp(action, "A") == 0 && copy_from != 0 && strlen(copy_from) != 0)) continue;
+           
             is_dir = true;
         }
 
@@ -280,14 +276,16 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
         //NOTE: this is actually a copy. to identify an actual rename, we need to find a delete in the same commit
         //      with the name found in the copy_from
         
-        if(status == "A" && copy_from != 0) {
-
+        if(status == "A" && copy_from != 0 && strlen(copy_from) != 0) {
+           
             std::string rename_from(copy_from);
             status = "R";
 
             if(is_dir && rename_from[rename_from.size()-1] != '/') {
                 rename_from = rename_from + std::string("/");
             }
+
+            //fprintf(stderr, "found rename of %s to %s\n", rename_from.c_str(), file.c_str());
 
             renames.insert(rename_from);
 
@@ -296,6 +294,9 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
         } else if(status == "D") {
 
             //if we've seen this filename as a rename, don't add the delete
+            //TODO: this assumes they are in a particular order. need to do this as a post process
+            //(ie add as a copy, change to rename if there is a delete, remove the delete
+            
             if(renames.find(file) == renames.end()) {
                 commit.addFile(file, status);
             }

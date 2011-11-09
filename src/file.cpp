@@ -240,22 +240,24 @@ void RFile::logic(float dt) {
 }
 
 void RFile::rename(const std::string& rename_to, const vec3f& rename_colour) {
+    dir->removeFile(this);
+
+    RDirNode* root       = dir->getRoot();
+    RDirNode* parent_dir = dir->getParent();
+
+    if(parent_dir != 0) {
+        parent_dir->removeChildIfEmpty(dir);
+    }
+    
     setFilename(rename_to);
 
     file_colour = rename_colour;
     
-    if(path != dir->getPath()) {
-        //debugLog("remove from this dir\n");
-        dir->removeFile(this);
+    vec2f old_dir_pos = dir->getPos();
 
-        //debugLog("add to root\n");
+    root->addFile(this);
 
-        vec2f old_dir_pos = dir->getPos();
-
-        dir->getRoot()->addFile(this);
-
-        pos += old_dir_pos - dir->getPos();
-    }
+    pos += old_dir_pos - dir->getPos();
 }
 
 void RFile::touch(const vec3f & colour) {

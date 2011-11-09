@@ -254,6 +254,17 @@ RDirNode* RDirNode::getRoot() {
     return parent->getRoot();
 }
 
+void RDirNode::removeChildIfEmpty(RDirNode* child) {
+   
+    if(child->noFiles() && child->noDirs()) {   
+        children.remove(child);
+        delete child;
+        nodeUpdated(false);
+
+        if(parent!=0) parent->removeChildIfEmpty(this);
+    }
+}
+
 // note - you still need to delete the file yourself
 bool RDirNode::removeFile(RFile* f) {
     //doesnt match this path at all
@@ -261,7 +272,7 @@ bool RDirNode::removeFile(RFile* f) {
         return false;
     }
 
-    //is this dir - remove from this node
+    //is this dir - add to this node
     if(f->path.compare(abspath) == 0) {
 
         for(std::list<RFile*>::iterator it = files.begin(); it != files.end(); it++) {
@@ -270,7 +281,7 @@ bool RDirNode::removeFile(RFile* f) {
                 if(!f->isHidden()) visible_count--;
 
                 fileUpdated(false);
-
+                
                 return true;
             }
         }
@@ -391,7 +402,11 @@ bool RDirNode::addFile(RFile* f) {
         //debugLog("addFile %s to %s\n", f->fullpath.c_str(), abspath.c_str());
 
         files.push_back(f);
-        if(!f->isHidden()) visible_count++;
+
+        if(!f->isHidden()) {
+            addVisible();
+        }
+
         f->setDir(this);
 
         fileUpdated(false);
@@ -530,7 +545,7 @@ void RDirNode::calcColour() {
     // make branch brighter if recently accessed
     float brightness = std::max(0.6f, 1.0f - std::min(1.0f, since_last_node_change / 3.0f));
 
-    col = vec4f(brightness, brightness, brightness, 1.0);
+    col = vec4f(brightness, brightness, brightness, std::min(since_node_visible/3.0f,1.0f));
 
     int fcount = 0;
 
