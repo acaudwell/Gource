@@ -54,7 +54,7 @@ my @inclusions = (
     qr{^/configure(?:\.ac)?$},
     qr{^/src/.+\.(?:cpp|h)$},
     qr{^/data/file\.png$},
-    qr{^/data/no_photo\.png$},
+    qr{^/data/user\.png$},
     qr{^/data/beam\.png$},
     qr{^/data/bloom\.tga$},
     qr{^/data/bloom_alpha\.tga$},

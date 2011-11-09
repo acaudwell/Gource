@@ -82,6 +82,10 @@ public:
     std::string user_image_dir;
     std::map<std::string, std::string> user_image_map;
 
+    float camera_zoom_min;
+    float camera_zoom_max;
+    float camera_zoom_default;
+
     std::string camera_mode;
     float padding;
 

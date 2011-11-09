@@ -311,6 +311,10 @@ void GourceSettings::setGourceDefaults() {
     user_image_dir     = "";
     user_image_map.clear();
 
+    camera_zoom_min     = 50.0f;
+    camera_zoom_default = 100.0f;
+    camera_zoom_max     = 5000.0f;
+
     camera_mode     = "overview";
     padding         = 1.1f;
 

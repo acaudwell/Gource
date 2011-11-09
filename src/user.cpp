@@ -210,7 +210,7 @@ void RUser::assignUserImage() {
             if(!gGourceSettings.colour_user_images) usercol = vec3f(1.0, 1.0, 1.0);
             graphic = texturemanager.grabFile(gGourceSettings.default_user_image);
         } else {
-            graphic = texturemanager.grab("no_photo.png");
+            graphic = texturemanager.grab("user.png");
         }
     }
 

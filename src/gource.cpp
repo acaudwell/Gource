@@ -52,7 +52,7 @@ Gource::Gource(FrameExporter* exporter) {
 
     bloomtex = texturemanager.grab(bloom_tga);
     beamtex  = texturemanager.grab("beam.png");
-    usertex  = texturemanager.grab("no_photo.png");
+    usertex  = texturemanager.grab("user.png");
 
     shadow_shader = text_shader = bloom_shader = 0;
 
@@ -121,7 +121,7 @@ Gource::Gource(FrameExporter* exporter) {
 
     file_key = FileKey(1.0f);
 
-    camera = ZoomCamera(vec3f(0,0, -300), vec3f(0.0, 0.0, 0.0), 250.0, 5000.0);
+    camera = ZoomCamera(vec3f(0,0, -300), vec3f(0.0, 0.0, 0.0), gGourceSettings.camera_zoom_default, gGourceSettings.camera_zoom_max);
     camera.setPadding(gGourceSettings.padding);
 
     setCameraMode(gGourceSettings.camera_mode);
@@ -450,11 +450,11 @@ void Gource::zoom(bool zoomin) {
     if(zoomin) {
         distance /= zoom_multi;
 
-        if(distance < 100.0f) distance = 100.0f;
+        if(distance < gGourceSettings.camera_zoom_min) distance = gGourceSettings.camera_zoom_min;
     } else {
         distance *= zoom_multi;
 
-        if(distance > 4999.0f) distance = 4999.0f;
+        if(distance > gGourceSettings.camera_zoom_max) distance = gGourceSettings.camera_zoom_max;
     }
 
     camera.setDistance(distance);
@@ -983,13 +983,13 @@ RFile* Gource::addFile(const RCommitFile& cf) {
     //if we already have max files in circulation
     //we cant add any more
     if(gGourceSettings.max_files > 0 && files.size() >= gGourceSettings.max_files) return 0;
-       
+
     //see if this is a directory
     std::string file_as_dir = cf.filename;
     if(file_as_dir[file_as_dir.size()-1] != '/') file_as_dir.append("/");
 
     if(root->isDir(file_as_dir)) return 0;
-    
+
     int tagid = tag_seq++;
 
     RFile* file = new RFile(cf.filename, cf.colour, vec2f(0.0,0.0), tagid);
@@ -1165,7 +1165,7 @@ void Gource::processCommit(RCommit& commit, float t) {
             for(std::list<RDirNode*>::iterator it = dirs.begin(); it != dirs.end(); it++) {
 
                 RDirNode* dir = (*it);
-                
+
                 //fprintf(stderr, "deleting everything under %s because of %s\n", dir->getPath().c_str(), cf.filename.c_str());
 
                 //foreach dir files
@@ -1179,7 +1179,7 @@ void Gource::processCommit(RCommit& commit, float t) {
                     addFileAction(commit.username, cf.action, file, t);
                 }
             }
-                
+
             return;
         }
 
@@ -2461,7 +2461,7 @@ void Gource::draw(float t, float dt) {
     // text using the specified font goes here
 
     fontmedium.setColour(vec4f(gGourceSettings.font_colour, 1.0f));
-    
+
     if(!gGourceSettings.hide_date) {
         fontmedium.draw(display.width/2 - date_x_offset, 20, displaydate);
     }
