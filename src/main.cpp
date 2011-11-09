@@ -36,10 +36,12 @@ int main(int argc, char *argv[]) {
             for(std::vector<std::string>::iterator fit = files.begin(); fit != files.end(); fit++) {
                 std::string file = *fit;
 
-                if(   file.rfind(".conf") == file.size()-5
-                   || file.rfind(".cfg")  == file.size()-4
-                   || file.rfind(".ini")  == file.size()-4) {
-
+                int file_length = file.size();
+                
+                if(   file.rfind(".conf") == (file_length-5) && file_length > 5
+                   || file.rfind(".cfg")  == (file_length-4) && file_length > 4
+                   || file.rfind(".ini")  == (file_length-4) && file_length > 4) {
+        
                     bool is_conf=true;
 
                     try {
@@ -70,7 +72,7 @@ int main(int argc, char *argv[]) {
         //set path
         if(!files.empty()) {
             std::string path = files[files.size()-1];
-
+            
             ConfSectionList* sectionlist = conf.getSections("gource");
 
             if(sectionlist!=0) {
