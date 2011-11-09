@@ -147,6 +147,19 @@ RDirNode* RDirNode::getParent() const{
 }
 
 
+bool RDirNode::isDir(const std::string& path) const {
+      
+    if(prefixedBy(path)) return true;
+
+    if(path.find(abspath) != 0) return false;
+    
+    for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
+        if((*it)->isDir(path)) return true;
+    }
+
+    return false;
+}
+
 //finds directories closest to the root directory prefixed by path (eg foo/ may match just foo/ or could also match foo/bar1, foo/bar2, ... if foo/ doesn't exist).
 void RDirNode::findDirs(const std::string& path, std::list<RDirNode*>& dirs) {
 
@@ -402,9 +415,10 @@ bool RDirNode::addFile(RFile* f) {
     //do we have a file in this directory thats fullpath is a prefix of this file, if so
     //that file is actually a directory - the file should be removed, and a directory with that path added
     //if this is the root node we do this regardless of if the file was added to a child node
+
     for(std::list<RFile*>::const_iterator it = files.begin(); it != files.end(); it++) {
         RFile* file = (*it);
-
+       
         if(f->path.find(file->fullpath) == 0) {
             //fprintf(stderr, "removing %s as is actually the directory of %s\n", file->fullpath.c_str(), f->fullpath.c_str());
             file->remove(true);

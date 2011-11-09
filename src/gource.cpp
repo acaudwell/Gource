@@ -980,6 +980,16 @@ void Gource::deleteFile(RFile* file) {
 
 RFile* Gource::addFile(const RCommitFile& cf) {
 
+    //if we already have max files in circulation
+    //we cant add any more
+    if(gGourceSettings.max_files > 0 && files.size() >= gGourceSettings.max_files) return 0;
+       
+    //see if this is a directory
+    std::string file_as_dir = cf.filename;
+    if(file_as_dir[file_as_dir.size()-1] != '/') file_as_dir.append("/");
+
+    if(root->isDir(file_as_dir)) return 0;
+    
     int tagid = tag_seq++;
 
     RFile* file = new RFile(cf.filename, cf.colour, vec2f(0.0,0.0), tagid);
@@ -1178,12 +1188,9 @@ void Gource::processCommit(RCommit& commit, float t) {
 
         if(file == 0) {
 
-            //if we already have max files in circulation
-            //we cant add any more
-            if(gGourceSettings.max_files > 0 && files.size() >= gGourceSettings.max_files)
-                continue;
-
             file = addFile(cf);
+
+            if(!file) continue;
         }
 
         addFileAction(commit.username, cf.action, file, t);
