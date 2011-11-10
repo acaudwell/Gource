@@ -253,19 +253,19 @@ RCommitFile::RCommitFile(const std::string& filename, const std::string& action,
     }
 }
 
-RCommitFile::RCommitFile(const std::string& rename_from, const std::string& rename_to, const std::string& action, const vec3f& colour)
+RCommitFile::RCommitFile(const std::string& filename, const std::string& destination, const std::string& action, const vec3f& colour)
     : action(action), colour(colour) {
 
-    this->filename  = munge_utf8(rename_from);
-    this->rename_to = munge_utf8(rename_to);
+    this->filename    = munge_utf8(filename);
+    this->destination = munge_utf8(destination);
 
     //prepend a root slash
     if(this->filename[0] != '/') {
         this->filename.insert(0, 1, '/');
     }
 
-    if(this->rename_to[0] != '/') {
-        this->rename_to.insert(0, 1, '/');
+    if(this->destination[0] != '/') {
+        this->destination.insert(0, 1, '/');
     }
 }
 
@@ -297,12 +297,12 @@ void RCommit::addFile(const std::string& filename, const  std::string& action, c
     files.push_back(RCommitFile(filename, action, colour));
 }
 
-void RCommit::addFile(const std::string& rename_from, const std::string& renamed_to, const std::string& action) {
-    files.push_back(RCommitFile(rename_from, renamed_to, action, fileColour(renamed_to)));
+void RCommit::addFile(const std::string& filename, const std::string& destination, const std::string& action) {
+    files.push_back(RCommitFile(filename, destination, action, fileColour(destination)));
 }
 
-void RCommit::addFile(const std::string& rename_from, const std::string& renamed_to, const  std::string& action, const vec3f& colour) {
-    files.push_back(RCommitFile(rename_from, renamed_to, action, colour));
+void RCommit::addFile(const std::string& filename, const std::string& destination, const  std::string& action, const vec3f& colour) {
+    files.push_back(RCommitFile(filename, destination, action, colour));
 }
 
 bool RCommit::isValid() {
@@ -317,6 +317,10 @@ void RCommit::debug() {
 
     for(std::list<RCommitFile>::iterator it = files.begin(); it != files.end(); it++) {
         RCommitFile f = *it;
-        debugLog("%s %s\n", f.action.c_str(), f.filename.c_str());
+        if(f.action == "C" || f.action == "R") {
+            debugLog("%s %s => %s\n", f.action.c_str(), f.filename.c_str(), f.destination.c_str());
+        } else {
+            debugLog("%s %s\n", f.action.c_str(), f.filename.c_str());
+        }
     }
 }

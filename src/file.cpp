@@ -248,11 +248,11 @@ void RFile::rename(const std::string& rename_to, const vec3f& rename_colour) {
     if(parent_dir != 0) {
         parent_dir->removeChildIfEmpty(dir);
     }
-    
+
     setFilename(rename_to);
 
     file_colour = rename_colour;
-    
+
     vec2f old_dir_pos = dir->getPos();
 
     root->addFile(this);

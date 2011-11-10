@@ -1234,9 +1234,11 @@ void Gource::addFileAction(const std::string& username, const RCommitFile& cf, R
         userAction = new ModifyAction(user, file, t);
     } else if(cf.action == "D") {
         userAction = new RemoveAction(user, file, t);
-    } else if(cf.action == "R" && !cf.rename_to.empty()) {
-        debugLog("Rename %s\n", file->getName().c_str() );
-        userAction = new RenameAction(user, file, cf.rename_to, cf.colour, t);
+    } else if(cf.action == "R" && !cf.destination.empty()) {
+        userAction = new RenameAction(user, file, cf.destination, cf.colour, t);
+    } else if(cf.action == "C" && !cf.destination.empty()) {
+        // TODO: implement copy
+        userAction = new RenameAction(user, file, cf.destination, cf.colour, t);
     } else {
         userAction = new ModifyAction(user, file, t);
     }

@@ -235,7 +235,9 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
 
     //parse changes
 
-    std::set<std::string> renames;
+    bool has_copy = false;
+
+    std::set<std::string> deletes;
 
     for(TiXmlElement* pathE = pathsE->FirstChildElement("path"); pathE != 0; pathE = pathE->NextSiblingElement()) {
         //parse path
@@ -254,7 +256,7 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
 
             //accept only deletes for directories or directory renames
             if(!(strcmp(action, "D") == 0 || strcmp(action, "A") == 0 && copy_from != 0 && strlen(copy_from) != 0)) continue;
-           
+
             is_dir = true;
         }
 
@@ -275,40 +277,68 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
 
         //NOTE: this is actually a copy. to identify an actual rename, we need to find a delete in the same commit
         //      with the name found in the copy_from
-        
-        if(status == "A" && copy_from != 0 && strlen(copy_from) != 0) {
-           
-            std::string rename_from(copy_from);
-            status = "R";
 
-            if(is_dir && rename_from[rename_from.size()-1] != '/') {
-                rename_from = rename_from + std::string("/");
+        if(status == "A" && copy_from != 0 && strlen(copy_from) > 0) {
+
+            has_copy = true;
+
+            std::string from(copy_from);
+
+            status = "C";
+
+            if(is_dir && from[from.size()-1] != '/') {
+                from.append("/");
             }
 
-            //fprintf(stderr, "found rename of %s to %s\n", rename_from.c_str(), file.c_str());
-
-            renames.insert(rename_from);
-
-            commit.addFile(rename_from, file, status);
+            commit.addFile(from, file, status);
 
         } else if(status == "D") {
 
-            //if we've seen this filename as a rename, don't add the delete
-            //TODO: this assumes they are in a particular order. need to do this as a post process
-            //(ie add as a copy, change to rename if there is a delete, remove the delete
-            
-            if(renames.find(file) == renames.end()) {
-                commit.addFile(file, status);
-            }
+            deletes.insert(file);
 
         } else {
+
             commit.addFile(file, status);
         }
     }
 
-    //fprintf(stderr,"parsed logentry\n");
+    if(has_copy) {
 
-    //read files
+        std::set<std::string>::iterator del_it;
+
+        // go through copies, convert to rename if there is a delete
+        for(std::list<RCommitFile>::iterator it = commit.files.begin(); it != commit.files.end(); it++) {
+
+            RCommitFile* cf = &(*it);
+
+            if(cf->action != "C") continue;
+
+            del_it = deletes.find(cf->filename);
+
+            //change to a rename, remove the delete
+            if(del_it != deletes.end()) {
+                cf->action = "R";
+                deletes.erase(del_it);
+
+                //TODO: what if you copy over the top of another file
+
+                continue;
+            }
+        }
+    }
+
+    //add remaining deletes
+
+    for(std::set<std::string>::iterator it = deletes.begin(); it != deletes.end(); it++) {
+        commit.addFile(*it, "D");
+    }
+
+    /*
+    if(has_copy) {
+        commit.debug();
+        //exit(1);
+    }
+    */
 
     return true;
 }
