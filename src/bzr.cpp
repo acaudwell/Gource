@@ -26,7 +26,7 @@ std::string gGourceBzrLogCommand() {
     return std::string("bzr log --verbose -r 1..-1 --short -n0 --forward");
 }
 
-BazaarLog::BazaarLog(const std::string& logfile) : RCommitLog(logfile) {
+BazaarLog::BazaarLog(const std::string& logfile) : RCommitLog(logfile, ".bzr") {
 
     log_command = gGourceBzrLogCommand();
 

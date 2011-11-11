@@ -32,8 +32,6 @@ protected:
     BaseLog* generateLog(const std::string& dir);
 public:
     GitCommitLog(const std::string& logfile);
-
-    static const std::string searchGitDirectory( const std::string& actualdir );
 };
 
 #endif

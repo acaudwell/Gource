@@ -28,7 +28,7 @@ std::string gGourceMercurialCommand() {
     return std::string("hg log -r 0:tip --style \"") + gource_style_path + std::string("\"");
 }
 
-MercurialLog::MercurialLog(const std::string& logfile) : RCommitLog(logfile) {
+MercurialLog::MercurialLog(const std::string& logfile) : RCommitLog(logfile, ".hg") {
 
     log_command = gGourceMercurialCommand();
 

@@ -16,6 +16,9 @@
 */
 
 #include "commitlog.h"
+#include <sys/param.h>
+#include <unistd.h>
+
 
 std::string munge_utf8(const std::string& str) {
 
@@ -32,7 +35,9 @@ std::string munge_utf8(const std::string& str) {
 
 //RCommitLog
 
-RCommitLog::RCommitLog(const std::string& logfile, int firstChar) {
+RCommitLog::RCommitLog(const std::string& logfile, const std::string& vcssub, int firstChar) :
+    logfile( logfile == "-" ? "-" : findRepositoryRoot( logfile, vcssub ) )
+{
 
     logf     = 0;
     seekable = false;
@@ -40,7 +45,7 @@ RCommitLog::RCommitLog(const std::string& logfile, int firstChar) {
     is_dir   = false;
     buffered = false;
 
-    if(logfile == "-") {
+    if(this->logfile == "-") {
 
         //check first char
         if(checkFirstChar(firstChar, std::cin)) {
@@ -54,7 +59,7 @@ RCommitLog::RCommitLog(const std::string& logfile, int firstChar) {
     }
 
     struct stat fileinfo;
-    int rc = stat(logfile.c_str(), &fileinfo);
+    int rc = stat(this->logfile.c_str(), &fileinfo);
 
     if(rc==0) {
         is_dir = (fileinfo.st_mode & S_IFDIR) ? true : false;
@@ -62,14 +67,14 @@ RCommitLog::RCommitLog(const std::string& logfile, int firstChar) {
         if(!is_dir) {
 
             //check first char
-            std::ifstream testf(logfile.c_str());
+            std::ifstream testf(this->logfile.c_str());
 
             bool firstOK = checkFirstChar(firstChar, testf);
 
             testf.close();
 
             if(firstOK) {
-                logf = new SeekLog(logfile);
+                logf = new SeekLog(this->logfile);
                 seekable = true;
                 success = true;
             }
@@ -206,6 +211,70 @@ bool RCommitLog::isFinished() {
     return false;
 }
 
+const std::string RCommitLog::findRepositoryRoot(const std::string& prjdir, const std::string& vcssub) {
+    std::string canonicaldir;
+
+    if( prjdir[0] != '/' ) {
+        int cwdsize = 512;
+        char* cwd = new char[ cwdsize ];
+
+        // get current working directory
+        while( NULL == getcwd( cwd, cwdsize ) ) {
+            cwdsize *= 2;
+            delete cwd;
+            cwd = new char[ cwdsize ];
+        }
+
+        // get absoloute path of prjdir
+        std::string concatenated = std::string( cwd ) + "/" + prjdir;
+
+        // convert to canonical path
+        char canonicalcstr[MAXPATHLEN];
+        if( NULL == realpath( concatenated.c_str(), canonicalcstr ) ) {
+            std::cerr << std::string( "Could not resolve path " ) + canonicalcstr + ".";
+            return prjdir;
+        }
+
+        canonicaldir = canonicalcstr;
+    }
+    else
+    {
+        // convert to canonical path
+        char canonicalcstr[MAXPATHLEN];
+        if( NULL != realpath( prjdir.c_str(), canonicalcstr ) ) {
+            std::cerr << std::string( "Could not resolve path " ) + canonicalcstr + ".";
+            return prjdir;
+        }
+
+        canonicaldir = canonicalcstr;
+    }
+
+    // does that path exist?!
+    struct stat st;
+    if( 0 != stat( canonicaldir.c_str(), &st ) ) {
+        return prjdir;
+    }
+
+    // search for vcssubdir recursively to root
+    while( true ) {
+        std::string d = canonicaldir + "/" + vcssub;
+
+        if( 0 == stat( d.c_str(), &st ) ) {
+            return canonicaldir;
+        }
+
+        size_t slashindex = canonicaldir.find_last_of( "/\\" );
+
+        // we are at root an have not been successfully
+        if( slashindex == std::string::npos || slashindex == 0 ) {
+            return prjdir;
+        }
+
+        // go one step to root
+        canonicaldir[slashindex] = 0;
+    }
+}
+
 //create temp file
 void RCommitLog::createTempLog() {
 
@@ -296,3 +365,4 @@ void RCommit::debug() {
         debugLog("%s %s\n", f.action.c_str(), f.filename.c_str());
     }
 }
+

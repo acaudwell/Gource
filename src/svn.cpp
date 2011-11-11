@@ -24,7 +24,7 @@ Regex svn_logentry_timestamp("(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{
 
 std::string gGourceSVNLogCommand = "svn log -r 1:HEAD --xml --verbose --quiet";
 
-SVNCommitLog::SVNCommitLog(const std::string& logfile) : RCommitLog(logfile, '<') {
+SVNCommitLog::SVNCommitLog(const std::string& logfile) : RCommitLog(logfile, ".svn", '<') {
 
     log_command = gGourceSVNLogCommand;
 

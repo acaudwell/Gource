@@ -29,7 +29,7 @@ std::string gGourceGitLogCommand = "git log "
     "--reverse --raw --encoding=UTF-8 "
     "--no-renames";
 
-GitCommitLog::GitCommitLog(const std::string& logfile) : RCommitLog(logfile, 'u') {
+GitCommitLog::GitCommitLog(const std::string& logfile) : RCommitLog(logfile, ".git", 'u') {
 
     log_command = gGourceGitLogCommand;
 
@@ -40,7 +40,7 @@ GitCommitLog::GitCommitLog(const std::string& logfile) : RCommitLog(logfile, 'u'
 
     //can generate log from directory
     if(!logf && is_dir) {
-        logf = generateLog(logfile);
+        logf = generateLog(this->logfile);
 
         if(logf) {
             success  = true;
@@ -163,34 +163,5 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
     if(commit.username.size()==0) return false;
 
     return true;
-}
-
-const std::string GitCommitLog::searchGitDirectory( const std::string& actualdir )
-{
-        struct stat st;
-
-        std::string d = actualdir;
-
-        while( true )
-        {
-                std::string s = d + "/.git";
-
-                if( 0 == stat( s.c_str(), &st ) )
-                {
-                        return d;
-                }
-                if( 0 != stat( d.c_str(), &st ) )
-                {
-                        return actualdir;
-                }
-
-                d = std::string( "../" ) + d;
-
-                // just to be sure :/
-                if( d.length() > 1024 )
-                        return actualdir;
-        }
-
-        return actualdir;
 }
 
