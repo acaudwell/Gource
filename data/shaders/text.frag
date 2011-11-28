@@ -9,5 +9,7 @@ void main(void)
 
     float combined_alpha = 1.0 - (1.0-shadow_alpha)*(1.0-colour_alpha);
 
-    gl_FragColor = gl_Color * vec4(vec3(colour_alpha / combined_alpha), combined_alpha);
+    if(combined_alpha != 0) colour_alpha /= combined_alpha;
+
+    gl_FragColor = gl_Color * vec4(vec3(colour_alpha), combined_alpha);
 }
