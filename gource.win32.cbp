@@ -32,6 +32,8 @@
 			<Add library="glu32" />
 			<Add library="glew32" />
 			<Add library="freetype" />
+                        <Add library="boost_filesystem-mgw44-mt-1_46_1" />
+                        <Add library="libboost_system-mgw44-mt-1_46_1" />
 		</Linker>
 		<Unit filename="data\shaders\bloom.frag" />
 		<Unit filename="data\shaders\bloom.vert" />
