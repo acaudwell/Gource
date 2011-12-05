@@ -143,6 +143,7 @@ Gource::Gource(FrameExporter* exporter) {
 }
 
 void Gource::writeCustomLog(const std::string& logfile, const std::string& output_file) {
+
     RCommitLog* commitlog = determineFormat(logfile);
 
     if(!commitlog) return;
@@ -179,16 +180,62 @@ void Gource::writeCustomLog(const std::string& logfile, const std::string& outpu
     if(output_file != "-") fclose(fh);
 }
 
-RCommitLog* Gource::determineFormat(const std::string& logfile) {
+bool Gource::findRepository(boost::filesystem::path& dir, std::string& log_format) {
+    
+    dir = absolute(dir);   
+    
+    //fprintf(stderr, "find repository from initial path: %s\n", dir.string().c_str());
+        
+    while(is_directory(dir)) {
+
+             if(is_directory(dir / ".git")) log_format = "git";
+        else if(is_directory(dir / ".hg"))  log_format = "hg";
+        else if(is_directory(dir / ".bzr")) log_format = "bzr";
+        else if(is_directory(dir / ".svn")) log_format = "svn";
+
+        if(!log_format.empty()) {
+            //fprintf(stderr, "found '%s' repository at: %s\n", log_format.c_str(), dir.string().c_str());
+            return true;
+        }
+        
+        if(!dir.has_parent_path()) return false;
+
+        dir = dir.parent_path();
+    }
+        
+    return false;
+}
+
+RCommitLog* Gource::determineFormat(std::string logfile) {
     debugLog("determineFormat(%s)\n", logfile.c_str());
 
     RCommitLog* clog = 0;
 
-    //we've been told what format to use
-    if(gGourceSettings.log_format.size() > 0) {
-        debugLog("--log-format = %s\n", gGourceSettings.log_format.c_str());
+    std::string log_format = gGourceSettings.log_format;
+    
+    //if the log format is not specified and 'logfile' is a directory, recursively look for a version control repository.
+    //this method allows for something strange like someone who having an svn repository inside a git repository
+    //(in which case it would pick the svn directory as it would encounter that first)
 
-        if(gGourceSettings.log_format == "git") {
+    if(log_format.empty() && logfile != "-") {
+
+        try {
+            boost::filesystem::path repo_path(logfile);
+
+            if(is_directory(repo_path)) {
+                if(findRepository(repo_path, log_format)) {
+                    logfile = repo_path.string();
+                }
+            }
+        } catch(boost::filesystem3::filesystem_error& error) {
+        }
+    }
+    
+    //we've been told what format to use
+    if(log_format.size() > 0) {
+        debugLog("log-format = %s\n", log_format.c_str());
+
+        if(log_format == "git") {
             clog = new GitCommitLog(logfile);
             if(clog->checkFormat()) return clog;
             delete clog;
@@ -198,42 +245,42 @@ RCommitLog* Gource::determineFormat(const std::string& logfile) {
             delete clog;
         }
 
-        if(gGourceSettings.log_format == "hg") {
+        if(log_format == "hg") {
             clog = new MercurialLog(logfile);
             if(clog->checkFormat()) return clog;
             delete clog;
         }
-        if(gGourceSettings.log_format == "bzr") {
+        if(log_format == "bzr") {
             clog = new BazaarLog(logfile);
             if(clog->checkFormat()) return clog;
             delete clog;
         }
 
-        if(gGourceSettings.log_format == "cvs") {
+        if(log_format == "cvs") {
             clog = new CVSEXPCommitLog(logfile);
             if(clog->checkFormat()) return clog;
             delete clog;
         }
 
-        if(gGourceSettings.log_format == "custom") {
+        if(log_format == "custom") {
             clog = new CustomLog(logfile);
             if(clog->checkFormat()) return clog;
             delete clog;
         }
 
-        if(gGourceSettings.log_format == "apache") {
+        if(log_format == "apache") {
             clog = new ApacheCombinedLog(logfile);
             if(clog->checkFormat()) return clog;
             delete clog;
         }
 
-        if(gGourceSettings.log_format == "svn") {
+        if(log_format == "svn") {
             clog = new SVNCommitLog(logfile);
             if(clog->checkFormat()) return clog;
             delete clog;
         }
 
-        if(gGourceSettings.log_format == "cvs2cl") {
+        if(log_format == "cvs2cl") {
             clog = new CVS2CLCommitLog(logfile);
             if(clog->checkFormat()) return clog;
             delete clog;
@@ -241,6 +288,8 @@ RCommitLog* Gource::determineFormat(const std::string& logfile) {
 
         return 0;
     }
+
+    // try different formats until one works
 
     //git
     debugLog("trying git...\n");

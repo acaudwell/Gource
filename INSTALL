@@ -17,6 +17,7 @@ Gource requires the following libraries to compile:
     PCRE3 (libpcre3-dev)
     Freetype 2 (libfreetype6-dev)
     GLEW (libglew-dev)
+    Boost Filesystem >= 1.46 (libboost-filesystem-dev)
 
 Optional:
 

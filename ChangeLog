@@ -4,6 +4,9 @@
  * Use AM_CPPFLAGS in Makefile.am to allow passing custom CPPFLAGS.
  * Don't add files that match the path of a known directory.
  * Fixed divide by zero in text shader causing artifacts on some video cards.
+ * Recursively search for repository directory when log-format not specified
+   (thanks to Jörg Bachmann for original concept / prototype).
+ * New dependency on Boost Filesystem.
 
 0.37:
  * Made SVN log GMT timestamp conversion fix portable.

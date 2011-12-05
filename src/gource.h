@@ -24,6 +24,7 @@
 
 #include <deque>
 #include <fstream>
+#include <boost/filesystem.hpp>
 
 #include "core/display.h"
 #include "core/shader.h"
@@ -219,7 +220,10 @@ class Gource : public SDLApp {
 
     void toggleCameraMode();
 
-    static RCommitLog* determineFormat(const std::string& logfile);
+    
+    static bool findRepository(boost::filesystem::path& dir, std::string& log_format);
+    
+    static RCommitLog* determineFormat(std::string logfile);
 
     void updateCamera(float dt);
 
