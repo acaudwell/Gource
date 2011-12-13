@@ -32,7 +32,7 @@ Gource::Gource(FrameExporter* exporter) {
     if(!GLEW_VERSION_2_0) gGourceSettings.ffp = true;
 
     if(!gGourceSettings.file_graphic) {
-        gGourceSettings.file_graphic = texturemanager.grab("file.png");
+        gGourceSettings.file_graphic = texturemanager.grab("file.png", true, true, true);
     }
 
     fontlarge = fontmanager.grab("FreeSans.ttf", 42);
@@ -52,7 +52,7 @@ Gource::Gource(FrameExporter* exporter) {
 
     bloomtex = texturemanager.grab(bloom_tga);
     beamtex  = texturemanager.grab("beam.png");
-    usertex  = texturemanager.grab("user.png");
+    usertex  = texturemanager.grab("user.png", true, true, true);
 
     shadow_shader = text_shader = bloom_shader = 0;
 

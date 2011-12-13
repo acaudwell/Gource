@@ -200,7 +200,7 @@ void RUser::assignUserImage() {
 
             if(!gGourceSettings.colour_user_images) usercol = vec3f(1.0, 1.0, 1.0);
 
-            graphic = texturemanager.grabFile(imagefile);
+            graphic = texturemanager.grabFile(imagefile, true, true, true);
         }
     }
 
@@ -208,9 +208,9 @@ void RUser::assignUserImage() {
     if(!graphic) {
         if(gGourceSettings.default_user_image.size() > 0) {
             if(!gGourceSettings.colour_user_images) usercol = vec3f(1.0, 1.0, 1.0);
-            graphic = texturemanager.grabFile(gGourceSettings.default_user_image);
+            graphic = texturemanager.grabFile(gGourceSettings.default_user_image, true, true, true);
         } else {
-            graphic = texturemanager.grab("user.png");
+            graphic = texturemanager.grab("user.png", true, true, true);
         }
     }
 
