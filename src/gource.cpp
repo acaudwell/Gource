@@ -1922,11 +1922,9 @@ void Gource::drawScene(float dt) {
 
     draw_edges_time = SDL_GetTicks() - draw_edges_time;
 
-    //draw shadows
+    //draw file shadows
 
     draw_shadows_time = SDL_GetTicks();
-
-    drawUserShadows(dt);
 
     drawFileShadows(dt);
 
@@ -1951,6 +1949,8 @@ void Gource::drawScene(float dt) {
     //draw users
 
     draw_users_time = SDL_GetTicks();
+
+    drawUserShadows(dt);
 
     drawUsers(dt);
 
