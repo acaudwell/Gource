@@ -313,7 +313,7 @@ void GourceSettings::setGourceDefaults() {
 
     camera_zoom_min     = 50.0f;
     camera_zoom_default = 100.0f;
-    camera_zoom_max     = 5000.0f;
+    camera_zoom_max     = 10000.0f;
 
     camera_mode     = "overview";
     padding         = 1.1f;

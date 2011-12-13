@@ -7,6 +7,7 @@
  * Recursively search for repository directory when log-format not specified
    (thanks to Jörg Bachmann for original concept / prototype).
  * New dependency on Boost Filesystem.
+ * Doubled the maximum zoom out distance.
 
 0.37:
  * Made SVN log GMT timestamp conversion fix portable.
