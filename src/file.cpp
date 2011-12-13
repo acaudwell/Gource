@@ -26,7 +26,7 @@ FXFont file_font;
 
 RFile::RFile(const std::string & name, const vec3f & colour, const vec2f & pos, int tagid) : Pawn(name,pos,tagid) {
     hidden = true;
-    size = gGourceFileDiameter;
+    size = gGourceFileDiameter * 1.05;
     radius = size * 0.5;
 
     setGraphic(gGourceSettings.file_graphic);
