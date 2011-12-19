@@ -220,9 +220,9 @@ class Gource : public SDLApp {
 
     void toggleCameraMode();
 
-    
+
     static bool findRepository(boost::filesystem::path& dir, std::string& log_format);
-    
+
     static RCommitLog* determineFormat(std::string logfile);
 
     void updateCamera(float dt);
@@ -248,11 +248,11 @@ class Gource : public SDLApp {
     void drawBackground(float dt);
 
     void drawScene(float dt);
-    
+
     void updateVBOs(float dt);
 
     void updateAndDrawEdges();
-    
+
     void drawFileShadows(float dt);
     void drawUserShadows(float dt);
     void drawActions(float dt);

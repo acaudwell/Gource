@@ -89,7 +89,7 @@ options:
             Elasticity of nodes.
 
     -b, --background-colour FFFFFF
-            Background colour in hex. 
+            Background colour in hex.
 
     --background-image IMAGE
         Set a background image.
@@ -151,7 +151,7 @@ options:
             Filter out any users matching a specified regular expression.
 
     --user-image-dir DIRECTORY
-            Directory containing .jpg or .png images of users 
+            Directory containing .jpg or .png images of users
             (eg 'Full Name.png') to use as avatars.
 
     --default-user-image IMAGE
@@ -311,7 +311,7 @@ version control systems:
 Interface:
 
 The time shown in the top left of the screen is set initially from the first
-log entry read and is incremented according to the simulation speed 
+log entry read and is incremented according to the simulation speed
 (--seconds-per-day).
 
 Pressing SPACE at any time will pause/unpause the simulation. While paused you

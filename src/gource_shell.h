@@ -29,7 +29,7 @@ class GourceShell : public SDLApp {
     bool next;
 
     GLuint transition_texture;
-    float  transition_interval; 
+    float  transition_interval;
 
     FrameExporter* exporter;
     ConfFile* conf;

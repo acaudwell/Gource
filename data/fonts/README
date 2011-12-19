@@ -44,7 +44,7 @@ Design Issues
 Which font shapes should be made?  Historical style terms like Renaissance
 or Baroque letterforms cannot be applied beyond Latin/Cyrillic/Greek
 scripts to any greater extent than Kufi or Nashki can be applied beyond
-Arabic script; "italic" is really only meaningful for Latin letters. 
+Arabic script; "italic" is really only meaningful for Latin letters.
 
 However, most modern writing systems have typographic formulations for
 contrasting uniform and modulated character stroke widths, and have some
@@ -88,14 +88,14 @@ wish to do so, delete this exception statement from your version.
 Files and their suffixes
 ------------------------
 
-The files with .sfd (Spline Font Database) are in FontForge's native format. 
+The files with .sfd (Spline Font Database) are in FontForge's native format.
 Please use these if you plan to modify the font files.
 
 TrueType fonts for immediate consumption are the files with the .ttf
 (TrueType Font) suffix.  These are ready to use in Xwindows based
 systems using FreeType, on Mac OS, and on older Windows systems.
 
-OpenType fonts (with suffix .otf) are for use in Windows Vista. 
+OpenType fonts (with suffix .otf) are for use in Windows Vista.
 Note that although they can be installed on Linux, but many applications
 in Linux still don't support them.
 

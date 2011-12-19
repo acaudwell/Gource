@@ -99,7 +99,7 @@ sub _win32_proc_list {
         my $username = $winproc->{Owner} || 'System';
         my $time     = $winproc->{UserModeTime};
 
-        $username =~ s/^.+\\//;               
+        $username =~ s/^.+\\//;
         $command  =~ s/\.exe$//i;
 
         next unless $command && $pid && $username;

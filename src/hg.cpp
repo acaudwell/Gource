@@ -77,12 +77,12 @@ BaseLog* MercurialLog::generateLog(const std::string& dir) {
 bool MercurialLog::parseCommit(RCommit& commit) {
 
     while(parseCommitEntry(commit));
-    
+
     return !commit.files.empty();
 }
 
 bool MercurialLog::parseCommitEntry(RCommit& commit) {
-    
+
     std::string line;
     std::vector<std::string> entries;
 
@@ -106,7 +106,7 @@ bool MercurialLog::parseCommitEntry(RCommit& commit) {
             return false;
         }
     }
-    
+
     std::string action = "A";
 
     if(!entries[2].empty()) {

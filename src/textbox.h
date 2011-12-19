@@ -38,21 +38,21 @@ class TextBox {
     int rect_width;
     int rect_height;
     bool visible;
-    
+
 public:
     TextBox();
     TextBox(const FXFont& font);
 
     void hide();
     void show();
-    
+
     void clear();
 
     void setPos(const vec2f& pos, bool adjust = false);
     void setColour(const vec3f& colour);
     void setAlpha(float alpha);
     void setBrightness(float brightness);
-    
+
     void addLine(std::string str);
 
     void setText(const std::string& str);

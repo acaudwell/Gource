@@ -28,14 +28,14 @@ FileKeyEntry::FileKeyEntry(const FXFont& font, const std::string& ext, const vec
     show = true;
 
     display_ext = ext;
-    
+
     bool truncated = false;
-    
+
     while(font.getWidth(display_ext) > width - 15.0f) {
         display_ext.resize(display_ext.size()-1);
         truncated = true;
     }
-    
+
     if(truncated) {
         display_ext += std::string("...");
     }

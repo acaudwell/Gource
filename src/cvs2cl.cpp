@@ -46,7 +46,7 @@ bool CVS2CLCommitLog::parseCommit(RCommit& commit) {
         //if so find the first logentry tag
 
         bool found_logentry = false;
-        
+
         while(getNextLine(line)) {
             if(cvs2cl_logentry_start.match(line)) {
                 found_logentry = true;
@@ -54,7 +54,7 @@ bool CVS2CLCommitLog::parseCommit(RCommit& commit) {
             }
         }
 
-        if(!found_logentry) return false;   
+        if(!found_logentry) return false;
     }
 
     //fprintf(stderr,"found logentry\n");
@@ -67,7 +67,7 @@ bool CVS2CLCommitLog::parseCommit(RCommit& commit) {
     //fprintf(stderr,"found opening tag\n");
 
     bool endfound = false;
-    
+
     while(getNextLine(line)) {
         logentry.append(line);
         logentry.append("\n");
@@ -88,11 +88,11 @@ bool CVS2CLCommitLog::parseCommit(RCommit& commit) {
     if(!doc.Parse(logentry.c_str())) return false;
 
     //fprintf(stderr,"try to parse logentry: %s\n", logentry.c_str());
-    
+
     TiXmlElement* leE = doc.FirstChildElement( "entry" );
-    
+
     std::vector<std::string> entries;
-    
+
     if(!leE) return false;
 
     //parse date
@@ -104,7 +104,7 @@ bool CVS2CLCommitLog::parseCommit(RCommit& commit) {
 
     if(!cvs2cl_logentry_timestamp.match(timestamp_str, &entries))
         return false;
-                    
+
     struct tm time_str;
 
     time_str.tm_year  = atoi(entries[0].c_str()) - 1900;
@@ -115,24 +115,24 @@ bool CVS2CLCommitLog::parseCommit(RCommit& commit) {
     time_str.tm_sec   = atoi(entries[5].c_str());
     time_str.tm_isdst = -1;
 
-    commit.timestamp = mktime(&time_str);            
-   
+    commit.timestamp = mktime(&time_str);
+
     //parse author
     TiXmlElement* authorE = leE->FirstChildElement("author");
-    
+
     if(authorE != 0) {
-    
+
         std::string author(authorE->GetText());
 
         if(author.empty()) author = "Unknown";
-    
+
         commit.username = author;
     }
 
     //parse changes
-    
+
     for(TiXmlElement* fileE = leE->FirstChildElement("file"); fileE != 0; fileE = fileE->NextSiblingElement()) {
-        
+
         TiXmlElement* state = fileE->FirstChildElement("cvsstate");
         TiXmlElement* name  = fileE->FirstChildElement("name");
 
@@ -143,13 +143,13 @@ bool CVS2CLCommitLog::parseCommit(RCommit& commit) {
         std::string file(name->GetText());
 
         if(file.empty()) continue;
-        
+
         commit.addFile(file, status);
     }
-    
+
     //fprintf(stderr,"parsed logentry\n");
 
     //read files
-    
+
     return true;
 }
