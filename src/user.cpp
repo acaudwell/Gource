@@ -21,14 +21,14 @@ float gGourceBeamDist          = 100.0;
 float gGourceActionDist        = 50.0;
 float gGourcePersonalSpaceDist = 100.0;
 
-RUser::RUser(const std::string& name, vec2f pos, int tagid) : Pawn(name,pos,tagid) {
+RUser::RUser(const std::string& name, vec2 pos, int tagid) : Pawn(name,pos,tagid) {
 
     this->name = name;
 
     speed = gGourceSettings.max_user_speed;
     size = 20.0 * gGourceSettings.user_scale;
 
-    shadowOffset = vec2f(2.0, 2.0) * gGourceSettings.user_scale;
+    shadowOffset = vec2(2.0, 2.0) * gGourceSettings.user_scale;
 
     shadow = true;
 
@@ -89,11 +89,11 @@ void RUser::applyForceUser(RUser* u) {
 
     if(u==this) return;
 
-    vec2f u_pos = u->getPos();
+    vec2 u_pos = u->getPos();
 
-    vec2f dir = u_pos - pos;
+    vec2 dir = u_pos - pos;
 
-    float dist = dir.length();
+    float dist = glm::length(dir);
 
     //different repelling force depending on how busy the user is
     float desired_dist = getActionCount() == 0 ?
@@ -103,40 +103,40 @@ void RUser::applyForceUser(RUser* u) {
     //resolve overlap
     if(dist < 0.001) {
 
-        accel += 1.0f * vec2f( (rand() % 100) - 50, (rand() % 100) - 50).normal();
+        accel += 1.0f * normalize(vec2( (rand() % 100) - 50, (rand() % 100) - 50));
 
         return;
     }
 
     //repelling force
     if(dist < desired_dist) {
-        accel -= (desired_dist-dist) * dir.normal();
+        accel -= (desired_dist-dist) * normalize(dir);
     }
 }
 
 void RUser::applyForceAction(RAction* action) {
     RFile* f = action->target;
 
-    vec2f f_pos = f->getAbsolutePos();
-    vec2f dir = f_pos - pos;
-    float dist = dir.length();
+    vec2 f_pos = f->getAbsolutePos();
+    vec2 dir = f_pos - pos;
+    float dist = glm::length(dir);
 
     float desired_dist = gGourceActionDist;
 
     //resolve overlap
     if(dist < 0.001) {
-        accel += vec2f( (rand() % 100) - 50, (rand() % 100) - 50).normal();
+        accel += normalize(vec2( (rand() % 100) - 50, (rand() % 100) - 50));
         return;
     }
 
     //repelling force
     if(dist < desired_dist) {
-        accel -= (desired_dist - dist) * dir.normal();
+        accel -= (desired_dist - dist) * normalize(dir);
         return;
     }
 
     if(dist > gGourceBeamDist) {
-        accel += (dist-gGourceBeamDist) * dir.normal();
+        accel += (dist-gGourceBeamDist) * normalize(dir);
     }
 }
 
@@ -198,26 +198,30 @@ void RUser::assignUserImage() {
         if(findimage != gGourceSettings.user_image_map.end()) {
             std::string imagefile = findimage->second;
 
-            if(!gGourceSettings.colour_user_images) usercol = vec3f(1.0, 1.0, 1.0);
+            if(!gGourceSettings.colour_user_images) usercol = vec3(1.0, 1.0, 1.0);
 
-            graphic = texturemanager.grabFile(imagefile, true, true, true);
+            graphic = texturemanager.grabFile(imagefile, true, GL_CLAMP_TO_EDGE);
         }
     }
+
+
+    //TODO: trilinear probably should be an attribute of the texture
+    //      perhaps the mipmap option should be an enum: eg TEX_MIPMAP_TRILINEAR
 
     //nope
     if(!graphic) {
         if(gGourceSettings.default_user_image.size() > 0) {
-            if(!gGourceSettings.colour_user_images) usercol = vec3f(1.0, 1.0, 1.0);
-            graphic = texturemanager.grabFile(gGourceSettings.default_user_image, true, true, true);
+            if(!gGourceSettings.colour_user_images) usercol = vec3(1.0, 1.0, 1.0);
+            graphic = texturemanager.grabFile(gGourceSettings.default_user_image, true, GL_CLAMP_TO_EDGE);
         } else {
-            graphic = texturemanager.grab("user.png", true, true, true);
+            graphic = texturemanager.grab("user.png", true, GL_CLAMP_TO_EDGE);
         }
     }
 
     setGraphic(graphic);
 
-    usercol = usercol * 0.6 + vec3f(1.0, 1.0, 1.0) * 0.4;
-    usercol *= 0.9;
+    usercol = usercol * 0.6f + vec3(1.0f) * 0.4f;
+    usercol *= 0.9f;
 }
 
 int RUser::getActionCount() {
@@ -255,7 +259,7 @@ void RUser::logic(float t, float dt) {
 
         if(!find_nearby_action) break;
 
-        float action_dist = (action->target->getAbsolutePos() - pos).length();
+        float action_dist = glm::length(action->target->getAbsolutePos() - pos);
 
         //queue first action in range
         if(action_dist < gGourceBeamDist) {
@@ -292,21 +296,13 @@ void RUser::logic(float t, float dt) {
         it++;
     }
 
-    if(accel.length2() > speed * speed) {
-        accel = accel.normal() * speed;
+    if(glm::length2(accel) > speed * speed) {
+        accel = normalize(accel) * speed;
     }
 
     pos += accel * dt;
 
     accel = accel * std::max(0.0f, (1.0f - gGourceSettings.user_friction*dt));
-
-    //ensure characters dont crawl
-//     float accel_amount = accel.length();
-//     if(!actions.empty() && accel_amount > 0.0 && accel_amount < min_units_ps) {
-//         accel = accel.normal() * min_units_ps;
-//     }
-
-//    move(dt);
 }
 
 void RUser::updateFont() {
@@ -334,12 +330,12 @@ void RUser::setSelected(bool selected) {
     updateFont();
 }
 
-const vec3f& RUser::getNameColour() const {
+const vec3& RUser::getNameColour() const {
     return (selected||highlighted) ? selectedcol : namecol;
 }
 
-vec3f RUser::getColour() const{
-    if(selected) return vec3f(1.0, 1.0, 1.0);
+vec3 RUser::getColour() const{
+    if(selected) return vec3(1.0, 1.0, 1.0);
 
     return usercol;
 }
@@ -378,7 +374,7 @@ void RUser::calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projec
 
     static GLdouble screen_x, screen_y, screen_z;
 
-    vec2f text_pos = pos;
+    vec2 text_pos = pos;
     text_pos.y -= dims.y * 0.5f;
 
     gluProject( text_pos.x, text_pos.y, 0.0f, modelview, projection, viewport, &screen_x, &screen_y, &screen_z);
@@ -393,10 +389,10 @@ void RUser::drawNameText(float alpha) {
     float user_alpha = getAlpha();
 
     if(gGourceSettings.highlight_all_users || highlighted || selected || alpha>0.0) {
-        vec3f name_col  = getNameColour();
+        vec3 name_col  = getNameColour();
         float name_alpha = (selected||highlighted||gGourceSettings.highlight_all_users) ? user_alpha : alpha;
 
-        font.setColour(vec4f(name_col.x, name_col.y, name_col.z, name_alpha));
+        font.setColour(vec4(name_col.x, name_col.y, name_col.z, name_alpha));
         font.draw(screenpos.x, screenpos.y, name);
     }
 }

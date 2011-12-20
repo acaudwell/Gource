@@ -28,11 +28,11 @@ class TextBox {
 
     std::vector<std::string> content;
 
-    vec3f colour;
+    vec3 colour;
     float alpha;
     float brightness;
-    vec2f corner;
-    vec2f shadow;
+    vec2 corner;
+    vec2 shadow;
     FXFont font;
     int max_width_chars;
     int rect_width;
@@ -48,8 +48,8 @@ public:
     
     void clear();
 
-    void setPos(const vec2f& pos, bool adjust = false);
-    void setColour(const vec3f& colour);
+    void setPos(const vec2& pos, bool adjust = false);
+    void setColour(const vec3& colour);
     void setAlpha(float alpha);
     void setBrightness(float brightness);
     

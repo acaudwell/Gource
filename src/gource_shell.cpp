@@ -24,6 +24,8 @@ GourceShell::GourceShell(ConfFile* conf, FrameExporter* exporter) {
     this->conf     = conf;
     this->exporter = exporter;
 
+    min_delta_msec = 16;
+
     next = false;
 
     gource = 0;
@@ -35,15 +37,45 @@ GourceShell::GourceShell(ConfFile* conf, FrameExporter* exporter) {
     transition_interval = 0.0f;
 
     if(strstr((const char *)glGetString(GL_EXTENSIONS), "GL_ARB_texture_non_power_of_two" )) {
-        transition_texture = display.emptyTexture(display.width, display.height, GL_RGBA);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        transition_texture = texturemanager.create(display.width, display.height, false, GL_CLAMP_TO_EDGE, GL_RGBA);           
     }
 }
 
 GourceShell::~GourceShell() {
     if(gource!=0) delete gource;
-    if(transition_texture!=0) glDeleteTextures(1, &transition_texture);
+    if(transition_texture!=0) texturemanager.release(transition_texture);
+}
+
+void GourceShell::toggleFullscreen() {
+   // texturemanager.unload();
+   // shadermanager.unload();
+
+    if(gource!=0) gource->unload();
+
+    //recreate gl context
+    display.toggleFullscreen();
+
+   // texturemanager.reload();
+   // shadermanager.reload();
+    
+    if(gource!=0) gource->reload();
+}
+
+void GourceShell::resize(SDL_ResizeEvent* e) {
+
+   // texturemanager.unload();
+   // shadermanager.unload();
+
+    if(gource!=0) gource->unload();
+
+    //recreate gl context
+    display.resize(e->w, e->h);
+
+  //  texturemanager.reload();
+  //  shadermanager.reload();
+
+    if(gource!=0) gource->reload();
 }
 
 void GourceShell::keyPress(SDL_KeyboardEvent *e) {
@@ -53,12 +85,18 @@ void GourceShell::keyPress(SDL_KeyboardEvent *e) {
         if (e->keysym.unicode == SDLK_ESCAPE) {
             appFinished=true;
         }
+        
+        if(e->keysym.unicode == SDLK_RETURN) {
+            Uint8* keyState = SDL_GetKeyState(NULL);
+            if(keyState[SDLK_RALT] || keyState[SDLK_LALT]) {
 
-        if (e->keysym.unicode == SDLK_RETURN) {
-            if(gGourceSettings.repo_count>1)
-                next = true;
+                toggleFullscreen();
+                
+            } else {
+                if(gGourceSettings.repo_count>1)
+                    next = true;
+            }
         }
-
     }
 
     if(gource!=0) gource->keyPress(e);
@@ -128,7 +166,7 @@ void GourceShell::blendLastFrame(float dt) {
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
 
-    glBindTexture(GL_TEXTURE_2D, transition_texture);
+    transition_texture->bind();
 
     glColor4f(1.0, 1.0, 1.0, transition_interval);
 
@@ -163,7 +201,11 @@ void GourceShell::update(float t, float dt) {
 
     //copy last frame
     if( (next|| gource->isFinished()) && transition_texture!=0) {
-        display.renderToTexture(transition_texture, display.width, display.height, GL_RGBA);
+        
+        glEnable(GL_TEXTURE_2D);
+        transition_texture->bind();
+        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, display.width, display.height, 0);
+        
     } else {
         //blend last frame of previous scene
         blendLastFrame(dt);

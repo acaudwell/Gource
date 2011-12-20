@@ -18,30 +18,52 @@
 #ifndef ZOOM_CAMERA_H
 #define ZOOM_CAMERA_H
 
-#include "core/camera.h"
 #include "core/bounds.h"
 #include "core/frustum.h"
 
 #include "gource_settings.h"
 
-class ZoomCamera : public Camera {
-    vec3f dest;
+class ZoomCamera {
+    vec3 pos;
+    vec3 dest;
+    vec3 target;
+    vec3 up;
+    vec3 _pos;
+    vec3 _target;
+
     bool lockon;
     float speed;
     float lockon_time;
 
     float padding;
+    
     float min_distance, max_distance;
+
+    float fov;
+    float znear, zfar;
 public:
     ZoomCamera();
-    ZoomCamera(vec3f start, vec3f target, float min_distance, float max_distance);
+    ZoomCamera(vec3 start, vec3 target, float min_distance, float max_distance);
 
     void setSpeed(float speed);
 
     void lockOn(bool lockon);
 
-    vec3f getDest() { return dest; }
+    void look();
+    void lookAt(const vec3& target);
+    void focus();
+    
+    const vec3& getPos()    const { return pos; };
+    const vec3& getUp()     const { return up; };
+    const vec3& getTarget() const { return target; };
+    const vec3& getDest()   const { return dest; };
 
+    float getFOV()   { return fov; };
+    float getZNear() { return znear; };
+    float getZFar()  { return zfar; };
+    
+    void setPos(const vec3& pos, bool keep_angle = false);
+    
     float getMinDistance();
     float getMaxDistance();
 

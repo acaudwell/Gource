@@ -119,6 +119,8 @@ int main(int argc, char *argv[]) {
     //enable vsync
     display.enableVsync(gGourceSettings.vsync);
 
+    display.enableResize(true);
+
     try {
 
         display.init("Gource", gGourceSettings.display_width, gGourceSettings.display_height, gGourceSettings.fullscreen);

@@ -24,7 +24,7 @@ int   gGourceMaxQuadTreeDepth = 6;
 int gGourceUserInnerLoops = 0;
 
 Gource::Gource(FrameExporter* exporter) {
-
+    
     this->logfile = gGourceSettings.path;
     commitlog = 0;
 
@@ -32,7 +32,7 @@ Gource::Gource(FrameExporter* exporter) {
     if(!GLEW_VERSION_2_0) gGourceSettings.ffp = true;
 
     if(!gGourceSettings.file_graphic) {
-        gGourceSettings.file_graphic = texturemanager.grab("file.png", true, true, true);
+        gGourceSettings.file_graphic = texturemanager.grab("file.png", true, GL_CLAMP_TO_EDGE);
     }
 
     fontlarge = fontmanager.grab("FreeSans.ttf", 42);
@@ -52,7 +52,7 @@ Gource::Gource(FrameExporter* exporter) {
 
     bloomtex = texturemanager.grab(bloom_tga);
     beamtex  = texturemanager.grab("beam.png");
-    usertex  = texturemanager.grab("user.png", true, true, true);
+    usertex  = texturemanager.grab("user.png", true, GL_CLAMP_TO_EDGE);
 
     shadow_shader = text_shader = bloom_shader = 0;
 
@@ -121,7 +121,7 @@ Gource::Gource(FrameExporter* exporter) {
 
     file_key = FileKey(1.0f);
 
-    camera = ZoomCamera(vec3f(0,0, -300), vec3f(0.0, 0.0, 0.0), gGourceSettings.camera_zoom_default, gGourceSettings.camera_zoom_max);
+    camera = ZoomCamera(vec3(0,0, -300), vec3(0.0, 0.0, 0.0), gGourceSettings.camera_zoom_default, gGourceSettings.camera_zoom_max);
     camera.setPadding(gGourceSettings.padding);
 
     setCameraMode(gGourceSettings.camera_mode);
@@ -370,6 +370,13 @@ Gource::~Gource() {
 void Gource::init() {
 }
 
+void Gource::unload() {
+}
+
+void Gource::reload() {
+    slider.resize();
+}
+
 void Gource::update(float t, float dt) {
 
     float scaled_dt = std::min(dt, max_tick_rate);
@@ -449,7 +456,7 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
 
     //move camera in direction the user dragged the mouse
     if(mousedragged || rightmouse) {
-        vec2f mag( e->xrel, e->yrel );
+        vec2 mag( e->xrel, e->yrel );
 
         //if right mouse button is held while dragging, rotate tree instead of
         //moving camera
@@ -474,7 +481,7 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
 
     if(grab_mouse) return;
 
-    mousepos = vec2f(e->x, e->y);
+    mousepos = vec2(e->x, e->y);
     mousemoved=true;
 
     cursor.updatePos(mousepos);
@@ -561,7 +568,7 @@ void Gource::mouseClick(SDL_MouseButtonEvent *e) {
 
     if(e->button == SDL_BUTTON_LEFT) {
 
-        //mousepos = vec2f(e->x, e->y);
+        //mousepos = vec2(e->x, e->y);
         mouseclicked=true;
 
         if(canSeek()) {
@@ -953,7 +960,7 @@ void Gource::reset() {
 
     message_timer = 0.0f;
 
-    cursor_move = vec2f(0.0f, 0.0f);
+    cursor_move = vec2(0.0f, 0.0f);
 
     selectedUser = 0;
     hoverUser = 0;
@@ -1041,7 +1048,7 @@ RFile* Gource::addFile(const RCommitFile& cf) {
 
     int tagid = tag_seq++;
 
-    RFile* file = new RFile(cf.filename, cf.colour, vec2f(0.0,0.0), tagid);
+    RFile* file = new RFile(cf.filename, cf.colour, vec2(0.0,0.0), tagid);
 
     files[cf.filename] = file;
     tagfilemap[tagid]  = file;
@@ -1060,12 +1067,12 @@ RFile* Gource::addFile(const RCommitFile& cf) {
 
 RUser* Gource::addUser(const std::string& username) {
 
-    vec2f pos;
+    vec2 pos;
 
     if(dir_bounds.area() > 0) {
         pos = dir_bounds.centre();
     } else {
-        pos = vec2f(0,0);
+        pos = vec2(0,0);
     }
 
     int tagid = tag_seq++;
@@ -1296,8 +1303,8 @@ void Gource::interactUsers() {
     // update quad tree
     Bounds2D quadtreebounds = user_bounds;
 
-    quadtreebounds.min -= vec2f(1.0f, 1.0f);
-    quadtreebounds.max += vec2f(1.0f, 1.0f);
+    quadtreebounds.min -= vec2(1.0f, 1.0f);
+    quadtreebounds.max += vec2(1.0f, 1.0f);
 
     update_user_tree_time = SDL_GetTicks();
 
@@ -1421,8 +1428,8 @@ void Gource::interactDirs() {
     // update quad tree
     Bounds2D quadtreebounds = dir_bounds;
 
-    quadtreebounds.min -= vec2f(1.0f, 1.0f);
-    quadtreebounds.max += vec2f(1.0f, 1.0f);
+    quadtreebounds.min -= vec2(1.0f, 1.0f);
+    quadtreebounds.max += vec2(1.0f, 1.0f);
 
     update_dir_tree_time = SDL_GetTicks();
 
@@ -1483,13 +1490,13 @@ void Gource::updateCamera(float dt) {
 
     if(manual_camera) {
 
-        if(cursor_move.length2() > 0.0f) {
+        if(glm::length2(cursor_move) > 0.0f) {
 
             float cam_rate = ( -camera.getPos().z ) / ( 5000.0f );
 
-            vec3f cam_pos = camera.getPos();
+            vec3 cam_pos = camera.getPos();
 
-            vec2f cursor_delta = cursor_move * cam_rate * 400.0f * dt;
+            vec2 cursor_delta = cursor_move * cam_rate * 400.0f * dt;
 
             cam_pos.x += cursor_delta.x;
             cam_pos.y += cursor_delta.y;
@@ -1499,7 +1506,7 @@ void Gource::updateCamera(float dt) {
 
             auto_rotate = false;
 
-            cursor_move = vec2f(0.0f, 0.0f);
+            cursor_move = vec2(0.0f, 0.0f);
         }
 
     } else {
@@ -1509,7 +1516,7 @@ void Gource::updateCamera(float dt) {
         if(track_users && (selectedFile !=0 || selectedUser !=0)) {
             Bounds2D focusbounds;
 
-            vec3f camerapos = camera.getPos();
+            vec3 camerapos = camera.getPos();
 
             if(selectedUser !=0) focusbounds.update(selectedUser->getPos());
             if(selectedFile !=0) focusbounds.update(selectedFile->getAbsolutePos());
@@ -1642,9 +1649,9 @@ void Gource::logic(float t, float dt) {
         for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
             RUser* user = it->second;
 
-            vec2f userpos = user->getPos();
+            vec2 userpos = user->getPos();
 
-            user->setPos(userpos.rotate(s, c));
+            user->setPos(rotate_vec2(userpos, s, c));
         }
 
         rotate_angle = 0.0f;
@@ -1750,9 +1757,9 @@ void Gource::logic(float t, float dt) {
 
 void Gource::mousetrace(float dt) {
 
-    vec3f cam_pos = camera.getPos();
+    vec3 cam_pos = camera.getPos();
 
-    vec2f projected_mouse = vec2f( -(mousepos.x * 2.0f - ((float)display.width)) / ((float)display.height),
+    vec2 projected_mouse = vec2( -(mousepos.x * 2.0f - ((float)display.width)) / ((float)display.height),
                                    (1.0f - (2.0f * mousepos.y) / ((float)display.height)))
                                    * cam_pos.z;
     projected_mouse.x += cam_pos.x;
@@ -1878,7 +1885,7 @@ void Gource::loadingScreen() {
 void Gource::drawBackground(float dt) {
     if(!gGourceDrawBackground) return;
 
-    display.setClearColour(vec4f(gGourceSettings.background_colour, gGourceSettings.transparent ? 0.0f : 1.0f));
+    display.setClearColour(vec4(gGourceSettings.background_colour, gGourceSettings.transparent ? 0.0f : 1.0f));
     display.clear();
 
     if(backgroundtex!=0) {
@@ -1998,7 +2005,7 @@ void Gource::updateAndDrawEdges() {
         shadow_shader->use();
         shadow_shader->setFloat("shadow_strength", 0.5);
 
-        vec2f shadow_offset = vec2f(2.0, 2.0);
+        vec2 shadow_offset = vec2(2.0, 2.0);
 
         glPushMatrix();
             glTranslatef(shadow_offset.x, shadow_offset.y, 0.0f);
@@ -2141,9 +2148,9 @@ void Gource::updateVBOs(float dt) {
             RUser* user = it->second;
 
             float alpha = user->getAlpha();
-            vec3f col   = user->getColour();
+            vec3 col   = user->getColour();
 
-            user_vbo.add(user->graphic->textureid, user->getPos() - user->dims*0.5f, user->dims, vec4f(col.x, col.y, col.z, alpha));
+            user_vbo.add(user->graphic->textureid, user->getPos() - user->dims*0.5f, user->dims, vec4(col.x, col.y, col.z, alpha));
 
             //draw actions
             user->updateActionsVBO(action_vbo);
@@ -2203,7 +2210,7 @@ void Gource::drawUserShadows(float dt) {
         shadow_shader->use();
         shadow_shader->setFloat("shadow_strength", 0.5);
 
-        vec2f shadow_offset = vec2f(2.0, 2.0) * gGourceSettings.user_scale;
+        vec2 shadow_offset = vec2(2.0, 2.0) * gGourceSettings.user_scale;
 
         glPushMatrix();
             glTranslatef(shadow_offset.x, shadow_offset.y, 0.0f);
@@ -2279,7 +2286,7 @@ void Gource::draw(float t, float dt) {
         return;
     }
 
-    Frustum frustum(camera);
+    Frustum frustum(camera.getPos(), camera.getTarget(), camera.getUp(), camera.getFOV(), camera.getZNear(), camera.getZFar());
 
     trace_time = SDL_GetTicks();
 
@@ -2446,7 +2453,7 @@ void Gource::draw(float t, float dt) {
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
 
-    vec3f campos = camera.getPos();
+    vec3 campos = camera.getPos();
 
     if(logotex!=0) {
         glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -2457,7 +2464,7 @@ void Gource::draw(float t, float dt) {
 
         glBindTexture(GL_TEXTURE_2D, logotex->textureid);
 
-        vec2f logopos = vec2f(display.width, display.height) - vec2f(logotex->w, logotex->h) - gGourceSettings.logo_offset;
+        vec2 logopos = vec2(display.width, display.height) - vec2(logotex->w, logotex->h) - gGourceSettings.logo_offset;
 
         glPushMatrix();
 
@@ -2488,7 +2495,7 @@ void Gource::draw(float t, float dt) {
         int cwidth    = font.getWidth("Software Version Control Visualization");
         int awidth    = font.getWidth("(C) 2009 Andrew Caudwell");
 
-        vec2f corner(display.width/2 - logowidth/2 - 30.0f, display.height/2 - 40);
+        vec2 corner(display.width/2 - logowidth/2 - 30.0f, display.height/2 - 40);
 
         glDisable(GL_TEXTURE_2D);
         glColor4f(0.0f, 0.5f, 1.0f, splash * 0.015f);
@@ -2509,7 +2516,7 @@ void Gource::draw(float t, float dt) {
 
     // text using the specified font goes here
 
-    fontmedium.setColour(vec4f(gGourceSettings.font_colour, 1.0f));
+    fontmedium.setColour(vec4(gGourceSettings.font_colour, 1.0f));
 
     if(!gGourceSettings.hide_date) {
         fontmedium.draw(display.width/2 - date_x_offset, 20, displaydate);

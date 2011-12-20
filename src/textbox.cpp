@@ -23,10 +23,10 @@ TextBox::TextBox() {
 TextBox::TextBox(const FXFont& font) {
     this->font   = font;
 
-    shadow = vec2f(3.0f, 3.0f);
+    shadow = vec2(3.0f, 3.0f);
     
-    colour = vec3f(0.7f, 0.7f, 0.7f);
-    corner = vec2f(0.0f,0.0f);
+    colour = vec3(0.7f, 0.7f, 0.7f);
+    corner = vec2(0.0f,0.0f);
     alpha  = 1.0f;
     brightness = 1.0f;
     max_width_chars = 1024;   
@@ -47,7 +47,7 @@ void TextBox::setBrightness(float brightness) {
     this->brightness = brightness;
 }
 
-void TextBox::setColour(const vec3f& colour) {
+void TextBox::setColour(const vec3& colour) {
     this->colour = colour;
 }
 
@@ -92,7 +92,7 @@ void TextBox::setText(const std::vector<std::string>& content) {
     }
 }
 
-void TextBox::setPos(const vec2f& pos, bool adjust) {
+void TextBox::setPos(const vec2& pos, bool adjust) {
 
     corner = pos;
 

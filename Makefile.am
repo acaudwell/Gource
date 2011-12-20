@@ -5,11 +5,10 @@ bin_PROGRAMS = gource
 gource_SOURCES = \
 	src/action.cpp src/action.h \
 	src/apache.cpp src/apache.h \
-        src/bloom.cpp src/bloom.h \
-        src/bzr.cpp src/bzr.h \
+	src/bloom.cpp src/bloom.h \
+	src/bzr.cpp src/bzr.h \
 	src/commitlog.cpp src/commitlog.h \
 	src/core/bounds.h \
-	src/core/camera.cpp src/core/camera.h \
 	src/core/conffile.cpp src/core/conffile.h \
 	src/core/display.cpp src/core/display.h \
 	src/core/frustum.cpp src/core/frustum.h \
@@ -34,7 +33,7 @@ gource_SOURCES = \
 	src/core/utf8/unchecked.h \
 	src/core/utf8/utf8.h \
 	src/core/vbo.cpp src/core/vbo.h \
-	src/core/vectors.h \
+	src/core/vectors.cpp src/core/vectors.h \
 	src/custom.cpp src/custom.h \
 	src/cvs-exp.cpp src/cvs-exp.h \
 	src/cvs2cl.cpp src/cvs2cl.h \

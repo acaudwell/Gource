@@ -59,7 +59,7 @@ public:
     std::string path;
 
     std::string logo;
-    vec2f logo_offset;
+    vec2 logo_offset;
 
     float start_position;
     float stop_position;
@@ -95,13 +95,13 @@ public:
     float bloom_multiplier;
     float bloom_intensity;
 
-    vec3f background_colour;
+    vec3 background_colour;
     std::string background_image;
 
     std::string title;
 
     int font_size;
-    vec3f font_colour;
+    vec3 font_colour;
 
     float elasticity;
 
@@ -121,7 +121,7 @@ public:
 
     bool highlight_dirs;
     bool highlight_all_users;
-    vec3f highlight_colour;
+    vec3 highlight_colour;
 
     std::vector<std::string> highlight_users;
     std::vector<std::string> follow_users;

@@ -47,16 +47,16 @@ class RDirNode : public QuadItem {
 
     SplineEdge spline;
 
-    vec4f col;
+    vec4 col;
 
-    vec2f spos;
+    vec2 spos;
 
-    vec2f projected_pos;
-    vec2f projected_spos;
+    vec2 projected_pos;
+    vec2 projected_spos;
 
-    vec2f pos;
-    vec2f vel;
-    vec2f accel, prev_accel;
+    vec2 pos;
+    vec2 vel;
+    vec2 accel, prev_accel;
 
     float dir_area;
 
@@ -77,8 +77,8 @@ class RDirNode : public QuadItem {
 
     int visible_count;
 
-    vec3f screenpos;
-    vec2f node_normal;
+    vec3 screenpos;
+    vec2 node_normal;
 
     void calcRadius();
     void calcColour();
@@ -93,7 +93,7 @@ class RDirNode : public QuadItem {
     void updateSplinePoint(float dt);
     void move(float dt);
 
-    vec2f calcFileDest(int layer_no, int file_no);
+    vec2 calcFileDest(int layer_no, int file_no);
     void updateFilePositions();
 
     void adjustPath();
@@ -133,7 +133,7 @@ public:
 
     const std::string & getPath() const;
 
-    const vec2f & getNodeNormal() const;
+    const vec2 & getNodeNormal() const;
 
     bool isParent(RDirNode* node) const;
 
@@ -153,23 +153,23 @@ public:
     const std::list<RFile*>* getFiles() const { return &files; };
     void getFilesRecursive(std::list<RFile*>& files) const;
 
-    vec3f averageFileColour() const;
+    vec3 averageFileColour() const;
 
-    const vec4f & getColour() const;
+    const vec4 & getColour() const;
 
     RDirNode* getParent() const;
 
     bool isDir(const std::string& path) const;
     void findDirs(const std::string& path, std::list<RDirNode*>& dirs);
 
-    const vec2f & getPos() const;
+    const vec2 & getPos() const;
 
     void calcEdges();
 
-    const vec2f & getProjectedPos() const;
-    const vec2f & getSPos() const;
+    const vec2 & getProjectedPos() const;
+    const vec2 & getSPos() const;
 
-    void setPos(const vec2f & pos);
+    void setPos(const vec2 & pos);
 
     void rotate(float s, float c);
 

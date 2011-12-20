@@ -24,7 +24,7 @@ std::vector<RFile*> gGourceRemovedFiles;
 FXFont file_selected_font;
 FXFont file_font;
 
-RFile::RFile(const std::string & name, const vec3f & colour, const vec2f & pos, int tagid) : Pawn(name,pos,tagid) {
+RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, int tagid) : Pawn(name,pos,tagid) {
     hidden = true;
     size = gGourceFileDiameter * 1.05;
     radius = size * 0.5;
@@ -35,7 +35,7 @@ RFile::RFile(const std::string & name, const vec3f & colour, const vec2f & pos, 
     nametime = 4.0;
     name_interval = nametime;
 
-    namecol     = vec3f(1.0, 1.0, 1.0);
+    namecol     = vec3(1.0, 1.0, 1.0);
     file_colour = colour;
 
     last_action = 0.0;
@@ -52,14 +52,14 @@ RFile::RFile(const std::string & name, const vec3f & colour, const vec2f & pos, 
         file_selected_font = fontmanager.grab("FreeSans.ttf", 18);
         file_selected_font.dropShadow(true);
         file_selected_font.roundCoordinates(false);
-        file_selected_font.setColour(vec4f(1.0f, 1.0f, 0.0f, 1.0f));
+        file_selected_font.setColour(vec4(1.0f, 1.0f, 0.0f, 1.0f));
     }
 
     if(!file_font.initialized()) {
         file_font = fontmanager.grab("FreeSans.ttf", 14);
         file_font.dropShadow(true);
         file_font.roundCoordinates(false);
-        file_font.setColour(vec4f(1.0f, 1.0f, 1.0f, 1.0f));
+        file_font.setColour(vec4(1.0f, 1.0f, 1.0f, 1.0f));
     }
 
     //namelist = glGenLists(1);
@@ -86,16 +86,16 @@ RDirNode* RFile::getDir() const{
     return dir;
 }
 
-vec2f RFile::getAbsolutePos() const{
+vec2 RFile::getAbsolutePos() const{
     return pos + dir->getPos();
 }
 
-bool RFile::overlaps(const vec2f& pos) const {
+bool RFile::overlaps(const vec2& pos) const {
 
-    vec2f abs_pos = getAbsolutePos();
+    vec2 abs_pos = getAbsolutePos();
 
     float halfsize_x = size * 0.5f;
-    vec2f halfsize ( halfsize_x, halfsize_x * graphic_ratio );
+    vec2 halfsize ( halfsize_x, halfsize_x * graphic_ratio );
 
     Bounds2D file_bounds(abs_pos - halfsize, abs_pos + halfsize);
 
@@ -154,24 +154,24 @@ void RFile::updateLabel() {
 }
 
 void RFile::colourize() {
-    file_colour = ext.size() ? colourHash(ext) : vec3f(1.0f, 1.0f, 1.0f);
+    file_colour = ext.size() ? colourHash(ext) : vec3(1.0f, 1.0f, 1.0f);
 }
 
-const vec3f& RFile::getNameColour() const{
+const vec3& RFile::getNameColour() const{
     return selected ? selectedcol : namecol;
 }
 
-const vec3f & RFile::getFileColour() const{
+const vec3 & RFile::getFileColour() const{
     return file_colour;
 }
 
-vec3f RFile::getColour() const{
-    if(selected) return vec3f(1.0, 1.0, 1.0);
+vec3 RFile::getColour() const{
+    if(selected) return vec3(1.0f);
 
     float lc = elapsed - last_action;
 
-    if(lc<1.0) {
-        return touch_colour * (1.0-lc) + file_colour * lc;
+    if(lc<1.0f) {
+        return touch_colour * (1.0f-lc) + file_colour * lc;
     }
 
     return file_colour;
@@ -191,10 +191,10 @@ float RFile::getAlpha() const{
 void RFile::logic(float dt) {
     Pawn::logic(dt);
 
-    vec2f dest_pos = dest;
+    vec2 dest_pos = dest;
 /*
     if(dir->getParent() != 0 && dir->noDirs()) {
-        vec2f dirnorm = dir->getNodeNormal();
+        vec2 dirnorm = dir->getNodeNormal();
         dest_pos = dirnorm + dest;
     }*/
 
@@ -205,16 +205,16 @@ void RFile::logic(float dt) {
     accel = dest_pos - pos;
 
     // apply accel
-    vec2f accel2 = accel * speed * dt;
+    vec2 accel2 = accel * speed * dt;
 
-    if(accel2.length2() > accel.length2()) {
+    if(glm::length2(accel2) > glm::length2(accel)) {
         accel2 = accel;
     }
 
     pos += accel2;
 
     //files have no momentum
-    accel = vec2f(0.0f, 0.0f);
+    accel = vec2(0.0f, 0.0f);
 
     // has completely faded out
     if(!expiring && elapsed - last_action >= gGourceSettings.file_idle_time + 1.0) {
@@ -239,7 +239,7 @@ void RFile::logic(float dt) {
     if(isHidden() && !removing) elapsed = 0.0;
 }
 
-void RFile::touch(const vec3f & colour) {
+void RFile::touch(const vec3 & colour) {
     if(removing) return;
 
     //fprintf(stderr, "touch %s\n", fullpath.c_str());
@@ -276,7 +276,7 @@ void RFile::calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projec
 
     static GLdouble screen_x, screen_y, screen_z;
 
-    vec2f text_pos = getAbsolutePos();
+    vec2 text_pos = getAbsolutePos();
     text_pos.x += 5.5f;
 
     if(selected)

@@ -4,7 +4,7 @@
 // File Key Entry
 // a string for the file ext and a colour
 
-FileKeyEntry::FileKeyEntry(const FXFont& font, const std::string& ext, const vec3f& colour) {
+FileKeyEntry::FileKeyEntry(const FXFont& font, const std::string& ext, const vec3& colour) {
     this->ext    = ext;
     this->colour = colour;
     this->pos_y  = -1.0f;
@@ -12,7 +12,7 @@ FileKeyEntry::FileKeyEntry(const FXFont& font, const std::string& ext, const vec
     this->font = font;
     this->font.dropShadow(false);
 
-    shadow      = vec2f(3.0, 3.0);
+    shadow      = vec2(3.0, 3.0);
 
     width       = 90.0f;
     height      = 18.0f;
@@ -41,7 +41,7 @@ FileKeyEntry::FileKeyEntry(const FXFont& font, const std::string& ext, const vec
     }
 }
 
-const vec3f& FileKeyEntry::getColour() const {
+const vec3& FileKeyEntry::getColour() const {
     return colour;
 }
 
@@ -58,7 +58,7 @@ bool FileKeyEntry::isFinished() const {
 }
 
 void FileKeyEntry::colourize() {
-    colour = ext.empty() ? vec3f(1.0f, 1.0f, 1.0f) : colourHash(ext);
+    colour = ext.empty() ? vec3(1.0f, 1.0f, 1.0f) : colourHash(ext);
 }
 
 void FileKeyEntry::inc() {
@@ -107,7 +107,7 @@ void FileKeyEntry::logic(float dt) {
         }
     }
 
-    pos = vec2f(alpha * left_margin, pos_y);
+    pos = vec2(alpha * left_margin, pos_y);
 }
 
 void FileKeyEntry::draw() {
@@ -142,7 +142,7 @@ void FileKeyEntry::draw() {
 
     glEnable(GL_TEXTURE_2D);
 
-    font.setColour(vec4f(1.0f, 1.0f, 1.0f, alpha));
+    font.setColour(vec4(1.0f, 1.0f, 1.0f, alpha));
 
     font.dropShadow(false);
     font.draw((int)pos.x+2, (int)pos.y+3,  display_ext.c_str());

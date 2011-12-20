@@ -28,12 +28,12 @@
 class bloom_vertex {
 public:
     bloom_vertex() {};
-    bloom_vertex(const vec2f& pos, const vec4f& colour, const vec4f& texcoord) :
+    bloom_vertex(const vec2& pos, const vec4& colour, const vec4& texcoord) :
         pos(pos), colour(colour), texcoord(texcoord) {};
 
-    vec2f pos;
-    vec4f colour;
-    vec4f texcoord;
+    vec2 pos;
+    vec4 colour;
+    vec4 texcoord;
     char padding[24];
 };
 
@@ -57,7 +57,7 @@ public:
     size_t vertices();
     size_t capacity();
 
-    void add(GLuint textureid, const vec2f& pos, const vec2f& dims, const vec4f& colour, const vec4f& texcoord);
+    void add(GLuint textureid, const vec2& pos, const vec2& dims, const vec4& colour, const vec4& texcoord);
 
     void update();
     void draw();

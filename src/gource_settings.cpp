@@ -304,7 +304,7 @@ void GourceSettings::setGourceDefaults() {
     loop = false;
 
     logo = "";
-    logo_offset = vec2f(20.0f,20.0f);
+    logo_offset = vec2(20.0f,20.0f);
 
     colour_user_images = false;
     default_user_image = "";
@@ -324,14 +324,14 @@ void GourceSettings::setGourceDefaults() {
     bloom_multiplier = 1.0f;
     bloom_intensity  = 0.75f;
 
-    background_colour = vec3f(0.1f, 0.1f, 0.1f);
+    background_colour = vec3(0.1f, 0.1f, 0.1f);
     background_image  = "";
 
     title             = "";
 
     font_size = 16;
-    font_colour = vec3f(1.0f, 1.0f, 1.0f);
-    highlight_colour = vec3f(1.0f, 1.0f, 0.3f);
+    font_colour = vec3(1.0f, 1.0f, 1.0f);
+    highlight_colour = vec3(1.0f, 1.0f, 0.3f);
 
     elasticity = 0.0f;
 
@@ -722,7 +722,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(entry->isVec3()) {
             font_colour = entry->getVec3();
         } else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
-            font_colour = vec3f(r,g,b);
+            font_colour = vec3(r,g,b);
             font_colour /= 255.0f;
         } else {
             conffile.invalidValueException(entry);
@@ -740,7 +740,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(entry->isVec3()) {
             background_colour = entry->getVec3();
         } else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
-            background_colour = vec3f(r,g,b);
+            background_colour = vec3(r,g,b);
             background_colour /= 255.0f;
         } else {
             conffile.invalidValueException(entry);
@@ -758,7 +758,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(entry->isVec3()) {
             highlight_colour = entry->getVec3();
         } else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
-            highlight_colour = vec3f(r,g,b);
+            highlight_colour = vec3(r,g,b);
             highlight_colour /= 255.0f;
         } else {
             conffile.invalidValueException(entry);
@@ -796,7 +796,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         int posy = 0;
 
         if(parseRectangle(logo_offset_str, &posx, &posy)) {
-            logo_offset = vec2f(posx, posy);
+            logo_offset = vec2(posx, posy);
         } else {
             conffile.invalidValueException(entry);
         }

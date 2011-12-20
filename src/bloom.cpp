@@ -61,12 +61,12 @@ size_t bloombuf::capacity() {
     return data_size;
 }
 
-void bloombuf::add(GLuint textureid, const vec2f& pos, const vec2f& dims, const vec4f& colour, const vec4f& texcoord) {
+void bloombuf::add(GLuint textureid, const vec2& pos, const vec2& dims, const vec4& colour, const vec4& texcoord) {
 
     bloom_vertex v1(pos,                       colour, texcoord);
-    bloom_vertex v2(pos + vec2f(dims.x, 0.0f), colour, texcoord);
+    bloom_vertex v2(pos + vec2(dims.x, 0.0f), colour, texcoord);
     bloom_vertex v3(pos + dims,                colour, texcoord);
-    bloom_vertex v4(pos + vec2f(0.0f, dims.y), colour, texcoord);
+    bloom_vertex v4(pos + vec2(0.0f, dims.y), colour, texcoord);
 
     int i = vertex_count;
 

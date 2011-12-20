@@ -29,12 +29,12 @@
 
 class Pawn : public QuadItem {
 protected:
-    vec2f pos;
-    vec2f shadowOffset;
+    vec2 pos;
+    vec2 shadowOffset;
 
     std::string name;
     float namewidth;
-    vec2f accel;
+    vec2 accel;
     float speed;
 
     float elapsed;
@@ -42,8 +42,8 @@ protected:
 
     float nametime;
     float name_interval;
-    vec3f namecol;
-    vec3f selectedcol;
+    vec3 namecol;
+    vec3 selectedcol;
 
     bool shadow;
 
@@ -58,21 +58,21 @@ protected:
     virtual bool nameVisible() const;
 
     virtual void drawNameText(float alpha) {};
-    virtual const vec3f& getNameColour() const;
+    virtual const vec3& getNameColour() const;
 protected:
     bool selected;
 public:
     float size;
     float graphic_ratio;
     TextureResource* graphic;
-    vec3f screenpos;
-    vec2f dims;
+    vec3 screenpos;
+    vec2 dims;
 
-    Pawn(const std::string& name, vec2f pos, int tagid);
-    const vec2f & getPos() const { return pos; }
-    void setPos(vec2f pos);
+    Pawn(const std::string& name, vec2 pos, int tagid);
+    const vec2 & getPos() const { return pos; }
+    void setPos(vec2 pos);
 
-    void calcScreenPos(const vec2f& offset);
+    void calcScreenPos(const vec2& offset);
 
     void updateQuadItemBounds();
 
@@ -92,7 +92,7 @@ public:
     bool isHidden() const { return hidden; }
 
     virtual float getAlpha() const{ return std::min(elapsed/fadetime, 1.0f); }
-    virtual vec3f getColour() const { return vec3f(1.0, 1.0, 1.0); }
+    virtual vec3 getColour() const { return vec3(1.0, 1.0, 1.0); }
 
     void setGraphic(TextureResource* graphic);
 

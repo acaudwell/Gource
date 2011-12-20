@@ -35,13 +35,13 @@ class RCommitFile {
 public:
     std::string filename;
     std::string action;
-    vec3f colour;
+    vec3 colour;
 
-    RCommitFile(const std::string& filename, const std::string& action, vec3f colour);
+    RCommitFile(const std::string& filename, const std::string& action, vec3 colour);
 };
 
 class RCommit {
-    vec3f fileColour(const std::string& filename);
+    vec3 fileColour(const std::string& filename);
 public:
     time_t timestamp;
     std::string username;
@@ -51,7 +51,7 @@ public:
     bool isValid();
 
     void addFile(const std::string& filename, const std::string& action);
-    void addFile(const std::string& filename, const std::string& action, vec3f colour);
+    void addFile(const std::string& filename, const std::string& action, vec3 colour);
 
     RCommit();
     void debug();

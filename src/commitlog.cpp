@@ -242,7 +242,7 @@ void RCommitLog::createTempLog() {
 
 // RCommitFile
 
-RCommitFile::RCommitFile(const std::string& filename, const std::string& action, vec3f colour) {
+RCommitFile::RCommitFile(const std::string& filename, const std::string& action, vec3 colour) {
 
     this->filename = munge_utf8(filename);
 
@@ -259,7 +259,7 @@ RCommit::RCommit() {
     timestamp = 0;
 }
 
-vec3f RCommit::fileColour(const std::string& filename) {
+vec3 RCommit::fileColour(const std::string& filename) {
 
     size_t slash = filename.rfind('/');
     size_t dot   = filename.rfind('.');
@@ -269,7 +269,7 @@ vec3f RCommit::fileColour(const std::string& filename) {
 
         return colourHash(file_ext);
     } else {
-        return vec3f(1.0, 1.0, 1.0);
+        return vec3(1.0, 1.0, 1.0);
     }
 }
 
@@ -277,7 +277,7 @@ void RCommit::addFile(const std::string& filename, const std::string& action) {
     files.push_back(RCommitFile(filename, action, fileColour(filename)));
 }
 
-void RCommit::addFile(const std::string& filename, const  std::string& action, vec3f colour) {
+void RCommit::addFile(const std::string& filename, const  std::string& action, vec3 colour) {
     files.push_back(RCommitFile(filename, action, colour));
 }
 

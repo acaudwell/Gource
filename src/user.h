@@ -48,19 +48,19 @@ class RUser : public Pawn {
     float min_units_ps;
 
     std::string name;
-    vec3f usercol;
+    vec3 usercol;
 
     bool highlighted;
 
     bool nameVisible() const;
 
     void updateFont();
-    const vec3f& getNameColour() const;
+    const vec3& getNameColour() const;
     void drawNameText(float alpha);
 public:
-    RUser(const std::string& name, vec2f pos, int tagid);
+    RUser(const std::string& name, vec2 pos, int tagid);
 
-    vec3f getColour() const;
+    vec3 getColour() const;
     void colourize();
 
     const std::string& getName() const;

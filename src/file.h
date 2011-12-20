@@ -18,16 +18,15 @@
 #ifndef RFILE_H
 #define RFILE_H
 
-#include "core/stringhash.h"
-
 #include "pawn.h"
 #include "dirnode.h"
+#include "core/stringhash.h"
 
 class RDirNode;
 
 class RFile : public Pawn {
-    vec3f file_colour;
-    vec3f touch_colour;
+    vec3 file_colour;
+    vec3 touch_colour;
 
     RDirNode* dir;
 
@@ -38,7 +37,7 @@ class RFile : public Pawn {
 
     float radius;
 
-    vec2f dest;
+    vec2 dest;
     float distance;
 
    // FXLabel* label;
@@ -47,28 +46,28 @@ class RFile : public Pawn {
 
     void setFilename(const std::string& abs_file_path);
 
-    const vec3f& getNameColour() const;
+    const vec3& getNameColour() const;
     void drawNameText(float alpha);
 public:
     std::string path;
     std::string fullpath;
     std::string ext;
 
-    RFile(const std::string & name, const vec3f & colour, const vec2f & pos, int tagid);
+    RFile(const std::string & name, const vec3 & colour, const vec2 & pos, int tagid);
     ~RFile();
 
     bool isExpiring() const { return expiring; }
     bool isRemoving() const { return removing; }
 
-    bool overlaps(const vec2f& pos) const;
+    bool overlaps(const vec2& pos) const;
 
-    const vec3f & getFileColour() const;
-    vec3f getColour() const;
+    const vec3 & getFileColour() const;
+    vec3 getColour() const;
     void colourize();
 
     float getAlpha() const;
 
-    void touch(const vec3f & colour);
+    void touch(const vec3 & colour);
 
     void setSelected(bool selected);
 
@@ -76,7 +75,7 @@ public:
 
     void setHidden(bool hidden);
 
-    void setDest(const vec2f & dest){ this->dest = dest; }
+    void setDest(const vec2 & dest){ this->dest = dest; }
     void setDistance(float distance){ this->distance = distance; }
 
     void calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection);
@@ -86,7 +85,7 @@ public:
 
     void remove(bool force=false);
 
-    vec2f getAbsolutePos() const;
+    vec2 getAbsolutePos() const;
 
     RDirNode* getDir() const;
     void setDir(RDirNode* dir);

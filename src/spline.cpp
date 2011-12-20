@@ -20,15 +20,17 @@
 SplineEdge::SplineEdge() {
 }
 
-void SplineEdge::update(const vec2f& pos1, const vec4f& col1, const vec2f& pos2, const vec4f& col2, const vec2f& spos) {
+void SplineEdge::update(const vec2& pos1, const vec4& col1, const vec2& pos2, const vec4& col2, const vec2& spos) {
 
-    vec2f pt_last;
-    vec4f col_last;
+    vec2 pt_last;
+    vec4 col_last;
 
-    vec2f mid = (pos1 - pos2) * 0.5;
-    vec2f to  = vec2f(pos1 - spos);
+    vec2 mid = (pos1 - pos2) * 0.5f;
+    vec2 to  = vec2(pos1 - spos);
 
-    float dp = std::min(1.0f, to.normal().dot(mid.normal()));
+    //TODO: not sure this makes any sense
+    //float dp = std::min(1.0f, to.normal().dot(mid.normal()));
+    float dp = std::min(1.0f, glm::dot(normalize(to), normalize(mid)) );
 
     float ang = acos(dp) / PI;
 
@@ -47,21 +49,21 @@ void SplineEdge::update(const vec2f& pos1, const vec4f& col1, const vec2f& pos2,
         float t = (float)i/edge_detail;
         float tt = 1.0f-t;
 
-        vec2f p0 = pos1 * t + spos * tt;
-        vec2f p1 = spos * t + pos2 * tt;
+        vec2 p0 = pos1 * t + spos * tt;
+        vec2 p1 = spos * t + pos2 * tt;
 
-        vec2f pt = p0 * t + p1 * tt;
+        vec2 pt = p0 * t + p1 * tt;
 
-        vec4f coln = col1 * t + col2 * tt;
+        vec4 coln = col1 * t + col2 * tt;
 
         spline_point.push_back(pt);
         spline_colour.push_back(coln);
     }
     
-    midpoint = pos1 * 0.25 + pos2 * 0.25 + spos * 0.5;
+    midpoint = pos1 * 0.25f + pos2 * 0.25f + spos * 0.5f;
 }
 
-const vec2f& SplineEdge::getMidPoint() const {
+const vec2& SplineEdge::getMidPoint() const {
     return midpoint;
 }
 
@@ -71,24 +73,31 @@ void SplineEdge::drawToVBO(quadbuf& buffer) const {
 
     for(int i=0; i < edges_count; i++) {
 
-        vec2f perp = (spline_point[i] - spline_point[i+1]).perpendicular().normal() * 2.5f;        
+        //vec2 perp = (spline_point[i] - spline_point[i+1]).perpendicular().normal() * 2.5f;        
         
-        quadbuf_vertex v1(spline_point[i]   + perp, spline_colour[i],   vec2f(1.0f, 0.0f));
-        quadbuf_vertex v2(spline_point[i]   - perp, spline_colour[i],   vec2f(0.0f, 0.0f));
-        quadbuf_vertex v3(spline_point[i+1] - perp, spline_colour[i+1], vec2f(0.0f, 0.0f));
-        quadbuf_vertex v4(spline_point[i+1] + perp, spline_colour[i+1], vec2f(1.0f, 0.0f));
+        vec2 perp = (spline_point[i] - spline_point[i+1]);
+        perp = normalize(vec2(-perp.y, perp.x)) * 2.5f;
+
+        quadbuf_vertex v1(spline_point[i]   + perp, spline_colour[i],   vec2(1.0f, 0.0f));
+        quadbuf_vertex v2(spline_point[i]   - perp, spline_colour[i],   vec2(0.0f, 0.0f));
+        quadbuf_vertex v3(spline_point[i+1] - perp, spline_colour[i+1], vec2(0.0f, 0.0f));
+        quadbuf_vertex v4(spline_point[i+1] + perp, spline_colour[i+1], vec2(1.0f, 0.0f));
 
         buffer.add(0, v1, v2, v3, v4);       
     }
 }
 
-void SplineEdge::drawBeam(const vec2f & pos1, const vec4f & col1, const vec2f & pos2, const vec4f & col2, float radius, bool first) const{
+void SplineEdge::drawBeam(const vec2 & pos1, const vec4 & col1, const vec2 & pos2, const vec4 & col2, float radius, bool first) const{
 
-    vec2f perp = (pos1 - pos2).perpendicular().normal() * radius;
+    //vec2 perp = (pos1 - pos2).perpendicular().normal() * radius;
 
+    vec2 perp = (pos1 - pos2);
+    perp = normalize(vec2(-perp.y, perp.x)) * radius;
+    
+    
     // src point
     if(first) {
-        glColor4fv(col1);
+        glColor4fv(glm::value_ptr(col1));
         glTexCoord2f(1.0,0.0);
         glVertex2f(pos1.x + perp.x, pos1.y + perp.y);
         glTexCoord2f(0.0,0.0);
@@ -96,7 +105,7 @@ void SplineEdge::drawBeam(const vec2f & pos1, const vec4f & col1, const vec2f & 
     }
 
     // dest point
-    glColor4fv(col2);
+    glColor4fv(glm::value_ptr(col2));
     glTexCoord2f(1.0,0.0);
     glVertex2f(pos2.x + perp.x, pos2.y + perp.y);
     glTexCoord2f(0.0,0.0);
@@ -107,12 +116,12 @@ void SplineEdge::drawShadow() const{
 
     int edges_count = spline_point.size() - 1;
 
-    vec2f offset(2.0, 2.0);
+    vec2 offset(2.0, 2.0);
 
     glBegin(GL_QUAD_STRIP);
 
     for(int i=0;i<edges_count;i++) {
-        drawBeam(spline_point[i] + offset, vec4f(0.0, 0.0, 0.0, gGourceShadowStrength), spline_point[i+1] + offset, vec4f(0.0, 0.0, 0.0, gGourceShadowStrength), 2.5, i==0);
+        drawBeam(spline_point[i] + offset, vec4(0.0, 0.0, 0.0, gGourceShadowStrength), spline_point[i+1] + offset, vec4(0.0, 0.0, 0.0, gGourceShadowStrength), 2.5, i==0);
     }
 
     glEnd();

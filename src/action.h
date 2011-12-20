@@ -26,7 +26,7 @@ class RFile;
 
 class RAction {
 protected:
-    vec3f colour;
+    vec3 colour;
 public:
     RUser* source;
     RFile* target;

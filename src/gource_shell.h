@@ -28,7 +28,7 @@ class GourceShell : public SDLApp {
 
     bool next;
 
-    GLuint transition_texture;
+    TextureResource* transition_texture;
     float  transition_interval; 
 
     FrameExporter* exporter;
@@ -43,6 +43,9 @@ public:
 
     void update(float t, float dt);
 
+    void resize(SDL_ResizeEvent* e);
+    void toggleFullscreen();
+    
     void keyPress(SDL_KeyboardEvent *e);
     void mouseMove(SDL_MouseMotionEvent *e);
     void mouseClick(SDL_MouseButtonEvent *e);

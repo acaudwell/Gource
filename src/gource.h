@@ -86,18 +86,18 @@ class Gource : public SDLApp {
     bool mouseclicked;
     bool mousedragged;
 
-    vec2f cursor_move;
+    vec2 cursor_move;
 
     bool recolour;
 
     bool update_file_labels;
-
+    
     bool use_selection_bounds;
     Bounds2D selection_bounds;
 
     float rotate_angle;
 
-    vec2f mousepos;
+    vec2 mousepos;
 
     float last_percent;
 
@@ -279,6 +279,10 @@ public:
     void draw(float t, float dt);
 
     void init();
+    
+    void unload();
+    void reload();
+    
     void update(float t, float dt);
     void keyPress(SDL_KeyboardEvent *e);
     void mouseMove(SDL_MouseMotionEvent *e);

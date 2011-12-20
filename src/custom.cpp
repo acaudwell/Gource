@@ -22,14 +22,14 @@ Regex custom_regex("^([0-9]+)\\|([^|]*)\\|([ADM]?)\\|([^|]+)(?:\\|#?([A-F0-9]{6}
 CustomLog::CustomLog(const std::string& logfile) : RCommitLog(logfile) {
 }
 
-vec3f CustomLog::parseColour(const std::string& cstr) {
+vec3 CustomLog::parseColour(const std::string& cstr) {
     debugLog("parseColour\n");
-    vec3f colour;
+    vec3 colour;
     int r,g,b;
 
     if(sscanf(cstr.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
 
-        colour = vec3f( r, g, b );
+        colour = vec3( r, g, b );
         colour /= 255.0f;
 
         debugLog("colour %.2f %.2f %.2f\n", colour.x,colour.y,colour.z);
@@ -76,7 +76,7 @@ bool CustomLog::parseCommitEntry(RCommit& commit) {
     }
 
     bool has_colour = false;
-    vec3f colour;
+    vec3 colour;
 
     if(entries.size()>=5 && entries[4].size()>0) {
         has_colour = true;

@@ -19,7 +19,7 @@
 
 float gGourceShadowStrength = 0.5;
 
-Pawn::Pawn(const std::string& name, vec2f pos, int tagid) {
+Pawn::Pawn(const std::string& name, vec2 pos, int tagid) {
     this->name  = name;
     this->pos   = pos;
     this->tagid = tagid;
@@ -33,12 +33,12 @@ Pawn::Pawn(const std::string& name, vec2f pos, int tagid) {
 
     namewidth = 0;
 
-    this->shadowOffset = vec2f(2.0, 2.0);
+    this->shadowOffset = vec2(2.0, 2.0);
     this->elapsed = 0.0;
     this->fadetime = 1.0;
     this->nametime = 5.0;
     this->name_interval = 0.0;
-    this->namecol = vec3f(1.0, 1.0, 1.0);
+    this->namecol = vec3(1.0, 1.0, 1.0);
 
     this->selectedcol = gGourceSettings.highlight_colour;
 
@@ -50,7 +50,7 @@ float Pawn::getSize() {
     return size;
 }
 
-void Pawn::setPos(vec2f pos) {
+void Pawn::setPos(vec2 pos) {
     this->pos = pos;
 }
 
@@ -66,7 +66,7 @@ void Pawn::updateQuadItemBounds() {
 
     float halfsize_x = size * 0.5f;
 
-    vec2f halfsize ( halfsize_x, halfsize_x * graphic_ratio );
+    vec2 halfsize ( halfsize_x, halfsize_x * graphic_ratio );
 
     //set bounds
     quadItemBounds.set(pos - halfsize, pos + halfsize);
@@ -89,7 +89,7 @@ void Pawn::setGraphic(TextureResource* graphic) {
     }
 
     this->graphic = graphic;
-    this->dims = vec2f(size, size*graphic_ratio);
+    this->dims = vec2(size, size*graphic_ratio);
 }
 
 
@@ -102,12 +102,12 @@ void Pawn::setSelected(bool selected) {
     this->selected = selected;
 }
 
-const vec3f& Pawn::getNameColour() const {
+const vec3& Pawn::getNameColour() const {
     return namecol;
 }
 
-void Pawn::calcScreenPos(const vec2f& offset) {
-    screenpos = display.project(vec3f(pos.x+offset.x, pos.y+offset.y, 0.0f));
+void Pawn::calcScreenPos(const vec2& offset) {
+    screenpos = display.project(vec3(pos.x+offset.x, pos.y+offset.y, 0.0f));
 }
 
 bool Pawn::nameVisible() const {
@@ -132,7 +132,7 @@ void Pawn::drawShadow(float dt) {
     if(isHidden() || !shadow) return;
 
     float halfsize = size * 0.5f;
-    vec2f offsetpos = pos - vec2f(halfsize, halfsize*graphic_ratio) + shadowOffset;
+    vec2 offsetpos = pos - vec2(halfsize, halfsize*graphic_ratio) + shadowOffset;
 
     float alpha = getAlpha();
 
@@ -163,11 +163,11 @@ void Pawn::draw(float dt) {
     if(hidden) return;
 
     float halfsize = size * 0.5f;
-    vec2f offsetpos = pos - vec2f(halfsize, halfsize*graphic_ratio);
+    vec2 offsetpos = pos - vec2(halfsize, halfsize*graphic_ratio);
 
     float alpha = getAlpha();
 
-    vec3f col = getColour();
+    vec3 col = getColour();
 
     glBindTexture(GL_TEXTURE_2D, graphic->textureid);
 

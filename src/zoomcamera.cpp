@@ -20,9 +20,12 @@
 ZoomCamera::ZoomCamera() {
 }
 
-ZoomCamera::ZoomCamera(vec3f start, vec3f target, float min_distance, float max_distance) : Camera(start,target) {
-    dest = start;
-    up = vec3f(0.0f, -1.0f, 0.0f);
+ZoomCamera::ZoomCamera(vec3 pos, vec3 target, float min_distance, float max_distance) :
+    pos(pos), _pos(pos), target(target), _target(target),  dest(pos), fov(90.0f) {
+
+    znear = 0.1;
+
+    up = vec3(0.0f, -1.0f, 0.0f);
 
     setMinDistance(min_distance);
     setMaxDistance(max_distance);
@@ -35,7 +38,8 @@ ZoomCamera::ZoomCamera(vec3f start, vec3f target, float min_distance, float max_
 }
 
 void ZoomCamera::reset() {
-    Camera::reset();
+    pos    = _pos;
+    target = _target;
 }
 
 float ZoomCamera::getMaxDistance() { return max_distance; }
@@ -63,6 +67,21 @@ void ZoomCamera::lockOn(bool lockon) {
     this->lockon = lockon;
 }
 
+void ZoomCamera::look() {
+    lookAt(target);
+}
+
+void ZoomCamera::lookAt(const vec3& target) {
+    gluLookAt( pos.x,    pos.y,    pos.z,
+               target.x, target.y, target.z,
+               up.x,     up.y,     up.z);
+}
+
+void ZoomCamera::focus() {
+    display.mode3D(fov, znear, zfar);
+    look();
+}
+
 void ZoomCamera::stop() {
     this->dest = pos;
 }
@@ -78,7 +97,7 @@ void ZoomCamera::adjust(const Bounds2D& bounds, bool adjust_distance) {
 
     //center camera on bounds
 
-    vec2f centre  = bounds.centre();
+    vec2 centre  = bounds.centre();
 
     //adjust by screen ratio
     dest.x = centre.x;
@@ -99,7 +118,7 @@ void ZoomCamera::adjust(const Bounds2D& bounds, bool adjust_distance) {
       }
 
     //calc visible width of the opposite wall at a distance of 1 this fov
-    float toa = tan( getFov() * 0.5f * DEGREES_TO_RADIANS ) * 2.0;
+    float toa = tan( fov * 0.5f * DEGREES_TO_RADIANS ) * 2.0;
 
     float distance;
 
@@ -135,22 +154,32 @@ void ZoomCamera::setDistance(float distance) {
     dest.z = -distance;
 }
 
-void ZoomCamera::logic(float dt) {
-    vec3f dp = (dest - pos);
+void ZoomCamera::setPos(const vec3& pos, bool keep_angle)  {
+    if(keep_angle) {
+        vec3 dir = target - this->pos;
+        this->pos = pos;
+        this->target = pos + dir;
+    } else {
+        this->pos = pos;
+    }
+}
 
-    vec3f dpt = dp * dt * speed;
+void ZoomCamera::logic(float dt) {
+    vec3 dp = (dest - pos);
+
+    vec3 dpt = dp * dt * speed;
 
     if(lockon) {
-        dpt = dpt * lockon_time + dp * (1.0-lockon_time);
+        dpt = dpt * lockon_time + dp * (1.0f-lockon_time);
 
         if(lockon_time>0.0) {
             lockon_time = std::max(0.0f, lockon_time-dt*0.5f);
         }
     }
 
-    if(dpt.length2() > dp.length2()) dpt = dp;
+    if(glm::length2(dpt) > glm::length2(dp)) dpt = dp;
 
     pos += dpt;
 
-    target = vec3f(pos.x, pos.y, 0.0);
+    target = vec3(pos.x, pos.y, 0.0);
 }
