@@ -24,7 +24,7 @@ Regex cvs2cl_logentry_timestamp("(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\
 
 std::string gGourceCVS2CLLogCommand = "cvs2cl --chrono --stdout --xml -g-q";
 
-CVS2CLCommitLog::CVS2CLCommitLog(const std::string& logfile) : RCommitLog(logfile, '<') {
+CVS2CLCommitLog::CVS2CLCommitLog(const std::string& logfile) : RCommitLog(logfile, "", '<') {
 }
 
 bool CVS2CLCommitLog::parseCommit(RCommit& commit) {
