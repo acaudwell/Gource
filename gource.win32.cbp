@@ -32,8 +32,8 @@
 			<Add library="glu32" />
 			<Add library="glew32" />
 			<Add library="freetype" />
-                        <Add library="boost_filesystem-mgw44-mt-1_46_1" />
-                        <Add library="libboost_system-mgw44-mt-1_46_1" />
+			<Add library="boost_filesystem-mgw44-mt-1_46_1" />
+			<Add library="libboost_system-mgw44-mt-1_46_1" />
 		</Linker>
 		<Unit filename="data\shaders\bloom.frag" />
 		<Unit filename="data\shaders\bloom.vert" />
@@ -52,8 +52,6 @@
 		<Unit filename="src\commitlog.cpp" />
 		<Unit filename="src\commitlog.h" />
 		<Unit filename="src\core\bounds.h" />
-		<Unit filename="src\core\camera.cpp" />
-		<Unit filename="src\core\camera.h" />
 		<Unit filename="src\core\conffile.cpp" />
 		<Unit filename="src\core\conffile.h" />
 		<Unit filename="src\core\display.cpp" />
@@ -92,6 +90,7 @@
 		<Unit filename="src\core\texture.h" />
 		<Unit filename="src\core\vbo.cpp" />
 		<Unit filename="src\core\vbo.h" />
+		<Unit filename="src\core\vectors.cpp" />
 		<Unit filename="src\core\vectors.h" />
 		<Unit filename="src\custom.cpp" />
 		<Unit filename="src\custom.h" />
