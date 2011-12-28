@@ -371,9 +371,16 @@ void Gource::init() {
 }
 
 void Gource::unload() {
+
+    file_vbo.unload();
+    user_vbo.unload();
+    edge_vbo.unload();
+    action_vbo.unload();
+   
 }
 
 void Gource::reload() {
+
     slider.resize();
 }
 

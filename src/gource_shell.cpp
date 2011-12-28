@@ -48,32 +48,32 @@ GourceShell::~GourceShell() {
 }
 
 void GourceShell::toggleFullscreen() {
-   // texturemanager.unload();
-   // shadermanager.unload();
+    texturemanager.unload();
+    shadermanager.unload();
 
     if(gource!=0) gource->unload();
 
     //recreate gl context
     display.toggleFullscreen();
 
-   // texturemanager.reload();
-   // shadermanager.reload();
+    texturemanager.reload();
+    shadermanager.reload();
     
     if(gource!=0) gource->reload();
 }
 
 void GourceShell::resize(SDL_ResizeEvent* e) {
 
-   // texturemanager.unload();
-   // shadermanager.unload();
+    texturemanager.unload();
+    shadermanager.unload();
 
     if(gource!=0) gource->unload();
 
     //recreate gl context
     display.resize(e->w, e->h);
 
-  //  texturemanager.reload();
-  //  shadermanager.reload();
+    texturemanager.reload();
+    shadermanager.reload();
 
     if(gource!=0) gource->reload();
 }
