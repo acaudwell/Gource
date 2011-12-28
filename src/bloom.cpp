@@ -53,6 +53,12 @@ void bloombuf::reset() {
     vertex_count = 0;
 }
 
+void bloombuf::unload() {
+    if(bufferid !=0) glDeleteBuffers(1, &bufferid);
+    bufferid = 0;
+    buffer_size = 0;
+}
+
 size_t bloombuf::vertices() {
     return vertex_count;
 }

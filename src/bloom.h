@@ -52,6 +52,7 @@ public:
     bloombuf(int data_size = 0);
     ~bloombuf();
 
+    void unload();
     void reset();
 
     size_t vertices();

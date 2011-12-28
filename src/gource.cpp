@@ -376,6 +376,7 @@ void Gource::unload() {
     user_vbo.unload();
     edge_vbo.unload();
     action_vbo.unload();
+    bloom_vbo.unload();
    
 }
 
