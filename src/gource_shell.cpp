@@ -49,9 +49,9 @@ GourceShell::~GourceShell() {
 
 void GourceShell::toggleFullscreen() {
 
-    fontmanager.unload();
     texturemanager.unload();
     shadermanager.unload();
+    fontmanager.unload();
 
     if(gource!=0) gource->unload();
 
@@ -60,6 +60,7 @@ void GourceShell::toggleFullscreen() {
 
     texturemanager.reload();
     shadermanager.reload();
+    fontmanager.reload();
 
     if(gource!=0) gource->reload();
 }
