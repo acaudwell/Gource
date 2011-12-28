@@ -609,11 +609,11 @@ void RDirNode::applyForceDir(RDirNode* node) {
 
     //resolve overlap
     if(posd < 0.00001) {
-        accel += normalize(vec2( (rand() % 100) - 50, (rand() % 100) - 50));
+        accel += normalise(vec2( (rand() % 100) - 50, (rand() % 100) - 50));
         return;
     }
 
-    accel += distance * normalize(dir);
+    accel += distance * normalise(dir);
 }
 
 const vec2 & RDirNode::getPos() const{
@@ -657,14 +657,14 @@ void RDirNode::applyForces(QuadTree & quadtree) {
 
     
     
-    accel += gGourceForceGravity * parent_dist * normalize(parent->getPos() - pos);
+    accel += gGourceForceGravity * parent_dist * normalise(parent->getPos() - pos);
     
     //  * dirs should be pushed along the parent_parent to parent normal by a force smaller than the parent radius force
     RDirNode* pparent = parent->getParent();
 
     if(pparent != 0) {
         vec2 parent_edge = (parent->getPos() - pparent->getPos());
-        vec2 parent_edge_normal = normalize(parent_edge);
+        vec2 parent_edge_normal = normalise(parent_edge);
 
         vec2 dest = (parent->getPos() + (parent->getRadius() + getRadius()) * parent_edge_normal) - pos;
 
@@ -686,7 +686,7 @@ void RDirNode::applyForces(QuadTree & quadtree) {
 
             visible++;
 
-            sib_accel -= normalize(node->getPos() - pos);
+            sib_accel -= normalise(node->getPos() - pos);
         }
 
         //parent circumfrence divided by the number of visible child nodes
@@ -758,7 +758,7 @@ void RDirNode::updateSplinePoint(float dt) {
 
     //dont let spos get more than half the length of the distance behind
     if(glm::length2(delta) > glm::length2(td)) {
-        spos += normalize(delta) * (glm::length(delta) - glm::length(td));
+        spos += normalise(delta) * (glm::length(delta) - glm::length(td));
     }
 
     spos += delta * std::min(1.0f, dt * 2.0f);
@@ -772,7 +772,7 @@ void RDirNode::setInitialPosition() {
     //offset position by some pseudo-randomness
     if(parentP != 0) {
         //pos += ((parent->getPos() - parentP->getPos()).normal() * 2.0 + vec2Hash(abspath)).normal();
-        pos += normalize(normalize(parent->getPos() - parentP->getPos()) * 2.0f + vec2Hash(abspath));
+        pos += normalise(normalise(parent->getPos() - parentP->getPos()) * 2.0f + vec2Hash(abspath));
        
     }  else {
         pos += vec2Hash(abspath);
@@ -888,7 +888,7 @@ void RDirNode::logic(float dt) {
 
     //update node normal
     if(parent != 0) {
-        node_normal = normalize(pos - parent->getPos());
+        node_normal = normalise(pos - parent->getPos());
     }
 
     //update files

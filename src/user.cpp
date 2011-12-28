@@ -103,14 +103,14 @@ void RUser::applyForceUser(RUser* u) {
     //resolve overlap
     if(dist < 0.001) {
 
-        accel += 1.0f * normalize(vec2( (rand() % 100) - 50, (rand() % 100) - 50));
+        accel += 1.0f * normalise(vec2( (rand() % 100) - 50, (rand() % 100) - 50));
 
         return;
     }
 
     //repelling force
     if(dist < desired_dist) {
-        accel -= (desired_dist-dist) * normalize(dir);
+        accel -= (desired_dist-dist) * normalise(dir);
     }
 }
 
@@ -125,18 +125,18 @@ void RUser::applyForceAction(RAction* action) {
 
     //resolve overlap
     if(dist < 0.001) {
-        accel += normalize(vec2( (rand() % 100) - 50, (rand() % 100) - 50));
+        accel += normalise(vec2( (rand() % 100) - 50, (rand() % 100) - 50));
         return;
     }
 
     //repelling force
     if(dist < desired_dist) {
-        accel -= (desired_dist - dist) * normalize(dir);
+        accel -= (desired_dist - dist) * normalise(dir);
         return;
     }
 
     if(dist > gGourceBeamDist) {
-        accel += (dist-gGourceBeamDist) * normalize(dir);
+        accel += (dist-gGourceBeamDist) * normalise(dir);
     }
 }
 
@@ -297,7 +297,7 @@ void RUser::logic(float t, float dt) {
     }
 
     if(glm::length2(accel) > speed * speed) {
-        accel = normalize(accel) * speed;
+        accel = normalise(accel) * speed;
     }
 
     pos += accel * dt;

@@ -47,7 +47,7 @@ void RAction::drawToVBO(quadbuf& buffer) const {
 
     //TODO: could use glm::perp
     
-    vec2 n    = normalize(dest - src);   
+    vec2 n    = normalise(dest - src);   
     vec2 perp = vec2(-n.y, n.x);
     
     vec2 offset     = perp * target->getSize() * 0.5f;
@@ -73,7 +73,7 @@ void RAction::draw(float dt) {
     vec2 src  = source->getPos();
     vec2 dest = target->getAbsolutePos();
 
-    vec2 n    = normalize(dest - src);   
+    vec2 n    = normalise(dest - src);   
     vec2 perp = vec2(-n.y, n.x);
     
     vec2 offset     = perp * target->getSize() * 0.5f;

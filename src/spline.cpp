@@ -30,7 +30,7 @@ void SplineEdge::update(const vec2& pos1, const vec4& col1, const vec2& pos2, co
 
     //TODO: not sure this makes any sense
     //float dp = std::min(1.0f, to.normal().dot(mid.normal()));
-    float dp = std::min(1.0f, glm::dot(normalize(to), normalize(mid)) );
+    float dp = std::min(1.0f, glm::dot(normalise(to), normalise(mid)) );
 
     float ang = acos(dp) / PI;
 
@@ -76,7 +76,7 @@ void SplineEdge::drawToVBO(quadbuf& buffer) const {
         //vec2 perp = (spline_point[i] - spline_point[i+1]).perpendicular().normal() * 2.5f;        
         
         vec2 perp = (spline_point[i] - spline_point[i+1]);
-        perp = normalize(vec2(-perp.y, perp.x)) * 2.5f;
+        perp = normalise(vec2(-perp.y, perp.x)) * 2.5f;
 
         quadbuf_vertex v1(spline_point[i]   + perp, spline_colour[i],   vec2(1.0f, 0.0f));
         quadbuf_vertex v2(spline_point[i]   - perp, spline_colour[i],   vec2(0.0f, 0.0f));
@@ -92,7 +92,7 @@ void SplineEdge::drawBeam(const vec2 & pos1, const vec4 & col1, const vec2 & pos
     //vec2 perp = (pos1 - pos2).perpendicular().normal() * radius;
 
     vec2 perp = (pos1 - pos2);
-    perp = normalize(vec2(-perp.y, perp.x)) * radius;
+    perp = normalise(vec2(-perp.y, perp.x)) * radius;
     
     
     // src point
