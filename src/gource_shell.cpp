@@ -38,7 +38,7 @@ GourceShell::GourceShell(ConfFile* conf, FrameExporter* exporter) {
 
     if(strstr((const char *)glGetString(GL_EXTENSIONS), "GL_ARB_texture_non_power_of_two" )) {
 
-        transition_texture = texturemanager.create(display.width, display.height, false, GL_CLAMP_TO_EDGE, GL_RGBA);           
+        transition_texture = texturemanager.create(display.width, display.height, false, GL_CLAMP_TO_EDGE, GL_RGBA);
     }
 }
 
@@ -48,6 +48,8 @@ GourceShell::~GourceShell() {
 }
 
 void GourceShell::toggleFullscreen() {
+
+    fontmanager.unload();
     texturemanager.unload();
     shadermanager.unload();
 
@@ -58,7 +60,7 @@ void GourceShell::toggleFullscreen() {
 
     texturemanager.reload();
     shadermanager.reload();
-    
+
     if(gource!=0) gource->reload();
 }
 
@@ -66,6 +68,7 @@ void GourceShell::resize(SDL_ResizeEvent* e) {
 
     texturemanager.unload();
     shadermanager.unload();
+    fontmanager.unload();
 
     if(gource!=0) gource->unload();
 
@@ -74,6 +77,7 @@ void GourceShell::resize(SDL_ResizeEvent* e) {
 
     texturemanager.reload();
     shadermanager.reload();
+    fontmanager.reload();
 
     if(gource!=0) gource->reload();
 }
@@ -85,13 +89,13 @@ void GourceShell::keyPress(SDL_KeyboardEvent *e) {
         if (e->keysym.unicode == SDLK_ESCAPE) {
             appFinished=true;
         }
-        
+
         if(e->keysym.unicode == SDLK_RETURN) {
             Uint8* keyState = SDL_GetKeyState(NULL);
             if(keyState[SDLK_RALT] || keyState[SDLK_LALT]) {
 
                 toggleFullscreen();
-                
+
             } else {
                 if(gGourceSettings.repo_count>1)
                     next = true;
@@ -191,7 +195,7 @@ void GourceShell::update(float t, float dt) {
 
     if(gource == 0 || gource->isFinished()) {
         gource = getNext();
-        
+
         if(gource==0) appFinished=true;
         return;
     }
@@ -201,11 +205,11 @@ void GourceShell::update(float t, float dt) {
 
     //copy last frame
     if( (next|| gource->isFinished()) && transition_texture!=0) {
-        
+
         glEnable(GL_TEXTURE_2D);
         transition_texture->bind();
         glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, display.width, display.height, 0);
-        
+
     } else {
         //blend last frame of previous scene
         blendLastFrame(dt);
