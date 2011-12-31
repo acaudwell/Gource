@@ -9,7 +9,7 @@ dnl AM_PATH_SDL([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
 dnl Test for SDL, and define SDL_CFLAGS and SDL_LIBS
 dnl
 AC_DEFUN([AM_PATH_SDL],
-[dnl 
+[dnl
 dnl Get the cflags and libraries from the sdl-config script
 dnl
 AC_ARG_WITH(sdl-prefix,[  --with-sdl-prefix=PFX   Prefix where SDL is installed (optional)],
@@ -73,7 +73,7 @@ char*
 my_strdup (char *str)
 {
   char *new_str;
-  
+
   if (str)
     {
       new_str = (char *)malloc ((strlen (str) + 1) * sizeof(char));
@@ -81,7 +81,7 @@ my_strdup (char *str)
     }
   else
     new_str = NULL;
-  
+
   return new_str;
 }
 
@@ -128,7 +128,7 @@ int main (int argc, char *argv[])
   fi
   if test "x$no_sdl" = x ; then
      AC_MSG_RESULT(yes)
-     ifelse([$2], , :, [$2])     
+     ifelse([$2], , :, [$2])
   else
      AC_MSG_RESULT(no)
      if test "$SDL_CONFIG" = "no" ; then

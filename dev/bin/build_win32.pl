@@ -16,7 +16,7 @@ my $VERSION  = gource_version();
 
 sub doit {
     my $cmd = shift;
-    
+
     if(system($cmd) != 0) {
 	die("command '$cmd' failed: $!");
     }
@@ -24,10 +24,10 @@ sub doit {
 
 sub dosify {
     my($src, $dest) = @_;
-    
+
     my $content = `cat $src`;
     $content =~ s/\r?\n/\r\n/g;
-    
+
     open  OUTPUT, ">$dest" or die("$!");
     print OUTPUT $content;
     close OUTPUT;

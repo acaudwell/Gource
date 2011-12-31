@@ -181,11 +181,11 @@ void Gource::writeCustomLog(const std::string& logfile, const std::string& outpu
 }
 
 bool Gource::findRepository(boost::filesystem::path& dir, std::string& log_format) {
-    
-    dir = absolute(dir);   
-    
+
+    dir = absolute(dir);
+
     //fprintf(stderr, "find repository from initial path: %s\n", dir.string().c_str());
-        
+
     while(is_directory(dir)) {
 
              if(is_directory(dir / ".git")) log_format = "git";
@@ -197,12 +197,12 @@ bool Gource::findRepository(boost::filesystem::path& dir, std::string& log_forma
             //fprintf(stderr, "found '%s' repository at: %s\n", log_format.c_str(), dir.string().c_str());
             return true;
         }
-        
+
         if(!dir.has_parent_path()) return false;
 
         dir = dir.parent_path();
     }
-        
+
     return false;
 }
 
@@ -212,7 +212,7 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
     RCommitLog* clog = 0;
 
     std::string log_format = gGourceSettings.log_format;
-    
+
     //if the log format is not specified and 'logfile' is a directory, recursively look for a version control repository.
     //this method allows for something strange like someone who having an svn repository inside a git repository
     //(in which case it would pick the svn directory as it would encounter that first)
@@ -230,7 +230,7 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
         } catch(boost::filesystem3::filesystem_error& error) {
         }
     }
-    
+
     //we've been told what format to use
     if(log_format.size() > 0) {
         debugLog("log-format = %s\n", log_format.c_str());

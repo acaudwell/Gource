@@ -153,7 +153,7 @@ void GourceShell::update(float t, float dt) {
 
     if(gource == 0 || gource->isFinished()) {
         gource = getNext();
-        
+
         if(gource==0) appFinished=true;
         return;
     }

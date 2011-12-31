@@ -187,7 +187,7 @@ public:
     void logic(float dt);
 
     void updateEdgeVBO(quadbuf& buffer) const;
-    
+
     void drawEdges() const;
     void drawEdgeShadows() const;
 

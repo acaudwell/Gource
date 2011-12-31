@@ -148,11 +148,11 @@ RDirNode* RDirNode::getParent() const{
 
 
 bool RDirNode::isDir(const std::string& path) const {
-      
+
     if(prefixedBy(path)) return true;
 
     if(path.find(abspath) != 0) return false;
-    
+
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         if((*it)->isDir(path)) return true;
     }
@@ -167,7 +167,7 @@ void RDirNode::findDirs(const std::string& path, std::list<RDirNode*>& dirs) {
         dirs.push_back(this);
         return;
     }
- 
+
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         (*it)->findDirs(path, dirs);
     }
@@ -418,7 +418,7 @@ bool RDirNode::addFile(RFile* f) {
 
     for(std::list<RFile*>::const_iterator it = files.begin(); it != files.end(); it++) {
         RFile* file = (*it);
-       
+
         if(f->path.find(file->fullpath) == 0) {
             //fprintf(stderr, "removing %s as is actually the directory of %s\n", file->fullpath.c_str(), f->fullpath.c_str());
             file->remove(true);

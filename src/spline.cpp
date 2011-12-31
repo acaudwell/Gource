@@ -57,7 +57,7 @@ void SplineEdge::update(const vec2f& pos1, const vec4f& col1, const vec2f& pos2,
         spline_point.push_back(pt);
         spline_colour.push_back(coln);
     }
-    
+
     midpoint = pos1 * 0.25 + pos2 * 0.25 + spos * 0.5;
 }
 
@@ -71,14 +71,14 @@ void SplineEdge::drawToVBO(quadbuf& buffer) const {
 
     for(int i=0; i < edges_count; i++) {
 
-        vec2f perp = (spline_point[i] - spline_point[i+1]).perpendicular().normal() * 2.5f;        
-        
+        vec2f perp = (spline_point[i] - spline_point[i+1]).perpendicular().normal() * 2.5f;
+
         quadbuf_vertex v1(spline_point[i]   + perp, spline_colour[i],   vec2f(1.0f, 0.0f));
         quadbuf_vertex v2(spline_point[i]   - perp, spline_colour[i],   vec2f(0.0f, 0.0f));
         quadbuf_vertex v3(spline_point[i+1] - perp, spline_colour[i+1], vec2f(0.0f, 0.0f));
         quadbuf_vertex v4(spline_point[i+1] + perp, spline_colour[i+1], vec2f(1.0f, 0.0f));
 
-        buffer.add(0, v1, v2, v3, v4);       
+        buffer.add(0, v1, v2, v3, v4);
     }
 }
 

@@ -24,12 +24,12 @@ TextBox::TextBox(const FXFont& font) {
     this->font   = font;
 
     shadow = vec2f(3.0f, 3.0f);
-    
+
     colour = vec3f(0.7f, 0.7f, 0.7f);
     corner = vec2f(0.0f,0.0f);
     alpha  = 1.0f;
     brightness = 1.0f;
-    max_width_chars = 1024;   
+    max_width_chars = 1024;
     rect_width = 0;
     rect_height = 0;
     visible = false;
@@ -70,16 +70,16 @@ void TextBox::addLine(std::string str) {
     int width = font.getWidth(str) + 6;
 
     if(width > rect_width) rect_width = width;
-    
+
     rect_height += (font.getFontSize()+4);
-    
-    content.push_back(str);   
+
+    content.push_back(str);
 }
 
 void TextBox::setText(const std::string& str) {
 
     clear();
-   
+
     addLine(str);
 }
 
@@ -99,7 +99,7 @@ void TextBox::setPos(const vec2f& pos, bool adjust) {
     if(!adjust) return;
 
     int fontheight = font.getFontSize() + 4;
-    
+
     corner.y -= rect_height;
 
     if((corner.x + rect_width) > display.width) {
@@ -121,13 +121,13 @@ void TextBox::draw() const {
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-    
+
+
     glColor4f(0.0f, 0.0f, 0.0f, alpha * 0.333f);
-    
+
     glPushMatrix();
         glTranslatef(shadow.x, shadow.y, 0.0f);
-    
+
         glBegin(GL_QUADS);
             glVertex2f(corner.x,           corner.y);
             glVertex2f(corner.x,           corner.y + rect_height);
@@ -135,7 +135,7 @@ void TextBox::draw() const {
             glVertex2f(corner.x+rect_width, corner.y);
         glEnd();
     glPopMatrix();
-        
+
     glColor4f(colour.x * brightness, colour.y * brightness, colour.z * brightness, alpha);
 
     glBegin(GL_QUADS);
@@ -143,8 +143,8 @@ void TextBox::draw() const {
         glVertex2f(corner.x,           corner.y + rect_height);
         glVertex2f(corner.x+rect_width, corner.y + rect_height);
         glVertex2f(corner.x+rect_width, corner.y);
-    glEnd();    
-    
+    glEnd();
+
     glEnable(GL_TEXTURE_2D);
     glColor4f(1.0f, 1.0f, 1.0f, alpha);
 

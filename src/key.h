@@ -27,7 +27,7 @@
 #include <vector>
 #include <algorithm>
 
-class FileKeyEntry {   
+class FileKeyEntry {
     FXFont font;
     vec3f colour;
     std::string ext;
@@ -54,18 +54,18 @@ public:
     void setDestY(float dest_y);
 
     void colourize();
-    
+
     void inc();
     void dec();
-    
+
     void setShow(bool show);
-    
+
     int getCount() const;
     void setCount(int count);
 
     bool isNew() const;
     bool isFinished() const;
-    
+
     void logic(float dt);
 
     void draw();
@@ -83,18 +83,18 @@ public:
     FileKey();
     ~FileKey();
     FileKey(float update_interval);
-    
+
     void setShow(bool show);
-    
+
     void clear();
 
     void colourize();
-    
+
     void inc(RFile* file);
     void dec(RFile* file);
 
     void logic(float dt);
-    
+
     void draw();
 };
 

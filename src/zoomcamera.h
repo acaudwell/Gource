@@ -57,7 +57,7 @@ public:
     void adjustDistance();
     void adjust(const Bounds2D& bounds);
     void adjust(const Bounds2D& bounds, bool adjust_distance);
-    
+
     void stop();
 };
 
