@@ -293,7 +293,7 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
 
     //git
     debugLog("trying git...\n");
-    clog = new GitCommitLog(logfile);
+    clog = new GitCommitLog( logfile );
     if(clog->checkFormat()) return clog;
 
     delete clog;

@@ -81,8 +81,10 @@ protected:
     bool getNextLine(std::string& line);
 
     virtual bool parseCommit(RCommit& commit) { return false; };
+
+    const std::string logfile;
 public:
-    RCommitLog(const std::string& logfile, int firstChar = -1);
+    RCommitLog(const std::string& logfile, const std::string& vcssub = "", int firstChar = -1);
     ~RCommitLog();
 
     void seekTo(float percent);
@@ -97,6 +99,8 @@ public:
     bool isFinished();
     bool isSeekable();
     float getPercent();
+
+    static const std::string findRepositoryRoot(const std::string& prjdir, const std::string& vcssub);
 };
 
 #endif
