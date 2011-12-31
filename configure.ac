@@ -29,15 +29,6 @@ AS_IF([test "$with_x" != yes], [
     esac
 ], [])
 
-#BOOST
-AX_BOOST_BASE([1.46], , AC_MSG_ERROR(Boost Filesystem >= 1.46 is required. Please see INSTALL))
-AX_BOOST_SYSTEM
-AX_BOOST_FILESYSTEM
-
-CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
-LDFLAGS="$LDFLAGS $BOOST_LDFLAGS"
-LIBS="$LIBS $BOOST_SYSTEM_LIB $BOOST_FILESYSTEM_LIB"
-
 #GL
 AX_CHECK_GL
 AX_CHECK_GLU
@@ -74,6 +65,14 @@ AC_CHECK_LIB([pcre], [pcre_compile],, AC_MSG_ERROR(PCRE is required. Please see 
 
 #GLEW
 AC_CHECK_LIB(GLEW, glewInit, LIBS="$LIBS -lGLEW", AC_MSG_ERROR([GLEW required. Please see INSTALL]))
+
+#BOOST
+AX_BOOST_BASE([1.46], , AC_MSG_ERROR(Boost Filesystem >= 1.46 is required. Please see INSTALL))
+AX_BOOST_SYSTEM
+AX_BOOST_FILESYSTEM
+
+CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
+LIBS="$LIBS $BOOST_SYSTEM_LIB $BOOST_FILESYSTEM_LIB"
 
 #Check for required headers
 AC_CHECK_HEADER([SDL.h],, AC_MSG_ERROR(SDL.h is required. Please see INSTALL))
