@@ -119,8 +119,12 @@ int main(int argc, char *argv[]) {
     //enable vsync
     display.enableVsync(gGourceSettings.vsync);
 
-    display.enableResize(true);
-
+    
+    //allow resizing window if we are not recording
+    if(gGourceSettings.output_ppm_filename.empty()) {
+        display.enableResize(true);
+    }
+    
     try {
 
         display.init("Gource", gGourceSettings.display_width, gGourceSettings.display_height, gGourceSettings.fullscreen);
