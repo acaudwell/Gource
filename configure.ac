@@ -79,6 +79,7 @@ AC_CHECK_HEADER([SDL.h],, AC_MSG_ERROR(SDL.h is required. Please see INSTALL))
 AC_CHECK_HEADER([SDL_image.h],, AC_MSG_ERROR(SDL_image.h is required. Please see INSTALL))
 AC_CHECK_HEADER([pcre.h],, AC_MSG_ERROR(pcre.h is required. Please see INSTALL))
 AC_CHECK_HEADER([GL/glew.h],, AC_MSG_ERROR(glew.h is required. Please see INSTALL))
+AC_CHECK_HEADER([glm/glm.hpp],, AC_MSG_ERROR(glm.h is required. Please see INSTALL))
 
 #see if ttf-font-dir option is enabled
 AC_ARG_ENABLE(ttf-font-dir,[AS_HELP_STRING([--enable-ttf-font-dir=DIR],[directory containing GNU FreeFont TTF fonts])],[gourcefontdir="$enableval"],[gourcefontdir=""])
