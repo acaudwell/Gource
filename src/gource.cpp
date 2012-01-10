@@ -1624,24 +1624,43 @@ void Gource::logic(float t, float dt) {
 
     slider.logic(dt);
 
+    bool right = false;
+    bool left  = false;
+    bool up    = false;
+    bool down  = false;
+
+#if SDL_VERSION_ATLEAST(1,3,0)
+    Uint8 *keystate = SDL_GetKeyboardState(0);
+
+    right = keystate[SDL_SCANCODE_RIGHT];
+    left  = keystate[SDL_SCANCODE_LEFT];
+    up    = keystate[SDL_SCANCODE_UP];
+    down  = keystate[SDL_SCANCODE_DOWN];
+#else
     Uint8 *keystate = SDL_GetKeyState(0);
 
-    if(keystate[SDLK_RIGHT]) {
+    right = keystate[SDLK_RIGHT];
+    left  = keystate[SDLK_LEFT];
+    up    = keystate[SDLK_UP];
+    down  = keystate[SDLK_DOWN];
+#endif
+    
+    if(right) {
         cursor_move.x = 10.0;
         manual_camera = true;
     }
 
-    if(keystate[SDLK_LEFT]) {
+    if(left) {
         cursor_move.x = -10.0;
         manual_camera = true;
     }
 
-    if(keystate[SDLK_UP]) {
+    if(up) {
         cursor_move.y = -10.0;
         manual_camera = true;
     }
 
-    if(keystate[SDLK_DOWN]) {
+    if(down) {
         cursor_move.y = 10.0;
         manual_camera = true;
     }

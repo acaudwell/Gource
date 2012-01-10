@@ -8,6 +8,7 @@
    (thanks to Jörg Bachmann for original concept / prototype).
  * New dependency on Boost Filesystem.
  * Doubled the maximum zoom out distance.
+ * Can now be built with either SDL 1.2 or 1.3 (fixes fullscreen mode on Lion).
 
 0.37:
  * Made SVN log GMT timestamp conversion fix portable.

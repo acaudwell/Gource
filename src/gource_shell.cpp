@@ -94,8 +94,14 @@ void GourceShell::keyPress(SDL_KeyboardEvent *e) {
         }
 
         if(e->keysym.unicode == SDLK_RETURN) {
-            Uint8* keyState = SDL_GetKeyState(NULL);
-            if(keyState[SDLK_RALT] || keyState[SDLK_LALT]) {
+
+#if SDL_VERSION_ATLEAST(1,3,0)
+            Uint8* keystate = SDL_GetKeyboardState(NULL);
+            if(keystate[SDL_SCANCODE_RALT] || keystate[SDL_SCANCODE_LALT]) {
+#else
+            Uint8* keystate = SDL_GetKeyState(NULL);
+            if(keystate[SDLK_RALT] || keystate[SDLK_LALT]) {
+#endif
 
                 toggleFullscreen();
 
