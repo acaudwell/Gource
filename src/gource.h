@@ -91,7 +91,7 @@ class Gource : public SDLApp {
     bool recolour;
 
     bool update_file_labels;
-    
+
     bool use_selection_bounds;
     Bounds2D selection_bounds;
 
@@ -184,6 +184,8 @@ class Gource : public SDLApp {
     Bounds2D user_bounds;
     Bounds2D active_user_bounds;
 
+    int commitqueue_max_size;
+
     std::deque<RCommit> commitqueue;
     std::map<std::string, RUser*> users;
     std::map<std::string, RFile*> files;
@@ -220,9 +222,9 @@ class Gource : public SDLApp {
 
     void toggleCameraMode();
 
-    
+
     static bool findRepository(boost::filesystem::path& dir, std::string& log_format);
-    
+
     static RCommitLog* determineFormat(std::string logfile);
 
     void updateCamera(float dt);
@@ -248,11 +250,11 @@ class Gource : public SDLApp {
     void drawBackground(float dt);
 
     void drawScene(float dt);
-    
+
     void updateVBOs(float dt);
 
     void updateAndDrawEdges();
-    
+
     void drawFileShadows(float dt);
     void drawUserShadows(float dt);
     void drawActions(float dt);
@@ -279,10 +281,10 @@ public:
     void draw(float t, float dt);
 
     void init();
-    
+
     void unload();
     void reload();
-    
+
     void update(float t, float dt);
     void keyPress(SDL_KeyboardEvent *e);
     void mouseMove(SDL_MouseMotionEvent *e);

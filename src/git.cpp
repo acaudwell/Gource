@@ -137,7 +137,7 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
         }
 
         //should see username before files
-        if(commit.username.size() == 0) return false;
+        if(commit.username.empty()) return false;
 
         size_t tab = line.find('\t');
 
@@ -160,7 +160,7 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
     }
 
     //check we at least got a username
-    if(commit.username.size()==0) return false;
+    if(commit.username.empty()) return false;
 
     return true;
 }

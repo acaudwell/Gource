@@ -24,7 +24,7 @@ int   gGourceMaxQuadTreeDepth = 6;
 int gGourceUserInnerLoops = 0;
 
 Gource::Gource(FrameExporter* exporter) {
-    
+
     this->logfile = gGourceSettings.path;
     commitlog = 0;
 
@@ -181,11 +181,11 @@ void Gource::writeCustomLog(const std::string& logfile, const std::string& outpu
 }
 
 bool Gource::findRepository(boost::filesystem::path& dir, std::string& log_format) {
-    
-    dir = absolute(dir);   
-    
+
+    dir = absolute(dir);
+
     //fprintf(stderr, "find repository from initial path: %s\n", dir.string().c_str());
-        
+
     while(is_directory(dir)) {
 
              if(is_directory(dir / ".git")) log_format = "git";
@@ -197,12 +197,12 @@ bool Gource::findRepository(boost::filesystem::path& dir, std::string& log_forma
             //fprintf(stderr, "found '%s' repository at: %s\n", log_format.c_str(), dir.string().c_str());
             return true;
         }
-        
+
         if(!dir.has_parent_path()) return false;
 
         dir = dir.parent_path();
     }
-        
+
     return false;
 }
 
@@ -212,7 +212,7 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
     RCommitLog* clog = 0;
 
     std::string log_format = gGourceSettings.log_format;
-    
+
     //if the log format is not specified and 'logfile' is a directory, recursively look for a version control repository.
     //this method allows for something strange like someone who having an svn repository inside a git repository
     //(in which case it would pick the svn directory as it would encounter that first)
@@ -230,7 +230,7 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
         } catch(boost::filesystem3::filesystem_error& error) {
         }
     }
-    
+
     //we've been told what format to use
     if(log_format.size() > 0) {
         debugLog("log-format = %s\n", log_format.c_str());
@@ -377,7 +377,7 @@ void Gource::unload() {
     edge_vbo.unload();
     action_vbo.unload();
     bloom_vbo.unload();
-   
+
 }
 
 void Gource::reload() {
@@ -981,6 +981,8 @@ void Gource::reset() {
     mousemoved=false;
     mousedragged = false;
 
+    commitqueue_max_size = 100;
+
     rotate_angle = 0.0f;
 
     if(root!=0) delete root;
@@ -1137,7 +1139,8 @@ void Gource::readLog() {
 
     //debugLog("readLog()\n");
 
-    while(!commitlog->isFinished() && commitqueue.size() < 1) {
+    // read commits until either we are ahead of currtime
+    while(!commitlog->isFinished() && (commitqueue.empty() || commitqueue.back().timestamp <= currtime && commitqueue.size() < commitqueue_max_size)) {
 
         RCommit commit;
 
@@ -1148,13 +1151,11 @@ void Gource::readLog() {
             continue;
         }
 
-        //ignore blank commits
-        if(commit.files.size() > 0) {
-            commitqueue.push_back(commit);
-        }
+         commitqueue.push_back(commit);
     }
 
-    if(first_read && commitqueue.size()==0) {
+    if(first_read && commitqueue.empty()) {
+        fprintf(stderr, "no files on first read\n");
         throw SDLAppException("no commits found");
     }
 
@@ -1178,39 +1179,11 @@ void Gource::readLog() {
 
 void Gource::processCommit(RCommit& commit, float t) {
 
-    //check user against filters, if found, discard commit
-    if(!gGourceSettings.user_filters.empty()) {
-        for(std::vector<Regex*>::iterator ri = gGourceSettings.user_filters.begin(); ri != gGourceSettings.user_filters.end(); ri++) {
-            Regex* r = *ri;
-
-            if(r->match(commit.username)) {
-                return;
-            }
-        }
-    }
-
     //find files of this commit or create it
     for(std::list<RCommitFile>::iterator it = commit.files.begin(); it != commit.files.end(); it++) {
 
         RCommitFile& cf = *it;
         RFile* file = 0;
-
-        //check filename against filters
-        if(!gGourceSettings.file_filters.empty()) {
-
-            bool filtered_filename = false;
-
-            for(std::vector<Regex*>::iterator ri = gGourceSettings.file_filters.begin(); ri != gGourceSettings.file_filters.end(); ri++) {
-                Regex* r = *ri;
-
-                if(r->match(cf.filename)) {
-                    filtered_filename = true;
-                    break;
-                }
-            }
-
-            if(filtered_filename) continue;
-        }
 
         //is this a directory (ends in slash)
         //deleting a directory - find directory: then for each file, remove each file
@@ -1644,7 +1617,7 @@ void Gource::logic(float t, float dt) {
     up    = keystate[SDLK_UP];
     down  = keystate[SDLK_DOWN];
 #endif
-    
+
     if(right) {
         cursor_move.x = 10.0;
         manual_camera = true;
@@ -1706,18 +1679,18 @@ void Gource::logic(float t, float dt) {
     }
 
     // get more entries
-    if(commitqueue.size() == 0) {
+    if(commitqueue.empty()) {
         readLog();
     }
 
     //loop in attempt to find commits
-    if(commitqueue.size()==0 && commitlog->isSeekable() && gGourceSettings.loop) {
+    if(commitqueue.empty() && commitlog->isSeekable() && gGourceSettings.loop) {
         first_read=true;
         seekTo(0.0);
         readLog();
     }
 
-    if(currtime==0 && commitqueue.size()) {
+    if(currtime==0 && !commitqueue.empty()) {
         currtime   = lasttime = commitqueue[0].timestamp;
         subseconds = 0.0;
     }
@@ -1744,9 +1717,9 @@ void Gource::logic(float t, float dt) {
 
 
     //add commits up until the current time
-    while(commitqueue.size() > 0) {
+    while(!commitqueue.empty()) {
 
-        RCommit commit = commitqueue[0];
+        RCommit commit = commitqueue.front();
 
         //auto skip ahead, unless stop_position_reached
         if(gGourceSettings.auto_skip_seconds>=0.0 && idle_time >= gGourceSettings.auto_skip_seconds && !stop_position_reached) {
@@ -1779,7 +1752,7 @@ void Gource::logic(float t, float dt) {
 
     updateCamera(dt);
 
-    updateTime(commitqueue.size() > 0 ? currtime : lasttime);
+    updateTime(!commitqueue.empty() ? currtime : lasttime);
 }
 
 void Gource::mousetrace(float dt) {
@@ -2602,7 +2575,7 @@ void Gource::draw(float t, float dt) {
         font.print(1,20, "FPS: %.2f", fps);
         font.print(1,40,"Days Per Second: %.2f",
             gGourceSettings.days_per_second);
-        font.print(1,60,"Time Scale: %.2f", gGourceSettings.time_scale);
+        font.print(1,60,"Commit Queue: %d", commitqueue.size());
         font.print(1,80,"Users: %d", users.size());
         font.print(1,100,"Files: %d", files.size());
         font.print(1,120,"Dirs: %d",  gGourceDirMap.size());

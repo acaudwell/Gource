@@ -16,6 +16,7 @@
 */
 
 #include "commitlog.h"
+#include "gource_settings.h"
 
 std::string munge_utf8(const std::string& str) {
 
@@ -103,7 +104,7 @@ bool RCommitLog::checkFormat() {
     if(!success) return false;
 
     //read a commit to see if the log is in the correct format
-    if(nextCommit(lastCommit)) {
+    if(nextCommit(lastCommit, false)) {
 
         if(seekable) {
             //if the log is seekable, go back to the start
@@ -185,7 +186,7 @@ bool RCommitLog::findNextCommit(RCommit& commit, int attempts) {
     return false;
 }
 
-bool RCommitLog::nextCommit(RCommit& commit) {
+bool RCommitLog::nextCommit(RCommit& commit, bool validate) {
 
     if(buffered) {
         commit = lastCommit;
@@ -197,7 +198,11 @@ bool RCommitLog::nextCommit(RCommit& commit) {
 
     if(!success) return false;
 
-    return commit.isValid();
+    commit.postprocess();
+
+    if(validate) return commit.isValid();
+
+    return true;
 }
 
 bool RCommitLog::isFinished() {
@@ -274,18 +279,43 @@ vec3 RCommit::fileColour(const std::string& filename) {
 }
 
 void RCommit::addFile(const std::string& filename, const std::string& action) {
-    files.push_back(RCommitFile(filename, action, fileColour(filename)));
+    addFile(filename, action, fileColour(filename));
 }
 
-void RCommit::addFile(const std::string& filename, const  std::string& action, vec3 colour) {
+void RCommit::addFile(const std::string& filename, const  std::string& action, const vec3& colour) {
+    //check filename against filters
+    if(!gGourceSettings.file_filters.empty()) {
+
+        for(std::vector<Regex*>::iterator ri = gGourceSettings.file_filters.begin(); ri != gGourceSettings.file_filters.end(); ri++) {
+            Regex* r = *ri;
+
+            if(r->match(filename)) {
+                return;
+            }
+        }
+    }
+
     files.push_back(RCommitFile(filename, action, colour));
+}
+
+void RCommit::postprocess() {
+    username = munge_utf8(username);
 }
 
 bool RCommit::isValid() {
 
-    username = munge_utf8(username);
+    //check user against filters, if found, discard commit
+    if(!gGourceSettings.user_filters.empty()) {
+        for(std::vector<Regex*>::iterator ri = gGourceSettings.user_filters.begin(); ri != gGourceSettings.user_filters.end(); ri++) {
+            Regex* r = *ri;
 
-    return true;
+            if(r->match(username)) {
+                return false;
+            }
+        }
+    }
+
+    return !files.empty();
 }
 
 void RCommit::debug() {

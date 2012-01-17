@@ -48,10 +48,11 @@ public:
 
     std::list<RCommitFile> files;
 
+    void postprocess();
     bool isValid();
 
     void addFile(const std::string& filename, const std::string& action);
-    void addFile(const std::string& filename, const std::string& action, vec3 colour);
+    void addFile(const std::string& filename, const std::string& action, const vec3& colour);
 
     RCommit();
     void debug();
@@ -93,7 +94,7 @@ public:
 
     bool getCommitAt(float percent, RCommit& commit);
     bool findNextCommit(RCommit& commit, int attempts);
-    bool nextCommit(RCommit& commit);
+    bool nextCommit(RCommit& commit, bool validate = true);
     bool isFinished();
     bool isSeekable();
     float getPercent();
