@@ -133,6 +133,8 @@ public:
 
     TextureResource* file_graphic;
 
+    int log_level;
+    
     GourceSettings();
 
     void setGourceDefaults();

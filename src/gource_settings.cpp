@@ -182,6 +182,7 @@ GourceSettings::GourceSettings() {
     conf_sections["load-config"]     = "command-line";
     conf_sections["save-config"]     = "command-line";
     conf_sections["output-custom-log"] = "command-line";
+    conf_sections["log-level"]         = "command-line";
 
     //boolean args
     arg_types["help"]            = "bool";
@@ -239,6 +240,7 @@ GourceSettings::GourceSettings() {
     arg_types["follow-user"]    = "multi-value";
     arg_types["highlight-user"] = "multi-value";
 
+    arg_types["log-level"]          = "string";
     arg_types["background-image"]   = "string";
     arg_types["logo"]               = "string";
     arg_types["logo-offset"]        = "string";
@@ -355,6 +357,8 @@ void GourceSettings::setGourceDefaults() {
 
     gStringHashSeed = 31;
 
+    log_level = LOG_LEVEL_ERROR;
+    
     //delete file filters
     for(std::vector<Regex*>::iterator it = file_filters.begin(); it != file_filters.end(); it++) {
         delete (*it);
@@ -427,6 +431,20 @@ void GourceSettings::commandLineOption(const std::string& name, const std::strin
 
     if(name == "output-custom-log" && value.size() > 0) {
         output_custom_filename = value;
+        return;
+    }
+
+    if(name == "log-level") {
+
+        if(value == "warn") {
+            log_level = LOG_LEVEL_WARN;
+        } else if(value == "debug") {
+            log_level = LOG_LEVEL_DEBUG;
+        } else if(value == "info") {
+            log_level = LOG_LEVEL_INFO;
+        } else if(value == "error") {
+            log_level = LOG_LEVEL_ERROR;
+        }
         return;
     }
 
@@ -1097,9 +1115,6 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             user_filters.push_back(r);
         }
     }
-
-
-
 
     //validate path
     if(gource_settings->hasValue("path")) {

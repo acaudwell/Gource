@@ -386,7 +386,7 @@ bool RDirNode::addFile(RFile* f) {
     //simply change path of node and add this to it
     if(   parent==0 && abspath == "/"
        && f->path.compare(abspath) != 0 && noFiles() && noDirs()) {
-        debugLog("modifying root path to %s\n", f->path.c_str());
+        debugLog("modifying root path to %s", f->path.c_str());
         changePath(f->path);
     }
 
@@ -704,7 +704,7 @@ void RDirNode::debug(int indent) const{
     std::string indentstr;
     while(indentstr.size() < indent) indentstr += " ";
 
-    debugLog("%s%s\n", indentstr.c_str(), abspath.c_str());
+    debugLog("%s%s", indentstr.c_str(), abspath.c_str());
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);

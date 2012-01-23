@@ -207,7 +207,7 @@ bool Gource::findRepository(boost::filesystem::path& dir, std::string& log_forma
 }
 
 RCommitLog* Gource::determineFormat(std::string logfile) {
-    debugLog("determineFormat(%s)\n", logfile.c_str());
+    debugLog("determineFormat(%s)", logfile.c_str());
 
     RCommitLog* clog = 0;
 
@@ -233,7 +233,7 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
 
     //we've been told what format to use
     if(log_format.size() > 0) {
-        debugLog("log-format = %s\n", log_format.c_str());
+        debugLog("log-format = %s", log_format.c_str());
 
         if(log_format == "git") {
             clog = new GitCommitLog(logfile);
@@ -1068,7 +1068,7 @@ RFile* Gource::addFile(const RCommitFile& cf) {
     file_key.inc(file);
 
     while(root->getParent() != 0) {
-        debugLog("parent changed to %s\n", root->getPath().c_str());
+        debugLog("parent changed to %s", root->getPath().c_str());
         root = root->getParent();
     }
 

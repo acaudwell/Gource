@@ -60,6 +60,9 @@ int main(int argc, char *argv[]) {
             }
         }
 
+        //set log level
+        logger->setLevel(gGourceSettings.log_level);
+
         //load config
         if(!gGourceSettings.load_config.empty()) {
             conf.clear();
@@ -118,8 +121,7 @@ int main(int argc, char *argv[]) {
 
     //enable vsync
     display.enableVsync(gGourceSettings.vsync);
-
-    
+   
     //allow resizing window if we are not recording
     if(gGourceSettings.output_ppm_filename.empty()) {
         display.enableResize(true);
