@@ -43,7 +43,6 @@ doit("mkdir -p $WINBUILD/data/shaders/");
 
 doit("cp gource.exe $WINBUILD");
 doit("cp data/beam.png $WINBUILD/data/");
-doit("cp data/cursor.png $WINBUILD/data/");
 doit("cp data/file.png $WINBUILD/data/");
 doit("cp data/user.png $WINBUILD/data/");
 doit("cp data/bloom.tga $WINBUILD/data/");

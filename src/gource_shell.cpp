@@ -67,7 +67,7 @@ void GourceShell::toggleFullscreen() {
     if(gource!=0) gource->reload();
 }
 
-void GourceShell::resize(SDL_ResizeEvent* e) {
+void GourceShell::resize(int width, int height) {
 
     texturemanager.unload();
     shadermanager.unload();
@@ -76,7 +76,7 @@ void GourceShell::resize(SDL_ResizeEvent* e) {
     if(gource!=0) gource->unload();
 
     //recreate gl context
-    display.resize(e->w, e->h);
+    display.resize(width, height);
 
     texturemanager.reload();
     shadermanager.reload();
@@ -89,11 +89,20 @@ void GourceShell::keyPress(SDL_KeyboardEvent *e) {
 
     //Quit demo if the user presses ESC
     if (e->type == SDL_KEYDOWN) {
-        if (e->keysym.unicode == SDLK_ESCAPE) {
+
+#if SDL_VERSION_ATLEAST(1,3,0)
+        bool key_escape = e->keysym.scancode == SDL_SCANCODE_ESCAPE;
+	bool key_return = e->keysym.scancode == SDL_SCANCODE_RETURN;
+#else
+        bool key_escape = e->keysym.unicode == SDLK_ESCAPE;
+	bool key_return = e->keysym.unicode == SDLK_RETURN;
+#endif
+
+        if (key_escape) {
             appFinished=true;
         }
 
-        if(e->keysym.unicode == SDLK_RETURN) {
+        if(key_return) {
 
 #if SDL_VERSION_ATLEAST(1,3,0)
             Uint8* keystate = SDL_GetKeyboardState(NULL);
@@ -118,6 +127,12 @@ void GourceShell::keyPress(SDL_KeyboardEvent *e) {
 void GourceShell::mouseMove(SDL_MouseMotionEvent *e) {
     if(gource!=0) gource->mouseMove(e);
 }
+
+#if SDL_VERSION_ATLEAST(1,3,0)
+void GourceShell::mouseWheel(SDL_MouseWheelEvent *e) {
+    if(gource!=0) gource->mouseWheel(e);
+}
+#endif
 
 void GourceShell::mouseClick(SDL_MouseButtonEvent *e) {
     if(gource!=0) gource->mouseClick(e);

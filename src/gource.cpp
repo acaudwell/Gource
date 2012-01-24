@@ -91,9 +91,6 @@ Gource::Gource(FrameExporter* exporter) {
     mousedragged = false;
     mouseclicked = false;
 
-    cursor.setCursorTexture(texturemanager.grab("cursor.png"));
-    cursor.useSystemCursor(false);
-
     if(gGourceSettings.hide_mouse) {
         cursor.showCursor(false);
     }
@@ -452,6 +449,7 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
 
     bool rightmouse = cursor.rightButtonPressed();
 
+#if not SDL_VERSION_ATLEAST(1,3,0)
     if(grab_mouse) {
          int warp_x = display.width/2;
          int warp_y = display.height/2;
@@ -461,6 +459,7 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
 
          SDL_WarpMouse(warp_x, warp_y);
     }
+#endif
 
     //move camera in direction the user dragged the mouse
     if(mousedragged || rightmouse) {
@@ -524,6 +523,25 @@ void Gource::zoom(bool zoomin) {
     camera.setDistance(distance);
 }
 
+#if SDL_VERSION_ATLEAST(1,3,0)
+void Gource::mouseWheel(SDL_MouseWheelEvent *e) {
+
+   int mouse_x, mouse_y;
+    SDL_GetMouseState(&mouse_x, &mouse_y);
+
+    vec2 mousepos(mouse_x, mouse_y);
+
+    if(e->y > 0) {
+        zoom(true);
+    }
+
+    if(e->y < 0) {
+        zoom(false);
+    }  
+}
+
+#endif
+
 void Gource::mouseClick(SDL_MouseButtonEvent *e) {
     if(commitlog==0) return;
     if(gGourceSettings.hide_mouse) return;
@@ -541,9 +559,14 @@ void Gource::mouseClick(SDL_MouseButtonEvent *e) {
 
         if(e->button == SDL_BUTTON_LEFT || e->button == SDL_BUTTON_RIGHT) {
             if(!cursor.buttonPressed()) {
-                cursor.showCursor(true);
                 grab_mouse=false;
-                SDL_WarpMouse(mousepos.x, mousepos.y);
+#if SDL_VERSION_ATLEAST(1,3,0)
+		SDL_SetRelativeMouseMode(SDL_FALSE);
+		SDL_WarpMouseInWindow(display.sdl_window, mousepos.x, mousepos.y);
+#else
+		SDL_WarpMouse(mousepos.x, mousepos.y);
+#endif
+                cursor.showCursor(true);
             }
         }
     }
@@ -571,6 +594,7 @@ void Gource::mouseClick(SDL_MouseButtonEvent *e) {
     if(e->button == SDL_BUTTON_RIGHT) {
         cursor.showCursor(false);
         grab_mouse=true;
+	SDL_SetRelativeMouseMode(SDL_TRUE);
         return;
     }
 
@@ -746,7 +770,38 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
     if (e->type == SDL_KEYUP) return;
 
     if (e->type == SDL_KEYDOWN) {
-        if (e->keysym.unicode == SDLK_ESCAPE) {
+
+#if SDL_VERSION_ATLEAST(1,3,0)
+	bool key_escape       = e->keysym.scancode == SDL_SCANCODE_ESCAPE;
+	bool key_tab          = e->keysym.scancode == SDL_SCANCODE_TAB;
+	bool key_space        = e->keysym.scancode == SDL_SCANCODE_SPACE;
+	bool key_plus         = e->keysym.scancode == SDL_SCANCODE_EQUALS;
+	bool key_equals       = e->keysym.scancode == SDL_SCANCODE_EQUALS;
+	bool key_minus        = e->keysym.scancode == SDL_SCANCODE_MINUS;
+        bool key_leftbracket  = e->keysym.scancode == SDL_SCANCODE_LEFTBRACKET;
+        bool key_rightbracket = e->keysym.scancode == SDL_SCANCODE_RIGHTBRACKET;
+        bool key_comma        = e->keysym.scancode == SDL_SCANCODE_COMMA;
+        bool key_period       = e->keysym.scancode == SDL_SCANCODE_PERIOD;    
+        bool key_slash        = e->keysym.scancode == SDL_SCANCODE_SLASH;
+	bool keypad_plus      = e->keysym.scancode == SDL_SCANCODE_KP_PLUS;
+	bool keypad_minus     = e->keysym.scancode == SDL_SCANCODE_KP_MINUS;
+#else
+	bool key_escape       = e->keysym.unicode == SDLK_ESCAPE;
+	bool key_tab          = e->keysym.unicode == SDLK_TAB;
+	bool key_space        = e->keysym.unicode == SDLK_SPACE;
+	bool key_plus         = e->keysym.unicode == SDLK_PLUS;
+	bool key_equals       = e->keysym.unicode == SDLK_EQUALS;
+	bool key_minus        = e->keysym.unicode == SDLK_MINUS;
+	bool key_leftbracket  = e->keysym.unicode == SDLK_LEFTBRACKET;
+	bool key_rightbracket = e->keysym.unicode == SDLK_RIGHTBRACKET;
+        bool key_comma        = e->keysym.unicode == SDLK_COMMA;
+	bool key_period       = e->keysym.unicode == SDLK_PERIOD; 
+	bool key_slash        = e->keysym.unicode == SDLK_SLASH;
+	bool keypad_plus  = e->keysym.unicode == SDLK_KP_PLUS;
+        bool keypad_minus = e->keysym.unicode == SDLK_KP_MINUS;
+#endif
+
+        if (key_escape) {
             appFinished=true;
         }
 
@@ -873,15 +928,15 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             recolour=true;
         }
 
-        if(e->keysym.unicode == SDLK_TAB) {
+        if(key_tab) {
             selectNextUser();
         }
 
-        if (e->keysym.unicode == SDLK_SPACE) {
+        if (key_space) {
             paused = !paused;
         }
 
-        if (e->keysym.unicode == SDLK_EQUALS || e->keysym.unicode == SDLK_PLUS) {
+        if (key_equals || key_plus) {
             if(gGourceSettings.days_per_second>=1.0) {
                 gGourceSettings.days_per_second = std::min(30.0f, floorf(gGourceSettings.days_per_second) + 1.0f);
             } else {
@@ -889,7 +944,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             }
         }
 
-        if (e->keysym.unicode == SDLK_MINUS) {
+        if (key_minus) {
             if(gGourceSettings.days_per_second>1.0) {
                 gGourceSettings.days_per_second = std::max(0.0f, floorf(gGourceSettings.days_per_second) - 1.0f);
             } else {
@@ -897,23 +952,23 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             }
         }
 
-        if(e->keysym.sym == SDLK_KP_MINUS) {
+        if(keypad_minus) {
             zoom(true);
         }
 
-        if(e->keysym.sym == SDLK_KP_PLUS) {
+        if(keypad_plus) {
             zoom(false);
         }
 
-        if(e->keysym.unicode == SDLK_LEFTBRACKET) {
+        if(key_leftbracket) {
             gGourceForceGravity /= 1.1;
         }
 
-        if(e->keysym.unicode == SDLK_RIGHTBRACKET) {
+        if(key_rightbracket) {
             gGourceForceGravity *= 1.1;
         }
 
-        if(e->keysym.unicode == SDLK_PERIOD) {
+        if(key_period) {
 
             if(gGourceSettings.time_scale>=1.0) {
                 gGourceSettings.time_scale = std::min(4.0f, floorf(gGourceSettings.time_scale) + 1.0f);
@@ -922,7 +977,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             }
         }
 
-        if(e->keysym.unicode == SDLK_COMMA) {
+        if(key_comma) {
 
             if(gGourceSettings.time_scale>1.0) {
                 gGourceSettings.time_scale = std::max(0.0f, floorf(gGourceSettings.time_scale) - 1.0f);
@@ -931,7 +986,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             }
         }
 
-        if(e->keysym.unicode == SDLK_SLASH) {
+        if(key_slash) {
             gGourceSettings.time_scale = 1.0f;
         }
     }
