@@ -594,7 +594,9 @@ void Gource::mouseClick(SDL_MouseButtonEvent *e) {
     if(e->button == SDL_BUTTON_RIGHT) {
         cursor.showCursor(false);
         grab_mouse=true;
-	SDL_SetRelativeMouseMode(SDL_TRUE);
+#if SDL_VERSION_ATLEAST(1,3,0)
+        SDL_SetRelativeMouseMode(SDL_TRUE);
+#endif
         return;
     }
 
@@ -772,33 +774,29 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
     if (e->type == SDL_KEYDOWN) {
 
 #if SDL_VERSION_ATLEAST(1,3,0)
-	bool key_escape       = e->keysym.scancode == SDL_SCANCODE_ESCAPE;
-	bool key_tab          = e->keysym.scancode == SDL_SCANCODE_TAB;
-	bool key_space        = e->keysym.scancode == SDL_SCANCODE_SPACE;
-	bool key_plus         = e->keysym.scancode == SDL_SCANCODE_EQUALS;
-	bool key_equals       = e->keysym.scancode == SDL_SCANCODE_EQUALS;
-	bool key_minus        = e->keysym.scancode == SDL_SCANCODE_MINUS;
+        bool key_escape       = e->keysym.scancode == SDL_SCANCODE_ESCAPE;
+        bool key_tab          = e->keysym.scancode == SDL_SCANCODE_TAB;
+        bool key_space        = e->keysym.scancode == SDL_SCANCODE_SPACE;
+        bool key_plus         = e->keysym.scancode == SDL_SCANCODE_EQUALS;
+        bool key_equals       = e->keysym.scancode == SDL_SCANCODE_EQUALS;
+        bool key_minus        = e->keysym.scancode == SDL_SCANCODE_MINUS;
         bool key_leftbracket  = e->keysym.scancode == SDL_SCANCODE_LEFTBRACKET;
         bool key_rightbracket = e->keysym.scancode == SDL_SCANCODE_RIGHTBRACKET;
         bool key_comma        = e->keysym.scancode == SDL_SCANCODE_COMMA;
         bool key_period       = e->keysym.scancode == SDL_SCANCODE_PERIOD;    
         bool key_slash        = e->keysym.scancode == SDL_SCANCODE_SLASH;
-	bool keypad_plus      = e->keysym.scancode == SDL_SCANCODE_KP_PLUS;
-	bool keypad_minus     = e->keysym.scancode == SDL_SCANCODE_KP_MINUS;
 #else
-	bool key_escape       = e->keysym.unicode == SDLK_ESCAPE;
-	bool key_tab          = e->keysym.unicode == SDLK_TAB;
-	bool key_space        = e->keysym.unicode == SDLK_SPACE;
-	bool key_plus         = e->keysym.unicode == SDLK_PLUS;
-	bool key_equals       = e->keysym.unicode == SDLK_EQUALS;
-	bool key_minus        = e->keysym.unicode == SDLK_MINUS;
-	bool key_leftbracket  = e->keysym.unicode == SDLK_LEFTBRACKET;
-	bool key_rightbracket = e->keysym.unicode == SDLK_RIGHTBRACKET;
+        bool key_escape       = e->keysym.unicode == SDLK_ESCAPE;
+        bool key_tab          = e->keysym.unicode == SDLK_TAB;
+        bool key_space        = e->keysym.unicode == SDLK_SPACE;
+        bool key_plus         = e->keysym.unicode == SDLK_PLUS;
+        bool key_equals       = e->keysym.unicode == SDLK_EQUALS;
+        bool key_minus        = e->keysym.unicode == SDLK_MINUS;
+        bool key_leftbracket  = e->keysym.unicode == SDLK_LEFTBRACKET;
+        bool key_rightbracket = e->keysym.unicode == SDLK_RIGHTBRACKET;
         bool key_comma        = e->keysym.unicode == SDLK_COMMA;
-	bool key_period       = e->keysym.unicode == SDLK_PERIOD; 
-	bool key_slash        = e->keysym.unicode == SDLK_SLASH;
-	bool keypad_plus  = e->keysym.unicode == SDLK_KP_PLUS;
-        bool keypad_minus = e->keysym.unicode == SDLK_KP_MINUS;
+        bool key_period       = e->keysym.unicode == SDLK_PERIOD; 
+        bool key_slash        = e->keysym.unicode == SDLK_SLASH;
 #endif
 
         if (key_escape) {
@@ -952,11 +950,11 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             }
         }
 
-        if(keypad_minus) {
+        if(e->keysym.sym == SDLK_KP_MINUS) {
             zoom(true);
         }
 
-        if(keypad_plus) {
+        if(e->keysym.sym == SDLK_KP_PLUS) {
             zoom(false);
         }
 
