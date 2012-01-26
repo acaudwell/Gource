@@ -37,6 +37,7 @@ my @exclusions = (
     qr{^/build-stamp$},
     qr{^/autom4te},
     qr{^/src/core/README$},
+    qr{^/src/core/ui/},
     qr{\.d$},
     qr{^/test/},
 );
