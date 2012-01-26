@@ -10,7 +10,7 @@ Contents
 1. Dependencies
 ===============
 
-Gource requires the following libraries to compile:
+Gource requires the following libraries to compile (package names may vary):
 
     SDL 1.2 (libsdl1.2-dev)
     SDL Image 1.2 (libsdl-image1.2-dev)
