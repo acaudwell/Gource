@@ -28,14 +28,14 @@ FileKeyEntry::FileKeyEntry(const FXFont& font, const std::string& ext, const vec
     show = true;
 
     display_ext = ext;
-    
+
     bool truncated = false;
-    
+
     while(font.getWidth(display_ext) > width - 15.0f) {
         display_ext.resize(display_ext.size()-1);
         truncated = true;
     }
-    
+
     if(truncated) {
         display_ext += std::string("...");
     }
@@ -273,7 +273,7 @@ void FileKey::logic(float dt) {
             std::sort(active_keys.begin(), active_keys.end(), file_key_entry_sort);
 
             //limit to entries we can put onto the screen
-            int max_visible_entries = (display.height - 150.0f) / 20.0f;
+            int max_visible_entries = std::max(0, (int)((display.height - 150.0f) / 20.0f));
 
             if (active_keys.size() > max_visible_entries) {
                 active_keys.resize(max_visible_entries);
