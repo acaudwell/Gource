@@ -1,6 +1,7 @@
 0.38:
  * New high quality sprites.
- * Window resizing and fullscreen toggle (alt + enter).
+ * Fullscreen toggle with alt + enter.
+ * Window is now resizable. -WIDTHxHEIGHT! creates a non-resizable window.
  * Lowered minimum zoom distance.
  * Use AM_CPPFLAGS in Makefile.am to allow passing custom CPPFLAGS.
  * Don't add files that match the path of a known directory.

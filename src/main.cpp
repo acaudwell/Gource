@@ -37,11 +37,11 @@ int main(int argc, char *argv[]) {
                 std::string file = *fit;
 
                 int file_length = file.size();
-                
+
                 if(   file.rfind(".conf") == (file_length-5) && file_length > 5
                    || file.rfind(".cfg")  == (file_length-4) && file_length > 4
                    || file.rfind(".ini")  == (file_length-4) && file_length > 4) {
-        
+
                     bool is_conf=true;
 
                     try {
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
         //set path
         if(!files.empty()) {
             std::string path = files[files.size()-1];
-            
+
             ConfSectionList* sectionlist = conf.getSections("gource");
 
             if(sectionlist!=0) {
@@ -121,12 +121,12 @@ int main(int argc, char *argv[]) {
 
     //enable vsync
     display.enableVsync(gGourceSettings.vsync);
-   
+
     //allow resizing window if we are not recording
-    if(gGourceSettings.output_ppm_filename.empty()) {
+    if(gGourceSettings.resizable && gGourceSettings.output_ppm_filename.empty()) {
         display.enableResize(true);
     }
-    
+
     try {
 
         display.init("Gource", gGourceSettings.display_width, gGourceSettings.display_height, gGourceSettings.fullscreen);

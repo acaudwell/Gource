@@ -358,7 +358,7 @@ void GourceSettings::setGourceDefaults() {
     gStringHashSeed = 31;
 
     log_level = LOG_LEVEL_ERROR;
-    
+
     //delete file filters
     for(std::vector<Regex*>::iterator it = file_filters.begin(); it != file_filters.end(); it++) {
         delete (*it);
@@ -813,7 +813,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         int posx = 0;
         int posy = 0;
 
-        if(parseRectangle(logo_offset_str, &posx, &posy)) {
+        if(parseRectangle(logo_offset_str, posx, posy)) {
             logo_offset = vec2(posx, posy);
         } else {
             conffile.invalidValueException(entry);

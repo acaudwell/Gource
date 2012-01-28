@@ -43,7 +43,7 @@ options:
 
     -WIDTHxHEIGHT, --viewport WIDTHxHEIGHT
             Set the viewport size. If -f is also supplied, will attempt to set
-            the video mode to this also.
+            the video mode to this also. Add ! to make the window non-resizable.
 
     -f, --fullscreen
             Fullscreen.
