@@ -289,63 +289,63 @@ RCommitLog* Gource::determineFormat(std::string logfile) {
     // try different formats until one works
 
     //git
-    debugLog("trying git...\n");
+    debugLog("trying git...");
     clog = new GitCommitLog(logfile);
     if(clog->checkFormat()) return clog;
 
     delete clog;
 
     //mercurial
-    debugLog("trying mercurial...\n");
+    debugLog("trying mercurial...");
     clog = new MercurialLog(logfile);
     if(clog->checkFormat()) return clog;
 
     delete clog;
 
     //bzr
-    debugLog("trying bzr...\n");
+    debugLog("trying bzr...");
     clog = new BazaarLog(logfile);
     if(clog->checkFormat()) return clog;
 
     delete clog;
 
     //git raw
-    debugLog("trying git raw...\n");
+    debugLog("trying git raw...");
     clog = new GitRawCommitLog(logfile);
     if(clog->checkFormat()) return clog;
 
     delete clog;
 
     //cvs exp
-    debugLog("trying cvs-exp...\n");
+    debugLog("trying cvs-exp...");
     clog = new CVSEXPCommitLog(logfile);
     if(clog->checkFormat()) return clog;
 
     delete clog;
 
     //svn
-    debugLog("trying svn...\n");
+    debugLog("trying svn...");
     clog = new SVNCommitLog(logfile);
     if(clog->checkFormat()) return clog;
 
     delete clog;
 
     //cvs2cl
-    debugLog("trying cvs2cl...\n");
+    debugLog("trying cvs2cl...");
     clog = new CVS2CLCommitLog(logfile);
     if(clog->checkFormat()) return clog;
 
     delete clog;
 
     //custom
-    debugLog("trying custom...\n");
+    debugLog("trying custom...");
     clog = new CustomLog(logfile);
     if(clog->checkFormat()) return clog;
 
     delete clog;
 
     //apache
-    debugLog("trying apache combined...\n");
+    debugLog("trying apache combined...");
     clog = new ApacheCombinedLog(logfile);
     if(clog->checkFormat()) return clog;
 
@@ -537,7 +537,7 @@ void Gource::mouseWheel(SDL_MouseWheelEvent *e) {
 
     if(e->y < 0) {
         zoom(false);
-    }  
+    }
 }
 
 #endif
@@ -783,7 +783,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
         bool key_leftbracket  = e->keysym.scancode == SDL_SCANCODE_LEFTBRACKET;
         bool key_rightbracket = e->keysym.scancode == SDL_SCANCODE_RIGHTBRACKET;
         bool key_comma        = e->keysym.scancode == SDL_SCANCODE_COMMA;
-        bool key_period       = e->keysym.scancode == SDL_SCANCODE_PERIOD;    
+        bool key_period       = e->keysym.scancode == SDL_SCANCODE_PERIOD;
         bool key_slash        = e->keysym.scancode == SDL_SCANCODE_SLASH;
 #else
         bool key_escape       = e->keysym.unicode == SDLK_ESCAPE;
@@ -795,7 +795,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
         bool key_leftbracket  = e->keysym.unicode == SDLK_LEFTBRACKET;
         bool key_rightbracket = e->keysym.unicode == SDLK_RIGHTBRACKET;
         bool key_comma        = e->keysym.unicode == SDLK_COMMA;
-        bool key_period       = e->keysym.unicode == SDLK_PERIOD; 
+        bool key_period       = e->keysym.unicode == SDLK_PERIOD;
         bool key_slash        = e->keysym.unicode == SDLK_SLASH;
 #endif
 
@@ -1629,6 +1629,9 @@ void Gource::logic(float t, float dt) {
         if(commitlog == 0) {
             //if not in a git dir and no log file, show help
             if(logfile.size() == 0 || logfile == ".") {
+
+                if(frameExporter!=0) frameExporter->stop();
+
                 SDL_Quit();
 
                 SDLAppException exception("");

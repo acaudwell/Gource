@@ -435,7 +435,6 @@ void GourceSettings::commandLineOption(const std::string& name, const std::strin
     }
 
     if(name == "log-level") {
-
         if(value == "warn") {
             log_level = LOG_LEVEL_WARN;
         } else if(value == "debug") {
