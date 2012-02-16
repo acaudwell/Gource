@@ -109,13 +109,13 @@ void ZoomCamera::adjust(const Bounds2D& bounds, bool adjust_distance) {
     float width  = bounds.width() * padding;
     float height = bounds.height() * padding;
 
-    float dratio = display.height / (float) display.width;
+    float aspect_ratio = display.width / (float) display.height;
 
-      if(dratio > 1.0) {
-          height /= dratio;
-      } else {
-          width *= dratio;
-      }
+    if(aspect_ratio < 1.0) {
+        height /= aspect_ratio;
+    } else {
+        width /= aspect_ratio;
+    }
 
     //calc visible width of the opposite wall at a distance of 1 this fov
     float toa = tan( fov * 0.5f * DEGREES_TO_RADIANS ) * 2.0;
@@ -127,17 +127,20 @@ void ZoomCamera::adjust(const Bounds2D& bounds, bool adjust_distance) {
 
     //cropping: vertical, horizontal or none
     if(gGourceSettings.crop_vertical) {
-        distance =  width / toa ;
 
+        distance =  width / toa;
+
+        
     } else if (gGourceSettings.crop_horizontal) {
-        distance =  height / toa ;
 
+        distance =  height / toa;
+        
     } else {
 
-        if(width > height) {
-            distance =  width / toa ;
+        if(width >= height) {
+            distance =  width / toa;
         } else {
-            distance =  height / toa ;
+            distance =  height / toa;
         }
     }
 

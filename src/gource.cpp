@@ -1581,9 +1581,11 @@ void Gource::updateCamera(float dt) {
 
         } else if(!cursor.rightButtonPressed() && dir_bounds.area() > 10000.0f) {
 
-            float ratio = dir_bounds.width() / dir_bounds.height();
+            float aspect_ratio = display.width / (float) display.height;
+            
+            float bounds_ratio = (aspect_ratio > 1.0f) ? dir_bounds.width() / dir_bounds.height() : dir_bounds.height() / dir_bounds.width(); 
 
-            if(ratio < 0.67f) {
+            if(bounds_ratio < 0.67f) {
                 rotation_remaining_angle = 90.0f;
             }
         }
