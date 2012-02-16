@@ -113,7 +113,7 @@ if(extended_help) {
     printf("  --user-filter REGEX      Ignore usernames matching this regex\n");
     printf("  --file-filter REGEX      Ignore files matching this regex\n\n");
 
-    printf("  --user-friction SECONDS  Time users come to a complete hault (default: 0.67)\n");
+    printf("  --user-friction SECONDS  Time users take to come to a halt (default: 0.67)\n");
     printf("  --user-scale SCALE       Change scale of users (default: 1.0)\n");
     printf("  --max-user-speed UNITS   Speed users can travel per second (default: 500)\n\n");
 

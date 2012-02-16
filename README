@@ -192,7 +192,7 @@ options:
             Max speed users can travel per second.
 
     --user-friction SECONDS
-            Time users come to a complete hault.
+            Time users take to come to a halt.
 
     --user-scale SCALE
             Change scale of users.
