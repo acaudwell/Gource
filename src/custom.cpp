@@ -17,7 +17,7 @@
 
 #include "custom.h"
 
-Regex custom_regex("^([0-9]+)\\|([^|]*)\\|([ADM]?)\\|([^|]+)(?:\\|#?([A-F0-9]{6}))?");
+Regex custom_regex("^(-?[0-9]+)\\|([^|]*)\\|([ADM]?)\\|([^|]+)(?:\\|#?([A-F0-9]{6}))?");
 
 CustomLog::CustomLog(const std::string& logfile) : RCommitLog(logfile) {
 }
