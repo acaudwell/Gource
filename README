@@ -172,7 +172,7 @@ options:
     --no-vsync
             Disable vsync.
 
-     --bloom-multiplier FLOAT
+    --bloom-multiplier FLOAT
             Adjust the amount of bloom.
 
     --bloom-intensity FLOAT
