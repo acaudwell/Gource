@@ -172,7 +172,7 @@ options:
     --no-vsync
             Disable vsync.
 
-     --bloom-multiplier FLOAT
+    --bloom-multiplier FLOAT
             Adjust the amount of bloom.
 
     --bloom-intensity FLOAT
@@ -247,12 +247,12 @@ options:
             file (see log commands or the custom log format), a Gource conf
             file or '-' to read STDIN.
 
-            If path is ommited, gource will attempt to read a log from the
+            If path is omitted, gource will attempt to read a log from the
             current directory.
 
 Git, Bazaar, Mercurial and SVN Examples:
 
-View the log of the respository in the current path:
+View the log of the repository in the current path:
 
     gource
 
@@ -314,7 +314,7 @@ The time shown in the top left of the screen is set initially from the first
 log entry read and is incremented according to the simulation speed 
 (--seconds-per-day).
 
-Pressing SPACE at any time will pause/unpause the simulation. While paused you
+Pressing SPACE at any time will pause/resume the simulation. While paused you
 may use the mouse to inspect the detail of individual files and users.
 
 TAB cycles through selecting the current visible users.
