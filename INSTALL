@@ -39,13 +39,17 @@ You also need to initialize and update the submodules:
     git submodule init
     git submodule update
 
-Building on Linux/Mac OS:
+Generic build instructions for Linux/Mac OS:
 
     ./configure
     make
     make install
 
-    for Arch Linux, there is a gource-git pkgbuild available in the arch user repository: https://aur.archlinux.org/packages.php?ID=56547
+Arch Linux:
+
+There is a gource-git pkgbuild available in the arch user repository:
+
+    https://aur.archlinux.org/packages.php?ID=56547
 
 Building on Windows:
 
