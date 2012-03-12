@@ -45,6 +45,8 @@ Building on Linux/Mac OS:
     make
     make install
 
+    for Arch Linux, there is a gource-git pkgbuild available in the arch user repository: https://aur.archlinux.org/packages.php?ID=56547
+
 Building on Windows:
 
 On Windows I recommend compiling the project file gource.win32.cbp
