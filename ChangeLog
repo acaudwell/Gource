@@ -10,6 +10,8 @@
    (thanks to Jörg Bachmann for original concept / prototype).
  * New dependency on Boost Filesystem.
  * Doubled the maximum zoom out distance.
+ * Allow negative timestamps before 1970 in custom log (artzub).
+ * Fix for UTF8-CPP checked.h compilation issue (vszakats).
 
 0.37:
  * Made SVN log GMT timestamp conversion fix portable.
