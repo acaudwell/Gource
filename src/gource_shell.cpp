@@ -50,7 +50,7 @@ GourceShell::~GourceShell() {
 void GourceShell::toggleFullscreen() {
 
     if(exporter != 0) return;
-    
+
     texturemanager.unload();
     shadermanager.unload();
     fontmanager.unload();

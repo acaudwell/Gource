@@ -137,8 +137,10 @@ if(extended_help) {
     }
 
 #ifdef _WIN32
-    printf("Press Enter\n");
-    getchar();
+    if(gSDLAppConsoleWindow) {
+        printf("Press Enter\n");
+        getchar();
+    }
 #endif
 
     exit(0);

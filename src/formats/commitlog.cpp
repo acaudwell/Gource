@@ -16,7 +16,7 @@
 */
 
 #include "commitlog.h"
-#include "gource_settings.h"
+#include "../gource_settings.h"
 
 std::string munge_utf8(const std::string& str) {
 
@@ -84,6 +84,26 @@ RCommitLog::~RCommitLog() {
     if(!temp_file.empty()) {
         remove(temp_file.c_str());
     }
+}
+
+int RCommitLog::systemCommand(const std::string& command) {
+#ifdef _WIN32
+    SDLAppCreateWindowsConsole();
+#endif
+    return system(command.c_str());
+}
+
+// TODO: implement check for 'nix OSs
+void RCommitLog::requireExecutable(const std::string& exename) {
+
+#ifdef _WIN32
+    TCHAR exePath[MAX_PATH];
+    DWORD result = SearchPath(0, exename.c_str(), ".exe", MAX_PATH, exePath, 0);
+
+    if(result) return;
+
+    throw SDLAppException("unable to find %s.exe", exename.c_str());
+#endif
 }
 
 //check firstChar of stream is as expected. if no firstChar defined just returns true.

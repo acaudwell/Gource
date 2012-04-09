@@ -84,7 +84,6 @@ Gource::Gource(FrameExporter* exporter) {
 
     paused       = false;
     first_read   = true;
-    draw_loading = true;
 
     grab_mouse   = false;
     mousemoved   = false;
@@ -133,6 +132,8 @@ Gource::Gource(FrameExporter* exporter) {
 
     reset();
 
+    logmill = new RLogMill(logfile);
+
     if(exporter!=0) setFrameExporter(exporter, gGourceSettings.output_framerate);
 
     //if recording a video or in demo mode, or multiple repos, the slider is initially hidden
@@ -141,9 +142,16 @@ Gource::Gource(FrameExporter* exporter) {
 
 void Gource::writeCustomLog(const std::string& logfile, const std::string& output_file) {
 
-    RCommitLog* commitlog = determineFormat(logfile);
+    RLogMill logmill(logfile);
+    RCommitLog* commitlog = logmill.getLog();
 
-    if(!commitlog) return;
+    // TODO: exception handling
+
+    if(!commitlog) {
+        std::string error = logmill.getError();
+        if(!error.empty()) SDLAppQuit(error);
+        return;
+    }
 
     RCommit commit;
 
@@ -177,188 +185,11 @@ void Gource::writeCustomLog(const std::string& logfile, const std::string& outpu
     if(output_file != "-") fclose(fh);
 }
 
-bool Gource::findRepository(boost::filesystem::path& dir, std::string& log_format) {
-
-    dir = absolute(dir);
-
-    //fprintf(stderr, "find repository from initial path: %s\n", dir.string().c_str());
-
-    while(is_directory(dir)) {
-
-             if(is_directory(dir / ".git")) log_format = "git";
-        else if(is_directory(dir / ".hg"))  log_format = "hg";
-        else if(is_directory(dir / ".bzr")) log_format = "bzr";
-        else if(is_directory(dir / ".svn")) log_format = "svn";
-
-        if(!log_format.empty()) {
-            //fprintf(stderr, "found '%s' repository at: %s\n", log_format.c_str(), dir.string().c_str());
-            return true;
-        }
-
-        if(!dir.has_parent_path()) return false;
-
-        dir = dir.parent_path();
-    }
-
-    return false;
-}
-
-RCommitLog* Gource::determineFormat(std::string logfile) {
-    debugLog("determineFormat(%s)", logfile.c_str());
-
-    RCommitLog* clog = 0;
-
-    std::string log_format = gGourceSettings.log_format;
-
-    //if the log format is not specified and 'logfile' is a directory, recursively look for a version control repository.
-    //this method allows for something strange like someone who having an svn repository inside a git repository
-    //(in which case it would pick the svn directory as it would encounter that first)
-
-    if(log_format.empty() && logfile != "-") {
-
-        try {
-            boost::filesystem::path repo_path(logfile);
-
-            if(is_directory(repo_path)) {
-                if(findRepository(repo_path, log_format)) {
-                    logfile = repo_path.string();
-                }
-            }
-        } catch(boost::filesystem3::filesystem_error& error) {
-        }
-    }
-
-    //we've been told what format to use
-    if(log_format.size() > 0) {
-        debugLog("log-format = %s", log_format.c_str());
-
-        if(log_format == "git") {
-            clog = new GitCommitLog(logfile);
-            if(clog->checkFormat()) return clog;
-            delete clog;
-
-            clog = new GitRawCommitLog(logfile);
-            if(clog->checkFormat()) return clog;
-            delete clog;
-        }
-
-        if(log_format == "hg") {
-            clog = new MercurialLog(logfile);
-            if(clog->checkFormat()) return clog;
-            delete clog;
-        }
-        if(log_format == "bzr") {
-            clog = new BazaarLog(logfile);
-            if(clog->checkFormat()) return clog;
-            delete clog;
-        }
-
-        if(log_format == "cvs") {
-            clog = new CVSEXPCommitLog(logfile);
-            if(clog->checkFormat()) return clog;
-            delete clog;
-        }
-
-        if(log_format == "custom") {
-            clog = new CustomLog(logfile);
-            if(clog->checkFormat()) return clog;
-            delete clog;
-        }
-
-        if(log_format == "apache") {
-            clog = new ApacheCombinedLog(logfile);
-            if(clog->checkFormat()) return clog;
-            delete clog;
-        }
-
-        if(log_format == "svn") {
-            clog = new SVNCommitLog(logfile);
-            if(clog->checkFormat()) return clog;
-            delete clog;
-        }
-
-        if(log_format == "cvs2cl") {
-            clog = new CVS2CLCommitLog(logfile);
-            if(clog->checkFormat()) return clog;
-            delete clog;
-        }
-
-        return 0;
-    }
-
-    // try different formats until one works
-
-    //git
-    debugLog("trying git...");
-    clog = new GitCommitLog(logfile);
-    if(clog->checkFormat()) return clog;
-
-    delete clog;
-
-    //mercurial
-    debugLog("trying mercurial...");
-    clog = new MercurialLog(logfile);
-    if(clog->checkFormat()) return clog;
-
-    delete clog;
-
-    //bzr
-    debugLog("trying bzr...");
-    clog = new BazaarLog(logfile);
-    if(clog->checkFormat()) return clog;
-
-    delete clog;
-
-    //git raw
-    debugLog("trying git raw...");
-    clog = new GitRawCommitLog(logfile);
-    if(clog->checkFormat()) return clog;
-
-    delete clog;
-
-    //cvs exp
-    debugLog("trying cvs-exp...");
-    clog = new CVSEXPCommitLog(logfile);
-    if(clog->checkFormat()) return clog;
-
-    delete clog;
-
-    //svn
-    debugLog("trying svn...");
-    clog = new SVNCommitLog(logfile);
-    if(clog->checkFormat()) return clog;
-
-    delete clog;
-
-    //cvs2cl
-    debugLog("trying cvs2cl...");
-    clog = new CVS2CLCommitLog(logfile);
-    if(clog->checkFormat()) return clog;
-
-    delete clog;
-
-    //custom
-    debugLog("trying custom...");
-    clog = new CustomLog(logfile);
-    if(clog->checkFormat()) return clog;
-
-    delete clog;
-
-    //apache
-    debugLog("trying apache combined...");
-    clog = new ApacheCombinedLog(logfile);
-    if(clog->checkFormat()) return clog;
-
-    delete clog;
-
-    return 0;
-}
-
 Gource::~Gource() {
     reset();
 
-    if(commitlog!=0) delete commitlog;
-    if(root!=0) delete root;
+    if(logmill!=0)   delete logmill;
+    if(root!=0)      delete root;
 
     //reset settings
     gGourceSettings.setGourceDefaults();
@@ -1582,8 +1413,8 @@ void Gource::updateCamera(float dt) {
         } else if(!cursor.rightButtonPressed() && dir_bounds.area() > 10000.0f) {
 
             float aspect_ratio = display.width / (float) display.height;
-            
-            float bounds_ratio = (aspect_ratio > 1.0f) ? dir_bounds.width() / dir_bounds.height() : dir_bounds.height() / dir_bounds.width(); 
+
+            float bounds_ratio = (aspect_ratio > 1.0f) ? dir_bounds.width() / dir_bounds.height() : dir_bounds.height() / dir_bounds.width();
 
             if(bounds_ratio < 0.67f) {
                 rotation_remaining_angle = 90.0f;
@@ -1612,25 +1443,23 @@ void Gource::changeColours() {
 
 void Gource::logic(float t, float dt) {
 
-    if(draw_loading) return;
-
     if(message_timer>0.0f) message_timer -= dt;
     if(splash>0.0f)        splash -= dt;
 
     //init log file
     if(commitlog == 0) {
 
-        try {
+        if(!logmill->isFinished()) return;
 
-            commitlog = determineFormat(logfile);
+        commitlog = logmill->getLog();
 
-        } catch(SeekLogException& exception) {
-            throw SDLAppException("unable to read log file");
-        }
+        std::string error = logmill->getError();
 
-        if(commitlog == 0) {
-            //if not in a git dir and no log file, show help
-            if(logfile.size() == 0 || logfile == ".") {
+        if(!commitlog) {
+
+            if(!error.empty()) {
+                throw SDLAppException(error);
+            } else {
 
                 if(frameExporter!=0) frameExporter->stop();
 
@@ -1638,11 +1467,8 @@ void Gource::logic(float t, float dt) {
 
                 SDLAppException exception("");
                 exception.setShowHelp(true);
+
                 throw exception;
-            } else if(SDLAppDirExists(logfile)) {
-                throw SDLAppException("directory not supported");
-            } else {
-                throw SDLAppException("unsupported log format (you may need to regenerate your log file)");
             }
         }
 
@@ -1937,7 +1763,24 @@ void Gource::loadingScreen() {
     std::string loading_message("Reading Log...");
     int width = font.getWidth(loading_message);
 
-    font.print(display.width/2 - width/2, display.height/2 - 10, "%s", loading_message.c_str());
+    const char* progress;
+
+    switch(int(runtime*3.0f)%4) {
+        case 0:
+            progress = "";
+            break;
+        case 1:
+            progress = ".";
+            break;
+        case 2:
+            progress = "..";
+            break;
+        case 3:
+            progress = "...";
+            break;
+    }
+
+    font.print(display.width/2 - width/2, display.height/2 - 10, "Reading Log%s", progress);
 }
 
 void Gource::drawBackground(float dt) {
@@ -2338,9 +2181,8 @@ void Gource::draw(float t, float dt) {
 
     drawBackground(dt);
 
-    if(draw_loading) {
+    if(!commitlog) {
         loadingScreen();
-        draw_loading = false;
         return;
     }
 

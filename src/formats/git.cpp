@@ -65,6 +65,9 @@ BaseLog* GitCommitLog::generateLog(const std::string& dir) {
         return 0;
     }
 
+    // do we have this client installed
+    requireExecutable("git");
+
     std::string command = getLogCommand();
 
     //create temp file
@@ -79,7 +82,7 @@ BaseLog* GitCommitLog::generateLog(const std::string& dir) {
     char cmd_buff[2048];
     sprintf(cmd_buff, "%s > %s", command.c_str(), temp_file.c_str());
 
-    int command_rc = system(cmd_buff);
+    int command_rc = systemCommand(cmd_buff);
 
     if(command_rc != 0) {
         chdir(cwd_buff);
@@ -96,7 +99,7 @@ BaseLog* GitCommitLog::generateLog(const std::string& dir) {
     if(!strcmp(firstBytes, "user:%aN")) {
         char *pos = strstr(cmd_buff, "%aN");
         pos[2] = 'n';
-        command_rc = system(cmd_buff);
+        command_rc = systemCommand(cmd_buff);
     }
 
     //change back to original directoy

@@ -24,7 +24,6 @@
 
 #include <deque>
 #include <fstream>
-#include <boost/filesystem.hpp>
 
 #include "core/display.h"
 #include "core/shader.h"
@@ -39,15 +38,7 @@
 
 #include "gource_settings.h"
 
-#include "git.h"
-#include "hg.h"
-#include "bzr.h"
-#include "gitraw.h"
-#include "cvs2cl.h"
-#include "cvs-exp.h"
-#include "custom.h"
-#include "apache.h"
-#include "svn.h"
+#include "logmill.h"
 
 #include "core/vbo.h"
 #include "bloom.h"
@@ -64,6 +55,8 @@ class Gource : public SDLApp {
     std::string logfile;
 
     FrameExporter* frameExporter;
+
+    RLogMill* logmill;
 
     RCommitLog* commitlog;
     PositionSlider slider;
@@ -144,7 +137,6 @@ class Gource : public SDLApp {
     FXFont font, fontlarge, fontmedium;
 
     bool first_read;
-    bool draw_loading;
     bool paused;
 
     float max_tick_rate;
@@ -215,17 +207,14 @@ class Gource : public SDLApp {
 
     void readLog();
 
+    void logReadingError(const std::string& error);
+
     void processCommit(RCommit& commit, float t);
     void addFileAction(const std::string& username, const std::string& action, RFile* file, float t);
 
     std::string dateAtPosition(float percent);
 
     void toggleCameraMode();
-
-
-    static bool findRepository(boost::filesystem::path& dir, std::string& log_format);
-
-    static RCommitLog* determineFormat(std::string logfile);
 
     void updateCamera(float dt);
 
@@ -276,6 +265,8 @@ public:
     void setFrameExporter(FrameExporter* exporter, int video_framerate);
 
     void showSplash();
+
+    bool isBusy();
 
     void logic(float t, float dt);
     void draw(float t, float dt);

@@ -53,6 +53,9 @@ BaseLog* MercurialLog::generateLog(const std::string& dir) {
         return 0;
     }
 
+    // do we have this client installed
+    requireExecutable("hg");
+
     std::string command = getLogCommand();
 
     createTempLog();
@@ -62,7 +65,7 @@ BaseLog* MercurialLog::generateLog(const std::string& dir) {
     char cmd_buff[2048];
     sprintf(cmd_buff, "%s -R \"%s\" > %s", command.c_str(), dir.c_str(), temp_file.c_str());
 
-    int command_rc = system(cmd_buff);
+    int command_rc = systemCommand(cmd_buff);
 
     if(command_rc != 0) {
         return 0;
@@ -77,12 +80,12 @@ BaseLog* MercurialLog::generateLog(const std::string& dir) {
 bool MercurialLog::parseCommit(RCommit& commit) {
 
     while(parseCommitEntry(commit));
-    
+
     return !commit.files.empty();
 }
 
 bool MercurialLog::parseCommitEntry(RCommit& commit) {
-    
+
     std::string line;
     std::vector<std::string> entries;
 
@@ -106,7 +109,7 @@ bool MercurialLog::parseCommitEntry(RCommit& commit) {
             return false;
         }
     }
-    
+
     std::string action = "A";
 
     if(!entries[2].empty()) {

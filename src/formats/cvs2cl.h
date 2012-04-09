@@ -18,8 +18,7 @@
 #ifndef CVS2CL_H
 #define CVS2CL_H
 
-#include "gource_settings.h"
-
+#include "../gource_settings.h"
 #include "commitlog.h"
 
 #include <sstream>
@@ -27,7 +26,7 @@
 #ifdef HAVE_LIBTINYXML
 #include <tinyxml.h>
 #else
-#include "tinyxml/tinyxml.h"
+#include "../tinyxml/tinyxml.h"
 #endif
 
 

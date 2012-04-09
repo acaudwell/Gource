@@ -58,6 +58,9 @@ BaseLog* SVNCommitLog::generateLog(const std::string& dir) {
         return 0;
     }
 
+    // do we have this client installed
+    requireExecutable("svn");
+
     std::string command = getLogCommand();
 
     //create temp file
@@ -72,7 +75,7 @@ BaseLog* SVNCommitLog::generateLog(const std::string& dir) {
     char cmd_buff[2048];
     sprintf(cmd_buff, "%s > %s", command.c_str(), temp_file.c_str());
 
-    int command_rc = system(cmd_buff);
+    int command_rc = systemCommand(cmd_buff);
 
     chdir(cwd_buff);
 

@@ -19,11 +19,11 @@
 #define RCOMMIT_LOG_H
 
 
-#include "core/seeklog.h"
-#include "core/display.h"
-#include "core/regex.h"
-#include "core/stringhash.h"
-#include "core/utf8/utf8.h"
+#include "../core/seeklog.h"
+#include "../core/display.h"
+#include "../core/regex.h"
+#include "../core/stringhash.h"
+#include "../core/utf8/utf8.h"
 
 #include <time.h>
 #include <string>
@@ -91,6 +91,9 @@ public:
     bool checkFormat();
 
     std::string getLogCommand();
+
+    int systemCommand(const std::string& command);
+    void requireExecutable(const std::string& exename);
 
     bool getCommitAt(float percent, RCommit& commit);
     bool findNextCommit(RCommit& commit, int attempts);

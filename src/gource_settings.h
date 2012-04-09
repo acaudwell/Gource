@@ -22,12 +22,12 @@
 
 #include <dirent.h>
 
-#include "hg.h"
-#include "git.h"
-#include "bzr.h"
-#include "cvs-exp.h"
-#include "cvs2cl.h"
-#include "svn.h"
+#include "formats/hg.h"
+#include "formats/git.h"
+#include "formats/bzr.h"
+#include "formats/cvs-exp.h"
+#include "formats/cvs2cl.h"
+#include "formats/svn.h"
 
 #include "core/settings.h"
 #include "core/regex.h"
@@ -134,7 +134,7 @@ public:
     TextureResource* file_graphic;
 
     int log_level;
-    
+
     GourceSettings();
 
     void setGourceDefaults();

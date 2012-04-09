@@ -185,7 +185,6 @@ int main(int argc, char *argv[]) {
         } else {
             SDLAppQuit(exception.what());
         }
-
     }
 
     if(gourcesh != 0) delete gourcesh;

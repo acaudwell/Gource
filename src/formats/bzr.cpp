@@ -53,6 +53,9 @@ BaseLog* BazaarLog::generateLog(const std::string& dir) {
 
     std::string command = getLogCommand();
 
+    // do we have this client installed
+    requireExecutable("bzr");
+
     createTempLog();
 
     if(temp_file.size()==0) return 0;
@@ -60,7 +63,7 @@ BaseLog* BazaarLog::generateLog(const std::string& dir) {
     char cmd_buff[2048];
     sprintf(cmd_buff, "%s %s > %s", command.c_str(), dir.c_str(), temp_file.c_str());
 
-    int command_rc = system(cmd_buff);
+    int command_rc = systemCommand(cmd_buff);
 
     if(command_rc != 0) {
         return 0;
