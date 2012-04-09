@@ -54,6 +54,8 @@ for the Code Blocks IDE (www.codeblocks.org).
 
 A pre-built version for Windows is normally available from the homepage.
 
+Gource expects SDL to have been built with the NO_STDIO_REDIRECT flag.
+
 3. Configure Options
 ====================
 
