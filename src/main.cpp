@@ -139,6 +139,10 @@ int main(int argc, char *argv[]) {
         SDLAppQuit(errormsg);
     }
 
+#ifdef _WIN32
+    SDLAppAttachToConsole();
+#endif
+
     //init frame exporter
     FrameExporter* exporter = 0;
 
