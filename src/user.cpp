@@ -331,7 +331,7 @@ void RUser::setSelected(bool selected) {
 }
 
 const vec3& RUser::getNameColour() const {
-    return (selected||highlighted) ? selectedcol : namecol;
+    return selected ? gGourceSettings.selection_colour : highlighted ? gGourceSettings.highlight_colour : namecol;
 }
 
 vec3 RUser::getColour() const{

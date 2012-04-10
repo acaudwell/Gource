@@ -89,28 +89,28 @@ options:
             Elasticity of nodes.
 
     -b, --background-colour FFFFFF
-            Background colour in hex. 
+            Background colour in hex.
 
     --background-image IMAGE
-        Set a background image.
+            Set a background image.
 
     --logo IMAGE
-        Logo to display in the foreground.
+            Logo to display in the foreground.
 
     --logo-offset XxY
-        Offset position of the logo.
+            Offset position of the logo.
 
     --title TITLE
-        Set a title.
+            Set a title.
 
     --font-size SIZE
-        Font size.
+            Font size used by the date and title.
 
     --font-colour FFFFFF
-        Font colour in hex.
+            Font colour used by the date and title in hex.
 
     --key
-        Show file extension key.
+            Show file extension key.
 
     --date-format FORMAT
             Specify display date string (strftime format).
@@ -129,17 +129,23 @@ options:
     --follow-user USER
             Have the camera automatically follow a particular user.
 
+    --highlight-dirs
+            Highlight the names of all directories.
+
     --highlight-user USER
             Highlight the names of a particular user.
 
     --highlight-users
             Highlight the names of all users.
 
-    --highlight-dirs
-            Highlight the names of all directories.
-
     --highlight-colour FFFFFF
-            Highlighted text colour in hex.
+            Font colour for highlighted users in hex.
+    
+    --selection-colour FFFFFF
+            Font colour for selected users and files.
+
+    --dir-colour FFFFFF
+            Font colour for directories.
 
     --file-filter REGEX
             Filter out any files matching a specified regular expression.

@@ -43,7 +43,6 @@ protected:
     float nametime;
     float name_interval;
     vec3 namecol;
-    vec3 selectedcol;
 
     bool shadow;
 

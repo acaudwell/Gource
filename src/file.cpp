@@ -52,7 +52,7 @@ RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, in
         file_selected_font = fontmanager.grab("FreeSans.ttf", 18);
         file_selected_font.dropShadow(true);
         file_selected_font.roundCoordinates(false);
-        file_selected_font.setColour(vec4(1.0f, 1.0f, 0.0f, 1.0f));
+        file_selected_font.setColour(vec4(gGourceSettings.selection_colour, 1.0f));
     }
 
     if(!file_font.initialized()) {
@@ -158,7 +158,7 @@ void RFile::colourize() {
 }
 
 const vec3& RFile::getNameColour() const{
-    return selected ? selectedcol : namecol;
+    return selected ? gGourceSettings.selection_colour : namecol;
 }
 
 const vec3 & RFile::getFileColour() const{

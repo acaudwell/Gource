@@ -1138,13 +1138,17 @@ void Gource::addFileAction(const std::string& username, const std::string& actio
     if(user == 0) {
         user = addUser(username);
 
-        // set the highlighted flag if name matches a highlighted user
-        for(std::vector<std::string>::iterator hi = gGourceSettings.highlight_users.begin(); hi != gGourceSettings.highlight_users.end(); hi++) {
-            std::string highlight = *hi;
+        if(gGourceSettings.highlight_all_users) user->setHighlighted(true);
+        else {
+        
+            // set the highlighted flag if name matches a highlighted user
+            for(std::vector<std::string>::iterator hi = gGourceSettings.highlight_users.begin(); hi != gGourceSettings.highlight_users.end(); hi++) {
+                std::string highlight = *hi;
 
-            if(highlight.size() && user->getName() == highlight) {
-                user->setHighlighted(true);
-                break;
+                if(!highlight.empty() && user->getName() == highlight) {
+                    user->setHighlighted(true);
+                    break;
+                }
             }
         }
     }
@@ -1791,7 +1795,7 @@ void Gource::loadingScreen() {
     const char* action = !shutdown ? "Reading Log" : "Aborting";
     
     int width = font.getWidth(action);
-
+    font.setColour(vec4(1.0f));
     font.print(display.width/2 - width/2, display.height/2 - 10, "%s%s", action, progress);
 }
 
@@ -2280,7 +2284,8 @@ void Gource::draw(float t, float dt) {
         fontmanager.startBuffer();
     }
 
-    font.roundCoordinates(false);
+    font.roundCoordinates(false);    
+    font.setColour(vec4(gGourceSettings.dir_colour, 1.0f));
 
     root->drawNames(font);
 
@@ -2420,8 +2425,10 @@ void Gource::draw(float t, float dt) {
 
         glEnable(GL_TEXTURE_2D);
 
-        glColor4f(1.0,1.0,1.0,1.0);
+        fontlarge.setColour(vec4(1.0f));
         fontlarge.draw(display.width/2 - logowidth/2,display.height/2 - 30, "Gource");
+
+        font.setColour(vec4(1.0f));
         font.draw(display.width/2 - cwidth/2,display.height/2 + 10, "Software Version Control Visualization");
         font.draw(display.width/2 - awidth/2,display.height/2 + 30, "(C) 2009 Andrew Caudwell");
     }
@@ -2477,12 +2484,11 @@ void Gource::draw(float t, float dt) {
     //debug info
 
     if(debug) {
-        font.setAlpha(1.0f);
+        font.setColour(vec4(1.0f));
 
         glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
         glEnable(GL_TEXTURE_2D);
-
 
         font.print(1,20, "FPS: %.2f", fps);
         font.print(1,40,"Days Per Second: %.2f",

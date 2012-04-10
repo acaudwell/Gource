@@ -121,8 +121,11 @@ public:
 
     bool highlight_dirs;
     bool highlight_all_users;
-    vec3 highlight_colour;
 
+    vec3 dir_colour;
+    vec3 highlight_colour;
+    vec3 selection_colour;
+    
     std::vector<std::string> highlight_users;
     std::vector<std::string> follow_users;
     std::vector<Regex*> file_filters;

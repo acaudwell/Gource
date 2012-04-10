@@ -93,8 +93,8 @@ if(extended_help) {
 
     printf("  --date-format FORMAT     Specify display date string (strftime format)\n\n");
 
-    printf("  --font-size SIZE         Font size\n");
-    printf("  --font-colour FFFFFF     Font colour in hex\n\n");
+    printf("  --font-size SIZE         Font size used by date and title\n");
+    printf("  --font-colour FFFFFF     Font colour used by date and title in hex\n\n");
 
     printf("  --file-extensions        Show filename extensions only\n\n");
 
@@ -118,10 +118,12 @@ if(extended_help) {
     printf("  --max-user-speed UNITS   Speed users can travel per second (default: 500)\n\n");
 
     printf("  --follow-user USER       Camera will automatically follow this user\n");
+    printf("  --highlight-dirs         Highlight the names of all directories\n");
     printf("  --highlight-user USER    Highlight the names of a particular user\n");
     printf("  --highlight-users        Highlight the names of all users\n\n");
-    printf("  --highlight-dirs         Highlight the names of all directories\n");
-    printf("  --highlight-colour       Font colour for highlighted text\n\n");
+    printf("  --highlight-colour       Font colour for highlighted users in hex.\n");
+    printf("  --selection-colour       Font colour for selected users and files.\n");
+    printf("  --dir-colour             Font colour for directories.\n\n");
 
     printf("  --hash-seed SEED         Change the seed of hash function\n\n");
 
@@ -269,6 +271,9 @@ GourceSettings::GourceSettings() {
     arg_types["title"]              = "string";
     arg_types["font-colour"]        = "string";
     arg_types["highlight-colour"]   = "string";
+    arg_types["selection-colour"]   = "string";
+    arg_types["dir-colour"]         = "string";
+    
 }
 
 void GourceSettings::setGourceDefaults() {
@@ -334,8 +339,10 @@ void GourceSettings::setGourceDefaults() {
     title             = "";
 
     font_size = 16;
-    font_colour = vec3(1.0f, 1.0f, 1.0f);
-    highlight_colour = vec3(1.0f, 1.0f, 0.3f);
+    dir_colour       = vec3(1.0f);
+    font_colour      = vec3(1.0f);
+    highlight_colour = vec3(1.0f);
+    selection_colour = vec3(1.0, 1.0, 0.3f);
 
     elasticity = 0.0f;
 
@@ -779,6 +786,42 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         } else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
             highlight_colour = vec3(r,g,b);
             highlight_colour /= 255.0f;
+        } else {
+            conffile.invalidValueException(entry);
+        }
+    }
+    
+    if((entry = gource_settings->getEntry("selection-colour")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify selection colour (FFFFFF)");
+
+        int r,g,b;
+
+        std::string colstring = entry->getString();
+
+        if(entry->isVec3()) {
+            selection_colour = entry->getVec3();
+        } else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
+            selection_colour = vec3(r,g,b);
+            selection_colour /= 255.0f;
+        } else {
+            conffile.invalidValueException(entry);
+        }
+    }    
+    
+    if((entry = gource_settings->getEntry("dir-colour")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify dir colour (FFFFFF)");
+
+        int r,g,b;
+
+        std::string colstring = entry->getString();
+
+        if(entry->isVec3()) {
+            dir_colour = entry->getVec3();
+        } else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
+            dir_colour = vec3(r,g,b);
+            dir_colour /= 255.0f;
         } else {
             conffile.invalidValueException(entry);
         }
