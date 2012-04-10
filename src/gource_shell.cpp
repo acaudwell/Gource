@@ -28,6 +28,8 @@ GourceShell::GourceShell(ConfFile* conf, FrameExporter* exporter) {
 
     next = false;
 
+    shutdown = false;
+    
     gource = 0;
     gource_settings = conf->getSections("gource")->begin();
 
@@ -99,7 +101,7 @@ void GourceShell::keyPress(SDL_KeyboardEvent *e) {
 #endif
 
         if (key_escape) {
-            appFinished=true;
+            quit();
         }
 
         if(key_return) {
@@ -138,6 +140,11 @@ void GourceShell::mouseClick(SDL_MouseButtonEvent *e) {
     if(gource!=0) gource->mouseClick(e);
 }
 
+void GourceShell::quit() {
+        if(gource!=0) gource->quit();
+        shutdown=true;
+}
+
 Gource* GourceShell::getNext() {
 
     if(gource!=0) {
@@ -146,6 +153,8 @@ Gource* GourceShell::getNext() {
 
         transition_interval = 1.0f;
     }
+    
+    if(shutdown) return 0;
 
     if(gource_settings == conf->getSections("gource")->end()) {
         return 0;

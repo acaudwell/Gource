@@ -134,6 +134,8 @@ Gource::Gource(FrameExporter* exporter) {
 
     logmill = new RLogMill(logfile);
 
+    shutdown = false;
+    
     if(exporter!=0) setFrameExporter(exporter, gGourceSettings.output_framerate);
 
     //if recording a video or in demo mode, or multiple repos, the slider is initially hidden
@@ -211,6 +213,10 @@ void Gource::unload() {
 void Gource::reload() {
 
     slider.resize();
+}
+
+void Gource::quit() {
+    shutdown = true;    
 }
 
 void Gource::update(float t, float dt) {
@@ -631,7 +637,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
 #endif
 
         if (key_escape) {
-            appFinished=true;
+            quit();
         }
 
         if(commitlog==0) return;
@@ -1443,6 +1449,11 @@ void Gource::changeColours() {
 
 void Gource::logic(float t, float dt) {
 
+    if(shutdown && logmill->isFinished()) {
+        appFinished=true;
+        return;
+    }
+    
     if(message_timer>0.0f) message_timer -= dt;
     if(splash>0.0f)        splash -= dt;
 
@@ -1450,7 +1461,7 @@ void Gource::logic(float t, float dt) {
     if(commitlog == 0) {
 
         if(!logmill->isFinished()) return;
-
+        
         commitlog = logmill->getLog();
 
         std::string error = logmill->getError();
@@ -1760,9 +1771,6 @@ void Gource::loadingScreen() {
 
     glColor4f(1.0, 1.0, 1.0, 1.0);
 
-    std::string loading_message("Reading Log...");
-    int width = font.getWidth(loading_message);
-
     const char* progress;
 
     switch(int(runtime*3.0f)%4) {
@@ -1780,7 +1788,11 @@ void Gource::loadingScreen() {
             break;
     }
 
-    font.print(display.width/2 - width/2, display.height/2 - 10, "Reading Log%s", progress);
+    const char* action = !shutdown ? "Reading Log" : "Aborting";
+    
+    int width = font.getWidth(action);
+
+    font.print(display.width/2 - width/2, display.height/2 - 10, "%s%s", action, progress);
 }
 
 void Gource::drawBackground(float dt) {

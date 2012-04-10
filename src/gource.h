@@ -57,6 +57,7 @@ class Gource : public SDLApp {
     FrameExporter* frameExporter;
 
     RLogMill* logmill;
+    bool shutdown;
 
     RCommitLog* commitlog;
     PositionSlider slider;
@@ -191,7 +192,7 @@ class Gource : public SDLApp {
     float message_timer;
 
     void setMessage(const char* str, ...);
-
+    
     void reset();
 
     RUser* addUser(const std::string& username);
@@ -276,6 +277,8 @@ public:
     void unload();
     void reload();
 
+    void quit();
+    
     void update(float t, float dt);
     void keyPress(SDL_KeyboardEvent *e);
     void mouseMove(SDL_MouseMotionEvent *e);
