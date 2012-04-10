@@ -4,10 +4,7 @@ bin_PROGRAMS = gource
 
 gource_SOURCES = \
 	src/action.cpp src/action.h \
-	src/apache.cpp src/apache.h \
 	src/bloom.cpp src/bloom.h \
-	src/bzr.cpp src/bzr.h \
-	src/commitlog.cpp src/commitlog.h \
 	src/core/bounds.h \
 	src/core/conffile.cpp src/core/conffile.h \
 	src/core/display.cpp src/core/display.h \
@@ -34,23 +31,27 @@ gource_SOURCES = \
 	src/core/utf8/utf8.h \
 	src/core/vbo.cpp src/core/vbo.h \
 	src/core/vectors.cpp src/core/vectors.h \
-	src/custom.cpp src/custom.h \
-	src/cvs-exp.cpp src/cvs-exp.h \
-	src/cvs2cl.cpp src/cvs2cl.h \
 	src/dirnode.cpp src/dirnode.h \
 	src/file.cpp src/file.h \
-	src/git.cpp src/git.h \
-	src/gitraw.cpp src/gitraw.h \
+	src/formats/apache.cpp src/formats/apache.h \
+	src/formats/bzr.cpp src/formats/bzr.h \
+	src/formats/commitlog.cpp src/formats/commitlog.h \
+	src/formats/custom.cpp src/formats/custom.h \
+	src/formats/cvs-exp.cpp src/formats/cvs-exp.h \
+	src/formats/cvs2cl.cpp src/formats/cvs2cl.h \
+	src/formats/git.cpp src/formats/git.h \
+	src/formats/gitraw.cpp src/formats/gitraw.h \
+	src/formats/hg.cpp src/formats/hg.h \
+	src/formats/svn.cpp src/formats/svn.h \
 	src/gource.cpp src/gource.h \
 	src/gource_shell.cpp src/gource_shell.h \
 	src/gource_settings.cpp src/gource_settings.h \
-	src/hg.cpp src/hg.h \
 	src/key.cpp src/key.h \
+	src/logmill.cpp src/logmill.h \
 	src/main.cpp src/main.h \
 	src/pawn.cpp src/pawn.h \
 	src/slider.cpp src/slider.h \
 	src/spline.cpp src/spline.h \
-	src/svn.cpp src/svn.h \
 	src/textbox.cpp src/textbox.h \
 	src/user.cpp src/user.h \
 	src/zoomcamera.cpp src/zoomcamera.h
