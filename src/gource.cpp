@@ -245,7 +245,7 @@ void Gource::update(float t, float dt) {
     draw(runtime, scaled_dt);
 
     //extract frames based on frameskip setting if frameExporter defined
-    if(frameExporter != 0) {
+    if(frameExporter != 0 && commitlog && !shutdown) {
         if(framecount % (frameskip+1) == 0) {
             frameExporter->dump();
         }
