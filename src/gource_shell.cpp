@@ -17,6 +17,8 @@
 
 #include "gource_shell.h"
 
+GourceShell* gGourceShell = 0;
+
 // GourceShell
 
 GourceShell::GourceShell(ConfFile* conf, FrameExporter* exporter) {
@@ -141,22 +143,25 @@ void GourceShell::mouseClick(SDL_MouseButtonEvent *e) {
 }
 
 void GourceShell::quit() {
-        if(gource!=0) gource->quit();
-        shutdown=true;
+    if(gource!=0) gource->quit();
+    shutdown=true;
 }
 
 Gource* GourceShell::getNext() {
 
     if(gource!=0) {
-        delete gource;
-        gource = 0;
-
         transition_interval = 1.0f;
     }
     
-    if(shutdown) return 0;
+    if(shutdown || gource_settings == conf->getSections("gource")->end()) {
 
-    if(gource_settings == conf->getSections("gource")->end()) {
+        // if we are done, delete gource and replace it with nothing
+        if(gource != 0) {
+            Gource* gource_tmp = gource;
+                gource = 0;
+            delete gource_tmp;
+        }
+
         return 0;
     }
 
@@ -187,10 +192,14 @@ Gource* GourceShell::getNext() {
         }
     }
 
-    Gource* gource = new Gource(exporter);
-
+    // replace gource
+    
+    Gource* gource_tmp = gource;
+        gource = new Gource(exporter);
+    delete gource_tmp;
+        
     next = false;
-
+    
     return gource;
 }
 
@@ -227,9 +236,8 @@ void GourceShell::blendLastFrame(float dt) {
 void GourceShell::update(float t, float dt) {
 
     if(gource == 0 || gource->isFinished()) {
-        gource = getNext();
+        if(!getNext()) appFinished=true;
 
-        if(gource==0) appFinished=true;
         return;
     }
 

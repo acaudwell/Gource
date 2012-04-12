@@ -49,7 +49,7 @@ public:
     void toggleFullscreen();
     
     void quit();
-    
+        
     void keyPress(SDL_KeyboardEvent *e);
     void mouseMove(SDL_MouseMotionEvent *e);
     void mouseClick(SDL_MouseButtonEvent *e);
@@ -59,3 +59,5 @@ public:
 };
 
 #endif
+
+extern GourceShell* gGourceShell;

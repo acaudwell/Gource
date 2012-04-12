@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
     if(gGourceSettings.resizable && gGourceSettings.output_ppm_filename.empty()) {
         display.enableResize(true);
     }
-
+        
     try {
 
         display.init("Gource", gGourceSettings.display_width, gGourceSettings.display_height, gGourceSettings.fullscreen);
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
     GourceShell* gourcesh = 0;
 
     try {
-        gourcesh = new GourceShell(&conf, exporter);
+        gourcesh = gGourceShell = new GourceShell(&conf, exporter);
         gourcesh->run();
 
     } catch(ResourceException& exception) {
@@ -186,6 +186,8 @@ int main(int argc, char *argv[]) {
             SDLAppQuit(exception.what());
         }
     }
+    
+    gGourceShell = 0;
 
     if(gourcesh != 0) delete gourcesh;
     if(exporter != 0) delete exporter;
