@@ -62,9 +62,22 @@ RLogMill::~RLogMill() {
 void RLogMill::run() {
     logmill_thread_state = LOGMILL_STATE_FETCHING;
 
+#if defined(HAVE_PTHREAD) && !defined(_WIN32)
+    sigset_t mask;
+    sigemptyset(&mask);
+
+    // unblock SIGINT so user can cancel
+    // NOTE: assumes SDL is using pthreads
+
+    sigaddset(&mask, SIGINT);
+    pthread_sigmask(SIG_UNBLOCK, &mask, 0);
+#endif
+
+    std::string log_format = gGourceSettings.log_format;
+
     try {
 
-        clog = fetchLog();
+        clog = fetchLog(log_format);
 
     } catch(SeekLogException& exception) {
         error = "unable to read log file";
@@ -74,7 +87,11 @@ void RLogMill::run() {
 
     if(!clog && error.empty()) {
         if(SDLAppDirExists(logfile)) {
-            error = "directory not supported";
+            if(!log_format.empty()) {
+                error = "failed to generate log file";
+            } else {
+                error = "directory not supported";
+            }
         } else {
             error = "unsupported log format (you may need to regenerate your log file)";
         }
@@ -141,11 +158,9 @@ bool RLogMill::findRepository(boost::filesystem::path& dir, std::string& log_for
 }
 
 
-RCommitLog* RLogMill::fetchLog() {
+RCommitLog* RLogMill::fetchLog(std::string& log_format) {
 
     RCommitLog* clog = 0;
-
-    std::string log_format = gGourceSettings.log_format;
 
     //if the log format is not specified and 'logfile' is a directory, recursively look for a version control repository.
     //this method allows for something strange like someone who having an svn repository inside a git repository

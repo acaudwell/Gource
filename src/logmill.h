@@ -27,6 +27,10 @@
 
 #include "formats/commitlog.h"
 
+#if defined(HAVE_PTHREAD) && !defined(_WIN32)
+#include <signal.h>
+#endif
+
 enum {
     LOGMILL_STATE_STARTUP,
     LOGMILL_STATE_FETCHING,
@@ -38,7 +42,7 @@ class RLogMill {
     SDL_Thread* thread;
     SDL_mutex* mutex;
     SDL_cond* cond;
-
+    
     int logmill_thread_state;
 
     std::string logfile;
@@ -47,7 +51,7 @@ class RLogMill {
     std::string error;
 
     bool findRepository(boost::filesystem::path& dir, std::string& log_format);
-    RCommitLog* fetchLog();
+    RCommitLog* fetchLog(std::string& log_format);
 public:
     RLogMill(const std::string& logfile);
     ~RLogMill();
