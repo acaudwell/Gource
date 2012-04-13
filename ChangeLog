@@ -12,6 +12,7 @@
  * Doubled the maximum zoom out distance.
  * Allow negative timestamps before 1970 in custom log (artzub).
  * Fix for UTF8-CPP checked.h compilation issue (vszakats).
+ * Fixed bug causing missing characters in text.
  * Fixed --highlight-users option not using highlight-colour.
  * highlight-colour default changed to white.
  * Added --selection-colour option (applied to selected users and files).
