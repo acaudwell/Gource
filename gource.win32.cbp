@@ -23,6 +23,8 @@
 		</Compiler>
 		<Linker>
 			<Add option="glew32.dll" />
+			<Add option="-static-libstdc++" />
+			<Add option="-static-libgcc" />
 			<Add library="mingw32" />
 			<Add library="pcre" />
 			<Add library="SDLmain" />
