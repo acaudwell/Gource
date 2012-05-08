@@ -62,7 +62,7 @@ void GourceSettings::help(bool extended_help) {
 
     printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)\n\n");
 
-    printf("  --max-files NUMBER       Max number of active files (default: 1000)\n");
+    printf("  --max-files NUMBER       Max number of files or 0 for no limit\n");
     printf("  --max-file-lag SECONDS   Max time files of a commit can take to appear\n\n");
 
     printf("  --log-command VCS        Show the VCS log command (git,svn,hg,bzr,cvs2cl)\n");
