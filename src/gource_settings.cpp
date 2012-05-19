@@ -131,7 +131,7 @@ if(extended_help) {
 }
 
     printf("PATH may be a supported version control directory, a log file, a gource config\n");
-    printf("file, or '-' to read STDIN. If ommited, gource will attempt to generate a log\n");
+    printf("file, or '-' to read STDIN. If omitted, gource will attempt to generate a log\n");
     printf("from the current directory.\n\n");
 
     if(!extended_help) {
