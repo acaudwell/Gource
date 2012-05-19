@@ -198,8 +198,6 @@ void RFile::logic(float dt) {
         dest_pos = dirnorm + dest;
     }*/
 
-    float dradius = dir->getRadius();
-
     dest_pos = dest_pos * distance;
 
     accel = dest_pos - pos;
