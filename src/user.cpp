@@ -178,8 +178,6 @@ void RUser::colourize() {
 }
 
 void RUser::assignUserImage() {
-    struct stat fileinfo;
-
     colourize();
 
     TextureResource* graphic = 0;
