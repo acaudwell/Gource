@@ -1157,7 +1157,7 @@ void Gource::addFileAction(const std::string& username, const std::string& actio
 
     RAction* userAction = 0;
 
-    int commitNo = commit_seq++;
+    commit_seq++;
 
     if(action == "D") {
         userAction = new RemoveAction(user, file, t);
@@ -1345,7 +1345,6 @@ void Gource::updateTime(time_t display_time) {
 
     //display date
     char datestr[256];
-    char timestr[256];
     struct tm* timeinfo = localtime ( &display_time );
 
     strftime(datestr, 256, gGourceSettings.date_format.c_str(), timeinfo);
@@ -1390,8 +1389,6 @@ void Gource::updateCamera(float dt) {
 
         if(track_users && (selectedFile !=0 || selectedUser !=0)) {
             Bounds2D focusbounds;
-
-            vec3 camerapos = camera.getPos();
 
             if(selectedUser !=0) focusbounds.update(selectedUser->getPos());
             if(selectedFile !=0) focusbounds.update(selectedFile->getAbsolutePos());

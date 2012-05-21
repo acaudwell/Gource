@@ -47,8 +47,6 @@ RDirNode::RDirNode(RDirNode* parent, const std::string & abspath) {
         vec2 parentPos = parent->getPos();
         vec2 offset;
 
-        RDirNode* parentP = parent->getParent();
-
         pos = parentPos;
     } else {
         pos = vec2(0.0f, 0.0f);
@@ -1064,9 +1062,6 @@ void RDirNode::updateBloomVBO(bloombuf& buffer, float dt) {
 void RDirNode::drawFiles(float dt) const{
 
     if(in_frustum) {
-
-        vec4 col = getColour();
-
         glPushMatrix();
             glTranslatef(pos.x, pos.y, 0.0);
 
