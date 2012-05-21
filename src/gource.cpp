@@ -2005,17 +2005,6 @@ void Gource::setMessage(const char* str, ...) {
 
 void Gource::screenshot() {
 
-    char* screenbuff = new char[display.width * display.height * 4];
-
-    glReadPixels(0, 0, display.width, display.height,
-                 GL_RGBA, GL_UNSIGNED_BYTE, screenbuff);
-
-    const char tga_header[12] = { 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    short width           = display.width;
-    short height          = display.height;
-    char  bitsperpixel    = 32;
-    char  imagedescriptor = 8;
-
     //get next free recording name
     char tganame[256];
     struct stat finfo;
@@ -2030,22 +2019,9 @@ void Gource::screenshot() {
     //write tga
     std::string filename(tganame);
 
-    std::ofstream tga;
-    tga.open(filename.c_str(), std::ios::out | std::ios::binary );
-
-    if(!tga.is_open()) return;
-
-    tga.write(tga_header, 12);
-    tga.write((char*)&width, sizeof(short));
-    tga.write((char*)&height, sizeof(short));
-    tga.write(&bitsperpixel, 1);
-    tga.write(&imagedescriptor, 1);
-
-    tga.write(screenbuff, display.width * display.height * 4);
-    tga.close();
-
-    delete[] screenbuff;
-
+    TGAWriter tga(gGourceSettings.transparent ? 4 : 3);
+    tga.screenshot(filename);
+    
     setMessage("Wrote screenshot %s", tganame);
 }
 

@@ -35,6 +35,7 @@
 #include "core/regex.h"
 #include "core/ppm.h"
 #include "core/mousecursor.h"
+#include "core/tga.h"
 
 #include "gource_settings.h"
 
