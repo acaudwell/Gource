@@ -25,6 +25,7 @@ gource_SOURCES = \
 	src/core/shader.cpp src/core/shader.h \
 	src/core/stringhash.cpp src/core/stringhash.h \
 	src/core/texture.cpp src/core/texture.h \
+	src/core/tga.cpp src/core/tga.h \
 	src/core/utf8/checked.h \
 	src/core/utf8/core.h \
 	src/core/utf8/unchecked.h \

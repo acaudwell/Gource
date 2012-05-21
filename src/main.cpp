@@ -59,9 +59,9 @@ int main(int argc, char *argv[]) {
                 }
             }
         }
-
+    
         //set log level
-        logger->setLevel(gGourceSettings.log_level);
+        Logger::getDefault()->setLevel(gGourceSettings.log_level);
 
         //load config
         if(!gGourceSettings.load_config.empty()) {
