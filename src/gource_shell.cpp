@@ -31,7 +31,7 @@ GourceShell::GourceShell(ConfFile* conf, FrameExporter* exporter) {
     next = false;
 
     shutdown = false;
-    
+
     gource = 0;
     gource_settings = conf->getSections("gource")->begin();
 
@@ -40,8 +40,7 @@ GourceShell::GourceShell(ConfFile* conf, FrameExporter* exporter) {
     transition_texture = 0;
     transition_interval = 0.0f;
 
-    if(strstr((const char *)glGetString(GL_EXTENSIONS), "GL_ARB_texture_non_power_of_two" )) {
-
+    if(GLEW_ARB_texture_non_power_of_two || GLEW_VERSION_2_0) {
         transition_texture = texturemanager.create(display.width, display.height, false, GL_CLAMP_TO_EDGE, GL_RGBA);
     }
 }
@@ -152,7 +151,7 @@ Gource* GourceShell::getNext() {
     if(gource!=0) {
         transition_interval = 1.0f;
     }
-    
+
     if(shutdown || gource_settings == conf->getSections("gource")->end()) {
 
         // if we are done, delete gource and replace it with nothing
@@ -193,13 +192,13 @@ Gource* GourceShell::getNext() {
     }
 
     // replace gource
-    
+
     Gource* gource_tmp = gource;
         gource = new Gource(exporter);
     delete gource_tmp;
-        
+
     next = false;
-    
+
     return gource;
 }
 

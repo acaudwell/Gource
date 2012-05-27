@@ -72,7 +72,8 @@ Gource::Gource(FrameExporter* exporter) {
 
     //load logo
     if(gGourceSettings.logo.size() > 0) {
-        logotex = texturemanager.grabFile(gGourceSettings.logo);
+        bool mipmap_logo = !(GLEW_ARB_texture_non_power_of_two || GLEW_VERSION_2_0);
+        logotex = texturemanager.grabFile(gGourceSettings.logo, mipmap_logo);
     }
 
     //load background image
@@ -135,7 +136,7 @@ Gource::Gource(FrameExporter* exporter) {
     logmill = new RLogMill(logfile);
 
     shutdown = false;
-    
+
     if(exporter!=0) setFrameExporter(exporter, gGourceSettings.output_framerate);
 
     //if recording a video or in demo mode, or multiple repos, the slider is initially hidden
@@ -216,7 +217,7 @@ void Gource::reload() {
 }
 
 void Gource::quit() {
-    shutdown = true;    
+    shutdown = true;
 }
 
 void Gource::update(float t, float dt) {
@@ -1140,7 +1141,7 @@ void Gource::addFileAction(const std::string& username, const std::string& actio
 
         if(gGourceSettings.highlight_all_users) user->setHighlighted(true);
         else {
-        
+
             // set the highlighted flag if name matches a highlighted user
             for(std::vector<std::string>::iterator hi = gGourceSettings.highlight_users.begin(); hi != gGourceSettings.highlight_users.end(); hi++) {
                 std::string highlight = *hi;
@@ -1454,7 +1455,7 @@ void Gource::logic(float t, float dt) {
         appFinished=true;
         return;
     }
-    
+
     if(message_timer>0.0f) message_timer -= dt;
     if(splash>0.0f)        splash -= dt;
 
@@ -1462,7 +1463,7 @@ void Gource::logic(float t, float dt) {
     if(commitlog == 0) {
 
         if(!logmill->isFinished()) return;
-        
+
         commitlog = logmill->getLog();
 
         std::string error = logmill->getError();
@@ -1790,7 +1791,7 @@ void Gource::loadingScreen() {
     }
 
     const char* action = !shutdown ? "Reading Log" : "Aborting";
-    
+
     int width = font.getWidth(action);
     font.setColour(vec4(1.0f));
     font.print(display.width/2 - width/2, display.height/2 - 10, "%s%s", action, progress);
@@ -2021,7 +2022,7 @@ void Gource::screenshot() {
 
     TGAWriter tga(gGourceSettings.transparent ? 4 : 3);
     tga.screenshot(filename);
-    
+
     setMessage("Wrote screenshot %s", tganame);
 }
 
@@ -2257,7 +2258,7 @@ void Gource::draw(float t, float dt) {
         fontmanager.startBuffer();
     }
 
-    font.roundCoordinates(false);    
+    font.roundCoordinates(false);
     font.setColour(vec4(gGourceSettings.dir_colour, 1.0f));
 
     root->drawNames(font);
