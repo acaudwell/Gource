@@ -32,14 +32,10 @@ GLM is a header only library that you can get from http://glm.g-truc.net/ if you
 ===========
 
 If you got the source directly from the Gource.git repository, you will first
-need to run autoreconf to generate the configure script:
+need to run autogen.sh which will generate the configure script and
+initialize and update the submodules.
 
-    autoreconf -f -i
-
-You also need to initialize and update the submodules:
-
-    git submodule init
-    git submodule update
+    ./autogen.sh
 
 Generic build instructions for Linux/Mac OS:
 
