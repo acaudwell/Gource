@@ -1889,9 +1889,10 @@ void Gource::drawScene(float dt) {
 }
 
 void Gource::updateAndDrawEdges() {
-    if(gGourceSettings.hide_tree) return;
 
     root->calcEdges();
+
+    if(gGourceSettings.hide_tree) return;
 
     //switch to 2d
     glMatrixMode(GL_PROJECTION);
