@@ -38,6 +38,10 @@ GitCommitLog::GitCommitLog(const std::string& logfile) : RCommitLog(logfile, 'u'
         log_command += gGourceSettings.git_branch;
     }
 
+    if(gGourceSettings.git_grep.size() > 0) {
+        log_command += " --grep=\"" + gGourceSettings.git_grep + "\"";
+    }
+
     //can generate log from directory
     if(!logf && is_dir) {
         logf = generateLog(logfile);
