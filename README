@@ -126,6 +126,9 @@ options:
     --git-branch
             Get the git log of a branch other than the current one.
 
+    --git-grep
+            Filter the git log with git-grep.
+
     --follow-user USER
             Have the camera automatically follow a particular user.
 
