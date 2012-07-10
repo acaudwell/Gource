@@ -1,3 +1,7 @@
+0.39;
+ * Fixed building against Boost 1.50 (svenstaro).
+ * Fixed blurry non power of 2 logos.
+
 0.38:
  * New high quality sprites.
  * Fullscreen toggle with alt + enter.
