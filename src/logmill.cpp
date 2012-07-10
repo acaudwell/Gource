@@ -176,7 +176,7 @@ RCommitLog* RLogMill::fetchLog(std::string& log_format) {
                     logfile = repo_path.string();
                 }
             }
-        } catch(boost::filesystem3::filesystem_error& error) {
+        } catch(boost::filesystem::filesystem_error& error) {
         }
     }
 
