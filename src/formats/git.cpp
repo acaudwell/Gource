@@ -25,7 +25,7 @@
 //   and try a different format (eg cvs-exp)
 
 std::string gGourceGitLogCommand = "git log "
-    "--pretty=format:user:%aN%n%ct "
+    "--pretty=format:user:%aN%n%at "
     "--reverse --raw --encoding=UTF-8 "
     "--no-renames";
 
