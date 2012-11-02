@@ -61,6 +61,7 @@ public:
 
     bool overlaps(const vec2& pos) const;
 
+    void setFileColour(const vec3 & colour);
     const vec3 & getFileColour() const;
     vec3 getColour() const;
     void colourize();
