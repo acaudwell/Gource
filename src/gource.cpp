@@ -1120,6 +1120,11 @@ void Gource::processCommit(RCommit& commit, float t) {
 
             if(!file) continue;
         }
+        else {
+            if (cf.action == "M") {
+                file->setFileColour(cf.colour);
+            }
+        }
 
         addFileAction(commit.username, cf.action, file, t);
     }

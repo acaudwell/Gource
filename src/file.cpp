@@ -161,6 +161,10 @@ const vec3& RFile::getNameColour() const{
     return selected ? gGourceSettings.selection_colour : namecol;
 }
 
+void RFile::setFileColour(const vec3 & colour) {
+    file_colour = colour;
+}
+
 const vec3 & RFile::getFileColour() const{
     return file_colour;
 }
