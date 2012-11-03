@@ -27,11 +27,15 @@ RAction::RAction(RUser* source, RFile* target, float addedtime) {
     rate = 0.5;
 }
 
+void RAction::apply() {
+    target->touch(colour);
+}
+
 void RAction::logic(float dt) {
     if(progress >= 1.0) return;
 
     if(progress == 0.0) {
-        target->touch(colour);
+        apply();
     }
 
     float action_rate = std::min(10.0f, rate * std::max(1.0f, ((float)source->getPendingActionCount())));
@@ -46,10 +50,10 @@ void RAction::drawToVBO(quadbuf& buffer) const {
     vec2 dest = target->getAbsolutePos();
 
     //TODO: could use glm::perp
-    
-    vec2 n    = normalise(dest - src);   
+
+    vec2 n    = normalise(dest - src);
     vec2 perp = vec2(-n.y, n.x);
-    
+
     vec2 offset     = perp * target->getSize() * 0.5f;
     vec2 offset_src = offset * 0.3f;
 
@@ -73,9 +77,9 @@ void RAction::draw(float dt) {
     vec2 src  = source->getPos();
     vec2 dest = target->getAbsolutePos();
 
-    vec2 n    = normalise(dest - src);   
+    vec2 n    = normalise(dest - src);
     vec2 perp = vec2(-n.y, n.x);
-    
+
     vec2 offset     = perp * target->getSize() * 0.5f;
     vec2 offset_src = offset * 0.3f;
 
@@ -118,6 +122,12 @@ void RemoveAction::logic(float dt) {
     }
 }
 
-ModifyAction::ModifyAction(RUser* source, RFile* target, float addedtime) : RAction(source, target, addedtime) {
+ModifyAction::ModifyAction(RUser* source, RFile* target, float addedtime, const vec3& modify_colour)
+    : modify_colour(modify_colour), RAction(source, target, addedtime) {
     colour = vec3(1.0, 0.7, 0.3);
+}
+
+void ModifyAction::apply() {
+    RAction::apply();
+    target->setFileColour(modify_colour);
 }

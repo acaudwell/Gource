@@ -1046,7 +1046,6 @@ void Gource::readLog() {
     }
 
     if(first_read && commitqueue.empty()) {
-        fprintf(stderr, "no files on first read\n");
         throw SDLAppException("no commits found");
     }
 
@@ -1104,7 +1103,7 @@ void Gource::processCommit(RCommit& commit, float t) {
                 for(std::list<RFile*>::iterator it = dir_files.begin(); it != dir_files.end(); it++) {
                     RFile* file = *it;
 
-                    addFileAction(commit.username, cf.action, file, t);
+                    addFileAction(commit.username, cf, file, t);
                 }
             }
 
@@ -1115,22 +1114,16 @@ void Gource::processCommit(RCommit& commit, float t) {
         if(seen_file != files.end()) file = seen_file->second;
 
         if(file == 0) {
-
             file = addFile(cf);
 
             if(!file) continue;
         }
-        else {
-            if (cf.action == "M") {
-                file->setFileColour(cf.colour);
-            }
-        }
 
-        addFileAction(commit.username, cf.action, file, t);
+        addFileAction(commit.username, cf, file, t);
     }
 }
 
-void Gource::addFileAction(const std::string& username, const std::string& action, RFile* file, float t) {
+void Gource::addFileAction(const std::string& username, const RCommitFile& cf, RFile* file, float t) {
     //create user if havent yet. do it here to ensure at least one of there files
     //was added (incase we hit gGourceSettings.max_files)
 
@@ -1165,13 +1158,13 @@ void Gource::addFileAction(const std::string& username, const std::string& actio
 
     commit_seq++;
 
-    if(action == "D") {
+    if(cf.action == "D") {
         userAction = new RemoveAction(user, file, t);
     } else {
-        if(action == "A") {
+        if(cf.action == "A") {
             userAction = new CreateAction(user, file, t);
         } else {
-            userAction = new ModifyAction(user, file, t);
+            userAction = new ModifyAction(user, file, t, cf.colour);
         }
     }
 

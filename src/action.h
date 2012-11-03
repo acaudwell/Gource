@@ -27,6 +27,7 @@ class RFile;
 class RAction {
 protected:
     vec3 colour;
+    virtual void apply();
 public:
     RUser* source;
     RFile* target;
@@ -59,8 +60,12 @@ public:
 };
 
 class ModifyAction : public RAction {
+protected:
+    vec3 modify_colour;
 public:
-    ModifyAction(RUser* source, RFile* target, float addedtime);
+    ModifyAction(RUser* source, RFile* target, float addedtime, const vec3& modify_colour);
+
+    void apply();
 };
 
 #endif

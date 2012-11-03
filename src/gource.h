@@ -193,7 +193,7 @@ class Gource : public SDLApp {
     float message_timer;
 
     void setMessage(const char* str, ...);
-    
+
     void reset();
 
     RUser* addUser(const std::string& username);
@@ -212,7 +212,7 @@ class Gource : public SDLApp {
     void logReadingError(const std::string& error);
 
     void processCommit(RCommit& commit, float t);
-    void addFileAction(const std::string& username, const std::string& action, RFile* file, float t);
+    void addFileAction(const std::string& username, const RCommitFile& cf, RFile* file, float t);
 
     std::string dateAtPosition(float percent);
 
@@ -279,7 +279,7 @@ public:
     void reload();
 
     void quit();
-    
+
     void update(float t, float dt);
     void keyPress(SDL_KeyboardEvent *e);
     void mouseMove(SDL_MouseMotionEvent *e);
