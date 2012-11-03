@@ -23,16 +23,13 @@ CustomLog::CustomLog(const std::string& logfile) : RCommitLog(logfile) {
 }
 
 vec3 CustomLog::parseColour(const std::string& cstr) {
-    debugLog("parseColour\n");
+
     vec3 colour;
     int r,g,b;
 
     if(sscanf(cstr.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
-
         colour = vec3( r, g, b );
         colour /= 255.0f;
-
-        debugLog("colour %.2f %.2f %.2f\n", colour.x,colour.y,colour.z);
     }
 
     return colour;
