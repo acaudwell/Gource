@@ -11,6 +11,7 @@ debug.log
 Makefile
 Makefile.in
 *.dll
+*.dll.a
 logs/*
 /aclocal.m4
 /autom4te.cache

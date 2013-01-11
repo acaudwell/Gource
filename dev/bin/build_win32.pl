@@ -71,6 +71,10 @@ doit("cp dev/win32/libpng12-0.dll $WINBUILD");
 doit("cp dev/win32/zlib1.dll $WINBUILD");
 doit("cp dev/win32/glew32.dll $WINBUILD");
 doit("cp dev/win32/freetype6.dll $WINBUILD");
+doit("cp dev/win32/libboost_filesystem-mgw47-1_52.dll $WINBUILD");
+doit("cp dev/win32/libboost_system-mgw47-1_52.dll $WINBUILD");
+doit("cp dev/win32/libgcc_s_dw2-1.dll $WINBUILD");
+doit("cp dev/win32/libstdc++-6.dll $WINBUILD");
 
 chdir($WINBUILD);
 doit("zip -r gource-$VERSION.win32.zip *");

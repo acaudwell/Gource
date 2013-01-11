@@ -23,8 +23,7 @@
 		</Compiler>
 		<Linker>
 			<Add option="glew32.dll" />
-			<Add option="-static-libstdc++" />
-			<Add option="-static-libgcc" />
+			<Add option="-L." />
 			<Add library="mingw32" />
 			<Add library="pcre" />
 			<Add library="SDLmain" />
@@ -34,8 +33,8 @@
 			<Add library="glu32" />
 			<Add library="glew32" />
 			<Add library="freetype" />
-			<Add library="boost_filesystem-mgw46-mt-1_48" />
-			<Add library="libboost_system-mgw46-mt-1_48" />
+			<Add library="libboost_filesystem-mgw47-1_52.dll.a" />
+			<Add library="libboost_system-mgw47-1_52.dll.a" />
 		</Linker>
 		<Unit filename="data\shaders\bloom.frag" />
 		<Unit filename="data\shaders\bloom.vert" />
