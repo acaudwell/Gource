@@ -2383,7 +2383,7 @@ void Gource::draw(float t, float dt) {
         int logowidth = fontlarge.getWidth("Gource");
         int logoheight = 100;
         int cwidth    = font.getWidth("Software Version Control Visualization");
-        int awidth    = font.getWidth("(C) 2009 Andrew Caudwell");
+        int awidth    = font.getWidth("(C) 2013 Andrew Caudwell");
 
         vec2 corner(display.width/2 - logowidth/2 - 30.0f, display.height/2 - 40);
 
