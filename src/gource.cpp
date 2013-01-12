@@ -2402,8 +2402,8 @@ void Gource::draw(float t, float dt) {
         fontlarge.draw(display.width/2 - logowidth/2,display.height/2 - 30, "Gource");
 
         font.setColour(vec4(1.0f));
-        font.draw(display.width/2 - cwidth/2,display.height/2 + 10, "Software Version Control Visualization");
-        font.draw(display.width/2 - awidth/2,display.height/2 + 30, "(C) 2009 Andrew Caudwell");
+        font.draw(display.width/2 - cwidth/2,display.height/2 + 15, "Software Version Control Visualization");
+        font.draw(display.width/2 - awidth/2,display.height/2 + 35, "(C) 2013 Andrew Caudwell");
     }
 
     // text using the specified font goes here
