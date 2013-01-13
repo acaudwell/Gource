@@ -18,7 +18,7 @@
 #ifndef GOURCE_SETTINGS_H
 #define GOURCE_SETTINGS_H
 
-#define GOURCE_VERSION "0.39"
+#define GOURCE_VERSION "0.40"
 
 #include <dirent.h>
 
