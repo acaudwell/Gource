@@ -106,6 +106,7 @@ public:
     float elasticity;
 
     std::string git_branch;
+    std::string git_grep;
 
     std::string log_format;
     std::string date_format;

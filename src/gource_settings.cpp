@@ -98,7 +98,8 @@ if(extended_help) {
 
     printf("  --file-extensions        Show filename extensions only\n\n");
 
-    printf("  --git-branch             Get the git log of a particular branch\n\n");
+    printf("  --git-branch             Get the git log of a particular branch\n");
+    printf("  --git-grep               Filter the git log with git-grep\n\n");
 
     printf("  --hide DISPLAY_ELEMENT   bloom,date,dirnames,files,filenames,mouse,progress,\n");
     printf("                           root,tree,users,usernames\n\n");
@@ -261,6 +262,7 @@ GourceSettings::GourceSettings() {
     arg_types["date-format"]        = "string";
     arg_types["log-format"]         = "string";
     arg_types["git-branch"]         = "string";
+    arg_types["git-grep"]           = "string";
     arg_types["start-position"]     = "string";
     arg_types["stop-position"]      = "string";
     arg_types["crop"]               = "string";
@@ -582,6 +584,13 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(!entry->hasValue()) conffile.missingValueException(entry);
 
         git_branch = entry->getString();
+    }
+
+    if((entry = gource_settings->getEntry("git-grep")) != 0) {
+
+        if(!entry->hasValue()) conffile.missingValueException(entry);
+
+        git_grep = entry->getString();
     }
 
     if(gource_settings->getBool("colour-images")) {
