@@ -1107,7 +1107,7 @@ void Gource::processCommit(RCommit& commit, float t) {
                 }
             }
 
-            return;
+            continue;
         }
 
         std::map<std::string, RFile*>::iterator seen_file = files.find(cf.filename);

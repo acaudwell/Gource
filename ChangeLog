@@ -1,4 +1,5 @@
 0.40:
+ * Fixed directory deletion short circuiting processing the rest of a commit.
  * Fix to boost macros for Macs and non-GNU systems (mistydemeo).
 
 0.39:
