@@ -5,6 +5,7 @@ bin_PROGRAMS = gource
 gource_SOURCES = \
 	src/action.cpp src/action.h \
 	src/bloom.cpp src/bloom.h \
+	src/caption.cpp src/caption.h \
 	src/core/bounds.h \
 	src/core/conffile.cpp src/core/conffile.h \
 	src/core/display.cpp src/core/display.h \

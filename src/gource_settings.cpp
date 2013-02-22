@@ -125,8 +125,13 @@ if(extended_help) {
     printf("  --selection-colour       Font colour for selected users and files.\n");
     printf("  --dir-colour             Font colour for directories.\n\n");
 
-    printf("  --hash-seed SEED         Change the seed of hash function\n\n");
+    printf("  --caption-file FILE         Caption file\n");
+    printf("  --caption-size SIZE         Caption font size\n");
+    printf("  --caption-colour FFFFFF     Caption colour in hex\n");
+    printf("  --caption-duration SECONDS  Caption duration (default: 10.0)\n\n");
 
+    printf("  --hash-seed SEED         Change the seed of hash function.\n\n");
+    
     printf("  --path PATH\n\n");
 }
 
@@ -252,6 +257,7 @@ GourceSettings::GourceSettings() {
     arg_types["load-config"]        = "string";
     arg_types["save-config"]        = "string";
     arg_types["output-custom-log"]  = "string";
+    arg_types["caption-file"]       = "string";
     arg_types["path"]               = "string";
     arg_types["log-command"]        = "string";
     arg_types["background-colour"]  = "string";
@@ -335,7 +341,7 @@ void GourceSettings::setGourceDefaults() {
 
     background_colour = vec3(0.1f, 0.1f, 0.1f);
     background_image  = "";
-
+   
     title             = "";
 
     font_size = 16;
@@ -364,6 +370,11 @@ void GourceSettings::setGourceDefaults() {
     highlight_all_users = false;
     highlight_dirs = false;
 
+    caption_file     = "";
+    caption_duration = 10.0f;
+    caption_size     = 24;
+    caption_colour   = vec3(1.0f, 1.0f, 1.0f);
+    
     gStringHashSeed = 31;
 
     log_level = LOG_LEVEL_ERROR;
@@ -683,6 +694,53 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             }
 
             closedir(dp);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("caption-file")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify caption file (filename)");
+
+        caption_file = entry->getString();
+    }
+
+    if((entry = gource_settings->getEntry("caption-duration")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify caption duration (seconds)");
+        
+        caption_duration = entry->getFloat();
+        
+        if(caption_duration <= 0.0f) {
+            conffile.invalidValueException(entry);
+        }
+    }
+    
+    if((entry = gource_settings->getEntry("caption-size")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify caption size");
+
+        caption_size = entry->getInt();
+    
+        if(caption_size<1 || caption_size>100) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("caption-colour")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify caption colour (FFFFFF)");
+
+        int r,g,b;
+
+        std::string colstring = entry->getString();
+
+        if(entry->isVec3()) {
+            caption_colour = entry->getVec3();
+        } else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
+            caption_colour = vec3(r,g,b);
+            caption_colour /= 255.0f;
+        } else {
+            conffile.invalidValueException(entry);
         }
     }
 
