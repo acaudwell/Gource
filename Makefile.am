@@ -65,8 +65,8 @@ shadersdir = $(pkgdatadir)/shaders
 dist_shaders_DATA = data/shaders/shadow.vert data/shaders/shadow.frag data/shaders/bloom.vert data/shaders/bloom.frag data/shaders/text.vert data/shaders/text.frag
 
 install-data-hook:
-	mkdir -p -m 755 ${DESTDIR}/$(mandir)/man1
-	gzip -cf9 data/gource.1 > $(DESTDIR)$(mandir)/man1/gource.1.gz
+	$(MKDIR_P) $(DESTDIR)$(mandir)/man1
+	gzip -cf9 $(srcdir)/data/gource.1 > $(DESTDIR)$(mandir)/man1/gource.1.gz
 
 uninstall-hook:
 	rm -f $(DESTDIR)$(mandir)/man1/gource.1.gz
