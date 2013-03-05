@@ -14,11 +14,7 @@ AC_CANONICAL_HOST
 AC_PROG_CXX
 AC_LANG(C++)
 
-AC_CHECK_FUNC(timegm,AC_DEFINE(HAVE_TIMEGM))
-AC_SUBST(HAVE_TIMEGM)
-
-AC_CHECK_FUNC(unsetenv,AC_DEFINE(HAVE_UNSETENV))
-AC_SUBST(HAVE_UNSETENV)
+AC_CHECK_FUNCS([timegm unsetenv])
 
 #Disable X11 on Macs unless required
 AS_IF([test "$with_x" != yes], [
@@ -36,35 +32,16 @@ CXXFLAGS="$CXXFLAGS $GL_CFLAGS $GLU_CFLAGS"
 CPPFLAGS="$CPPFLAGS $GL_CFLAGS $GLU_CFLAGS"
 LIBS="$LIBS $GL_LIBS $GLU_LIBS"
 
-#SDL
-SDL_VERSION=1.2.10
-AM_PATH_SDL($SDL_VERSION,
-            :,
-            AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
-)
-CXXFLAGS="$CXXFLAGS $SDL_CFLAGS"
-CPPFLAGS="$CPPFLAGS $SDL_CFLAGS"
-LIBS="$LIBS $SDL_LIBS"
+PKG_CHECK_MODULES([FT2], [freetype2 >= 9.0.3])
+PKG_CHECK_MODULES([PCRE], [libpcre])
+PKG_CHECK_MODULES([GLEW], [glew])
+PKG_CHECK_MODULES([SDL], [sdl >= 1.2.10 SDL_image])
 
-#Freetype2
-AC_CHECK_FT2([9.0.3],[],[AC_MSG_ERROR([FreeType2 is required. Please see INSTALL])])
-CXXFLAGS="$CXXFLAGS $FT2_CFLAGS"
-CPPFLAGS="$CPPFLAGS $FT2_CFLAGS"
-LIBS="$LIBS $FT2_LIBS"
+CPPFLAGS="${CPPFLAGS} ${FT2_CFLAGS} ${PCRE_CFLAGS} ${GLEW_CFLAGS} ${SDL_CFLAGS}"
+LIBS="${LIBS} ${FT2_LIBS} ${PCRE_LIBS} ${GLEW_LIBS} ${SDL_LIBS}"
 
-#SDL_image library with PNG support
-AC_CHECK_LIB(SDL_image, IMG_LoadPNG_RW, LIBS="$LIBS", AC_MSG_ERROR([SDL_image with PNG support required. Please see INSTALL]))
-
-#SDL_image library with JPG support
-AC_CHECK_LIB(SDL_image, IMG_LoadJPG_RW, LIBS="$LIBS", AC_MSG_ERROR([SDL_image with JPG support required. Please see INSTALL]))
-
-LIBS="$LIBS -lSDL_image"
-
-#PCRE
-AC_CHECK_LIB([pcre], [pcre_compile],, AC_MSG_ERROR(PCRE is required. Please see INSTALL))
-
-#GLEW
-AC_CHECK_LIB(GLEW, glewInit, LIBS="$LIBS -lGLEW", AC_MSG_ERROR([GLEW is required. Please see INSTALL]))
+AC_CHECK_FUNCS([IMG_LoadPNG_RW], , AC_MSG_ERROR([SDL_image with PNG support required. Please see INSTALL]))
+AC_CHECK_FUNCS([IMG_LoadJPG_RW], , AC_MSG_ERROR([SDL_image with JPEG support required. Please see INSTALL]))
 
 #BOOST
 AX_BOOST_BASE([1.46], , AC_MSG_ERROR(Boost Filesystem >= 1.46 is required. Please see INSTALL))
@@ -76,12 +53,6 @@ LIBS="$LIBS $BOOST_SYSTEM_LIB $BOOST_FILESYSTEM_LIB"
 
 #GLM
 AC_CHECK_HEADER([glm/glm.hpp],, AC_MSG_ERROR(GLM headers are required. Please see INSTALL))
-
-#Check for required headers
-AC_CHECK_HEADER([SDL.h],, AC_MSG_ERROR(SDL headers are required. Please see INSTALL))
-AC_CHECK_HEADER([SDL_image.h],, AC_MSG_ERROR(SDL_image headers are required. Please see INSTALL))
-AC_CHECK_HEADER([pcre.h],, AC_MSG_ERROR(PCRE headers are required. Please see INSTALL))
-AC_CHECK_HEADER([GL/glew.h],, AC_MSG_ERROR(GLEW headers are required. Please see INSTALL))
 
 #see if ttf-font-dir option is enabled
 AC_ARG_ENABLE(ttf-font-dir,[AS_HELP_STRING([--enable-ttf-font-dir=DIR],[directory containing GNU FreeFont TTF fonts])],[gourcefontdir="$enableval"],[gourcefontdir=""])
