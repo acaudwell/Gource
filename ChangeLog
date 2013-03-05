@@ -1,6 +1,7 @@
 0.40:
  * Fixed directory deletion short circuiting processing the rest of a commit.
  * Fix to boost macros for Macs and non-GNU systems (mistydemeo).
+ * Autotools improvements (flameeyes).
 
 0.39:
  * Fixed blurry non power of 2 logos.
