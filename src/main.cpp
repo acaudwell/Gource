@@ -38,9 +38,9 @@ int main(int argc, char *argv[]) {
 
                 int file_length = file.size();
 
-                if(   file.rfind(".conf") == (file_length-5) && file_length > 5
-                   || file.rfind(".cfg")  == (file_length-4) && file_length > 4
-                   || file.rfind(".ini")  == (file_length-4) && file_length > 4) {
+                if(   (file.rfind(".conf") == (file_length-5) && file_length > 5)
+                   || (file.rfind(".cfg")  == (file_length-4) && file_length > 4)
+                   || (file.rfind(".ini")  == (file_length-4) && file_length > 4) ) {
 
                     bool is_conf=true;
 

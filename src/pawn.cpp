@@ -109,7 +109,7 @@ void Pawn::calcScreenPos(const vec2& offset) {
 }
 
 bool Pawn::nameVisible() const {
-    return (!selected && name_interval < 0.0 || isHidden()) ? false : true;
+    return ((!selected && name_interval < 0.0) || isHidden()) ? false : true;
 }
 
 void Pawn::drawName() {

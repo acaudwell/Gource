@@ -84,8 +84,8 @@ protected:
     virtual bool parseCommit(RCommit& commit) { return false; };
 public:
     RCommitLog(const std::string& logfile, int firstChar = -1);
-    ~RCommitLog();
-
+    virtual ~RCommitLog();
+    
     void seekTo(float percent);
 
     bool checkFormat();

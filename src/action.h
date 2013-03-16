@@ -38,7 +38,8 @@ public:
     float rate;
 
     RAction(RUser* source, RFile* target, float addedtime);
-
+    virtual ~RAction() {};
+    
     inline bool isFinished() const { return (progress >= 1.0); };
 
     virtual void logic(float dt);

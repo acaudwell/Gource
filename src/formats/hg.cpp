@@ -16,6 +16,7 @@
 */
 
 #include "hg.h"
+#include "../core/sdlapp.h"
 
 Regex hg_regex("^([0-9]+) -?[0-9]+\\|([^|]+)\\|([ADM]?)\\|(.+)$");
 
