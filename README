@@ -229,6 +229,21 @@ options:
     --hash-seed SEED
             Change the seed of hash function.
 
+    --caption-file FILE
+            Caption file (see Caption Log Format).
+
+    --caption-size SIZE
+            Caption size.
+
+    --caption-colour FFFFFF
+            Caption colour in hex.
+
+    --caption-duration SECONDS
+            Caption duration.
+
+    --caption-offset X
+            Caption horizontal offset (0 to centre captions).
+
     -o, --output-ppm-stream FILE
             Output a PPM image stream to a file ('-' for STDOUT).
 
@@ -300,6 +315,14 @@ there is a pipe ('|') delimited custom log format:
     type      - initial for the update type - (A)dded, (M)odified or (D)eleted.
     file      - Path of the file updated.
     colour    - A colour for the file in hex (FFFFFF) format. Optional.
+
+Caption Log Format:
+
+Gource can display captions along the timeline by specifying a caption file
+(using --caption-file) in the pipe ('|') delimited format below:
+
+    timestamp - A unix timestamp of when to display the caption.
+    caption   - The caption
 
 Recording Videos:
 

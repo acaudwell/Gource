@@ -24,24 +24,26 @@
 
 class RCaption {    
     float alpha;
-    float decay;
-    
+    float elapsed;
+
     vec2 pos;
 
     vec3 colour;
     
     FXFont font;
+    std::string caption;
     
 public:
-    std::string caption;
     time_t timestamp;
 
     RCaption(const std::string& caption, time_t timestamp, const FXFont& font);
 
     void setPos(const vec2& pos);
-    const vec2& getPos();
+
+    const vec2& getPos() const;
+    const std::string& getCaption() const;
     
-    bool isFinished();
+    bool isFinished() const;
     
     void logic(float dt);
 

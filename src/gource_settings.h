@@ -136,6 +136,7 @@ public:
     vec3 caption_colour;
     float caption_duration;
     int caption_size;
+    int caption_offset;
     
     std::string output_custom_filename;   
     

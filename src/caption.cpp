@@ -18,32 +18,39 @@
 #include "caption.h"
 
 RCaption::RCaption(const std::string& caption, time_t timestamp, const FXFont& font) {
-    this->caption = caption;
+
+    this->caption   = caption;
     this->timestamp = timestamp;
     this->font      = font;
     
-    alpha  = 1.0f;
-    colour = gGourceSettings.caption_colour;
-    decay  = 1.0f / gGourceSettings.caption_duration;
-}
-
-const vec2& RCaption::getPos() {
-    return pos;
+    alpha   = 0.0;
+    elapsed = 0.0;
+    colour  = gGourceSettings.caption_colour;
 }
 
 void RCaption::setPos(const vec2& pos) {
     this->pos = pos;
 }
 
-bool RCaption::isFinished() {
-    return alpha <= 0.0f;
+const vec2& RCaption::getPos() const {
+    return pos;
+}
+
+const std::string& RCaption::getCaption() const {
+    return caption;
+}
+
+bool RCaption::isFinished() const {
+    return elapsed >= gGourceSettings.caption_duration;
 }
 
 void RCaption::logic(float dt) {
-    alpha = std::max(0.0f, alpha - dt * decay);
+    float fade_in = glm::min(2.0f, gGourceSettings.caption_duration / 3.0f);
+    elapsed += dt;
+    alpha = glm::min(1.0f, glm::min(elapsed,glm::max(0.0f,gGourceSettings.caption_duration-elapsed)) / fade_in);
 }
 
 void RCaption::draw() {
-    font.setColour(vec4(colour.x, colour.y, colour.z, 1.0f - fabs(alpha - 0.5) * 2.0f));
+    font.setColour(vec4(colour.x, colour.y, colour.z, alpha));
     font.draw(pos.x, pos.y, caption);
 }

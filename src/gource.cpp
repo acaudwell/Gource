@@ -1085,7 +1085,7 @@ void Gource::readLog() {
     //debugLog("readLog()\n");
 
     // read commits until either we are ahead of currtime
-    while(!commitlog->isFinished() && (commitqueue.empty() || commitqueue.back().timestamp <= currtime && commitqueue.size() < commitqueue_max_size)) {
+    while(!commitlog->isFinished() && (commitqueue.empty() || (commitqueue.back().timestamp <= currtime && commitqueue.size() < commitqueue_max_size)) ) {
 
         RCommit commit;
 
@@ -1112,8 +1112,8 @@ void Gource::readLog() {
 
     bool is_finished = commitlog->isFinished();
 
-    if(   gGourceSettings.stop_at_end && is_finished
-       || gGourceSettings.stop_position > 0.0 && commitlog->isSeekable() && (is_finished || last_percent >= gGourceSettings.stop_position)) {
+    if(   (gGourceSettings.stop_at_end && is_finished)
+       || (gGourceSettings.stop_position > 0.0 && commitlog->isSeekable() && (is_finished || last_percent >= gGourceSettings.stop_position)) ) {
         stop_position_reached = true;
     }
 
@@ -1694,7 +1694,7 @@ void Gource::logic(float t, float dt) {
         if(caption->timestamp > currtime) break;
 
         float cap_height = fontcaption.getMaxHeight();
-
+        
         float y = display.height - 10;
 
         // add extra space if title is enabled
@@ -1706,8 +1706,9 @@ void Gource::logic(float t, float dt) {
 
             bool found = false;
             
-            for(std::list<RCaption*>::iterator it = active_captions.begin(); it!=active_captions.end();it++) {
+            for(std::list<RCaption*>::iterator it = active_captions.begin(); it!=active_captions.end(); it++) {
                 RCaption* actcap = *it;
+
                 vec2 cappos = actcap->getPos();
                 
                 if(cappos.y == y) {
@@ -1721,7 +1722,16 @@ void Gource::logic(float t, float dt) {
             y -= cap_height;
         }
 
-        caption->setPos(vec2(10.0f, y));
+        int offset_x = gGourceSettings.caption_offset;
+
+        // centre
+        if(offset_x == 0) {
+            offset_x = (display.width / 2) - (fontcaption.getWidth(caption->getCaption()) / 2);           
+        } else if(offset_x < 0) {
+            offset_x = display.width - offset_x;
+        }
+        
+        caption->setPos(vec2(offset_x, y));
 
         captions.pop_front();        
         active_captions.push_back(caption);
@@ -1880,7 +1890,7 @@ void Gource::loadingScreen() {
 
     glColor4f(1.0, 1.0, 1.0, 1.0);
 
-    const char* progress;
+    const char* progress = "";
 
     switch(int(runtime*3.0f)%4) {
         case 0:

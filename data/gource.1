@@ -196,6 +196,21 @@ Separate multiple elements with commas (eg 'mouse,progress')
 \fB\-\-hash\-seed SEED\fR
 Change the seed of hash function.
 .TP
+\fB\-\-caption-file FILE
+Caption file (see Caption Log Format).
+.TP
+\fB\-\-caption-size SIZE
+Caption size.
+.TP
+\fB\-\-caption-colour FFFFFF
+Caption colour in hex.
+.TP
+\fB\-\-caption-duration SECONDS
+Caption duration.
+.TP
+\fB\-\-caption-offset X
+Caption horizontal offset (0 to centre captions).
+.TP
 \fB\-o, \-\-output\-ppm\-stream FILE\fR
 Output a PPM image stream to a file ('\-' for STDOUT).
 
@@ -221,7 +236,7 @@ Either a supported version control directory, a pre-generated log file (see log 
 
 If path is omitted, gource will attempt to read a log from the current directory.
 
-.SH GIT, BAZAAR, MERCURIAL AND SVN EXAMPLES
+.SS Git, Bazaar, Mercurial and SVN Examples
 
 View the log of the repository in the current path:
 
@@ -251,7 +266,7 @@ You can also have Gource write a copy of the log file in its own format:
 .ti 10
 \fIgource\fR \-\-output\-custom\-log my\-project\-custom.log
 
-.SH CVS SUPPORT
+.SS CVS Support
 
 Use 'cvs2cl' to generate the log and then pass it to Gource:
 
@@ -260,7 +275,7 @@ cvs2cl \-\-chrono \-\-stdout \-\-xml \-g\-q > my\-cvs\-project.log
 .ti 10
 gource my\-cvs\-project.log
 
-.SH CUSTOM LOG FORMAT
+.SS Custom Log Format
 
 If you want to use Gource with something other than the supported systems, there is a pipe ('|') delimited custom log format:
 
@@ -275,14 +290,23 @@ file      - Path of the file updated.
 .ti 10
 colour    - A colour for the file in hex (FFFFFF) format. Optional.
 
-.SH RECORDING VIDEOS
+.SS Caption Log Format
+
+Gource can display captions along the timeline by specifying a caption file (using \-\-caption\-file) in the pipe ('|') delimited format below:
+
+.ti 10
+timestamp - A unix timestamp of when to display the caption.
+.ti 10
+caption   - The caption
+
+.SS Recording Videos
 
 See the guide on the homepage for examples of recording videos with Gource:
 
 .ti 10
 http://code.google.com/p/gource/wiki/Videos
 
-.SH MORE INFORMATION
+.SS More Information
 
 Visit the Gource homepage for guides and examples of using Gource with various version control systems:
 
