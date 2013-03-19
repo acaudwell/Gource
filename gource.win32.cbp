@@ -19,6 +19,7 @@
 		<Compiler>
 			<Add option="-O3" />
 			<Add option="-W" />
+			<Add option="-std=gnu++0x" />
 			<Add option="-Dmain=SDL_main" />
 		</Compiler>
 		<Linker>
@@ -46,6 +47,8 @@
 		<Unit filename="src\action.h" />
 		<Unit filename="src\bloom.cpp" />
 		<Unit filename="src\bloom.h" />
+		<Unit filename="src\caption.cpp" />
+		<Unit filename="src\caption.h" />
 		<Unit filename="src\core\bounds.h" />
 		<Unit filename="src\core\conffile.cpp" />
 		<Unit filename="src\core\conffile.h" />
@@ -79,6 +82,8 @@
 		<Unit filename="src\core\settings.h" />
 		<Unit filename="src\core\shader.cpp" />
 		<Unit filename="src\core\shader.h" />
+		<Unit filename="src\core\shader_common.cpp" />
+		<Unit filename="src\core\shader_common.h" />
 		<Unit filename="src\core\stringhash.cpp" />
 		<Unit filename="src\core\stringhash.h" />
 		<Unit filename="src\core\texture.cpp" />
