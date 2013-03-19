@@ -133,7 +133,7 @@ if(extended_help) {
     printf("  --caption-offset X          Caption horizontal offset\n\n");
 
     printf("  --hash-seed SEED         Change the seed of hash function.\n\n");
-    
+
     printf("  --path PATH\n\n");
 }
 
@@ -280,19 +280,20 @@ GourceSettings::GourceSettings() {
     arg_types["highlight-colour"]   = "string";
     arg_types["selection-colour"]   = "string";
     arg_types["dir-colour"]         = "string";
-    
+
     arg_types["caption-file"]       = "string";
     arg_types["caption-size"]       = "int";
     arg_types["caption-duration"]   = "float";
     arg_types["caption-colour"]     = "string";
     arg_types["caption-offset"]     = "int";
-    
-    
+
+
 }
 
 void GourceSettings::setGourceDefaults() {
 
     path = ".";
+    default_path = true;
 
     ffp = false;
 
@@ -349,7 +350,7 @@ void GourceSettings::setGourceDefaults() {
 
     background_colour = vec3(0.1f, 0.1f, 0.1f);
     background_image  = "";
-   
+
     title             = "";
 
     font_size = 16;
@@ -383,7 +384,7 @@ void GourceSettings::setGourceDefaults() {
     caption_size     = 24;
     caption_offset   = 10;
     caption_colour   = vec3(1.0f, 1.0f, 1.0f);
-    
+
     gStringHashSeed = 31;
 
     log_level = LOG_LEVEL_ERROR;
@@ -716,20 +717,20 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
     if((entry = gource_settings->getEntry("caption-duration")) != 0) {
 
         if(!entry->hasValue()) conffile.entryException(entry, "specify caption duration (seconds)");
-        
+
         caption_duration = entry->getFloat();
-        
+
         if(caption_duration <= 0.0f) {
             conffile.invalidValueException(entry);
         }
     }
-    
+
     if((entry = gource_settings->getEntry("caption-size")) != 0) {
 
         if(!entry->hasValue()) conffile.entryException(entry, "specify caption size");
 
         caption_size = entry->getInt();
-    
+
         if(caption_size<1 || caption_size>100) {
             conffile.invalidValueException(entry);
         }
@@ -741,7 +742,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
         caption_offset = entry->getInt();
     }
-    
+
     if((entry = gource_settings->getEntry("caption-colour")) != 0) {
 
         if(!entry->hasValue()) conffile.entryException(entry, "specify caption colour (FFFFFF)");
@@ -864,7 +865,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             conffile.invalidValueException(entry);
         }
     }
-    
+
     if((entry = gource_settings->getEntry("selection-colour")) != 0) {
 
         if(!entry->hasValue()) conffile.entryException(entry, "specify selection colour (FFFFFF)");
@@ -881,8 +882,8 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         } else {
             conffile.invalidValueException(entry);
         }
-    }    
-    
+    }
+
     if((entry = gource_settings->getEntry("dir-colour")) != 0) {
 
         if(!entry->hasValue()) conffile.entryException(entry, "specify dir colour (FFFFFF)");
@@ -1237,6 +1238,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
     //validate path
     if(gource_settings->hasValue("path")) {
         path = gource_settings->getString("path");
+        default_path = false;
     }
 
     if(path == "-") {

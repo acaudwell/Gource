@@ -57,6 +57,7 @@ public:
     std::string load_config;
     std::string save_config;
     std::string path;
+    bool default_path;
 
     std::string logo;
     vec2 logo_offset;
@@ -125,21 +126,21 @@ public:
     vec3 dir_colour;
     vec3 highlight_colour;
     vec3 selection_colour;
-    
+
     std::vector<std::string> highlight_users;
     std::vector<std::string> follow_users;
     std::vector<Regex*> file_filters;
     std::vector<Regex*> user_filters;
     bool file_extensions;
-    
+
     std::string caption_file;
     vec3 caption_colour;
     float caption_duration;
     int caption_size;
     int caption_offset;
-    
-    std::string output_custom_filename;   
-    
+
+    std::string output_custom_filename;
+
     TextureResource* file_graphic;
 
     int log_level;

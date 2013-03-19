@@ -17,6 +17,7 @@
 
 #include "commitlog.h"
 #include "../gource_settings.h"
+#include "../core/sdlapp.h"
 
 std::string munge_utf8(const std::string& str) {
 

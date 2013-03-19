@@ -89,6 +89,11 @@ void RLogMill::run() {
         if(SDLAppDirExists(logfile)) {
             if(!log_format.empty()) {
                 error = "failed to generate log file";
+#ifdef _WIN32
+            // no error - should trigger help message
+            } else if(gGourceSettings.default_path && boost::filesystem::exists("./gource.exe")) {
+                error = "";
+#endif
             } else {
                 error = "directory not supported";
             }
