@@ -18,6 +18,11 @@
 #include "gource_settings.h"
 #include "core/sdlapp.h"
 
+#include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
+
+#include "core/utf8/utf8.h"
+
 GourceSettings gGourceSettings;
 
 //display help message
@@ -665,26 +670,39 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             user_image_dir += std::string("/");
         }
 
-        //get jpg and png images in dir
-        DIR *dp;
-        struct dirent *dirp;
-
         user_image_map.clear();
 
-        if((dp = opendir(gGourceSettings.user_image_dir.c_str())) != 0) {
+        boost::filesystem::path image_dir_path(user_image_dir);
 
-            while ((dirp = readdir(dp)) != 0) {
-                std::string dirfile = std::string(dirp->d_name);
+        if(!is_directory(image_dir_path)) {
+             conffile.entryException(entry, "specified user-image-dir is not a directory");
+        }
 
-                size_t extpos = 0;
+        std::vector<boost::filesystem::path> image_dir_files;
 
-                if(   (extpos=dirfile.rfind(".jpg"))  == std::string::npos
-                && (extpos=dirfile.rfind(".jpeg")) == std::string::npos
-                && (extpos=dirfile.rfind(".png"))  == std::string::npos) continue;
+        try {
+            copy(boost::filesystem::directory_iterator(image_dir_path), boost::filesystem::directory_iterator(), back_inserter(image_dir_files));
+        } catch(const boost::filesystem::filesystem_error& exception) {
+             conffile.entryException(entry, "error reading specified user-image-dir");
+        }
 
+        for(boost::filesystem::path& p : image_dir_files) {
 
-                std::string image_path = gGourceSettings.user_image_dir + dirfile;
-                std::string name       = dirfile.substr(0,extpos);
+            std::string dirfile;
+
+#ifdef _WIN32
+            std::wstring dirfile_16 = p.filename().wstring();
+            utf8::utf16to8(dirfile_16.begin(), dirfile_16.end(), back_inserter(dirfile));
+#else
+            dirfile = p.filename().string();
+#endif
+            std::string file_ext = extension(p);
+            boost::algorithm::to_lower(file_ext);
+
+            if(file_ext != ".jpg" && file_ext != ".jpeg" && file_ext != ".png") continue;
+
+            std::string image_path = gGourceSettings.user_image_dir + dirfile;
+            std::string name       = dirfile.substr(0,dirfile.size() - file_ext.size());
 
 #ifdef __APPLE__
                 CFMutableStringRef help = CFStringCreateMutable(kCFAllocatorDefault, 0);
@@ -698,12 +716,9 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
                 name = data;
 #endif
 
-                debugLog("%s => %s", name.c_str(), image_path.c_str());
+            debugLog("%s => %s", name.c_str(), image_path.c_str());
 
-                user_image_map[name] = image_path;
-            }
-
-            closedir(dp);
+            user_image_map[name] = image_path;
         }
     }
 

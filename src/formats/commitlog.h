@@ -23,7 +23,6 @@
 #include "../core/display.h"
 #include "../core/regex.h"
 #include "../core/stringhash.h"
-#include "../core/utf8/utf8.h"
 
 #include <time.h>
 #include <string>
@@ -85,7 +84,7 @@ protected:
 public:
     RCommitLog(const std::string& logfile, int firstChar = -1);
     virtual ~RCommitLog();
-    
+
     void seekTo(float percent);
 
     bool checkFormat();

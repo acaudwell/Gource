@@ -19,17 +19,20 @@
 #include "../gource_settings.h"
 #include "../core/sdlapp.h"
 
-std::string munge_utf8(const std::string& str) {
+#include "../core/utf8/utf8.h"
 
-    std::string munged;
+std::string filter_utf8(const std::string& str) {
+
+    std::string filtered;
+
     try {
-        utf8::replace_invalid(str.begin(), str.end(), back_inserter(munged), '?');
+        utf8::replace_invalid(str.begin(), str.end(), back_inserter(filtered), '?');
     }
     catch(...) {
-        munged = "???";
+        filtered = "???";
     }
 
-    return munged;
+    return filtered;
 }
 
 //RCommitLog
@@ -270,7 +273,7 @@ void RCommitLog::createTempLog() {
 
 RCommitFile::RCommitFile(const std::string& filename, const std::string& action, vec3 colour) {
 
-    this->filename = munge_utf8(filename);
+    this->filename = filter_utf8(filename);
 
     //prepend a root slash
     if(this->filename[0] != '/') {
@@ -320,7 +323,7 @@ void RCommit::addFile(const std::string& filename, const  std::string& action, c
 }
 
 void RCommit::postprocess() {
-    username = munge_utf8(username);
+    username = filter_utf8(username);
 }
 
 bool RCommit::isValid() {
