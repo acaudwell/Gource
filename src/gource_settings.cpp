@@ -58,7 +58,7 @@ void GourceSettings::help(bool extended_help) {
     printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 10)\n");
     printf("      --realtime                   Realtime playback speed\n");
     printf("  -c, --time-scale SCALE           Change simulation time scale (default: 1.0)\n");
-    printf("  -e, --elasticity FLOAT           Elasticity of nodes\n\n");
+    printf("  -e, --elasticity FLOAT           Elasticity of nodes (default: 0.0)\n\n");
 
     printf("  --key                            Show file extension key\n\n");
 
