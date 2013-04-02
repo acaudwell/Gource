@@ -219,6 +219,8 @@ close $NSIS_HANDLE;
 # generate installer
 
 doit("makensis $output_file");
+
+doit("rm $output_file");
 doit("mv $installer_name ..");
 
 # also create zip archive
