@@ -17,7 +17,7 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-O3" />
+			<Add option="-O2" />
 			<Add option="-W" />
 			<Add option="-std=gnu++0x" />
 			<Add option="-Dmain=SDL_main" />
