@@ -2,6 +2,7 @@
  * Added caption support.
  * Fixed directory deletion short circuiting processing the rest of a commit.
  * Fixed issue loading non-ascii user image filenames on windows.
+ * Ignore UTF-8 byte order mark at the start of lines in custom log files.
  * Fix to boost macros for Macs and non-GNU systems (mistydemeo).
  * Autotools improvements (flameeyes).
 
