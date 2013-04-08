@@ -39,7 +39,7 @@ chdir("$base_dir") or die("chdir to $base_dir failed");
 
 my $nsis_script = q[
 !include "MUI2.nsh"
-!include "EnvVarUpdate.nsh"
+!include "SafeEnvVarUpdate.nsh"
 
 Name "Gource GOURCE_VERSION"
 
@@ -61,6 +61,22 @@ RequestExecutionLevel admin
 
 !insertmacro MUI_LANGUAGE "English"
 
+Function .onInit
+ 
+  ReadRegStr $R0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "UninstallString"
+  StrCmp $R0 "" done
+  MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
+  "Gource appears to already be installed. $\n$\nClick OK to remove the previous version and continue the installation." \
+  IDOK uninst
+  Abort
+ 
+ uninst:
+  ClearErrors
+  ExecWait $R0
+done:
+ 
+FunctionEnd
+
 Section "Gource" SecGource
   SectionIn RO
 
@@ -78,11 +94,11 @@ Section "Gource" SecGource
 SectionEnd
 
 Section "Add to PATH" SecAddtoPath
-  ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR"
+  ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR\cmd"
 SectionEnd
 
 Section "Uninstall"
-  ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" "$INSTDIR"
+  ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" "$INSTDIR\cmd"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource"
 
   GOURCE_UNINSTALL_LIST
@@ -91,6 +107,18 @@ Section "Uninstall"
   Delete $INSTDIR\uninstall.exe
   RMDir "$INSTDIR"
 SectionEnd
+];
+
+my $cmd_script = q[
+@echo off
+"%~dp0\..\gource.exe" %*
+];
+$cmd_script =~ s{\n}{\r\n}g;
+
+my $bash_script = q[
+#!/bin/sh
+GOURCE_CMD_DIR=`dirname "$0"`
+"$GOURCE_CMD_DIR/../gource.exe" "$@"
 ];
 
 my @gource_files = qw(
@@ -139,6 +167,7 @@ my @gource_dirs = qw(
     data
     data/fonts
     data/shaders
+    cmd
 );
 
 my $tmp_dir = "$builds_dir/gource-build.$$";
@@ -169,6 +198,17 @@ foreach my $file (@gource_dlls) {
 foreach my $file (@gource_txts) {
     dosify("$file", "$tmp_dir/$file.txt");
     push @gource_bundle, "$file.txt";
+}
+
+# shell scripts for running gource
+foreach my $shell_script (["cmd/gource.cmd", $cmd_script], ["cmd/gource", $bash_script]) {
+    my($script_file, $script) = @$shell_script;
+
+    open my $script_handle, ">$tmp_dir/$script_file" or die("failed to open $script_file: $!");
+    print $script_handle $script;
+    close $script_handle;
+
+    push @gource_bundle, $script_file;
 }
 
 my $version = gource_version();
@@ -217,6 +257,9 @@ print $NSIS_HANDLE $nsis_script;
 close $NSIS_HANDLE;
 
 # generate installer
+
+# assert we have the long string build of NSIS
+doit("makensis -HDRINFO | grep -q NSIS_MAX_STRLEN=8192");
 
 doit("makensis $output_file");
 
