@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<log>
+<logentry revision="1">
+<author>bob</author>
+<date>2010-01-20T08:35:18.022581Z</date>
+<paths>
+<path kind="" action="A">/blah/blah/filea.sh</path>
+<path kind="" action="A">/blah/blah/fileb.sh</path>
+<path kind="" action="A">/blah/blah/filec.sh</path>
+<path kind="" action="A">/blah/blah/filed.sh</path>
+<path kind="" action="A">/blah/blah/filee.sh</path>
+</paths>
+</logentry>
+<logentry revision="2">
+<author>bob</author>
+<date>2010-01-20T08:40:18.022581Z</date>
+<paths>
+<path
+   kind="dir"
+   action="D">/blah</path>
+</paths>
+</logentry>
+</log>
+
