@@ -85,6 +85,8 @@ public:
     RCommitLog(const std::string& logfile, int firstChar = -1);
     virtual ~RCommitLog();
 
+    static std::string filter_utf8(const std::string& str);
+
     void seekTo(float percent);
 
     bool checkFormat();

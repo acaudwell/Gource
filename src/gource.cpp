@@ -47,7 +47,7 @@ Gource::Gource(FrameExporter* exporter) {
     fontcaption.dropShadow(true);
     fontcaption.roundCoordinates(false);
     fontcaption.alignTop(false);
-    
+
     font = fontmanager.grab("FreeSans.ttf", 14);
     font.dropShadow(true);
     font.roundCoordinates(true);
@@ -899,7 +899,7 @@ void Gource::reset() {
     for(std::list<RCaption*>::iterator it = captions.begin(); it!=captions.end();it++) {
         delete (*it);
     }
-   
+
     for(std::list<RCaption*>::iterator it = active_captions.begin(); it!=active_captions.end();it++) {
         delete (*it);
     }
@@ -1040,7 +1040,7 @@ void Gource::seekTo(float percent) {
     commitlog->seekTo(percent);
 }
 
-Regex caption_regex("^([0-9]+)\\|(.+)$");
+Regex caption_regex("^(?:\\xEF\\xBB\\xBF)?([0-9]+)\\|(.+)$");
 
 void Gource::loadCaptions() {
     if(!gGourceSettings.caption_file.size()) return;
@@ -1048,31 +1048,32 @@ void Gource::loadCaptions() {
     std::ifstream cf(gGourceSettings.caption_file.c_str());
 
     if(!cf.is_open()) return;
-    
+
     std::string line;
     std::vector<std::string> matches;
 
     time_t last_timestamp = 0;
-    
+
     while(std::getline(cf, line)) {
-        
+
         ConfFile::trim(line);
 
         if(!caption_regex.match(line, &matches)) continue;
-        
-        time_t timestamp = atol(matches[0].c_str());
-        
+
+        time_t timestamp    = atol(matches[0].c_str());
+        std::string caption = RCommitLog::filter_utf8(matches[1]);
+
         //ignore older captions
-        if(timestamp<currtime) continue;
+        if(timestamp < currtime) continue;
 
         //ignore out of order captions
-        if(timestamp<last_timestamp) continue;
+        if(timestamp < last_timestamp) continue;
 
         last_timestamp = timestamp;
 
         //fprintf(stderr, "%d %s\n", timestamp, matches[1].c_str());
 
-        captions.push_back(new RCaption(matches[1], timestamp, fontcaption));
+        captions.push_back(new RCaption(caption, timestamp, fontcaption));
     }
 
     //fprintf(stderr, "loaded %d captions\n", captions.size());
@@ -1642,7 +1643,7 @@ void Gource::logic(float t, float dt) {
     if(currtime==0 && !commitqueue.empty()) {
         currtime   = lasttime = commitqueue[0].timestamp;
         subseconds = 0.0;
-        
+
         loadCaptions();
     }
 
@@ -1690,33 +1691,33 @@ void Gource::logic(float t, float dt) {
 
     while(captions.size() > 0) {
         RCaption* caption = captions.front();
-        
+
         if(caption->timestamp > currtime) break;
 
         float cap_height = fontcaption.getMaxHeight();
-        
+
         float y = display.height - 10;
 
         // add extra space if title is enabled
         if(!gGourceSettings.title.empty()) {
             y -= fontmedium.getMaxHeight() + cap_height;
         }
-        
+
         while(1) {
 
             bool found = false;
-            
+
             for(std::list<RCaption*>::iterator it = active_captions.begin(); it!=active_captions.end(); it++) {
                 RCaption* actcap = *it;
 
                 vec2 cappos = actcap->getPos();
-                
+
                 if(cappos.y == y) {
                     found = true;
                     break;
                 }
             }
-            
+
             if(!found) break;
 
             y -= cap_height;
@@ -1726,28 +1727,28 @@ void Gource::logic(float t, float dt) {
 
         // centre
         if(offset_x == 0) {
-            offset_x = (display.width / 2) - (fontcaption.getWidth(caption->getCaption()) / 2);           
+            offset_x = (display.width / 2) - (fontcaption.getWidth(caption->getCaption()) / 2);
         } else if(offset_x < 0) {
             offset_x = display.width - offset_x;
         }
-        
+
         caption->setPos(vec2(offset_x, y));
 
-        captions.pop_front();        
+        captions.pop_front();
         active_captions.push_back(caption);
     }
-    
+
     for(std::list<RCaption*>::iterator it = active_captions.begin(); it!=active_captions.end();) {
          RCaption* caption = *it;
-         
+
          caption->logic(dt);
-         
+
          if(caption->isFinished()) {
              it = active_captions.erase(it);
              delete caption;
              continue;
          }
-         
+
          it++;
     }
 
@@ -2541,8 +2542,8 @@ void Gource::draw(float t, float dt) {
 
     for(std::list<RCaption*>::iterator it = active_captions.begin(); it!=active_captions.end(); it++) {
         RCaption* caption = *it;
-        
-        caption->draw();        
+
+        caption->draw();
     }
 
     if(message_timer>0.0f) {

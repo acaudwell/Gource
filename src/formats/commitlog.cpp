@@ -21,7 +21,7 @@
 
 #include "../core/utf8/utf8.h"
 
-std::string filter_utf8(const std::string& str) {
+std::string RCommitLog::filter_utf8(const std::string& str) {
 
     std::string filtered;
 
@@ -273,7 +273,7 @@ void RCommitLog::createTempLog() {
 
 RCommitFile::RCommitFile(const std::string& filename, const std::string& action, vec3 colour) {
 
-    this->filename = filter_utf8(filename);
+    this->filename = RCommitLog::filter_utf8(filename);
 
     //prepend a root slash
     if(this->filename[0] != '/') {
@@ -323,7 +323,7 @@ void RCommit::addFile(const std::string& filename, const  std::string& action, c
 }
 
 void RCommit::postprocess() {
-    username = filter_utf8(username);
+    username = RCommitLog::filter_utf8(username);
 }
 
 bool RCommit::isValid() {
