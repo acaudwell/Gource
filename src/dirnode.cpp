@@ -39,9 +39,9 @@ RDirNode::RDirNode(RDirNode* parent, const std::string & abspath) {
     setParent(parent);
 
     accel = spos = prev_accel = vel = vec2(0.0f);
-    
+
     //NOTE: parent is always being set to 0 so this never gets called ...
-    
+
     //figure out starting position
     if(parent !=0) {
         vec2 parentPos = parent->getPos();
@@ -109,7 +109,7 @@ void RDirNode::nodeUpdated(bool userInitiated) {
 
     calcRadius();
     updateFilePositions();
-
+    if(visible && noDirs() && noFiles()) visible = false;
     if(parent !=0) parent->nodeUpdated(true);
 }
 
@@ -150,11 +150,11 @@ RDirNode* RDirNode::getParent() const{
 
 
 bool RDirNode::isDir(const std::string& path) const {
-      
+
     if(prefixedBy(path)) return true;
 
     if(path.find(abspath) != 0) return false;
-    
+
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         if((*it)->isDir(path)) return true;
     }
@@ -169,7 +169,7 @@ void RDirNode::findDirs(const std::string& path, std::list<RDirNode*>& dirs) {
         dirs.push_back(this);
         return;
     }
- 
+
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         (*it)->findDirs(path, dirs);
     }
@@ -420,7 +420,7 @@ bool RDirNode::addFile(RFile* f) {
 
     for(std::list<RFile*>::const_iterator it = files.begin(); it != files.end(); it++) {
         RFile* file = (*it);
-       
+
         if(f->path.find(file->fullpath) == 0) {
             //fprintf(stderr, "removing %s as is actually the directory of %s\n", file->fullpath.c_str(), f->fullpath.c_str());
             file->remove(true);
@@ -582,7 +582,7 @@ float RDirNode::distanceToParent() const{
 
     float posd     = glm::length(parent->getPos() - pos);
     float distance = posd - (dir_radius + parent->getParentRadius());
-    
+
     return distance;
 }
 
@@ -594,7 +594,7 @@ void RDirNode::applyForceDir(RDirNode* node) {
     float posd2       = glm::length2(dir);
     float myradius    = getRadius();
     float your_radius = node->getRadius();
-    
+
     float sumradius = (myradius + your_radius);
 
     float distance2 = posd2 - sumradius*sumradius;
@@ -653,10 +653,10 @@ void RDirNode::applyForces(QuadTree & quadtree) {
     //  * dirs should attract to sit on the radius of the parent dir ie:
     //    should attract to distance_to_parent * normal_to_parent
 
-    
-    
+
+
     accel += gGourceForceGravity * parent_dist * normalise(parent->getPos() - pos);
-    
+
     //  * dirs should be pushed along the parent_parent to parent normal by a force smaller than the parent radius force
     RDirNode* pparent = parent->getParent();
 
@@ -771,11 +771,11 @@ void RDirNode::setInitialPosition() {
     if(parentP != 0) {
         //pos += ((parent->getPos() - parentP->getPos()).normal() * 2.0 + vec2Hash(abspath)).normal();
         pos += normalise(normalise(parent->getPos() - parentP->getPos()) * 2.0f + vec2Hash(abspath));
-       
+
     }  else {
         pos += vec2Hash(abspath);
     }
-    
+
     //the spline point
     spos = pos - (parent->getPos() - pos) * 0.5f;
     position_initialized=true;
