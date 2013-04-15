@@ -38,21 +38,30 @@ sub dosify {
 chdir("$base_dir") or die("chdir to $base_dir failed");
 
 my $nsis_script = q[
+!define MULTIUSER_MUI
+!define MULTIUSER_EXECUTIONLEVEL Highest
+!define MULTIUSER_INSTALLMODE_COMMANDLINE
+!define MULTIUSER_INSTALLMODE_DEFAULT_REGISTRY_KEY "Software\Gource"
+!define MULTIUSER_INSTALLMODE_INSTDIR_REGISTRY_KEY "Software\Gource"
+!define MULTIUSER_INSTALLMODE_DEFAULT_REGISTRY_VALUENAME "Install_Mode"
+!define MULTIUSER_INSTALLMODE_INSTDIR_REGISTRY_VALUENAME "Install_Dir"
+!define MULTIUSER_INSTALLMODE_INSTDIR "Gource"
+!include "MultiUser.nsh"
+
 !include "MUI2.nsh"
+!include "LogicLib.nsh"
 !include "SafeEnvVarUpdate.nsh"
 
 Name "Gource GOURCE_VERSION"
 
-OutFile    "GOURCE_INSTALLER"
-InstallDir $PROGRAMFILES\Gource
-
-RequestExecutionLevel admin
+OutFile "GOURCE_INSTALLER"
 
 !define MUI_WELCOMEFINISHPAGE_BITMAP   "..\..\nsis\welcome.bmp"
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "..\..\nsis\welcome.bmp"
 
 !define MUI_COMPONENTSPAGE_NODESC
 
+!insertmacro MULTIUSER_PAGE_INSTALLMODE
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
@@ -62,8 +71,8 @@ RequestExecutionLevel admin
 !insertmacro MUI_LANGUAGE "English"
 
 Function .onInit
- 
-  ReadRegStr $R0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "UninstallString"
+  !insertmacro MULTIUSER_INIT
+  ReadRegStr $R0 SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "UninstallString"
   StrCmp $R0 "" done
   MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
   "Gource appears to already be installed. $\n$\nClick OK to remove the previous version and continue the installation." \
@@ -73,9 +82,14 @@ Function .onInit
  uninst:
   ClearErrors
   ExecWait $R0
-done:
+
+ done:
  
 FunctionEnd
+
+Function un.onInit
+  !insertmacro MULTIUSER_UNINIT
+FunctionEnd 
 
 Section "Gource" SecGource
   SectionIn RO
@@ -84,22 +98,38 @@ Section "Gource" SecGource
 
   writeUninstaller $INSTDIR\uninstall.exe
 
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "DisplayName"          "Gource"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "DisplayVersion"       "GOURCE_VERSION"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "UninstallString"      '"$INSTDIR\uninstall.exe"'
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "QuietUninstallString" '"$INSTDIR\uninstall.exe" /S'
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "NoModify" 1
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "NoRepair" 1
+  WriteRegStr SHCTX "Software\Gource" ${MULTIUSER_INSTALLMODE_INSTDIR_REGISTRY_VALUENAME} "$INSTDIR"
+  WriteRegStr SHCTX "Software\Gource" ${MULTIUSER_INSTALLMODE_DEFAULT_REGISTRY_VALUENAME} "$MultiUser.InstallMode"
+
+  WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "DisplayName"          "Gource"
+  WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "DisplayVersion"       "GOURCE_VERSION"
+  WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "UninstallString"      '"$INSTDIR\uninstall.exe"'
+  WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "QuietUninstallString" '"$INSTDIR\uninstall.exe" /S'
+  WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "NoModify" 1
+  WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "NoRepair" 1
 
 SectionEnd
 
 Section "Add to PATH" SecAddtoPath
-  ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR\cmd"
+ 
+  ${If} $MultiUser.InstallMode == "AllUsers"
+    ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR\cmd"
+  ${ElseIf} $MultiUser.InstallMode == "CurrentUser"
+    ${EnvVarUpdate} $0 "PATH" "A" "HKCU" "$INSTDIR\cmd"
+  ${EndIf}
+
 SectionEnd
 
 Section "Uninstall"
-  ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" "$INSTDIR\cmd"
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource"
+
+  ${If} $MultiUser.InstallMode == "AllUsers"
+    ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" "$INSTDIR\cmd"
+  ${ElseIf} $MultiUser.InstallMode == "CurrentUser"
+    ${un.EnvVarUpdate} $0 "PATH" "R" "HKCU" "$INSTDIR\cmd"
+  ${EndIf}
+
+  DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource"
+  DeleteRegKey SHCTX "Software\Gource"
 
   GOURCE_UNINSTALL_LIST
   GOURCE_UNINSTALL_DIRS
