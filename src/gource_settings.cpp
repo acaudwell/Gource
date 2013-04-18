@@ -704,18 +704,6 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             std::string image_path = gGourceSettings.user_image_dir + dirfile;
             std::string name       = dirfile.substr(0,dirfile.size() - file_ext.size());
 
-#ifdef __APPLE__
-                CFMutableStringRef help = CFStringCreateMutable(kCFAllocatorDefault, 0);
-                CFStringAppendCString(help, name.c_str(), kCFStringEncodingUTF8);
-                CFStringNormalize(help, kCFStringNormalizationFormC);
-                char data[4096];
-                CFStringGetCString(help,
-                                   data,
-                                   sizeof(data),
-                                   kCFStringEncodingUTF8);
-                name = data;
-#endif
-
             debugLog("%s => %s", name.c_str(), image_path.c_str());
 
             user_image_map[name] = image_path;
