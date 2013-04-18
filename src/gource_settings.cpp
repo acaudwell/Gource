@@ -486,10 +486,6 @@ void GourceSettings::commandLineOption(const std::string& name, const std::strin
     throw ConfFileException(invalid_error, "", 0);
 }
 
-
-#ifdef __APPLE__
-#include <CoreFoundation/CoreFoundation.h>
-#endif
 void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gource_settings) {
 
     setGourceDefaults();
