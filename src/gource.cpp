@@ -1729,7 +1729,7 @@ void Gource::logic(float t, float dt) {
         if(offset_x == 0) {
             offset_x = (display.width / 2) - (fontcaption.getWidth(caption->getCaption()) / 2);
         } else if(offset_x < 0) {
-            offset_x = display.width - offset_x;
+            offset_x = display.width + offset_x - fontcaption.getWidth(caption->getCaption());      
         }
 
         caption->setPos(vec2(offset_x, y));
