@@ -386,8 +386,8 @@ void GourceSettings::setGourceDefaults() {
 
     caption_file     = "";
     caption_duration = 10.0f;
-    caption_size     = 24;
-    caption_offset   = 10;
+    caption_size     = 16;
+    caption_offset   = 0;
     caption_colour   = vec3(1.0f, 1.0f, 1.0f);
 
     gStringHashSeed = 31;
