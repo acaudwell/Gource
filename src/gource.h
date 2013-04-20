@@ -142,6 +142,7 @@ class Gource : public SDLApp {
 
     bool first_read;
     bool paused;
+    bool reloaded;
 
     float max_tick_rate;
     int frameskip;
@@ -187,7 +188,7 @@ class Gource : public SDLApp {
     std::map<std::string, RFile*> files;
     std::map<int, RFile*> tagfilemap;
     std::map<int, RUser*> tagusermap;
-    
+
     std::list<RCaption*> captions;
     std::list<RCaption*> active_captions;
 
@@ -213,7 +214,7 @@ class Gource : public SDLApp {
     void selectNextUser();
 
     void loadCaptions();
-    
+
     void readLog();
 
     void logReadingError(const std::string& error);

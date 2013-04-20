@@ -88,6 +88,7 @@ Gource::Gource(FrameExporter* exporter) {
 
     stop_position_reached=false;
 
+    reloaded     = false;
     paused       = false;
     first_read   = true;
 
@@ -217,8 +218,7 @@ void Gource::unload() {
 }
 
 void Gource::reload() {
-
-    slider.resize();
+    reloaded = true;
 }
 
 void Gource::quit() {
@@ -1689,30 +1689,53 @@ void Gource::logic(float t, float dt) {
         commitqueue.pop_front();
     }
 
+    slider.resize();
+
+    float caption_height  = fontcaption.getMaxHeight();
+    float caption_start_y = canSeek() ? slider.getBounds().min.y - 35.0f : display.height - fontmedium.getMaxHeight() - 20.0f;
+
+    if(!gGourceSettings.title.empty()) {
+        caption_start_y = glm::min( caption_start_y, display.height - 20.0f - fontmedium.getMaxHeight() );
+    }
+
+    caption_start_y = glm::floor(caption_start_y);
+
+    if(reloaded) {
+        // reposition active captions
+        float y = caption_start_y;
+
+        for(RCaption* cap : active_captions) {
+
+            int caption_offset_x = gGourceSettings.caption_offset;
+
+            // centre
+            if(caption_offset_x == 0) {
+                caption_offset_x = (display.width / 2) - (fontcaption.getWidth(cap->getCaption()) / 2);
+            } else if(caption_offset_x < 0) {
+                caption_offset_x = display.width + caption_offset_x - fontcaption.getWidth(cap->getCaption());
+            }
+
+            cap->setPos(vec2(caption_offset_x, y));
+            y -= caption_height;
+        }
+
+        reloaded = false;
+    }
+
     while(captions.size() > 0) {
         RCaption* caption = captions.front();
 
         if(caption->timestamp > currtime) break;
 
-        float cap_height = fontcaption.getMaxHeight();
-
-        float y = display.height - 10;
-
-        // add extra space if title is enabled
-        if(!gGourceSettings.title.empty()) {
-            y -= fontmedium.getMaxHeight() + cap_height;
-        }
+        float y = caption_start_y;
 
         while(1) {
 
             bool found = false;
 
-            for(std::list<RCaption*>::iterator it = active_captions.begin(); it!=active_captions.end(); it++) {
-                RCaption* actcap = *it;
+            for(RCaption* cap : active_captions) {
 
-                vec2 cappos = actcap->getPos();
-
-                if(cappos.y == y) {
+                if(cap->getPos().y == y) {
                     found = true;
                     break;
                 }
@@ -1720,19 +1743,19 @@ void Gource::logic(float t, float dt) {
 
             if(!found) break;
 
-            y -= cap_height;
+            y -= caption_height;
         }
 
-        int offset_x = gGourceSettings.caption_offset;
+        int caption_offset_x = gGourceSettings.caption_offset;
 
         // centre
-        if(offset_x == 0) {
-            offset_x = (display.width / 2) - (fontcaption.getWidth(caption->getCaption()) / 2);
-        } else if(offset_x < 0) {
-            offset_x = display.width + offset_x - fontcaption.getWidth(caption->getCaption());      
+        if(caption_offset_x == 0) {
+            caption_offset_x = (display.width / 2) - (fontcaption.getWidth(caption->getCaption()) / 2);
+        } else if(caption_offset_x < 0) {
+            caption_offset_x = display.width + caption_offset_x - fontcaption.getWidth(caption->getCaption());
         }
 
-        caption->setPos(vec2(offset_x, y));
+        caption->setPos(vec2(caption_offset_x, y));
 
         captions.pop_front();
         active_captions.push_back(caption);
@@ -2036,8 +2059,9 @@ void Gource::updateAndDrawEdges() {
 
         edge_vbo.update();
 
-        shadow_shader->use();
+        shadow_shader->setSampler2D("tex", 0);
         shadow_shader->setFloat("shadow_strength", 0.5);
+        shadow_shader->use();
 
         vec2 shadow_offset = vec2(2.0, 2.0);
 
@@ -2192,8 +2216,9 @@ void Gource::drawFileShadows(float dt) {
 
     if(!gGourceSettings.ffp) {
 
-        shadow_shader->use();
+        shadow_shader->setSampler2D("tex", 0);
         shadow_shader->setFloat("shadow_strength", 0.5);
+        shadow_shader->use();
 
         glBindTexture(GL_TEXTURE_2D, gGourceSettings.file_graphic->textureid);
 
@@ -2217,8 +2242,9 @@ void Gource::drawUserShadows(float dt) {
 
     if(!gGourceSettings.ffp) {
 
-        shadow_shader->use();
+        shadow_shader->setSampler2D("tex", 0);
         shadow_shader->setFloat("shadow_strength", 0.5);
+        shadow_shader->use();
 
         vec2 shadow_offset = vec2(2.0, 2.0) * gGourceSettings.user_scale;
 
@@ -2406,9 +2432,10 @@ void Gource::draw(float t, float dt) {
 
         text_vbo_draw_time = SDL_GetTicks();
 
-        text_shader->use();
+        text_shader->setSampler2D("tex", 0);
         text_shader->setFloat("shadow_strength", 0.7);
         text_shader->setFloat("texel_size", font_texel_size);
+        text_shader->use();
 
         fontmanager.drawBuffer();
 
