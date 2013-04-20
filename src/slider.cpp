@@ -32,12 +32,16 @@ PositionSlider::PositionSlider(float percent) {
     mouseover_elapsed = 1.0;
     fade_time = 1.0;
     alpha = 0.0;
-    
+
     resize();
 }
 
+const Bounds2D& PositionSlider::getBounds() const {
+    return bounds;
+}
+
 void PositionSlider::resize() {
-    int gap = display.width / 30;
+    int gap = 35;
 
     bounds.reset();
     bounds.update(vec2(gap, display.height - gap*2));
@@ -110,21 +114,36 @@ void PositionSlider::logic(float dt) {
     }
 }
 
+void PositionSlider::drawSlider(float pos_x) const {
 
-void PositionSlider::draw(float dt) {
-    glDisable(GL_TEXTURE_2D);
     glLineWidth(2.0f);
-    glColor4f(slidercol.x, slidercol.y, slidercol.z, alpha);
 
     bounds.draw();
 
-    float posx = bounds.min.x + (bounds.max.x - bounds.min.x) * percent;
+    glLineWidth(2.0f);
 
-    glLineWidth(4.0f);
     glBegin(GL_LINES);
-        glVertex2f(posx, bounds.min.y);
-        glVertex2f(posx, bounds.max.y);
+        glVertex2f(pos_x, bounds.min.y);
+        glVertex2f(pos_x, bounds.max.y);
     glEnd();
+}
+
+void PositionSlider::draw(float dt) {
+
+    glDisable(GL_TEXTURE_2D);
+
+    float pos_x = bounds.min.x + (bounds.max.x - bounds.min.x) * percent;
+
+    glColor4f(0.0f, 0.0f, 0.0f, 0.7*alpha);
+
+    glPushMatrix();
+        glTranslatef(2.0, 2.0, 0.0);
+        drawSlider(pos_x);
+    glPopMatrix();
+
+    glColor4f(slidercol.x, slidercol.y, slidercol.z, alpha);
+
+    drawSlider(pos_x);
 
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);

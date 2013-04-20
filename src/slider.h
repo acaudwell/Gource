@@ -37,6 +37,8 @@ class PositionSlider {
 
     float capwidth;
     std::string caption;
+
+    void drawSlider(float position) const;
 public:
     PositionSlider(float percent = 0.0f);
 
@@ -47,8 +49,10 @@ public:
     void setPercent(float percent);
 
     void resize();
-    
+
     void show();
+
+    const Bounds2D& getBounds() const;
 
     bool mouseOver(vec2 pos, float* percent_ptr);
     bool click(vec2 pos, float* percent_ptr);
