@@ -92,9 +92,17 @@ RCommitLog::~RCommitLog() {
 
 int RCommitLog::systemCommand(const std::string& command) {
 #ifdef _WIN32
-    SDLAppCreateWindowsConsole();
+    SDLApp::createConsole();
+    SDLApp::detachConsole();
 #endif
-    return system(command.c_str());
+
+    int rc = system(command.c_str());
+
+#ifdef _WIN32
+    SDLApp::attachConsole();
+#endif
+
+    return rc;
 }
 
 // TODO: implement check for 'nix OSs

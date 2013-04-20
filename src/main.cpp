@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
                 }
             }
         }
-    
+
         //set log level
         Logger::getDefault()->setLevel(gGourceSettings.log_level);
 
@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
     if(gGourceSettings.resizable && gGourceSettings.output_ppm_filename.empty()) {
         display.enableResize(true);
     }
-        
+
     try {
 
         display.init("Gource", gGourceSettings.display_width, gGourceSettings.display_height, gGourceSettings.fullscreen);
@@ -140,7 +140,7 @@ int main(int argc, char *argv[]) {
     }
 
 #ifdef _WIN32
-    SDLAppAttachToConsole();
+    SDLApp::attachConsole();
 #endif
 
     //init frame exporter
@@ -186,7 +186,7 @@ int main(int argc, char *argv[]) {
             SDLAppQuit(exception.what());
         }
     }
-    
+
     gGourceShell = 0;
 
     if(gourcesh != 0) delete gourcesh;

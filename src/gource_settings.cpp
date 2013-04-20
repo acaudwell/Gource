@@ -29,10 +29,10 @@ GourceSettings gGourceSettings;
 void GourceSettings::help(bool extended_help) {
 
 #ifdef _WIN32
-    SDLAppCreateWindowsConsole();
+    SDLApp::createConsole();
 
     //resize window to fit help message
-    SDLAppResizeWindowsConsole(820);
+    SDLApp::resizeConsole(820);
 #endif
 
     printf("Gource v%s\n", GOURCE_VERSION);
@@ -151,7 +151,7 @@ if(extended_help) {
     }
 
 #ifdef _WIN32
-    if(gSDLAppConsoleWindow) {
+    if(SDLApp::console_window != 0) {
         printf("Press Enter\n");
         getchar();
     }
@@ -478,6 +478,8 @@ void GourceSettings::commandLineOption(const std::string& name, const std::strin
             log_level = LOG_LEVEL_INFO;
         } else if(value == "error") {
             log_level = LOG_LEVEL_ERROR;
+        } else if(value == "pedantic") {
+            log_level = LOG_LEVEL_PEDANTIC;
         }
         return;
     }
@@ -1298,7 +1300,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
     }
 
     if(path.size()==0 || isdir) {
-        SDLAppCreateWindowsConsole();
+        SDLApp::createConsole();
     }
 #endif
 }
