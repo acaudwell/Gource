@@ -3,8 +3,8 @@
 *.mkv
 *.mp4
 .objs
-gource
-gource.exe
+/gource
+/gource.exe
 gource.win32.depend
 gource.win32.layout
 debug.log

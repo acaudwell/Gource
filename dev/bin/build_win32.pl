@@ -139,18 +139,6 @@ Section "Uninstall"
 SectionEnd
 ];
 
-my $cmd_script = q[
-@echo off
-@start /wait "gource" "%~dp0\..\gource.exe" %*
-];
-$cmd_script =~ s{\n}{\r\n}g;
-
-my $bash_script = q[
-#!/bin/sh
-GOURCE_CMD_DIR=`dirname "$0"`
-"$GOURCE_CMD_DIR/../gource.exe" "$@"
-];
-
 my @gource_files = qw(
     gource.exe
     README
@@ -167,6 +155,8 @@ my @gource_files = qw(
     data/shaders/shadow.vert
     data/shaders/text.frag
     data/shaders/text.vert
+    cmd/gource.cmd
+    cmd/gource
 );
 
 my @gource_txts = qw(
@@ -228,17 +218,6 @@ foreach my $file (@gource_dlls) {
 foreach my $file (@gource_txts) {
     dosify("$file", "$tmp_dir/$file.txt");
     push @gource_bundle, "$file.txt";
-}
-
-# shell scripts for running gource
-foreach my $shell_script (["cmd/gource.cmd", $cmd_script], ["cmd/gource", $bash_script]) {
-    my($script_file, $script) = @$shell_script;
-
-    open my $script_handle, ">$tmp_dir/$script_file" or die("failed to open $script_file: $!");
-    print $script_handle $script;
-    close $script_handle;
-
-    push @gource_bundle, $script_file;
 }
 
 my $version = gource_version();

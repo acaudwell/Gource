@@ -1,0 +1,3 @@
+#!/bin/sh
+GOURCE_CMD_DIR=`dirname "$0"`
+"$GOURCE_CMD_DIR/../gource.exe" "$@"
