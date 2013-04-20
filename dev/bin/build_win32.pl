@@ -141,7 +141,7 @@ SectionEnd
 
 my $cmd_script = q[
 @echo off
-"%~dp0\..\gource.exe" %*
+@start /wait "gource" "%~dp0\..\gource.exe" %*
 ];
 $cmd_script =~ s{\n}{\r\n}g;
 
