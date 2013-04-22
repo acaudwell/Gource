@@ -29,10 +29,9 @@ GourceSettings gGourceSettings;
 void GourceSettings::help(bool extended_help) {
 
 #ifdef _WIN32
-    SDLApp::createConsole();
-
     //resize window to fit help message
     SDLApp::resizeConsole(820);
+    SDLApp::showConsole(true);
 #endif
 
     printf("Gource v%s\n", GOURCE_VERSION);
@@ -151,7 +150,7 @@ if(extended_help) {
     }
 
 #ifdef _WIN32
-    if(SDLApp::console_window != 0) {
+    if(!SDLApp::existing_console) {
         printf("Press Enter\n");
         getchar();
     }
@@ -163,6 +162,7 @@ if(extended_help) {
 GourceSettings::GourceSettings() {
     repo_count = 0;
     file_graphic = 0;
+    log_level = LOG_LEVEL_OFF;
 
     setGourceDefaults();
 
@@ -391,8 +391,6 @@ void GourceSettings::setGourceDefaults() {
     caption_colour   = vec3(1.0f, 1.0f, 1.0f);
 
     gStringHashSeed = 31;
-
-    log_level = LOG_LEVEL_ERROR;
 
     //delete file filters
     for(std::vector<Regex*>::iterator it = file_filters.begin(); it != file_filters.end(); it++) {
@@ -1297,10 +1295,6 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         int rc = stat(path.c_str(), &fileinfo);
 
         if(rc==0 && fileinfo.st_mode & S_IFDIR) isdir = true;
-    }
-
-    if(path.size()==0 || isdir) {
-        SDLApp::createConsole();
     }
 #endif
 }

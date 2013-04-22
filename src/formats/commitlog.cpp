@@ -91,17 +91,7 @@ RCommitLog::~RCommitLog() {
 }
 
 int RCommitLog::systemCommand(const std::string& command) {
-#ifdef _WIN32
-    SDLApp::createConsole();
-    SDLApp::detachConsole();
-#endif
-
     int rc = system(command.c_str());
-
-#ifdef _WIN32
-    SDLApp::attachConsole();
-#endif
-
     return rc;
 }
 

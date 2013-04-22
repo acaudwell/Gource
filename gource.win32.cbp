@@ -25,6 +25,7 @@
 		<Linker>
 			<Add option="glew32.dll" />
 			<Add option="-L." />
+			<Add option="-mconsole" />
 			<Add library="mingw32" />
 			<Add library="pcre" />
 			<Add library="SDLmain" />

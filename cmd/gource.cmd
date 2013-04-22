@@ -1,2 +1,2 @@
 @echo off
-@start /wait "gource" "%~dp0\..\gource.exe" %*
+"%~dp0\..\gource.exe" %*

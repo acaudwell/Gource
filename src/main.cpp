@@ -21,6 +21,10 @@ int main(int argc, char *argv[]) {
 
     SDLAppInit("Gource", "gource");
 
+#ifdef _WIN32
+        SDLApp::initConsole();
+#endif
+
     ConfFile conf;
     std::vector<std::string> files;
 
@@ -62,6 +66,13 @@ int main(int argc, char *argv[]) {
 
         //set log level
         Logger::getDefault()->setLevel(gGourceSettings.log_level);
+
+#ifdef _WIN32
+        // hide console if not needed
+        if(gGourceSettings.log_level == LOG_LEVEL_OFF && !SDLApp::existing_console) {
+            SDLApp::showConsole(false);
+        }
+#endif
 
         //load config
         if(!gGourceSettings.load_config.empty()) {
@@ -138,10 +149,6 @@ int main(int argc, char *argv[]) {
 
         SDLAppQuit(errormsg);
     }
-
-#ifdef _WIN32
-    SDLApp::attachConsole();
-#endif
 
     //init frame exporter
     FrameExporter* exporter = 0;
