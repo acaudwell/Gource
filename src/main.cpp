@@ -17,6 +17,42 @@
 
 #include "main.h"
 
+// look for a .gource in this order:
+// * if a directory specified and there is one in that directory.
+// * if the user has a .gource in their home directory.
+
+
+std::string find_gource_rc(const std::string& file_path) {
+   
+    std::vector<std::string> rc_search_dirs;
+
+    if(!file_path.empty()) rc_search_dirs.push_back(file_path);
+    else rc_search_dirs.push_back(".");
+    
+    char* home = getenv("HOME");
+    if(home!=0) rc_search_dirs.push_back(std::string(home));
+    
+    // TODO: check some other env var on windows ?
+
+    std::string gource_rc_path;
+    
+    for(const std::string& dir : rc_search_dirs) {
+        debugLog("checking %s", dir.c_str());
+        boost::filesystem::path path(dir);
+        
+        if(boost::filesystem::is_directory(path)) {
+            path /= ".gource";
+
+            if(boost::filesystem::exists(path)) {
+                gource_rc_path = path.string();
+                break;
+            }
+        }
+    }
+    
+    return gource_rc_path;
+}
+
 int main(int argc, char *argv[]) {
 
     SDLAppInit("Gource", "gource");
@@ -32,15 +68,18 @@ int main(int argc, char *argv[]) {
         gGourceSettings.parseArgs(argc, argv, conf, &files);
 
         if(gGourceSettings.load_config.empty() && !files.empty()) {
+
             //see if file looks like a config file
             for(std::vector<std::string>::iterator fit = files.begin(); fit != files.end(); fit++) {
+
                 std::string file = *fit;
 
                 int file_length = file.size();
 
-                if(   (file.rfind(".conf") == (file_length-5) && file_length > 5)
-                   || (file.rfind(".cfg")  == (file_length-4) && file_length > 4)
-                   || (file.rfind(".ini")  == (file_length-4) && file_length > 4) ) {
+                if(   (file.rfind(".conf")  == (file_length-5))
+                   || (file.rfind(".cfg")   == (file_length-4))
+                   || (file.rfind(".gourc") == (file_length-5))
+                   || (file.rfind(".ini")   == (file_length-4)) ) {
 
                     bool is_conf=true;
 
@@ -58,11 +97,22 @@ int main(int argc, char *argv[]) {
                     }
                 }
             }
-        }
-
+        }       
+        
         //set log level
         Logger::getDefault()->setLevel(gGourceSettings.log_level);
 
+        std::string gource_path;
+        
+        if(!files.empty()) {
+            gource_path = files[files.size()-1];
+        }
+        
+        // see if there is a .gourc file to use
+        if(gGourceSettings.load_config.empty()) {
+            gGourceSettings.load_config = find_gource_rc(gource_path);
+        }
+        
         //load config
         if(!gGourceSettings.load_config.empty()) {
             conf.clear();
@@ -73,17 +123,15 @@ int main(int argc, char *argv[]) {
         }
 
         //set path
-        if(!files.empty()) {
-            std::string path = files[files.size()-1];
-
+        if(!gource_path.empty()) {
             ConfSectionList* sectionlist = conf.getSections("gource");
 
             if(sectionlist!=0) {
                 for(ConfSectionList::iterator sit = sectionlist->begin(); sit != sectionlist->end(); sit++) {
-                    (*sit)->setEntry("path", path);
+                    (*sit)->setEntry("path", gource_path);
                 }
             } else {
-                conf.setEntry("gource", "path", path);
+                conf.setEntry("gource", "path", gource_path);
             }
         }
 
