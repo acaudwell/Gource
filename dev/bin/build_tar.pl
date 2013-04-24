@@ -22,10 +22,16 @@ sub gource_version {
 my $VERSION = gource_version();
 
 my @exclusions = (
+    qr{^/autogen\.sh$},
+    qr{^/backup/},
+    qr{^/confs/},
+    qr{^/cmd/},
+    qr{^/resources/},
+    qr{^/tests/},
+    qr{^/scripts/},
     qr{^/contrib/},
     qr{^/config.status$},
     qr{^/config.log$},
-    qr{^/debian/},
     qr{^/gource$},
     qr{^/dev/},
     qr{^/logs/},
@@ -39,7 +45,6 @@ my @exclusions = (
     qr{^/src/core/README$},
     qr{^/src/core/ui/},
     qr{\.d$},
-    qr{^/test/},
 );
 
 my @inclusions = (
@@ -53,7 +58,7 @@ my @inclusions = (
     qr{^/aclocal\.m4$},
     qr{^/m4/.+\.m4$},
     qr{^/configure(?:\.ac)?$},
-    qr{^/src/.+\.(?:cpp|h)$},
+    qr{^/src/.+\.(?:cpp|h|cc|hh)$},
     qr{^/data/file\.png$},
     qr{^/data/user\.png$},
     qr{^/data/beam\.png$},
@@ -117,7 +122,7 @@ foreach my $file (@files) {
     next if grep { $file =~ $_ } @exclusions;
 
     unless(grep { $file =~ $_ } @inclusions) {
-        warn "nothing known about $file\n";
+        warn "WARNING: nothing known about $file\n";
         next;
     }
 
