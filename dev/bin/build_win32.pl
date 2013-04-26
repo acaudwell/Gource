@@ -141,7 +141,6 @@ SectionEnd
 
 my @gource_files = qw(
     gource.exe
-    README
     data/beam.png
     data/file.png
     data/user.png
