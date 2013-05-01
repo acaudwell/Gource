@@ -140,7 +140,7 @@ options:
 
     --highlight-colour FFFFFF
             Font colour for highlighted users in hex.
-    
+
     --selection-colour FFFFFF
             Font colour for selected users and files.
 
@@ -157,7 +157,7 @@ options:
             Filter out any users matching a specified regular expression.
 
     --user-image-dir DIRECTORY
-            Directory containing .jpg or .png images of users 
+            Directory containing .jpg or .png images of users
             (eg 'Full Name.png') to use as avatars.
 
     --default-user-image IMAGE
@@ -184,7 +184,7 @@ options:
     --bloom-intensity FLOAT
             Adjust the intensity of the bloom.
 
-    --max-files
+    --max-files NUMBER
             Set the maximum number of files or 0 for no limit.
 
             Excess files will be discarded.
@@ -340,7 +340,7 @@ version control systems:
 Interface:
 
 The time shown in the top left of the screen is set initially from the first
-log entry read and is incremented according to the simulation speed 
+log entry read and is incremented according to the simulation speed
 (--seconds-per-day).
 
 Pressing SPACE at any time will pause/resume the simulation. While paused you
@@ -365,9 +365,9 @@ Interactive keyboard commands:
     (+-)  Adjust simulation speed.
     (<>)  Adjust time scale.
     (TAB) Cycle through visible users
-    
+
     (Alt+Enter) Toggle Fullscreen
-    
+
     (ESC) Quit
 
 4. Copyright
