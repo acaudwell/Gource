@@ -1,3 +1,6 @@
+0.41:
+ * Full screen mode now uses desktop resolution by default.
+
 0.40:
  * Added caption support.
  * Improved command line interoperability on Windows.
