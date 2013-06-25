@@ -96,6 +96,8 @@ public:
     int systemCommand(const std::string& command);
     void requireExecutable(const std::string& exename);
 
+    void bufferCommit(RCommit& commit);
+
     bool getCommitAt(float percent, RCommit& commit);
     bool findNextCommit(RCommit& commit, int attempts);
     bool nextCommit(RCommit& commit, bool validate = true);

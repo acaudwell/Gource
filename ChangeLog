@@ -1,5 +1,6 @@
 0.41:
  * Full screen mode now uses desktop resolution by default.
+ * Added --start-date option.
 
 0.40:
  * Added caption support.

@@ -60,7 +60,6 @@ class Gource : public SDLApp {
     FrameExporter* frameExporter;
 
     RLogMill* logmill;
-    bool shutdown;
 
     RCommitLog* commitlog;
     PositionSlider slider;

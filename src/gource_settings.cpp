@@ -22,6 +22,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include "core/utf8/utf8.h"
+#include <time.h>
 
 GourceSettings gGourceSettings;
 
@@ -44,6 +45,7 @@ void GourceSettings::help(bool extended_help) {
     printf("      --multi-sampling             Enable multi-sampling\n");
     printf("      --no-vsync                   Disable vsync\n\n");
 
+    printf("      --start-date YYYY-MM-DD      Date to start from\n");
     printf("  -p, --start-position POSITION    Begin at some position (0.0-1.0 or 'random')\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
     printf("  -t, --stop-at-time SECONDS       Stop after a specified number of seconds\n");
@@ -163,6 +165,7 @@ GourceSettings::GourceSettings() {
     repo_count = 0;
     file_graphic = 0;
     log_level = LOG_LEVEL_OFF;
+    shutdown = false;
 
     setGourceDefaults();
 
@@ -274,6 +277,7 @@ GourceSettings::GourceSettings() {
     arg_types["log-format"]         = "string";
     arg_types["git-branch"]         = "string";
     arg_types["start-position"]     = "string";
+    arg_types["start-date"]         = "string";
     arg_types["stop-position"]      = "string";
     arg_types["crop"]               = "string";
     arg_types["hide"]               = "string";
@@ -314,6 +318,7 @@ void GourceSettings::setGourceDefaults() {
     hide_mouse     = false;
     hide_root      = false;
 
+    start_timestamp = 0;
     start_position = 0.0f;
     stop_position  = 0.0f;
     stop_at_time   = -1.0f;
@@ -1016,6 +1021,33 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
         if(time_scale <= 0.0f || time_scale > 4.0f) {
             conffile.entryException(entry, "time-scale outside of range 0.0 - 4.0");
+        }
+    }
+
+    if((entry = gource_settings->getEntry("start-date")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify start-date (YYYY-MM-DD)");
+
+        std::string start_date = entry->getString();
+
+        int year;
+        int month;
+        int day;
+
+        if(start_date.size()==10 && sscanf(start_date.c_str(), "%04d-%02d-%02d", &year, &month, &day) == 3) {
+
+            struct tm time_str;
+            time_str.tm_year  = year - 1900;
+            time_str.tm_mon   = month;
+            time_str.tm_mday  = day;
+            time_str.tm_hour  = 0;
+            time_str.tm_min   = 0;
+            time_str.tm_sec   = 0;
+            time_str.tm_isdst = -1;
+
+            start_timestamp = mktime(&time_str);
+        } else {
+            conffile.invalidValueException(entry);
         }
     }
 

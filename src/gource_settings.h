@@ -62,10 +62,12 @@ public:
     std::string logo;
     vec2 logo_offset;
 
+    time_t start_timestamp;
     float start_position;
     float stop_position;
     float stop_at_time;
 
+    bool shutdown;
     bool stop_on_idle;
     bool stop_at_end;
     bool dont_stop;

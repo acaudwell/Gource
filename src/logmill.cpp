@@ -79,6 +79,20 @@ void RLogMill::run() {
 
         clog = fetchLog(log_format);
 
+        // find first commit after start_timestamp if specified
+        if(gGourceSettings.start_timestamp != 0) {
+
+            RCommit commit;
+
+            while(!gGourceSettings.shutdown && !clog->isFinished()) {
+
+                if(clog->nextCommit(commit) && commit.timestamp >= gGourceSettings.start_timestamp) {
+                    clog->bufferCommit(commit);
+                    break;
+                }
+            }
+        }
+
     } catch(SeekLogException& exception) {
         error = "unable to read log file";
     } catch(SDLAppException& exception) {

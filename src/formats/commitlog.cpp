@@ -208,6 +208,11 @@ bool RCommitLog::findNextCommit(RCommit& commit, int attempts) {
     return false;
 }
 
+void RCommitLog::bufferCommit(RCommit& commit) {
+    lastCommit = commit;
+    buffered = true;
+}
+
 bool RCommitLog::nextCommit(RCommit& commit, bool validate) {
 
     if(buffered) {

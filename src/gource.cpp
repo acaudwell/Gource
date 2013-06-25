@@ -141,8 +141,6 @@ Gource::Gource(FrameExporter* exporter) {
 
     logmill = new RLogMill(logfile);
 
-    shutdown = false;
-
     if(exporter!=0) setFrameExporter(exporter, gGourceSettings.output_framerate);
 
     //if recording a video or in demo mode, or multiple repos, the slider is initially hidden
@@ -222,7 +220,6 @@ void Gource::reload() {
 }
 
 void Gource::quit() {
-    shutdown = true;
 }
 
 void Gource::update(float t, float dt) {
@@ -251,7 +248,7 @@ void Gource::update(float t, float dt) {
     draw(runtime, scaled_dt);
 
     //extract frames based on frameskip setting if frameExporter defined
-    if(frameExporter != 0 && commitlog && !shutdown) {
+    if(frameExporter != 0 && commitlog && !gGourceSettings.shutdown) {
         if(framecount % (frameskip+1) == 0) {
             frameExporter->dump();
         }
@@ -1097,7 +1094,7 @@ void Gource::readLog() {
             continue;
         }
 
-         commitqueue.push_back(commit);
+        commitqueue.push_back(commit);
     }
 
     if(first_read && commitqueue.empty()) {
@@ -1504,7 +1501,7 @@ void Gource::changeColours() {
 
 void Gource::logic(float t, float dt) {
 
-    if(shutdown && logmill->isFinished()) {
+    if(gGourceSettings.shutdown && logmill->isFinished()) {
         appFinished=true;
         return;
     }
@@ -1931,7 +1928,7 @@ void Gource::loadingScreen() {
             break;
     }
 
-    const char* action = !shutdown ? "Reading Log" : "Aborting";
+    const char* action = !gGourceSettings.shutdown ? "Reading Log" : "Aborting";
 
     int width = font.getWidth(action);
     font.setColour(vec4(1.0f));
