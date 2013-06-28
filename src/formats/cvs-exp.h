@@ -25,8 +25,8 @@ protected:
     bool parseCommit(RCommit& commit);
 public:
     CVSEXPCommitLog(const std::string& logfile);
-};
 
-extern std::string gGourceCvsExpLogCommand;
+    static std::string logCommand();    
+};
 
 #endif

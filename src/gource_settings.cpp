@@ -24,6 +24,13 @@
 #include "core/utf8/utf8.h"
 #include <time.h>
 
+#include "formats/hg.h"
+#include "formats/git.h"
+#include "formats/bzr.h"
+#include "formats/cvs-exp.h"
+#include "formats/cvs2cl.h"
+#include "formats/svn.h"
+
 GourceSettings gGourceSettings;
 
 //display help message
@@ -438,11 +445,11 @@ void GourceSettings::commandLineOption(const std::string& name, const std::strin
     }
 
     if(name == "git-log-command" || log_command == "git") {
-        SDLAppInfo(gGourceGitLogCommand);
+        SDLAppInfo(GitCommitLog::logCommand());
     }
 
     if(name == "cvs-exp-command" || log_command == "cvs-exp") {
-        SDLAppInfo(gGourceCvsExpLogCommand);
+        SDLAppInfo(CVSEXPCommitLog::logCommand());
     }
 
     if(log_command == "cvs") {
@@ -450,21 +457,19 @@ void GourceSettings::commandLineOption(const std::string& name, const std::strin
     }
 
     if(name == "cvs2cl-command" || log_command == "cvs2cl") {
-        SDLAppInfo(gGourceCVS2CLLogCommand);
+        SDLAppInfo(CVS2CLCommitLog::logCommand());
     }
 
     if(name == "svn-log-command" || log_command == "svn") {
-        SDLAppInfo(gGourceSVNLogCommand);
+        SDLAppInfo(SVNCommitLog::logCommand());
     }
 
     if(name == "hg-log-command" || log_command == "hg") {
-        std::string command = gGourceMercurialCommand();
-        SDLAppInfo(command);
+        SDLAppInfo(MercurialLog::logCommand());
     }
 
     if(name == "bzr-log-command" || log_command == "bzr") {
-        std::string command = gGourceBzrLogCommand();
-        SDLAppInfo(command);
+        SDLAppInfo(BazaarLog::logCommand());
     }
 
     if(name == "output-custom-log" && value.size() > 0) {
@@ -1028,24 +1033,31 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
         if(!entry->hasValue()) conffile.entryException(entry, "specify start-date (YYYY-MM-DD)");
 
-        std::string start_date = entry->getString();
+        std::string start_date_string = entry->getString();
 
         int year;
         int month;
         int day;
 
-        if(start_date.size()==10 && sscanf(start_date.c_str(), "%04d-%02d-%02d", &year, &month, &day) == 3) {
+        if(start_date_string.size()==10 && sscanf(start_date_string.c_str(), "%04d-%02d-%02d", &year, &month, &day) == 3) {
 
             struct tm time_str;
             time_str.tm_year  = year - 1900;
-            time_str.tm_mon   = month;
+            time_str.tm_mon   = month - 1;
             time_str.tm_mday  = day;
             time_str.tm_hour  = 0;
             time_str.tm_min   = 0;
             time_str.tm_sec   = 0;
             time_str.tm_isdst = -1;
 
-            start_timestamp = mktime(&time_str);
+            time_t timestamp = mktime(&time_str);
+
+            if(timestamp == -1) {
+                conffile.invalidValueException(entry);
+            }
+
+            this->start_timestamp = timestamp;
+            this->start_date      = start_date_string;
         } else {
             conffile.invalidValueException(entry);
         }

@@ -18,19 +18,9 @@
 #ifndef SVNLOG_H
 #define SVNLOG_H
 
-#include "../gource_settings.h"
-
 #include "commitlog.h"
 
 #include <sstream>
-
-#ifdef HAVE_LIBTINYXML
-#include <tinyxml.h>
-#else
-#include "../tinyxml/tinyxml.h"
-#endif
-
-#include <unistd.h>
 
 extern std::string gGourceSVNLogCommand;
 
@@ -42,6 +32,8 @@ protected:
     std::string logentry;
 public:
     SVNCommitLog(const std::string& logfile);
+    
+    static std::string logCommand();
 };
 
 #endif

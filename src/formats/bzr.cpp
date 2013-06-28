@@ -16,19 +16,28 @@
 */
 
 #include "bzr.h"
+#include "../gource_settings.h"
+
+#include <boost/format.hpp>
 
 Regex bzr_commit_regex("^ *([\\d.]+) (.+)\t(\\d{4})-(\\d+)-(\\d+)(?: \\{[^}]+})?(?: \\[merge\\])?$");
 Regex bzr_file_regex("^ *([AMDR])  (.*[^/])$");
 
 // parse Bazaar log entries (using the gource.style template)
 
-std::string gGourceBzrLogCommand() {
-    return std::string("bzr log --verbose -r 1..-1 --short -n0 --forward");
+std::string BazaarLog::logCommand() {
+    std::string log_command = std::string("bzr log --verbose -r 1..-1 --short -n0 --forward");
+
+    if(!gGourceSettings.start_date.empty()) {
+        log_command.replace(log_command.find("1..-1"), 5, str(boost::format("date:%s..-1") % gGourceSettings.start_date));
+    }
+
+    return log_command;
 }
 
 BazaarLog::BazaarLog(const std::string& logfile) : RCommitLog(logfile) {
 
-    log_command = gGourceBzrLogCommand();
+    log_command = logCommand();
 
     //can generate log from directory
     if(!logf && is_dir) {
@@ -82,11 +91,11 @@ bool BazaarLog::parseCommit(RCommit& commit) {
 
     if(!logf->getNextLine(line)) return false;
 
-    debugLog("read %s\n", line.c_str());
     if (!bzr_commit_regex.match(line, &entries)) {
-        debugLog("regex failed\n");
+        //debugLog("regex failed\n");
         return false;
     }
+
     commit.username = entries[1];
 
     year  = atoi(entries[2].c_str());

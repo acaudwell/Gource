@@ -20,14 +20,14 @@
 
 #include "commitlog.h"
 
-std::string gGourceBzrLogCommand();
-
 class BazaarLog : public RCommitLog {
 protected:
     bool parseCommit(RCommit& commit);
     BaseLog* generateLog(const std::string& dir);
 public:
     BazaarLog(const std::string& logfile);
+
+    static std::string logCommand();    
 };
 
 #endif

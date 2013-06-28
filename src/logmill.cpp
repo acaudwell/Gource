@@ -25,6 +25,8 @@
 #include "formats/bzr.h"
 #include "formats/svn.h"
 #include "formats/apache.h"
+#include "formats/cvs-exp.h"
+#include "formats/cvs2cl.h"
 
 extern "C" {
 
@@ -80,7 +82,7 @@ void RLogMill::run() {
         clog = fetchLog(log_format);
 
         // find first commit after start_timestamp if specified
-        if(gGourceSettings.start_timestamp != 0) {
+        if(clog != 0 && gGourceSettings.start_timestamp != 0) {
 
             RCommit commit;
 

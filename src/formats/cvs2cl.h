@@ -18,21 +18,7 @@
 #ifndef CVS2CL_H
 #define CVS2CL_H
 
-#include "../gource_settings.h"
 #include "commitlog.h"
-
-#include <sstream>
-
-#ifdef HAVE_LIBTINYXML
-#include <tinyxml.h>
-#else
-#include "../tinyxml/tinyxml.h"
-#endif
-
-
-#include <unistd.h>
-
-extern std::string gGourceCVS2CLLogCommand;
 
 class CVS2CLCommitLog : public RCommitLog {
 protected:
@@ -41,6 +27,8 @@ protected:
     std::string logentry;
 public:
     CVS2CLCommitLog(const std::string& logfile);
+
+    static std::string logCommand();    
 };
 
 #endif

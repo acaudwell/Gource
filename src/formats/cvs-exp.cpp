@@ -25,7 +25,10 @@ Regex cvsexp_detail_regex("author: ([^;]+);  state: ([^;]+);(.+)$");
 Regex cvsexp_entry_regex("\\| (.+),v:([0-9.]+),?");
 Regex cvsexp_end_regex("^(=+)$");
 
-std::string gGourceCvsExpLogCommand = "cvs-exp.pl -notree";
+std::string CVSEXPCommitLog::logCommand() {
+    std::string log_command = "cvs-exp.pl -notree";
+    return log_command;
+}
 
 CVSEXPCommitLog::CVSEXPCommitLog(const std::string& logfile) : RCommitLog(logfile) {
 }

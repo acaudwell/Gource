@@ -18,12 +18,7 @@
 #ifndef GITLOG_H
 #define GITLOG_H
 
-#include "../gource_settings.h"
 #include "commitlog.h"
-
-#include <unistd.h>
-
-extern std::string gGourceGitLogCommand;
 
 class GitCommitLog : public RCommitLog {
 protected:
@@ -31,6 +26,8 @@ protected:
     BaseLog* generateLog(const std::string& dir);
 public:
     GitCommitLog(const std::string& logfile);
+    
+    static std::string logCommand();
 };
 
 #endif

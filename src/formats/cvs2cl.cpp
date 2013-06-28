@@ -16,13 +16,23 @@
 */
 
 #include "cvs2cl.h"
+#include "../gource_settings.h"
+
+#ifdef HAVE_LIBTINYXML
+#include <tinyxml.h>
+#else
+#include "../tinyxml/tinyxml.h"
+#endif
 
 Regex cvs2cl_xml_tag("^<\\??xml");
 Regex cvs2cl_logentry_start("^<entry");
 Regex cvs2cl_logentry_end("^</entry>");
 Regex cvs2cl_logentry_timestamp("(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})Z");
 
-std::string gGourceCVS2CLLogCommand = "cvs2cl --chrono --stdout --xml -g-q";
+std::string CVS2CLCommitLog::logCommand() {
+    std::string log_command = "cvs2cl --chrono --stdout --xml -g-q";
+    return log_command;
+}
 
 CVS2CLCommitLog::CVS2CLCommitLog(const std::string& logfile) : RCommitLog(logfile, '<') {
 }

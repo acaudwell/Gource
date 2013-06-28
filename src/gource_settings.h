@@ -20,15 +20,7 @@
 
 #define GOURCE_VERSION "0.41"
 
-#include <dirent.h>
-
-#include "formats/hg.h"
-#include "formats/git.h"
-#include "formats/bzr.h"
-#include "formats/cvs-exp.h"
-#include "formats/cvs2cl.h"
-#include "formats/svn.h"
-
+#include "core/texture.h"
 #include "core/settings.h"
 #include "core/regex.h"
 
@@ -62,7 +54,9 @@ public:
     std::string logo;
     vec2 logo_offset;
 
+    std::string start_date;
     time_t start_timestamp;
+
     float start_position;
     float stop_position;
     float stop_at_time;

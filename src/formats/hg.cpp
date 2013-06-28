@@ -17,22 +17,30 @@
 
 #include "hg.h"
 #include "../core/sdlapp.h"
+#include "../gource_settings.h"
+
+#include <boost/format.hpp>
 
 Regex hg_regex("^([0-9]+) -?[0-9]+\\|([^|]+)\\|([ADM]?)\\|(.+)$");
 
-// parse Mercurial log entries (using the gource.style template)
+std::string MercurialLog::logCommand() {
 
-std::string gGourceMercurialCommand() {
-
+    // parse Mercurial log entries (using the gource.style template)
     std::string gource_style_path = gSDLAppResourceDir + std::string("gource.style");
 
-    return std::string("hg log -r 0:tip --style \"") + gource_style_path + std::string("\"");
+    std::string log_command = std::string("hg log -r 0:tip --style \"") + gource_style_path + std::string("\"");
+
+    if(!gGourceSettings.start_date.empty()) {
+        log_command.replace(log_command.find("-r 0:tip"), 8, str(boost::format("--date '>%s'") % gGourceSettings.start_date));
+    }
+    
+    return log_command;   
 }
 
 MercurialLog::MercurialLog(const std::string& logfile) : RCommitLog(logfile) {
 
-    log_command = gGourceMercurialCommand();
-
+    log_command = logCommand();
+        
     //can generate log from directory
     if(!logf && is_dir) {
         logf = generateLog(logfile);

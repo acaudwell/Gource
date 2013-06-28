@@ -16,18 +16,36 @@
 */
 
 #include "svn.h"
+#include "../gource_settings.h"
+
+#include <boost/format.hpp>
+
+#ifdef HAVE_LIBTINYXML
+#include <tinyxml.h>
+#else
+#include "../tinyxml/tinyxml.h"
+#endif
 
 Regex svn_xml_tag("^<\\??xml");
 Regex svn_logentry_start("^<logentry");
 Regex svn_logentry_end("^</logentry>");
 Regex svn_logentry_timestamp("(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})");
 
-std::string gGourceSVNLogCommand = "svn log -r 1:HEAD --xml --verbose --quiet";
+std::string SVNCommitLog::logCommand() {
+
+    std::string log_command = "svn log -r 1:HEAD --xml --verbose --quiet";
+    
+    if(!gGourceSettings.start_date.empty()) {
+        log_command.replace(log_command.find("1:HEAD"), 6, str(boost::format("{%s}:HEAD") % gGourceSettings.start_date));
+    }
+
+    return log_command;   
+}
 
 SVNCommitLog::SVNCommitLog(const std::string& logfile) : RCommitLog(logfile, '<') {
 
-    log_command = gGourceSVNLogCommand;
-
+    log_command = logCommand();
+        
     //can generate log from directory
     if(!logf && is_dir) {
         logf = generateLog(logfile);
