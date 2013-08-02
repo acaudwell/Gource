@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
         }
 
         //write custom log file
-        if(gGourceSettings.output_custom_filename.size() > 0 && gGourceSettings.path.size() > 0) {
+        if(!gGourceSettings.output_custom_filename.empty() && !gGourceSettings.path.empty()) {
 
             Gource::writeCustomLog(gGourceSettings.path, gGourceSettings.output_custom_filename);
             exit(0);
@@ -142,6 +142,10 @@ int main(int argc, char *argv[]) {
 
         display.init("Gource", gGourceSettings.display_width, gGourceSettings.display_height, gGourceSettings.fullscreen);
 
+#if SDL_VERSION_ATLEAST(2,0,0)
+        SDL_SetHint(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "0");
+#endif
+        
     } catch(SDLInitException& exception) {
 
         char errormsg[1024];
