@@ -19,6 +19,7 @@
 #include "core/sdlapp.h"
 
 #include <boost/filesystem.hpp>
+#include <boost/format.hpp>
 #include <boost/algorithm/string.hpp>
 
 #include "core/utf8/utf8.h"
@@ -1319,26 +1320,17 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 #endif
 
         std::cin.clear();
+       
+    } else if(!path.empty() && path != ".") {
+
+        //remove trailing slash
+        if(path[path.size()-1] == '\\' || path[path.size()-1] == '/') {
+            path.resize(path.size()-1);
+        }
+
+        // check path exists
+        if(!boost::filesystem::exists(path)) {
+            throw ConfFileException(str(boost::format("'%s' does not appear to be a valid file or directory") % path), "", 0);
+        }
     }
-
-    //remove trailing slash and check if path is a directory
-    if(path.size() &&
-    (path[path.size()-1] == '\\' || path[path.size()-1] == '/')) {
-        path = path.substr(0,path.size()-1);
-    }
-
-#ifdef _WIN32
-    //on windows, pre-open console window if we think this is a directory the
-    //user is trying to open, as system() commands will create a console window
-    //if there isn't one anyway.
-
-    bool isdir = false;
-
-    if(path.size()>0) {
-        struct stat fileinfo;
-        int rc = stat(path.c_str(), &fileinfo);
-
-        if(rc==0 && fileinfo.st_mode & S_IFDIR) isdir = true;
-    }
-#endif
 }
