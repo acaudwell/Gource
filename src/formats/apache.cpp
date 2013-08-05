@@ -16,6 +16,7 @@
 */
 
 #include "apache.h"
+#include <time.h>
 
 const char* months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug" , "Sep", "Oct", "Nov", "Dec" };
 Regex apache_entry_start("^(?:[^ ]+ )?([^ ]+) +[^ ]+ +([^ ]+) +\\[(.*?)\\] +(.*)$");
@@ -43,10 +44,6 @@ bool ApacheCombinedLog::parseCommit(RCommit& commit) {
 
     //get details
     commit.username = matches[0];
-    //std::string user      = matches[1];
-
-    //parse timestamp
-    struct tm time_str;
 
     std::string request_str = matches[3];
     std::string datestr     = matches[2];
@@ -57,20 +54,14 @@ bool ApacheCombinedLog::parseCommit(RCommit& commit) {
         return 0;
     }
 
+    //parse timestamp
     int day    = atoi(matches[0].c_str());
     int year   = atoi(matches[2].c_str());
     int hour   = atoi(matches[3].c_str());
     int minute = atoi(matches[4].c_str());
     int second = atoi(matches[5].c_str());
 
-//    int zone   = atoi(matches[7].c_str());
-    //negative timezone
-//    if(strcmp(matches[6].c_str(), "-")==0) {
-//        zone = -zone;
-//    }
-
     int month=0;
-
     for(int i=0;i<12;i++) {
         if(matches[1] == months[i]) {
             month=i;
@@ -78,6 +69,7 @@ bool ApacheCombinedLog::parseCommit(RCommit& commit) {
         }
     }
 
+    struct tm time_str;
     time_str.tm_year = year - 1900;
     time_str.tm_mon  = month;
     time_str.tm_mday = day;

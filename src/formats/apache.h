@@ -19,10 +19,6 @@
 #define GOURCE_APACHE_H
 
 #include <string>
-#include <string.h>
-
-#include <vector>
-#include <time.h>
 
 #include "commitlog.h"
 
