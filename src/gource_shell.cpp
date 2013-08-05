@@ -92,8 +92,8 @@ void GourceShell::keyPress(SDL_KeyboardEvent *e) {
     if (e->type == SDL_KEYDOWN) {
 
 #if SDL_VERSION_ATLEAST(2,0,0)
-        bool key_escape = e->keysym.scancode == SDL_SCANCODE_ESCAPE;
-        bool key_return = e->keysym.scancode == SDL_SCANCODE_RETURN;
+        bool key_escape = e->keysym.sym == SDLK_ESCAPE;
+        bool key_return = e->keysym.sym == SDLK_RETURN;
 #else
         bool key_escape = e->keysym.unicode == SDLK_ESCAPE;
         bool key_return = e->keysym.unicode == SDLK_RETURN;
@@ -106,7 +106,7 @@ void GourceShell::keyPress(SDL_KeyboardEvent *e) {
         if(key_return) {
 
 #if SDL_VERSION_ATLEAST(2,0,0)
-            Uint8* keystate = SDL_GetKeyboardState(NULL);
+            const Uint8* keystate = SDL_GetKeyboardState(NULL);
             if(keystate[SDL_SCANCODE_RALT] || keystate[SDL_SCANCODE_LALT]) {
 #else
             Uint8* keystate = SDL_GetKeyState(NULL);
