@@ -1,7 +1,7 @@
 0.41:
  * Multi-monitor support using SDL 2.0 when available.
  * Full screen mode now uses desktop resolution by default.
- * Added --start-date option.
+ * Added --start-date YYYY-MM-DD option.
 
 0.40:
  * Added caption support.
