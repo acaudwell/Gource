@@ -24,19 +24,20 @@
 		</Compiler>
 		<Linker>
 			<Add option="glew32.dll" />
-			<Add option="-L." />
+			<Add option="-static-libstdc++" />
+			<Add option="-static-libgcc" />
 			<Add option="-mconsole" />
 			<Add library="mingw32" />
 			<Add library="pcre" />
-			<Add library="SDLmain" />
-			<Add library="SDL" />
+			<Add library="SDL2main" />
+			<Add library="SDL2" />
 			<Add library="opengl32" />
-			<Add library="SDL_image" />
+			<Add library="SDL2_image" />
 			<Add library="glu32" />
 			<Add library="glew32" />
 			<Add library="freetype" />
-			<Add library="libboost_filesystem-mgw47-1_52.dll.a" />
-			<Add library="libboost_system-mgw47-1_52.dll.a" />
+			<Add library="libboost_filesystem-mgw46-mt-1_52" />
+			<Add library="libboost_system-mgw46-mt-1_52" />
 		</Linker>
 		<Unit filename="data\shaders\bloom.frag" />
 		<Unit filename="data\shaders\bloom.vert" />
