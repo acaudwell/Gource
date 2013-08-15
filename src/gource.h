@@ -18,10 +18,6 @@
 #ifndef GOURCE_H
 #define GOURCE_H
 
-#ifdef _WIN32
-#include "windows.h"
-#endif
-
 #include <deque>
 #include <list>
 #include <fstream>
