@@ -396,11 +396,6 @@ void Gource::zoom(bool zoomin) {
 #if SDL_VERSION_ATLEAST(2,0,0)
 void Gource::mouseWheel(SDL_MouseWheelEvent *e) {
 
-   int mouse_x, mouse_y;
-    SDL_GetMouseState(&mouse_x, &mouse_y);
-
-    vec2 mousepos(mouse_x, mouse_y);
-
     if(e->y > 0) {
         zoom(true);
     }
