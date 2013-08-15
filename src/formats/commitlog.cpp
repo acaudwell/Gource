@@ -244,7 +244,7 @@ void RCommitLog::createTempLog() {
     std::string tempdir;
 
 #ifdef _WIN32
-    DWORD tmplen = GetTempPath(0, "");
+    DWORD tmplen = GetTempPath(0, 0);
 
     if(tmplen == 0) return;
 
