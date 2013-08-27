@@ -30,9 +30,11 @@ class RFile : public Pawn {
 
     RDirNode* dir;
 
-    bool removing;
-    bool expiring;
+    bool forced_removal;
+    bool expired;
 
+    float fade_start;
+    
     float last_action;
 
     float radius;
@@ -55,9 +57,6 @@ public:
 
     RFile(const std::string & name, const vec3 & colour, const vec2 & pos, int tagid);
     ~RFile();
-
-    bool isExpiring() const { return expiring; }
-    bool isRemoving() const { return removing; }
 
     bool overlaps(const vec2& pos) const;
 

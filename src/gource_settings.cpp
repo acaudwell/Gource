@@ -75,7 +75,7 @@ void GourceSettings::help(bool extended_help) {
     printf("  --default-user-image IMAGE       Default user image file\n");
     printf("  --colour-images                  Colourize user images\n\n");
 
-    printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)\n\n");
+    printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 0)\n\n");
 
     printf("  --max-files NUMBER       Max number of files or 0 for no limit\n");
     printf("  --max-file-lag SECONDS   Max time files of a commit can take to appear\n\n");
@@ -340,7 +340,7 @@ void GourceSettings::setGourceDefaults() {
 
     auto_skip_seconds = 3.0f;
     days_per_second   = 0.1f; // TODO: check this is right
-    file_idle_time    = 60.0f;
+    file_idle_time    = 0.0f;
     time_scale        = 1.0f;
 
     loop = false;
@@ -1001,9 +1001,6 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
         if(file_idle_time<0.0f || (file_idle_time == 0.0f && file_idle_str[0] != '0') ) {
             conffile.invalidValueException(entry);
-        }
-        if(file_idle_time==0.0f) {
-            file_idle_time = 86400.0f;
         }
     }
 

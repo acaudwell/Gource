@@ -2,6 +2,7 @@
  * Multi-monitor support using SDL 2.0 when available.
  * Full screen mode now uses desktop resolution by default.
  * Added --start-date YYYY-MM-DD option.
+ * Changed --file-idle-time default value to 0.
 
 0.40:
  * Added caption support.

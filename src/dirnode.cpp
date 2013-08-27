@@ -308,7 +308,7 @@ bool RDirNode::removeFile(RFile* f) {
 void RDirNode::printFiles() {
     for(std::list<RFile*>::iterator it = files.begin(); it != files.end(); it++) {
         RFile* file = (*it);
-        fprintf(stderr, "%s: %s %s%s%s\n", getPath().c_str(), file->fullpath.c_str() , file->isExpiring() ? "expiring " : "", file->isRemoving() ? "removing " : "", file->isHidden() ? "hidden " : "");
+        fprintf(stderr, "%s: %s %s\n", getPath().c_str(), file->fullpath.c_str() , file->isHidden() ? "hidden " : "");
     }
 }
 
