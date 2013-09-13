@@ -1,4 +1,3 @@
-
                              Gource
 
               software version control visualization
@@ -372,6 +371,18 @@ Interactive keyboard commands:
     (Alt+Enter) Toggle Fullscreen
 
     (ESC) Quit
+
+Starting Gource with Command Line (Under Windows):
+    
+    Note: This is a guide for those who start Gource with command line but get a 'git.exe' not found error
+    
+    1. Start cmd.exe (under you C:\windows\system32\ folder)
+    2. Now you need to find the folder where you installed Git, it normally under 'C:\Program Files\Git'
+    3. Navigate to the directory 'cmd', now you are in 'C:\Program Files\Git\cmd'
+    4. Now go to the command line window (cmd.exe), type in 'set path=%path%;C:\Program Files\Git\cmd' (without the ' sign, and also change the 'C:\Program Files\Git\cmd' to your git directory)
+    5. Find your Gource path ('D:\Documents and Settings\GaryNg\Desktop\Git\gource-0.40.win32' for my case)
+    6. In the cmd window, type in 'pushd D:\Documents and Settings\GaryNg\Desktop\Git\gource-0.40.win32' (without the ' sign, and also remember to change 'D:\Documents and Settings\GaryNg\Desktop\Git\gource-0.40.win32' to your Gource path)
+    7. You can finally start Gource with 'Gource [path]'!
 
 4. Copyright
 ============
