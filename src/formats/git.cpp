@@ -30,7 +30,7 @@ std::string GitCommitLog::logCommand() {
     std::string log_command = "git log "
     "--pretty=format:user:%aN%n%ct "
     "--reverse --raw --encoding=UTF-8 "
-    "--no-renames";    
+    "--no-renames";
 
     if(!gGourceSettings.git_branch.empty()) {
         log_command += " ";
@@ -42,13 +42,18 @@ std::string GitCommitLog::logCommand() {
         log_command += gGourceSettings.start_date;
     }
 
+    if(!gGourceSettings.stop_date.empty()) {
+        log_command += " --until ";
+        log_command += gGourceSettings.stop_date;
+    }
+
     return log_command;
 }
-    
+
 GitCommitLog::GitCommitLog(const std::string& logfile) : RCommitLog(logfile, 'u') {
 
     log_command = logCommand();
-        
+
     //can generate log from directory
     if(!logf && is_dir) {
         logf = generateLog(logfile);

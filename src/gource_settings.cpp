@@ -53,13 +53,14 @@ void GourceSettings::help(bool extended_help) {
     printf("      --multi-sampling             Enable multi-sampling\n");
     printf("      --no-vsync                   Disable vsync\n\n");
 
-    printf("      --start-date YYYY-MM-DD      Date to start from\n");
-    printf("  -p, --start-position POSITION    Begin at some position (0.0-1.0 or 'random')\n");
-    printf("      --stop-position  POSITION    Stop at some position\n");
-    printf("  -t, --stop-at-time SECONDS       Stop after a specified number of seconds\n");
-    printf("      --stop-at-end                Stop at end of the log\n");
-    printf("      --dont-stop                  Keep running after the end of the log\n");
-    printf("      --loop                       Loop at the end of the log\n\n");
+    printf("      --start-date 'YYYY-MM-DD hh:mm:ss'  Start at some date and (optional) time\n");
+    printf("      --stop-date  'YYYY-MM-DD hh:mm:ss'  Stop at some date and (optional) time\n");
+    printf("  -p, --start-position POSITION           Start at some position (0.0-1.0 or 'random')\n");
+    printf("      --stop-position  POSITION           Stop at some position\n");
+    printf("  -t, --stop-at-time SECONDS              Stop after a specified number of seconds\n");
+    printf("      --stop-at-end                       Stop at end of the log\n");
+    printf("      --dont-stop                         Keep running after the end of the log\n");
+    printf("      --loop                              Loop at the end of the log\n\n");
 
     printf("  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens\n");
     printf("                                   for a number of seconds (default: 3)\n");
@@ -286,6 +287,7 @@ GourceSettings::GourceSettings() {
     arg_types["git-branch"]         = "string";
     arg_types["start-position"]     = "string";
     arg_types["start-date"]         = "string";
+    arg_types["stop-date"]          = "string";
     arg_types["stop-position"]      = "string";
     arg_types["crop"]               = "string";
     arg_types["hide"]               = "string";
@@ -327,6 +329,11 @@ void GourceSettings::setGourceDefaults() {
     hide_root      = false;
 
     start_timestamp = 0;
+    start_date = "";
+
+    stop_timestamp = 0;
+    stop_date = "";
+
     start_position = 0.0f;
     stop_position  = 0.0f;
     stop_at_time   = -1.0f;
@@ -1029,33 +1036,42 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if((entry = gource_settings->getEntry("start-date")) != 0) {
 
-        if(!entry->hasValue()) conffile.entryException(entry, "specify start-date (YYYY-MM-DD)");
+        if(!entry->hasValue()) conffile.entryException(entry, "specify start-date (YYYY-MM-DD HH:MM:SS)");
 
         std::string start_date_string = entry->getString();
 
-        int year;
-        int month;
-        int day;
+        if(parseDateTime(start_date_string, start_timestamp)) {
 
-        if(start_date_string.size()==10 && sscanf(start_date_string.c_str(), "%04d-%02d-%02d", &year, &month, &day) == 3) {
+            char datestr[256];
+            strftime(datestr, 256, "%Y-%m-%d", localtime ( &start_timestamp ));
+            start_date = datestr;
 
-            struct tm time_str;
-            time_str.tm_year  = year - 1900;
-            time_str.tm_mon   = month - 1;
-            time_str.tm_mday  = day;
-            time_str.tm_hour  = 0;
-            time_str.tm_min   = 0;
-            time_str.tm_sec   = 0;
-            time_str.tm_isdst = -1;
+        } else {
+            conffile.invalidValueException(entry);
+        }
+    }
 
-            time_t timestamp = mktime(&time_str);
+    if((entry = gource_settings->getEntry("stop-date")) != 0) {
 
-            if(timestamp == -1) {
-                conffile.invalidValueException(entry);
+        if(!entry->hasValue()) conffile.entryException(entry, "specify stop-date (YYYY-MM-DD HH:MM:SS)");
+
+        std::string end_date_string = entry->getString();
+
+        if(parseDateTime(end_date_string, stop_timestamp)) {
+
+            struct tm * timeinfo;
+            timeinfo = localtime ( &stop_timestamp );
+
+            time_t stop_timestamp_rounded = stop_timestamp;
+
+            if(timeinfo->tm_hour > 0 || timeinfo->tm_min > 0 || timeinfo->tm_sec > 0) {
+                stop_timestamp_rounded += 60*60*24;
             }
 
-            this->start_timestamp = timestamp;
-            this->start_date      = start_date_string;
+            char datestr[256];
+            strftime(datestr, 256, "%Y-%m-%d", localtime ( &stop_timestamp_rounded ));
+            stop_date = datestr;
+
         } else {
             conffile.invalidValueException(entry);
         }
@@ -1317,7 +1333,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 #endif
 
         std::cin.clear();
-       
+
     } else if(!path.empty() && path != ".") {
 
         //remove trailing slash

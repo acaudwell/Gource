@@ -55,7 +55,9 @@ public:
     vec2 logo_offset;
 
     std::string start_date;
+    std::string stop_date;
     time_t start_timestamp;
+    time_t stop_timestamp;
 
     float start_position;
     float stop_position;

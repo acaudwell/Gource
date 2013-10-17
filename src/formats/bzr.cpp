@@ -26,11 +26,13 @@ Regex bzr_file_regex("^ *([AMDR])  (.*[^/])$");
 // parse Bazaar log entries (using the gource.style template)
 
 std::string BazaarLog::logCommand() {
-    std::string log_command = std::string("bzr log --verbose -r 1..-1 --short -n0 --forward");
 
-    if(!gGourceSettings.start_date.empty()) {
-        log_command.replace(log_command.find("1..-1"), 5, str(boost::format("date:%s..-1") % gGourceSettings.start_date));
-    }
+    std::string start = (!gGourceSettings.start_date.empty()) ? gGourceSettings.start_date : "1";
+    std::string stop  = (!gGourceSettings.stop_date.empty())  ? gGourceSettings.stop_date  : "-1";
+
+    std::string range = str(boost::format("date:%s..%s") % start % stop);
+
+    std::string log_command = str(boost::format("bzr log --verbose -r %s --short -n0 --forward") % range);
 
     return log_command;
 }

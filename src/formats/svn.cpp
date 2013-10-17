@@ -33,19 +33,23 @@ Regex svn_logentry_timestamp("(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{
 
 std::string SVNCommitLog::logCommand() {
 
-    std::string log_command = "svn log -r 1:HEAD --xml --verbose --quiet";
-    
-    if(!gGourceSettings.start_date.empty()) {
-        log_command.replace(log_command.find("1:HEAD"), 6, str(boost::format("{%s}:HEAD") % gGourceSettings.start_date));
-    }
+    std::string start = (!gGourceSettings.start_date.empty())
+        ? str(boost::format("{%s}") % gGourceSettings.start_date) : "1";
 
-    return log_command;   
+    std::string stop  = (!gGourceSettings.stop_date.empty())
+        ? str(boost::format("{%s}") % gGourceSettings.stop_date) : "HEAD";
+
+    std::string range = str(boost::format("%s:%s") % start % stop);
+
+    std::string log_command = str(boost::format("svn log -r %s --xml --verbose --quiet") % range);
+
+    return log_command;
 }
 
 SVNCommitLog::SVNCommitLog(const std::string& logfile) : RCommitLog(logfile, '<') {
 
     log_command = logCommand();
-        
+
     //can generate log from directory
     if(!logf && is_dir) {
         logf = generateLog(logfile);

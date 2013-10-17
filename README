@@ -54,8 +54,11 @@ options:
     --transparent
             Make the background transparent. Only really useful for screenshots.
 
-    --start-date YYYY-MM-DD
-            Start with first log entry on or after the supplied date.
+    --start-date 'YYYY-MM-DD hh:mm:ss'
+            Start with the first log entry after the supplied date and (optional) time.
+
+    --stop-date 'YYYY-MM-DD hh:mm:ss'
+            Stop at the last log entry before the supplied date and (optional) time.
 
     -p, --start-position POSITION
             Begin at some position in the log (between 0.0 and 1.0 or 'random').

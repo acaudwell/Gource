@@ -1127,8 +1127,17 @@ void Gource::readLog() {
 
     bool is_finished = commitlog->isFinished();
 
-    if(   (gGourceSettings.stop_at_end && is_finished)
-       || (gGourceSettings.stop_position > 0.0 && commitlog->isSeekable() && (is_finished || last_percent >= gGourceSettings.stop_position)) ) {
+
+    if(
+       // end reached
+       (gGourceSettings.stop_at_end && is_finished)
+
+       // stop timestamp reached
+       || (gGourceSettings.stop_timestamp != 0 && !(commitqueue.empty()) && commitqueue.back().timestamp >= gGourceSettings.stop_timestamp)
+
+       // stop position reached
+       || (gGourceSettings.stop_position > 0.0 && commitlog->isSeekable() && (is_finished || last_percent >= gGourceSettings.stop_position))
+    ) {
         stop_position_reached = true;
     }
 

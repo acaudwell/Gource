@@ -28,19 +28,31 @@ std::string MercurialLog::logCommand() {
     // parse Mercurial log entries (using the gource.style template)
     std::string gource_style_path = gSDLAppResourceDir + std::string("gource.style");
 
-    std::string log_command = std::string("hg log -r 0:tip --style \"") + gource_style_path + std::string("\"");
+    std::string range =
+        // date range
+        (!gGourceSettings.start_date.empty() && !gGourceSettings.stop_date.empty()) ?
+          str(boost::format("--date '%s to %s'") % gGourceSettings.start_date % gGourceSettings.stop_date)
 
-    if(!gGourceSettings.start_date.empty()) {
-        log_command.replace(log_command.find("-r 0:tip"), 8, str(boost::format("--date '>%s'") % gGourceSettings.start_date));
-    }
-    
-    return log_command;   
+        // start date only
+        : (!gGourceSettings.start_date.empty()) ?
+          str(boost::format("--date '>%s'") % gGourceSettings.start_date)
+
+        // stop date only
+        : (!gGourceSettings.stop_date.empty()) ?
+          str(boost::format("--date '<%s'") % gGourceSettings.stop_date)
+
+        // default
+        : "-r 0:tip";
+
+    std::string log_command = str(boost::format("hg log %s --style '%s'") % range % gource_style_path);
+
+    return log_command;
 }
 
 MercurialLog::MercurialLog(const std::string& logfile) : RCommitLog(logfile) {
 
     log_command = logCommand();
-        
+
     //can generate log from directory
     if(!logf && is_dir) {
         logf = generateLog(logfile);
