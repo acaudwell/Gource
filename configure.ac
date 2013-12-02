@@ -21,6 +21,7 @@ AS_IF([test "$with_x" != yes], [
     case "$host_os" in
     darwin*)
         with_x="no"
+        LIBS="$LIBS -framework CoreFoundation"
     ;;
     esac
 ], [])
