@@ -27,6 +27,7 @@ gource_SOURCES = \
 	src/core/stringhash.cpp \
 	src/core/texture.cpp \
 	src/core/tga.cpp \
+	src/core/timezone.cpp \
 	src/core/vbo.cpp \
 	src/core/vectors.cpp \
 	src/dirnode.cpp \

@@ -122,7 +122,6 @@ bool RCommitLog::checkFirstChar(int firstChar, std::istream& stream) {
 }
 
 bool RCommitLog::checkFormat() {
-
     if(!success) return false;
 
     //read a commit to see if the log is in the correct format
@@ -236,6 +235,10 @@ bool RCommitLog::isFinished() {
     if(seekable && logf->isFinished()) return true;
 
     return false;
+}
+
+bool RCommitLog::hasBufferedCommit() {
+    return buffered;
 }
 
 //create temp file

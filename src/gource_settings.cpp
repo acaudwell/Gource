@@ -1036,7 +1036,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if((entry = gource_settings->getEntry("start-date")) != 0) {
 
-        if(!entry->hasValue()) conffile.entryException(entry, "specify start-date (YYYY-MM-DD HH:MM:SS)");
+        if(!entry->hasValue()) conffile.entryException(entry, "specify start-date (YYYY-MM-DD hh:mm:ss)");
 
         std::string start_date_string = entry->getString();
 
@@ -1053,7 +1053,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if((entry = gource_settings->getEntry("stop-date")) != 0) {
 
-        if(!entry->hasValue()) conffile.entryException(entry, "specify stop-date (YYYY-MM-DD HH:MM:SS)");
+        if(!entry->hasValue()) conffile.entryException(entry, "specify stop-date (YYYY-MM-DD hh:mm:ss)");
 
         std::string end_date_string = entry->getString();
 

@@ -101,6 +101,7 @@ public:
     bool getCommitAt(float percent, RCommit& commit);
     bool findNextCommit(RCommit& commit, int attempts);
     bool nextCommit(RCommit& commit, bool validate = true);
+    bool hasBufferedCommit();
     bool isFinished();
     bool isSeekable();
     float getPercent();
