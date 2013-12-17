@@ -1111,6 +1111,11 @@ void Gource::readLog() {
             continue;
         }
 
+        if(gGourceSettings.stop_timestamp != 0 && commit.timestamp > gGourceSettings.stop_timestamp) {
+            stop_position_reached = true;
+            break;
+        }
+        
         commitqueue.push_back(commit);
     }
 
@@ -1131,9 +1136,6 @@ void Gource::readLog() {
     if(
        // end reached
        (gGourceSettings.stop_at_end && is_finished)
-
-       // stop timestamp reached
-       || (gGourceSettings.stop_timestamp != 0 && !(commitqueue.empty()) && commitqueue.back().timestamp >= gGourceSettings.stop_timestamp)
 
        // stop position reached
        || (gGourceSettings.stop_position > 0.0 && commitlog->isSeekable() && (is_finished || last_percent >= gGourceSettings.stop_position))
