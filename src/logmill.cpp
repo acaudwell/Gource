@@ -105,7 +105,12 @@ void RLogMill::run() {
     if(!clog && error.empty()) {
         if(boost::filesystem::is_directory(logfile)) {
             if(!log_format.empty()) {
-                error = "failed to generate log file";
+                
+                if(gGourceSettings.start_timestamp || gGourceSettings.stop_timestamp) {
+                    error = "failed to generate log file for the specified time period";
+                } else {
+                    error = "failed to generate log file";
+                }
 #ifdef _WIN32
             // no error - should trigger help message
             } else if(gGourceSettings.default_path && boost::filesystem::exists("./gource.exe")) {
