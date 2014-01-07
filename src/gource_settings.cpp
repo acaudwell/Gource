@@ -53,8 +53,8 @@ void GourceSettings::help(bool extended_help) {
     printf("      --multi-sampling             Enable multi-sampling\n");
     printf("      --no-vsync                   Disable vsync\n\n");
 
-    printf("      --start-date 'YYYY-MM-DD hh:mm:ss'  Start at some date and (optional) time\n");
-    printf("      --stop-date  'YYYY-MM-DD hh:mm:ss'  Stop at some date and (optional) time\n");
+    printf("  --start-date 'YYYY-MM-DD hh:mm:ss +tz'  Start at a date and optional time\n");
+    printf("  --stop-date  'YYYY-MM-DD hh:mm:ss +tz'  Stop at a date and optional time\n\n");
     printf("  -p, --start-position POSITION           Start at some position (0.0-1.0 or 'random')\n");
     printf("      --stop-position  POSITION           Stop at some position\n");
     printf("  -t, --stop-at-time SECONDS              Stop after a specified number of seconds\n");
