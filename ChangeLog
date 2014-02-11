@@ -1,5 +1,6 @@
 0.41:
  * Multi-monitor support using SDL 2.0 when available.
+ * SDL 1.2 support is deprecated.
  * Full screen mode now uses desktop resolution by default.
  * Added --start-date, --stop-date 'YYYY-MM-DD hh:mm:ss' options.
  * Changed --file-idle-time default value to 0.

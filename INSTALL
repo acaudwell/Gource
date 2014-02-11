@@ -14,17 +14,16 @@ Gource requires the following libraries to compile (package names may vary):
 
     SDL 2.0 (libsdl2-dev)
     SDL Image 2.0 (libsdl2-image-dev)
-
-    If SDL 2.0 is unavailable:
-
-    SDL 1.2 (libsdl1.2-dev)
-    SDL Image 1.2 (libsdl-image1.2-dev)
-
     PCRE (libpcre3-dev)
     Freetype 2 (libfreetype6-dev)
     GLEW (libglew-dev)
     GLM >= 0.9.3 (libglm-dev)
     Boost Filesystem >= 1.46 (libboost-filesystem-dev)
+
+    If SDL 2.0 is unavailable you can still use SDL 1.2, but this is deprecated:
+
+    SDL 1.2 (libsdl1.2-dev)
+    SDL Image 1.2 (libsdl-image1.2-dev)
 
 Optional:
 

@@ -41,6 +41,7 @@ PKG_CHECK_MODULES([SDL2], [sdl2 SDL2_image], [have_sdl2=yes], [have_sdl2=no])
 
 # use SDL 2 if available, otherwise use SDL 1.2
 if test "x$have_sdl2" = xno; then
+    AC_MSG_WARN([SDL 2.0 libraries not found. Trying SDL 1.2. Please note SDL 1.2 support is deprecated]) 
     PKG_CHECK_MODULES([SDL], [sdl >= 1.2.10 SDL_image])
 fi
 
