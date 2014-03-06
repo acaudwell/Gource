@@ -1,2 +1,2 @@
-@echo off
-"%~dp0\..\gource.exe" %*
+@ECHO OFF
+START "" "%~dp0\..\gource.exe" %*
