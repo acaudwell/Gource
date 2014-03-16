@@ -162,24 +162,19 @@ my @gource_txts = qw(
     README
     ChangeLog
     data/fonts/README
-    README-SDL
     COPYING
     THANKS
 );
 
 my @gource_dlls = qw(
-    SDL.dll
-    SDL_image.dll
-    pcre3.dll
-    jpeg.dll
-    libpng12-0.dll
+    SDL2.dll
+    SDL2_image.dll
+    libpcre-1.dll
+    libjpeg-9.dll
+    libpng16-16.dll
     zlib1.dll
     glew32.dll
-    freetype6.dll
-    libboost_filesystem-mgw47-1_52.dll
-    libboost_system-mgw47-1_52.dll
-    libgcc_s_dw2-1.dll
-    libstdc++-6.dll
+    libfreetype-6.dll
 );
 
 my @gource_dirs = qw(

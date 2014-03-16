@@ -36,7 +36,6 @@ my @exclusions = (
     qr{^/dev/},
     qr{^/logs/},
     qr{/\.},
-    qr{^/README-SDL$},
     qr{Makefile$},
     qr{\.o$},
     qr{^/todo.txt$},
