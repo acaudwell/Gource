@@ -1,6 +1,6 @@
 /*
 www.sourceforge.net/projects/tinyxml
-Original code (2.0 and earlier )copyright (c) 2000-2002 Lee Thomason (www.grinninglizard.com)
+Original code by Lee Thomason (www.grinninglizard.com)
 
 This software is provided 'as-is', without any express or implied 
 warranty. In no event will the authors be held liable for any 
@@ -40,7 +40,7 @@ distribution.
 // Note tha "PutString" hardcodes the same list. This
 // is less flexible than it appears. Changing the entries
 // or order will break putstring.	
-TiXmlBase::Entity TiXmlBase::entity[ NUM_ENTITY ] = 
+TiXmlBase::Entity TiXmlBase::entity[ TiXmlBase::NUM_ENTITY ] = 
 {
 	{ "&amp;",  5, '&' },
 	{ "&lt;",   4, '<' },
@@ -174,7 +174,7 @@ class TiXmlParsingData
   public:
 	void Stamp( const char* now, TiXmlEncoding encoding );
 
-	const TiXmlCursor& Cursor()	{ return cursor; }
+	const TiXmlCursor& Cursor() const	{ return cursor; }
 
   private:
 	// Only used by the document!
@@ -631,9 +631,9 @@ const char* TiXmlBase::ReadText(	const char* p,
 			}
 		}
 	}
-	if ( p && *p ) 
+	if ( p && *p )
 		p += strlen( endTag );
-	return p;
+	return ( p && *p ) ? p : 0;
 }
 
 #ifdef TIXML_USE_STL
@@ -1298,9 +1298,10 @@ const char* TiXmlUnknown::Parse( const char* p, TiXmlParsingData* data, TiXmlEnc
 
 	if ( !p )
 	{
-		if ( document )	document->SetError( TIXML_ERROR_PARSING_UNKNOWN, 0, 0, encoding );
+		if ( document )	
+			document->SetError( TIXML_ERROR_PARSING_UNKNOWN, 0, 0, encoding );
 	}
-	if ( *p == '>' )
+	if ( p && *p == '>' )
 		return p+1;
 	return p;
 }
@@ -1350,7 +1351,8 @@ const char* TiXmlComment::Parse( const char* p, TiXmlParsingData* data, TiXmlEnc
 
 	if ( !StringEqual( p, startTag, false, encoding ) )
 	{
-		document->SetError( TIXML_ERROR_PARSING_COMMENT, p, data, encoding );
+		if ( document )
+			document->SetError( TIXML_ERROR_PARSING_COMMENT, p, data, encoding );
 		return 0;
 	}
 	p += strlen( startTag );
@@ -1512,7 +1514,8 @@ const char* TiXmlText::Parse( const char* p, TiXmlParsingData* data, TiXmlEncodi
 
 		if ( !StringEqual( p, startTag, false, encoding ) )
 		{
-			document->SetError( TIXML_ERROR_PARSING_CDATA, p, data, encoding );
+			if ( document )
+				document->SetError( TIXML_ERROR_PARSING_CDATA, p, data, encoding );
 			return 0;
 		}
 		p += strlen( startTag );
@@ -1536,7 +1539,7 @@ const char* TiXmlText::Parse( const char* p, TiXmlParsingData* data, TiXmlEncodi
 
 		const char* end = "<";
 		p = ReadText( p, &value, ignoreWhite, end, false, encoding );
-		if ( p )
+		if ( p && *p )
 			return p-1;	// don't truncate the '<'
 		return 0;
 	}
