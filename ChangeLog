@@ -4,6 +4,7 @@
  * Full screen mode now uses desktop resolution by default.
  * Added --start-date, --stop-date 'YYYY-MM-DD hh:mm:ss' options.
  * Changed --file-idle-time default value to 0.
+ * Changed screenshot format to PNG.
 
 0.40:
  * Added caption support.

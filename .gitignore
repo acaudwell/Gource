@@ -2,6 +2,7 @@
 *.mpg
 *.mkv
 *.mp4
+gource-*.png
 .objs
 /gource
 /gource.exe

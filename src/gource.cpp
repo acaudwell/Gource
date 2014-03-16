@@ -16,6 +16,7 @@
 */
 
 #include "gource.h"
+#include "core/png_writer.h"
 
 bool  gGourceDrawBackground  = true;
 bool  gGourceQuadTreeDebug   = false;
@@ -96,6 +97,8 @@ Gource::Gource(FrameExporter* exporter) {
     mousemoved   = false;
     mousedragged = false;
     mouseclicked = false;
+
+    take_screenshot = false;
 
     if(gGourceSettings.hide_mouse) {
         cursor.showCursor(false);
@@ -663,7 +666,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
         if(commitlog==0) return;
 
         if(e->keysym.sym == SDLK_F12) {
-            screenshot();
+            take_screenshot = true;
         }
 
         if (e->keysym.sym == SDLK_q) {
@@ -1115,7 +1118,7 @@ void Gource::readLog() {
             stop_position_reached = true;
             break;
         }
-        
+
         commitqueue.push_back(commit);
     }
 
@@ -2175,23 +2178,23 @@ void Gource::setMessage(const char* str, ...) {
 void Gource::screenshot() {
 
     //get next free recording name
-    char tganame[256];
+    char pngname[256];
     struct stat finfo;
-    int tgano = 1;
+    int pngno = 1;
 
-    while(tgano < 10000) {
-        snprintf(tganame, 256, "gource-%04d.tga", tgano);
-        if(stat(tganame, &finfo) != 0) break;
-        tgano++;
+    while(pngno < 10000) {
+        snprintf(pngname, 256, "gource-%04d.png", pngno);
+        if(stat(pngname, &finfo) != 0) break;
+        pngno++;
     }
 
-    //write tga
-    std::string filename(tganame);
+    //write png
+    std::string filename(pngname);
 
-    TGAWriter tga(gGourceSettings.transparent ? 4 : 3);
-    tga.screenshot(filename);
+    PNGWriter png(gGourceSettings.transparent ? 4 : 3);
+    png.screenshot(filename);
 
-    setMessage("Wrote screenshot %s", tganame);
+    setMessage("Wrote screenshot %s", pngname);
 }
 
 void Gource::updateVBOs(float dt) {
@@ -2598,7 +2601,7 @@ void Gource::draw(float t, float dt) {
         caption->draw();
     }
 
-    if(message_timer>0.0f) {
+    if(!take_screenshot && message_timer>0.0f) {
          fontmedium.draw(1, 3, message);
     }
 
@@ -2699,4 +2702,9 @@ void Gource::draw(float t, float dt) {
 
     mousemoved=false;
     mouseclicked=false;
+
+    if(take_screenshot) {
+        screenshot();
+        take_screenshot = false;
+    }
 }

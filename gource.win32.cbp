@@ -39,6 +39,7 @@
 			<Add library="freetype" />
 			<Add library="libboost_filesystem-mgw46-mt-1_52" />
 			<Add library="libboost_system-mgw46-mt-1_52" />
+			<Add library="libpng16.dll.a" />
 		</Linker>
 		<Unit filename="data/shaders/bloom.frag" />
 		<Unit filename="data/shaders/bloom.vert" />
@@ -69,6 +70,8 @@
 		<Unit filename="src/core/pi.h" />
 		<Unit filename="src/core/plane.cpp" />
 		<Unit filename="src/core/plane.h" />
+		<Unit filename="src/core/png_writer.cpp" />
+		<Unit filename="src/core/png_writer.h" />
 		<Unit filename="src/core/ppm.cpp" />
 		<Unit filename="src/core/ppm.h" />
 		<Unit filename="src/core/quadtree.cpp" />
@@ -91,8 +94,6 @@
 		<Unit filename="src/core/stringhash.h" />
 		<Unit filename="src/core/texture.cpp" />
 		<Unit filename="src/core/texture.h" />
-		<Unit filename="src/core/tga.cpp" />
-		<Unit filename="src/core/tga.h" />
 		<Unit filename="src/core/timezone.cpp" />
 		<Unit filename="src/core/timezone.h" />
 		<Unit filename="src/core/vbo.cpp" />

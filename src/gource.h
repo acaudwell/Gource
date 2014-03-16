@@ -32,7 +32,6 @@
 #include "core/regex.h"
 #include "core/ppm.h"
 #include "core/mousecursor.h"
-#include "core/tga.h"
 
 #include "gource_settings.h"
 
@@ -138,6 +137,8 @@ class Gource : public SDLApp {
     bool first_read;
     bool paused;
     bool reloaded;
+
+    bool take_screenshot;
 
     float max_tick_rate;
     int frameskip;
@@ -259,7 +260,7 @@ class Gource : public SDLApp {
     void screenshot();
 
     void changeColours();
-    
+
     void grabMouse(bool grab_mouse);
 public:
     Gource(FrameExporter* frameExporter = 0);
