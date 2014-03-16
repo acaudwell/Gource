@@ -2601,10 +2601,6 @@ void Gource::draw(float t, float dt) {
         caption->draw();
     }
 
-    if(!take_screenshot && message_timer>0.0f) {
-         fontmedium.draw(1, 3, message);
-    }
-
     //file key
     file_key.draw();
     file_key.setShow(gGourceSettings.show_key);
@@ -2706,5 +2702,15 @@ void Gource::draw(float t, float dt) {
     if(take_screenshot) {
         screenshot();
         take_screenshot = false;
+    }
+
+    if(message_timer > 0.0f) {
+        font.setColour(vec4(1.0f));
+
+        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glEnable(GL_TEXTURE_2D);
+
+        font.draw(1, 3, message);
     }
 }
