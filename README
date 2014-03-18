@@ -163,6 +163,9 @@ options:
     --dir-colour FFFFFF
             Font colour for directories.
 
+    --dir-name-depth DEPTH
+            Draw names of directories down to a specific depth in the tree.
+
     --file-filter REGEX
             Filter out any files matching a specified regular expression.
 

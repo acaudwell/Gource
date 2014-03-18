@@ -139,8 +139,9 @@ if(extended_help) {
     printf("  --highlight-users        Highlight the names of all users\n\n");
     printf("  --highlight-colour       Font colour for highlighted users in hex.\n");
     printf("  --selection-colour       Font colour for selected users and files.\n");
-    printf("  --dir-colour             Font colour for directories.\n\n");
-
+    printf("  --dir-colour             Font colour for directories.\n");
+    printf("  --dir-name-depth DEPTH   Draw names of directories down to a specific depth.\n\n");
+    
     printf("  --caption-file FILE         Caption file\n");
     printf("  --caption-size SIZE         Caption font size\n");
     printf("  --caption-colour FFFFFF     Caption colour in hex\n");
@@ -306,7 +307,7 @@ GourceSettings::GourceSettings() {
     arg_types["caption-colour"]     = "string";
     arg_types["caption-offset"]     = "int";
 
-
+    arg_types["dir-name-depth"]     = "int";
 }
 
 void GourceSettings::setGourceDefaults() {
@@ -383,6 +384,8 @@ void GourceSettings::setGourceDefaults() {
     font_colour      = vec3(1.0f);
     highlight_colour = vec3(1.0f);
     selection_colour = vec3(1.0, 1.0, 0.3f);
+
+    dir_name_depth = 0;
 
     elasticity = 0.0f;
 
@@ -1305,6 +1308,17 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             }
 
             user_filters.push_back(r);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("dir-name-depth")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify dir-name-depth (depth)");
+
+        dir_name_depth = entry->getInt();
+
+        if(dir_name_depth <= 0) {
+            conffile.invalidValueException(entry);
         }
     }
 

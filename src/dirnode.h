@@ -96,6 +96,7 @@ class RDirNode : public QuadItem {
     vec2 calcFileDest(int layer_no, int file_no);
     void updateFilePositions();
 
+    void adjustDepth();
     void adjustPath();
     void drawDirName(FXFont& dirfont) const;
 public:

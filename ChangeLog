@@ -3,6 +3,7 @@
  * SDL 1.2 support is deprecated.
  * Full screen mode now uses desktop resolution by default.
  * Added --start-date, --stop-date 'YYYY-MM-DD hh:mm:ss' options.
+ * Added --dir-name-depth option.
  * Changed --file-idle-time default value to 0.
  * Changed screenshot format to PNG.
 

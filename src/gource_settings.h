@@ -125,6 +125,8 @@ public:
     vec3 highlight_colour;
     vec3 selection_colour;
 
+    int dir_name_depth;
+
     std::vector<std::string> highlight_users;
     std::vector<std::string> follow_users;
     std::vector<Regex*> file_filters;
@@ -142,7 +144,7 @@ public:
     TextureResource* file_graphic;
 
     int log_level;
-
+    
     GourceSettings();
 
     void setGourceDefaults();
