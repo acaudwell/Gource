@@ -4,8 +4,8 @@
 AC_PREREQ(2.61)
 
 AC_INIT(Gource, 0.41, [acaudwell@gmail.com])
+AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([src/main.h])
-
 AM_INIT_AUTOMAKE([dist-bzip2 foreign subdir-objects])
 
 AC_CANONICAL_HOST
