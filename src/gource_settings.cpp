@@ -39,7 +39,7 @@ void GourceSettings::help(bool extended_help) {
 
 #ifdef _WIN32
     //resize window to fit help message
-    SDLApp::resizeConsole(820);
+    SDLApp::resizeConsole(730);
     SDLApp::showConsole(true);
 #endif
 
@@ -55,12 +55,12 @@ void GourceSettings::help(bool extended_help) {
 
     printf("  --start-date 'YYYY-MM-DD hh:mm:ss +tz'  Start at a date and optional time\n");
     printf("  --stop-date  'YYYY-MM-DD hh:mm:ss +tz'  Stop at a date and optional time\n\n");
-    printf("  -p, --start-position POSITION           Start at some position (0.0-1.0 or 'random')\n");
-    printf("      --stop-position  POSITION           Stop at some position\n");
-    printf("  -t, --stop-at-time SECONDS              Stop after a specified number of seconds\n");
-    printf("      --stop-at-end                       Stop at end of the log\n");
-    printf("      --dont-stop                         Keep running after the end of the log\n");
-    printf("      --loop                              Loop at the end of the log\n\n");
+    printf("  -p, --start-position POSITION    Start at some position (0.0-1.0 or 'random')\n");
+    printf("      --stop-position  POSITION    Stop at some position\n");
+    printf("  -t, --stop-at-time SECONDS       Stop after a specified number of seconds\n");
+    printf("      --stop-at-end                Stop at end of the log\n");
+    printf("      --dont-stop                  Keep running after the end of the log\n");
+    printf("      --loop                       Loop at the end of the log\n\n");
 
     printf("  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens\n");
     printf("                                   for a number of seconds (default: 3)\n");
@@ -78,11 +78,11 @@ void GourceSettings::help(bool extended_help) {
 
     printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 0)\n\n");
 
-    printf("  --max-files NUMBER       Max number of files or 0 for no limit\n");
-    printf("  --max-file-lag SECONDS   Max time files of a commit can take to appear\n\n");
+    printf("  --max-files NUMBER      Max number of files or 0 for no limit\n");
+    printf("  --max-file-lag SECONDS  Max time files of a commit can take to appear\n\n");
 
-    printf("  --log-command VCS        Show the VCS log command (git,svn,hg,bzr,cvs2cl)\n");
-    printf("  --log-format  VCS        Specify the log format (git,svn,hg,bzr,cvs2cl,custom)\n\n");
+    printf("  --log-command VCS       Show the VCS log command (git,svn,hg,bzr,cvs2cl)\n");
+    printf("  --log-format  VCS       Specify the log format (git,svn,hg,bzr,cvs2cl,custom)\n\n");
 
     printf("  --load-config CONF_FILE  Load a config file\n");
     printf("  --save-config CONF_FILE  Save a config file with the current options\n\n");
@@ -141,7 +141,7 @@ if(extended_help) {
     printf("  --selection-colour       Font colour for selected users and files.\n");
     printf("  --dir-colour             Font colour for directories.\n");
     printf("  --dir-name-depth DEPTH   Draw names of directories down to a specific depth.\n\n");
-    
+
     printf("  --caption-file FILE         Caption file\n");
     printf("  --caption-size SIZE         Caption font size\n");
     printf("  --caption-colour FFFFFF     Caption colour in hex\n");
