@@ -95,7 +95,7 @@ BaseLog* SVNCommitLog::generateLog(const std::string& dir) {
     }
 
     char cmd_buff[2048];
-    sprintf(cmd_buff, "%s > %s", command.c_str(), temp_file.c_str());
+    snprintf(cmd_buff, 2048, "%s > %s", command.c_str(), temp_file.c_str());
 
     int command_rc = systemCommand(cmd_buff);
 

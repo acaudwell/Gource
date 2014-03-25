@@ -72,7 +72,7 @@ BaseLog* BazaarLog::generateLog(const std::string& dir) {
     if(temp_file.size()==0) return 0;
 
     char cmd_buff[2048];
-    sprintf(cmd_buff, "%s %s > %s", command.c_str(), dir.c_str(), temp_file.c_str());
+    snprintf(cmd_buff, 2048, "%s %s > %s", command.c_str(), dir.c_str(), temp_file.c_str());
 
     int command_rc = systemCommand(cmd_buff);
 
