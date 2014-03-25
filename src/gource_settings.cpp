@@ -628,7 +628,15 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
         if(!entry->hasValue()) conffile.missingValueException(entry);
 
-        git_branch = entry->getString();
+        Regex branch_regex("^[/\\w.,;_=+{}\\[\\]-]+$");
+
+        std::string branch = entry->getString();
+
+        if(branch_regex.match(branch)) {
+            git_branch = branch;
+        } else {
+            conffile.invalidValueException(entry);
+        }
     }
 
     if(gource_settings->getBool("colour-images")) {
