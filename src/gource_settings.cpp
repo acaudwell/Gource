@@ -628,7 +628,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
         if(!entry->hasValue()) conffile.missingValueException(entry);
 
-        Regex branch_regex("^[/\\w.,;_=+{}\\[\\]-]+$");
+        Regex branch_regex("^(?!-)[/\\w.,;_=+{}\\[\\]-]+$");
 
         std::string branch = entry->getString();
 

@@ -32,11 +32,6 @@ std::string GitCommitLog::logCommand() {
     "--reverse --raw --encoding=UTF-8 "
     "--no-renames";
 
-    if(!gGourceSettings.git_branch.empty()) {
-        log_command += " ";
-        log_command += gGourceSettings.git_branch;
-    }
-
     if(!gGourceSettings.start_date.empty()) {
         log_command += " --since ";
         log_command += gGourceSettings.start_date;
@@ -45,6 +40,11 @@ std::string GitCommitLog::logCommand() {
     if(!gGourceSettings.stop_date.empty()) {
         log_command += " --until ";
         log_command += gGourceSettings.stop_date;
+    }
+
+    if(!gGourceSettings.git_branch.empty()) {
+        log_command += " ";
+        log_command += gGourceSettings.git_branch;
     }
 
     return log_command;
