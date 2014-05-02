@@ -27,10 +27,10 @@ Regex bzr_file_regex("^ *([AMDR])  (.*[^/])$");
 
 std::string BazaarLog::logCommand() {
 
-    std::string start = (!gGourceSettings.start_date.empty()) ? gGourceSettings.start_date : "1";
-    std::string stop  = (!gGourceSettings.stop_date.empty())  ? gGourceSettings.stop_date  : "-1";
+    std::string start = (!gGourceSettings.start_date.empty()) ? "date:"+gGourceSettings.start_date : "1";
+    std::string stop  = (!gGourceSettings.stop_date.empty())  ? "date:"+gGourceSettings.stop_date  : "-1";
 
-    std::string range = str(boost::format("date:%s..%s") % start % stop);
+    std::string range = str(boost::format("%s..%s") % start % stop);
 
     std::string log_command = str(boost::format("bzr log --verbose -r %s --short -n0 --forward") % range);
 
