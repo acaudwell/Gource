@@ -1,5 +1,7 @@
 0.42:
  * Fixed bzr log command when no start date was specified (chrisf).
+ * Fixed hg log commit order when date range specified.
+ * Fixed parser bug in date range filtering code.
 
 0.41:
  * Multi-monitor support using SDL 2.0 when available.

@@ -220,6 +220,9 @@ bool RCommitLog::nextCommit(RCommit& commit, bool validate) {
         return true;
     }
 
+    // ensure commit is re-initialized
+    commit = RCommit();
+
     bool success = parseCommit(commit);
 
     if(!success) return false;

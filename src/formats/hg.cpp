@@ -42,9 +42,9 @@ std::string MercurialLog::logCommand() {
           str(boost::format("--date '<%s'") % gGourceSettings.stop_date)
 
         // default
-        : "-r 0:tip";
+        : "";
 
-    std::string log_command = str(boost::format("hg log %s --style '%s'") % range % gource_style_path);
+    std::string log_command = str(boost::format("hg log %s -r 0:tip --style '%s'") % range % gource_style_path);
 
     return log_command;
 }
