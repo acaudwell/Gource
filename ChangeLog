@@ -1,6 +1,7 @@
 0.42:
  * Fixed bzr log command when no start date was specified (chrisf).
  * Fixed hg log commit order when date range specified.
+ * Fixed hg log command line on Windows.
  * Fixed parser bug in date range filtering code.
 
 0.41:

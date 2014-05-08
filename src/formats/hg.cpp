@@ -46,6 +46,10 @@ std::string MercurialLog::logCommand() {
 
     std::string log_command = str(boost::format("hg log %s -r 0:tip --style '%s'") % range % gource_style_path);
 
+#ifdef _WIN32
+    std::replace(log_command.begin(), log_command.end(), '\'', '"');
+#endif
+
     return log_command;
 }
 
