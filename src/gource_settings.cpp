@@ -141,6 +141,7 @@ if(extended_help) {
     printf("  --selection-colour       Font colour for selected users and files.\n");
     printf("  --dir-colour             Font colour for directories.\n");
     printf("  --dir-name-depth DEPTH   Draw names of directories down to a specific depth.\n\n");
+	printf("  --dir-name-files FILES   Draw names of directories when it contains specified file count.\n\n");   
 
     printf("  --caption-file FILE         Caption file\n");
     printf("  --caption-size SIZE         Caption font size\n");
@@ -308,6 +309,7 @@ GourceSettings::GourceSettings() {
     arg_types["caption-offset"]     = "int";
 
     arg_types["dir-name-depth"]     = "int";
+    arg_types["dir-name-files"]		= "int";
 }
 
 void GourceSettings::setGourceDefaults() {
@@ -386,6 +388,7 @@ void GourceSettings::setGourceDefaults() {
     selection_colour = vec3(1.0, 1.0, 0.3f);
 
     dir_name_depth = 0;
+    dir_name_files = 0;
 
     elasticity = 0.0f;
 
@@ -1329,6 +1332,17 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             conffile.invalidValueException(entry);
         }
     }
+
+	if ((entry = gource_settings->getEntry("dir-name-files")) != 0) {
+
+		if (!entry->hasValue()) conffile.entryException(entry, "specify dir-name-files (files)");
+
+		dir_name_files = entry->getInt();
+
+		if (dir_name_files <= 0) {
+			conffile.invalidValueException(entry);
+		}
+	}
 
     //validate path
     if(gource_settings->hasValue("path")) {
