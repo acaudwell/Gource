@@ -137,9 +137,11 @@ if(extended_help) {
     printf("  --highlight-dirs         Highlight the names of all directories\n");
     printf("  --highlight-user USER    Highlight the names of a particular user\n");
     printf("  --highlight-users        Highlight the names of all users\n\n");
+
     printf("  --highlight-colour       Font colour for highlighted users in hex.\n");
     printf("  --selection-colour       Font colour for selected users and files.\n");
-    printf("  --dir-colour             Font colour for directories.\n");
+    printf("  --dir-colour             Font colour for directories.\n\n");
+
     printf("  --dir-name-depth DEPTH   Draw names of directories down to a specific depth.\n\n");
 
     printf("  --caption-file FILE         Caption file\n");
