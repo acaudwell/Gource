@@ -1,3 +1,6 @@
+0.43:
+ * Updated boost autoconf macros to fix multi-arch detection.
+
 0.42:
  * Fixed bzr log command when no start date was specified (chrisf).
  * Fixed hg log commit order when date range specified.

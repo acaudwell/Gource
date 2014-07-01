@@ -31,7 +31,7 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 14
+#serial 17
 
 AC_DEFUN([AX_BOOST_SYSTEM],
 [
