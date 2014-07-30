@@ -77,6 +77,7 @@ public:
     bool ffp;
 
     bool colour_user_images;
+    bool user_image_never_remove;
     std::string default_user_image;
     std::string user_image_dir;
     std::map<std::string, std::string> user_image_map;

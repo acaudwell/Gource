@@ -1343,7 +1343,7 @@ void Gource::updateUsers(float t, float dt) {
             selectUser(0);
         }
 
-        if(u->isInactive()) {
+        if(u->isInactive() && !gGourceSettings.user_image_never_remove) {
             inactiveUsers.push_back(u);
         }
 
