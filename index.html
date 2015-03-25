@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="icon" href="favicon.ico">
+
+<title>Gource - a software version control visualization tool</title>
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/site.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        <a class="navbar-brand" href="#">Gource</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="#download">Download</a></li>
+            <li><a href="#news">News</a></li>
+            <li><a href="https://github.com/acaudwell/Gource/wiki/Videos">Videos</a></li>
+            <li><a href="https://github.com/acaudwell/Gource/wiki/Controls">Controls</a></li>
+            <li><a href="https://github.com/acaudwell/Gource/wiki">Wiki</a></li>
+            <li><a href="https://github.com/acaudwell/Gource">Source</a></li>
+            <li><a href="http://www.thealphablenders.com/">Blog</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container main">
+
+<p><img class="logo" src="images/gource-logo.png"></p>
+
+<p>Gource is a software version control visualization tool.</p>
+
+<iframe class="player" width="640" height="360" frameborder="0"
+ src="https://www.youtube.com/embed/NjUuAuBcoqs">
+</iframe>
+
+<wiki:video url="http://www.youtube.com/watch?v=NjUuAuBcoqs">
+
+<p>See more of Gource in action on the <a href="https://github.com/acaudwell/Gource/wiki/Videos">Videos</a> page.</p>
+
+<h2><a id="download"></a>Download</h2>
+
+<p>
+<a class="btn btn-lg btn-success" href="https://github.com/acaudwell/Gource/releases/download/gource-0.42/gource-0.42-setup.exe">gource-0.42-setup.exe</a>
+<a class="btn btn-lg btn-success" href="https://github.com/acaudwell/Gource/releases/download/gource-0.42/gource-0.42.win32.zip">gource-0.42.win32.zip</a>
+<a class="btn btn-lg btn-success" href="https://github.com/acaudwell/Gource/releases/download/gource-0.43/gource-0.43.tar.gz">gource-0.43.tar.gz</a>
+</p>
+
+<p>&nbsp;</p>
+
+<ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#synopsis">Synopsis</li>
+    <li><a href="#related">Related Software</li>
+    <li><a href="#donations">Donations</li>
+    <li><a href="#news">News</li>
+</ul>
+
+<h2><a id="introduction"></a>Introduction</h2>
+
+<p>Software projects are displayed by Gource as an animated tree with the root directory of the project at its centre. Directories appear as branches with files as leaves. Developers can be seen working on the tree at the times they contributed to the project.</p>
+
+<p>Gource includes built-in log generation support for <b>Git</b>, <b>Mercurial</b>, <b>Bazaar</b> and <b><a href="https://github.com/acaudwell/Gource/wiki/SVN">SVN</a></b>. Gource can also parse logs produced by several third party tools for <a href="https://github.com/acaudwell/Gource/wiki/CVS">CVS</a> repositories.</p>
+
+<h2><a id="synopsis"></a>Synopsis</h2>
+
+<p>view the log of the repository (Git, SVN, Mercurial and Bazaar) in the current path:</p>
+
+<pre>
+gource
+</pre>
+
+<p>For more options and examples see the <a href="https://github.com/acaudwell/Gource/wiki/Controls">Controls</a> wiki page, consult the included README file or man page documentation.</p>
+
+<h2><a id="donations"></a>Donations</h2>
+
+<p>If you like Gource and would like to show your appreciation and encourage future work on this and other open source projects by the author, please consider making a donation!</p>
+
+<p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TZYLY4VTKC9TN&lc=NZ&item_name=Gource&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"><img src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif"></a></p>
+
+<h2><a id="related"></a>Related Software</h2>
+
+<p>You may also want to check out <a href="http://code.google.com/p/logstalgia/">Logstalgia</a>, a web server access log visualization tool.</p>
+
+<h2><a id="news"></a>News</h2>
+
+<h3>21 March 2015</h3>
+
+<p>Due to Google Code shutting down I will soon be moving the Gource homepage to Github. The <a href="https://github.com/acaudwell/Gource">source code</a> is already hosted there.</p>
+
+<p>I've disabled Wiki comments in the mean time due to link spam.</p>
+
+<h3>16 October 2014</h3>
+
+<p>Gource <b>0.43</b> has been released to fix a minor build issue with Boost on multi-arch Linux systems.</p>
+
+<p>There are no other changes so if you're not affected by this you can stick with 0.42.</p>
+
+<p>Changes since 0.42:</p>
+
+<ul>
+<li>Updated boost autoconf macros to fix multi-arch detection.</li>
+</ul>
+
+Downloads:
+
+<ul>
+<li><a href="https://github.com/acaudwell/Gource/releases/download/gource-0.43/gource-0.43.tar.gz">gource-0.43.tar.gz</a></li>
+</ul>
+
+<h3>23 September 2014</h3>
+
+<p>I've been nominated for this years <a href="http://www.nzosa.org.nz/">New Zealand Open Source Awards</a> in the <a href="http://www.nzosa.org.nz/peoples-choice">people's choice</a> category.</p>
+
+<h3>9 May 2014</h3>
+
+Gource <b>0.42</b> fixes some bugs introduced in 0.41 affecting Mercurial, Bazaar support and date range filtering.
+
+<p>Changes since 0.41:</p>
+
+<ul>
+<li>Fixed bzr log command when no start date was specified (chrisf).</li>
+<li>Fixed hg log commit order when date range specified.</li>
+<li>Fixed hg log command line on Windows.</li>
+<li>Fixed parser bug in date range filtering code.</li>
+</ul>
+
+<p>Downloads:</p>
+
+<ul>
+<li><a href="https://github.com/acaudwell/Gource/releases/download/gource-0.42/gource-0.42.tar.gz">gource-0.42.tar.gz</a></li>
+<li><a href="https://github.com/acaudwell/Gource/releases/download/gource-0.42/gource-0.42-setup.exe">gource-0.42-setup.exe</a></li>
+<li><a href="https://github.com/acaudwell/Gource/releases/download/gource-0.42/gource-0.42.win32.zip">gource-0.42.win32.zip</a></li>
+</ul>
+
+<h3>14 April 2014</h3>
+
+<p>Gource <b>0.41</b> has been released.</p>
+
+<p>You can now specify a date range directly with --start-date and --stop-date (using 'YYYY-MM-DD hh:mm:ss' ISO format).</p>
+
+<p>Gource now uses SDL 2.0 when available, providing much better multi-monitor support.</p>
+
+<p>Changes since 0.40:</p>
+
+<ul>
+<li>Multi-monitor support using SDL 2.0 when available.</li>
+<li>SDL 1.2 support is deprecated.</li>
+<li>Full screen mode now uses desktop resolution by default.</li>
+<li>Added --start-date, --stop-date 'YYYY-MM-DD hh:mm:ss' options.</li>
+<li>Added --dir-name-depth option.</li>
+<li>Changed --file-idle-time default value to 0.</li>
+<li>Changed screenshot format to PNG.</li>
+</ul>
+
+<p>Downloads are now hosted on Github as Google Code no longer accepts adding new downloads:</p>
+
+<ul>
+<li><a href="https://github.com/acaudwell/Gource/releases/download/gource-0.41/gource-0.41.tar.gz">gource-0.41.tar.gz</a></li>
+<li><a href="https://github.com/acaudwell/Gource/releases/download/gource-0.41/gource-0.41-setup.exe">gource-0.41-setup.exe</a></li>
+<li><a href="https://github.com/acaudwell/Gource/releases/download/gource-0.41/gource-0.41.win32.zip">gource-0.41.win32.zip</a></li>
+</ul>
+
+<p>If you package Gource for a distro, please update the dependencies to use SDL 2 instead of SDL 1.2.</p>
+
+</div><!-- /.container -->
+
+<script src="js/jquery-1.11.2.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
