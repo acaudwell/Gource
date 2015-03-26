@@ -51,7 +51,7 @@ h3 {
 }
 
 pre {
-    background-color: #bbb;
+    background-color: #ccc;
     border: 1px solid #666;
     font-weight: bold;
 }
@@ -72,7 +72,6 @@ pre {
   background-color: #000;
   border-top: 2px solid #3a3a3a;
   border-bottom: 2px solid #3a3a3a;
-  max-beight: 720px;
 }
 
 .carousel-fade .carousel-inner .item {
