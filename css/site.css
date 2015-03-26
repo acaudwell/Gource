@@ -71,15 +71,8 @@ pre {
   border-top: 2px solid #3a3a3a;
   border-bottom: 2px solid #3a3a3a;
 }
-.carousel .item {
-  height: 700px;
-}
 
 .carousel-inner > .item > img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  min-width: 100%;
   overflow: hidden;
 }
 
