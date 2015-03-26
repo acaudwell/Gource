@@ -75,11 +75,6 @@ pre {
   min-height: 100px;  
 }
 
-.carousel-inner > .item > img {
-  overflow: hidden;
-  margin: 0 auto;
-}
-
 .carousel-fade .carousel-inner .item {
   opacity: 0;
   -webkit-transition-property: opacity;
