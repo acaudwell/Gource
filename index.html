@@ -16,7 +16,7 @@
 
 <body>
 
-    <nav class="navbar navbar-default">
+    <nav class="navbar">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -29,7 +29,6 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="#download">Download</a></li>
             <li><a href="#news">News</a></li>
             <li><a href="https://github.com/acaudwell/Gource/wiki/Videos">Videos</a></li>
             <li><a href="https://github.com/acaudwell/Gource/wiki/Controls">Controls</a></li>
@@ -41,31 +40,53 @@
       </div>
     </nav>
 
+    <div id="screenshot-carousel" class="carousel slide carousel-fade" data-ride="carousel">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#screenshot-carousel" data-slide-to="0" class="active"></li>
+        <li data-target="#screenshot-carousel" data-slide-to="1"></li>
+        <li data-target="#screenshot-carousel" data-slide-to="2"></li>
+      </ol>
+      <div class="carousel-inner" role="listbox">
+        <div class="item active">
+          <img class="first-slide" src="images/gource-linux.jpg" alt="First slide">
+          <div class="container">
+            <div class="carousel-caption">
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img class="second-slide" src="images/gource-papervision.jpg" alt="Second slide">
+          <div class="container">
+            <div class="carousel-caption">
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img class="third-slide" src="images/gource-git.jpg" alt="Third slide">
+          <div class="container">
+            <div class="carousel-caption">
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="left carousel-control" href="#screenshot-carousel" role="button" data-slide="prev">
+      </a>
+      <a class="right carousel-control" href="#screenshot-carousel" role="button" data-slide="next">
+      </a>
+    </div><!-- /.carousel -->
+
     <div class="container main">
 
-<p><img class="logo" src="images/gource-logo.png"></p>
-
-<p>Gource is a software version control visualization tool.</p>
-
-<iframe class="player" width="640" height="360" frameborder="0"
- src="https://www.youtube.com/embed/NjUuAuBcoqs">
-</iframe>
-
-<wiki:video url="http://www.youtube.com/watch?v=NjUuAuBcoqs">
-
-<p>See more of Gource in action on the <a href="https://github.com/acaudwell/Gource/wiki/Videos">Videos</a> page.</p>
-
-<h2><a id="download"></a>Download</h2>
-
 <p>
-<a class="btn btn-lg btn-success" href="https://github.com/acaudwell/Gource/releases/download/gource-0.42/gource-0.42-setup.exe">gource-0.42-setup.exe</a>
-<a class="btn btn-lg btn-success" href="https://github.com/acaudwell/Gource/releases/download/gource-0.42/gource-0.42.win32.zip">gource-0.42.win32.zip</a>
-<a class="btn btn-lg btn-success" href="https://github.com/acaudwell/Gource/releases/download/gource-0.43/gource-0.43.tar.gz">gource-0.43.tar.gz</a>
+<center>
+<a class="btn btn-lg btn-info" href="https://github.com/acaudwell/Gource/releases/download/gource-0.42/gource-0.42-setup.exe">gource-0.42-setup.exe</a>
+<a class="btn btn-lg btn-info" href="https://github.com/acaudwell/Gource/releases/download/gource-0.42/gource-0.42.win32.zip">gource-0.42.win32.zip</a>
+<a class="btn btn-lg btn-info" href="https://github.com/acaudwell/Gource/releases/download/gource-0.43/gource-0.43.tar.gz">gource-0.43.tar.gz</a>
+</center>
 </p>
 
-<p>&nbsp;</p>
-
-<ul>
+<ul class="index">
     <li><a href="#introduction">Introduction</a></li>
     <li><a href="#synopsis">Synopsis</li>
     <li><a href="#related">Related Software</li>
@@ -74,6 +95,8 @@
 </ul>
 
 <h2><a id="introduction"></a>Introduction</h2>
+
+<iframe class="player" width="640" height="360" frameborder="0" src="https://www.youtube.com/embed/NjUuAuBcoqs"></iframe>
 
 <p>Software projects are displayed by Gource as an animated tree with the root directory of the project at its centre. Directories appear as branches with files as leaves. Developers can be seen working on the tree at the times they contributed to the project.</p>
 
