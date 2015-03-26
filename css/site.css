@@ -41,6 +41,8 @@ a:hover, a:focus {
 
 h2 {
     font-size: 1.8em;
+    font-weight: bold;
+    padding-top: 20px;
 }
 
 h3 {
@@ -75,6 +77,7 @@ pre {
 
 .carousel-inner > .item > img {
   overflow: hidden;
+  margin: 0 auto;
 }
 
 .carousel-fade .carousel-inner .item {
