@@ -1,7 +1,7 @@
 body {
     font-size: 1.6em;
     font-family: Helvetica,Arial,sans-serif;
-    background-color: #111;
+    background-color: #333;
     color: #fff;
 }
 
@@ -20,7 +20,7 @@ a:hover, a:focus {
 
 .navbar-nav > li > a:focus, .navbar-nav > li > a:hover, .index > li > a:focus, .index > li > a:hover {
     color: #fff;
-    background-color: #111;
+    background-color: #333;
     text-decoration: none;
 }
 
