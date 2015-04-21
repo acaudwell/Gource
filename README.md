@@ -336,16 +336,12 @@ Gource can display captions along the timeline by specifying a caption file
 
 Recording Videos:
 
-See the guide on the homepage for examples of recording videos with Gource:
-
-    http://code.google.com/p/gource/wiki/Videos
+See the guide on the homepage for examples of recording videos with Gource: http://code.google.com/p/gource/wiki/Videos
 
 More Information:
 
 Visit the Gource homepage for guides and examples of using Gource with various
-version control systems:
-
-    http://code.google.com/p/gource/
+version control systems: http://code.google.com/p/gource/
 
 Interface:
 
