@@ -2,7 +2,7 @@
 [![GitHub release](https://img.shields.io/github/release/acaudwell/Gource.svg)](https://github.com/acaudwell/Gource/releases)
 [![GitHub license](https://img.shields.io/github/license/acaudwell/Gource.svg)](https://raw.githubusercontent.com/acaudwell/Gource/master/COPYING)
 
-[Original source](http://gource.googlecode.com/)
+[Gource on Google Code](http://gource.googlecode.com/)
 
 
 Description
