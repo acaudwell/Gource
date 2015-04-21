@@ -1,39 +1,23 @@
+# Gource - Software version control visualization
+[Original source](http://gource.googlecode.com/)
+[![GitHub release](https://img.shields.io/github/release/acaudwell/Gource.svg)](https://github.com/acaudwell/Gource/releases)
 
-                             Gource
-
-              software version control visualization
-
-                Copyright (C) 2009 Andrew Caudwell
-
-                  http://gource.googlecode.com/
-
-Contents
-========
-
-1. Description
-2. Requirements
-3. Using Gource
-4. Copyright
-
-1. Description
-==============
-
-OpenGL-based 3D visualisation tool for source control repositories.
+Gource is an OpenGL-based 3D visualisation tool for source control repositories.
 
 The repository is displayed as a tree where the root of the repository is the
 centre, directories are branches and files are leaves. Contributors to the
 source code appear and disappear as they contribute to specific files and
 directories.
 
-2. Requirements
+Requirements
 ===============
 
 Gource's display is rendered using OpenGL and requires a 3D accelerated video
 card to run.
 
-3. Using Gource
+Using Gource
 ===============
-
+```
 gource <options> <path>
 
 options:
@@ -289,6 +273,8 @@ options:
 
             If path is omitted, gource will attempt to read a log from the
             current directory.
+
+```
 
 Git, Bazaar, Mercurial and SVN Examples:
 
