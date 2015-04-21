@@ -1,7 +1,12 @@
 # Gource - Software version control visualization
-[Original source](http://gource.googlecode.com/)
 [![GitHub release](https://img.shields.io/github/release/acaudwell/Gource.svg)](https://github.com/acaudwell/Gource/releases)
+[![GitHub license](https://img.shields.io/github/license/acaudwell/Gource.svg)](https://raw.githubusercontent.com/acaudwell/Gource/master/COPYING)
 
+[Original source](http://gource.googlecode.com/)
+
+
+Description
+======
 Gource is an OpenGL-based 3D visualisation tool for source control repositories.
 
 The repository is displayed as a tree where the root of the repository is the
@@ -10,13 +15,13 @@ source code appear and disappear as they contribute to specific files and
 directories.
 
 Requirements
-===============
+======
 
 Gource's display is rendered using OpenGL and requires a 3D accelerated video
 card to run.
 
 Using Gource
-===============
+======
 ```
 gource <options> <path>
 
@@ -375,7 +380,7 @@ Interactive keyboard commands:
     (ESC) Quit
 
 4. Copyright
-============
+======
 
 Gource - software version control visualization
 Copyright (C) 2009 Andrew Caudwell <acaudwell@gmail.com>
