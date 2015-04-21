@@ -382,7 +382,7 @@ Interactive keyboard commands:
 4. Copyright
 ======
 
-Gource - software version control visualization
+##### Gource - software version control visualization
 
 Copyright (C) 2009 Andrew Caudwell <acaudwell@gmail.com>
 
