@@ -347,7 +347,7 @@ Interface:
 
 The time shown in the top left of the screen is set initially from the first
 log entry read and is incremented according to the simulation speed
-(--seconds-per-day).
+(`--seconds-per-day`).
 
 Pressing SPACE at any time will pause/resume the simulation. While paused you
 may use the mouse to inspect the detail of individual files and users.
