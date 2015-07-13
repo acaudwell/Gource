@@ -40,14 +40,17 @@ a:hover, a:focus {
 }
 
 h2 {
-    font-size: 1.8em;
-    font-weight: bold;
-    padding-top: 20px;
+    font-size: 1.6em;
+    font-family: arial, sans-serif;
+    margin-top: 1em;
+    color: #aaa;
 }
 
 h3 {
     font-size: 1.5em;
-    font-weight: bold;
+    font-family: arial, sans-serif;
+    margin-top: 1em;
+    color: #aaa;
 }
 
 pre {
