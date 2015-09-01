@@ -59,12 +59,18 @@ void SplineEdge::update(const vec2& pos1, const vec4& col1, const vec2& pos2, co
         spline_point.push_back(pt);
         spline_colour.push_back(coln);
     }
-    
+
     midpoint = pos1 * 0.25f + pos2 * 0.25f + spos * 0.5f;
+
+    endpoint = pos2;
 }
 
 const vec2& SplineEdge::getMidPoint() const {
     return midpoint;
+}
+
+const vec2& SplineEdge::getEndpoint() const {
+    return point2;
 }
 
 void SplineEdge::drawToVBO(quadbuf& buffer) const {
@@ -73,8 +79,8 @@ void SplineEdge::drawToVBO(quadbuf& buffer) const {
 
     for(int i=0; i < edges_count; i++) {
 
-        //vec2 perp = (spline_point[i] - spline_point[i+1]).perpendicular().normal() * 2.5f;        
-        
+        //vec2 perp = (spline_point[i] - spline_point[i+1]).perpendicular().normal() * 2.5f;
+
         vec2 perp = (spline_point[i] - spline_point[i+1]);
         perp = normalise(vec2(-perp.y, perp.x)) * 2.5f;
 
@@ -83,7 +89,7 @@ void SplineEdge::drawToVBO(quadbuf& buffer) const {
         quadbuf_vertex v3(spline_point[i+1] - perp, spline_colour[i+1], vec2(0.0f, 0.0f));
         quadbuf_vertex v4(spline_point[i+1] + perp, spline_colour[i+1], vec2(1.0f, 0.0f));
 
-        buffer.add(0, v1, v2, v3, v4);       
+        buffer.add(0, v1, v2, v3, v4);
     }
 }
 
@@ -93,8 +99,8 @@ void SplineEdge::drawBeam(const vec2 & pos1, const vec4 & col1, const vec2 & pos
 
     vec2 perp = (pos1 - pos2);
     perp = normalise(vec2(-perp.y, perp.x)) * radius;
-    
-    
+
+
     // src point
     if(first) {
         glColor4fv(glm::value_ptr(col1));
