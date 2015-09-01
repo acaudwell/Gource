@@ -929,10 +929,11 @@ void RDirNode::drawDirName(FXFont& dirfont) const{
 
     float alpha = gGourceSettings.highlight_dirs ? 1.0 : std::max(0.0f, 5.0f - since_last_node_change) / 5.0f;
 
-    vec2 mid = spline.getMidPoint();
+    //vec2 mid = spline.getMidPoint();
+    vec2 p1 = spline.getEndpoint();
 
     dirfont.setAlpha(alpha);
-    dirfont.draw(mid.x, mid.y, path_token);
+    dirfont.draw(p1.x, p1.y, path_token);
 }
 
 void RDirNode::calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection) {
@@ -953,7 +954,6 @@ void RDirNode::calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* pro
     static vec2 unselected_offset(5.5f, -1.0f);
 
     if(!gGourceSettings.hide_filenames) {
-
         //first pass - calculate positions of names
         for(std::list<RFile*>::const_iterator it = files.begin(); it!=files.end(); it++) {
             RFile* f = *it;
