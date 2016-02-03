@@ -377,12 +377,17 @@ Interactive keyboard commands:
 
     (V)   Toggle camera mode
     (C)   Displays Gource logo
-    (K)   Toggle file extension key.
+    (K)   Toggle file extension key
     (M)   Toggle mouse visibility
-    (N)   Jump forward in time to next log entry.
-    (S)   Randomize colours.
-    (+-)  Adjust simulation speed.
-    (<>)  Adjust time scale.
+    (N)   Jump forward in time to next log entry
+    (S)   Randomize colours
+    (D)   Toggle directory name display mode
+    (F)   Toggle file name display mode
+    (U)   Toggle user name display mode
+    (G)   Toggle display of users
+    (R)   Toggle display of tree
+    (+-)  Adjust simulation speed
+    (<>)  Adjust time scale
     (TAB) Cycle through visible users
     (F12) Screenshot
     (Alt+Enter) Fullscreen toggle
