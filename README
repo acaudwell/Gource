@@ -220,7 +220,7 @@ options:
             Time users take to come to a halt.
 
     --user-scale SCALE
-            Change scale of users.
+            Change scale of user avatars.
 
     --camera-mode MODE
             Camera mode (overview,track).
@@ -385,7 +385,8 @@ Interactive keyboard commands:
     (F)   Toggle file name display mode
     (U)   Toggle user name display mode
     (G)   Toggle display of users
-    (R)   Toggle display of tree
+    (T)   Toggle display of directory tree edges
+    (R)   Toggle display of root directory edges
     (+-)  Adjust simulation speed
     (<>)  Adjust time scale
     (TAB) Cycle through visible users
