@@ -417,12 +417,13 @@ void GourceSettings::setGourceDefaults() {
 
     gStringHashSeed = 31;
 
-    //delete file filters
-    for(std::vector<Regex*>::iterator it = file_filters.begin(); it != file_filters.end(); it++) {
+    file_extensions = false;
+
+    //delete hidden file filters
+    for(std::vector<Regex*>::iterator it = hidden_file_filters.begin(); it != hidden_file_filters.end(); it++) {
         delete (*it);
     }
-    file_filters.clear();
-    file_extensions = false;
+    hidden_file_filters.clear();
 
     //delete user filters
     for(std::vector<Regex*>::iterator it = user_filters.begin(); it != user_filters.end(); it++) {
@@ -1294,7 +1295,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
                 conffile.entryException(entry, "invalid file-filter regular expression");
             }
 
-            file_filters.push_back(r);
+            hidden_file_filters.push_back(r);
         }
     }
 
