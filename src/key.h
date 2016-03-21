@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FILE_KEY_H
-#define FILE_KEY_H
+#ifndef TEXT_KEY_H
+#define TEXT_KEY_H
 
 #include "core/display.h"
 #include "core/vectors.h"
@@ -27,10 +27,10 @@
 #include <vector>
 #include <algorithm>
 
-class FileKeyEntry {   
+class TextKeyEntry {
     FXFont font;
     vec3 colour;
-    std::string ext;
+    std::string label;
     std::string display_ext;
     float alpha;
     float brightness;
@@ -46,10 +46,10 @@ class FileKeyEntry {
     vec2 shadow;
     bool show;
 public:
-    FileKeyEntry(const FXFont& font, const std::string& ext, const vec3& colour);
+    TextKeyEntry(const FXFont& font, const std::string& label, const vec3& colour);
 
     const vec3& getColour() const;
-    const std::string& getExt() const;
+    const std::string& getLabel() const;
 
     void setDestY(float dest_y);
 
@@ -71,18 +71,18 @@ public:
     void draw();
 };
 
-class FileKey {
-    std::vector<FileKeyEntry*> active_keys;
-    std::map<std::string, FileKeyEntry*> keymap;
+class TextKey {
+    std::vector<TextKeyEntry*> active_keys;
+    std::map<std::string, TextKeyEntry*> keymap;
 
     FXFont font;
     float update_interval;
     float interval_remaining;
     bool show;
 public:
-    FileKey();
-    ~FileKey();
-    FileKey(float update_interval);
+    TextKey();
+    ~TextKey();
+    TextKey(float update_interval);
     
     void setShow(bool show);
     

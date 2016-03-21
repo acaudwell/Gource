@@ -125,7 +125,7 @@ Gource::Gource(FrameExporter* exporter) {
     textbox.setBrightness(0.5f);
     textbox.show();
 
-    file_key = FileKey(1.0f);
+    file_key = TextKey(1.0f);
 
     camera = ZoomCamera(vec3(0,0, -300), vec3(0.0, 0.0, 0.0), gGourceSettings.camera_zoom_default, gGourceSettings.camera_zoom_max);
     camera.setPadding(gGourceSettings.padding);

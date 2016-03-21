@@ -60,7 +60,7 @@ class Gource : public SDLApp {
     PositionSlider slider;
     ZoomCamera camera;
 
-    FileKey file_key;
+    TextKey file_key;
 
     bool debug, trace_debug;
 
