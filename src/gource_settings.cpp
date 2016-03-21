@@ -71,6 +71,7 @@ void GourceSettings::help(bool extended_help) {
     printf("  -e, --elasticity FLOAT           Elasticity of nodes (default: 0.0)\n\n");
 
     printf("  --key                            Show file extension key\n\n");
+    printf("  --author                         Show counting per author\n\n");
 
     printf("  --user-image-dir DIRECTORY       Dir containing images to use as avatars\n");
     printf("  --default-user-image IMAGE       Default user image file\n");
@@ -149,6 +150,8 @@ if(extended_help) {
     printf("  --caption-colour FFFFFF     Caption colour in hex\n");
     printf("  --caption-duration SECONDS  Caption duration (default: 10.0)\n");
     printf("  --caption-offset X          Caption horizontal offset\n\n");
+
+    printf("  --author-mode MODE          Define what keep track (file,commit)\n\n");
 
     printf("  --hash-seed SEED         Change the seed of hash function.\n\n");
 
@@ -239,6 +242,7 @@ GourceSettings::GourceSettings() {
     arg_types["highlight-dirs"]  = "bool";
     arg_types["file-extensions"] = "bool";
     arg_types["key"]             = "bool";
+    arg_types["author"]          = "bool";
     arg_types["ffp"]             = "bool";
 
     arg_types["disable-auto-rotate"] = "bool";
@@ -309,6 +313,8 @@ GourceSettings::GourceSettings() {
     arg_types["caption-colour"]     = "string";
     arg_types["caption-offset"]     = "int";
 
+    arg_types["author-mode"]          = "string";
+
     arg_types["dir-name-depth"]     = "int";
 }
 
@@ -345,6 +351,8 @@ void GourceSettings::setGourceDefaults() {
     dont_stop      = false;
 
     show_key = false;
+    show_author_key = false;
+    author_key_mode = "file";
 
     disable_auto_rotate = false;
 
@@ -1130,6 +1138,21 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if(gource_settings->getBool("key")) {
         show_key = true;
+    }
+
+    if(gource_settings->getBool("author")) {
+        show_author_key = true;
+    }
+
+    if((entry = gource_settings->getEntry("author-mode")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify author-mode (file,commit)");
+
+        author_key_mode = entry->getString();
+
+        if(author_key_mode != "file" && author_key_mode != "commit") {
+            conffile.invalidValueException(entry);
+        }
     }
 
     if(gource_settings->getBool("ffp")) {

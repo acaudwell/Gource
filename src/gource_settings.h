@@ -45,6 +45,8 @@ public:
     bool disable_auto_rotate;
 
     bool show_key;
+    bool show_author_key;
+    std::string author_key_mode;
 
     std::string load_config;
     std::string save_config;

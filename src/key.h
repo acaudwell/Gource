@@ -111,6 +111,9 @@ class AuthorKey : public TextKey {
     void inc(const std::string &label, bool expires = false);
     void dec(const std::string &label);
 
+protected:
+    bool is_commit_mode;
+
 public:
     AuthorKey();
     ~AuthorKey();

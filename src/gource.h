@@ -61,6 +61,7 @@ class Gource : public SDLApp {
     ZoomCamera camera;
 
     TextKey file_key;
+    AuthorKey author_key;
 
     bool debug, trace_debug;
 

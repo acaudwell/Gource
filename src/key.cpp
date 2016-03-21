@@ -371,7 +371,7 @@ void TextKey::draw() {
 }
 
 AuthorKey::AuthorKey() : TextKey() {
-
+    is_commit_mode = !strcmp("commit", gGourceSettings.author_key_mode.c_str());
 }
 
 AuthorKey::~AuthorKey() {
@@ -381,6 +381,7 @@ AuthorKey::~AuthorKey() {
 
 AuthorKey::AuthorKey(float update_interval) : TextKey(update_interval) {
 
+    is_commit_mode = !strcmp("commit", gGourceSettings.author_key_mode.c_str());
 }
 
 void AuthorKey::clear() {
@@ -389,11 +390,13 @@ void AuthorKey::clear() {
 }
 
 void AuthorKey::incCommit(const std::string &author) {
+    if (!is_commit_mode) return;
 
     TextKey::inc(author, false);
 }
 
 void AuthorKey::incFile(const std::string &author) {
+    if (is_commit_mode) return;
 
     TextKey::inc(author, true);
 }
