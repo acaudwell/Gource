@@ -151,6 +151,7 @@ if(extended_help) {
     printf("  --caption-duration SECONDS  Caption duration (default: 10.0)\n");
     printf("  --caption-offset X          Caption horizontal offset\n\n");
 
+    printf("  --text-rectangle-width SIZE Define maximum space for extension or author key\n");
     printf("  --author-mode MODE          Define what keep track (file,commit)\n\n");
 
     printf("  --hash-seed SEED         Change the seed of hash function.\n\n");
@@ -313,6 +314,7 @@ GourceSettings::GourceSettings() {
     arg_types["caption-colour"]     = "string";
     arg_types["caption-offset"]     = "int";
 
+    arg_types["text-rectangle-width"] = "int";
     arg_types["author-mode"]          = "string";
 
     arg_types["dir-name-depth"]     = "int";
@@ -352,6 +354,7 @@ void GourceSettings::setGourceDefaults() {
 
     show_key = false;
     show_author_key = false;
+    text_rectangle_width = 90;
     author_key_mode = "file";
 
     disable_auto_rotate = false;
@@ -1142,6 +1145,17 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if(gource_settings->getBool("author")) {
         show_author_key = true;
+    }
+
+    if((entry = gource_settings->getEntry("text-rectangle-width")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify rectangle width (number)");
+
+        text_rectangle_width = entry->getInt();
+
+        if( text_rectangle_width<0 || (text_rectangle_width == 0 && entry->getString() != "0") ) {
+            conffile.invalidValueException(entry);
+        }
     }
 
     if((entry = gource_settings->getEntry("author-mode")) != 0) {

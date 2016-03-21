@@ -14,7 +14,7 @@ TextKeyEntry::TextKeyEntry(const FXFont& font, const std::string& label, const v
 
     shadow      = vec2(3.0, 3.0);
 
-    width       = 90.0f;
+    width       = std::max(90, gGourceSettings.text_rectangle_width);
     height      = 18.0f;
     left_margin = 20.0f;
     brightness  = 1.0f;

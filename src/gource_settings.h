@@ -46,6 +46,7 @@ public:
 
     bool show_key;
     bool show_author_key;
+    int text_rectangle_width;
     std::string author_key_mode;
 
     std::string load_config;
