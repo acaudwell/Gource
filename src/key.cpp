@@ -17,13 +17,13 @@ TextKeyEntry::TextKeyEntry(const FXFont& font, const std::string& label, const v
     width       = 90.0f;
     height      = 18.0f;
     left_margin = 20.0f;
-    count       = 0;
     brightness  = 1.0f;
     alpha       = 0.0f;
 
     move_elapsed = 1.0f;
     src_y        = -1.0f;
     dest_y       = -1.0f;
+    elapsed_time = 1.0f;
 
     show = true;
 
@@ -39,6 +39,8 @@ TextKeyEntry::TextKeyEntry(const FXFont& font, const std::string& label, const v
     if(truncated) {
         display_ext += std::string("...");
     }
+
+    value.clear();
 }
 
 const vec3& TextKeyEntry::getColour() const {
@@ -54,27 +56,27 @@ void TextKeyEntry::setShow(bool show) {
 }
 
 bool TextKeyEntry::isFinished() const {
-    return (count<=0 && alpha <= 0.0f);
+    return (getValue()<=0 && alpha <= 0.0f);
 }
 
 void TextKeyEntry::colourize() {
     colour = label.empty() ? vec3(1.0f, 1.0f, 1.0f) : colourHash(label);
 }
 
-void TextKeyEntry::inc() {
-    count++;
+void TextKeyEntry::inc(bool autoexpire) {
+    value.push_back(autoexpire ? elapsed_time : std::numeric_limits<float>::max());
 }
 
 void TextKeyEntry::dec() {
-    count--;
+    value.erase(value.begin());
 }
 
-int TextKeyEntry::getCount() const {
-    return count;
+int TextKeyEntry::getValue() const {
+    return value.size();
 }
 
-void TextKeyEntry::setCount(int count) {
-    this->count = count;
+void TextKeyEntry::setValue(unsigned count, float elapsed_time) {
+    value.resize(count, elapsed_time);
 }
 
 void TextKeyEntry::setDestY(float dest_y) {
@@ -88,8 +90,11 @@ void TextKeyEntry::setDestY(float dest_y) {
 
 
 void TextKeyEntry::logic(float dt) {
+    elapsed_time += dt;
 
-    if(count<=0 || !show) {
+    removeExpiredEntries();
+
+    if(getValue() <= 0 || !show) {
         alpha = std::max(0.0f, alpha - dt);
     } else if(alpha < 1.0f) {
         alpha = std::min(1.0f, alpha + dt);
@@ -148,7 +153,22 @@ void TextKeyEntry::draw() {
     font.draw((int)pos.x+2, (int)pos.y+3,  display_ext.c_str());
 
     font.dropShadow(true);
-    font.print((int)pos.x+width+4, (int)pos.y+3, "%d", count);
+    font.print((int)pos.x+width+4, (int)pos.y+3, "%d", getValue());
+}
+
+void TextKeyEntry::removeExpiredEntries() {
+
+    float expire_time = gGourceSettings.file_idle_time;
+
+    while (expire_time > 0.0f && value.size() > 0) {
+        float diff_time = elapsed_time - value[0];
+
+        if(diff_time <= expire_time) {
+            break;
+        }
+
+        value.erase(value.begin());
+    }
 }
 
 // Key
@@ -203,7 +223,7 @@ void TextKey::clear() {
 
     for(std::vector<TextKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
         TextKeyEntry* entry = *it;
-        entry->setCount(0);
+        entry->setValue(0);
     }
 
     interval_remaining = 0.0f;
@@ -226,7 +246,7 @@ void TextKey::inc(RFile* file) {
 }
 
 
-//decrement count of extension. if drops to zero, mark it for removal
+//decrement value of extension. if drops to zero, mark it for removal
 void TextKey::dec(RFile* file) {
 
     std::map<std::string, TextKeyEntry*>::iterator result = keymap.find(file->ext);
@@ -240,9 +260,9 @@ void TextKey::dec(RFile* file) {
 
 bool file_key_entry_sort (const TextKeyEntry* a, const TextKeyEntry* b) {
 
-    //sort by count
-    if(a->getCount() != b->getCount())
-        return (a->getCount() > b->getCount());
+    //sort by Value
+    if(a->getValue() != b->getValue())
+        return (a->getValue() > b->getValue());
 
     //then by name (tie breaker)
     return a->getLabel().compare(b->getLabel()) < 0;
@@ -285,7 +305,7 @@ void TextKey::logic(float dt) {
 
             for(std::vector<TextKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
                 TextKeyEntry* entry = *it;
-                if(entry->getCount()>0) {
+                if(entry->getValue()>0) {
                     entry->setDestY(key_y);
                 }
                 key_y += 20.0f;

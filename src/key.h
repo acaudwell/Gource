@@ -32,9 +32,9 @@ class TextKeyEntry {
     vec3 colour;
     std::string label;
     std::string display_ext;
+    std::vector<float> value;
     float alpha;
     float brightness;
-    int count;
     float pos_y;
     float src_y;
     float dest_y;
@@ -42,6 +42,7 @@ class TextKeyEntry {
     float left_margin;
     float width;
     float height;
+    float elapsed_time;
     vec2 pos;
     vec2 shadow;
     bool show;
@@ -55,13 +56,13 @@ public:
 
     void colourize();
     
-    void inc();
+    void inc(bool autoexpire = false);
     void dec();
     
     void setShow(bool show);
     
-    int getCount() const;
-    void setCount(int count);
+    int getValue() const;
+    void setValue(unsigned count, float elapsed_time = std::numeric_limits<float>::max());
 
     bool isNew() const;
     bool isFinished() const;
@@ -69,6 +70,8 @@ public:
     void logic(float dt);
 
     void draw();
+
+    void removeExpiredEntries();
 };
 
 class TextKey {
