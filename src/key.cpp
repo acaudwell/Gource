@@ -258,6 +258,36 @@ void TextKey::dec(RFile* file) {
     entry->dec();
 }
 
+void TextKey::inc(const std::string &label, bool expires) {
+
+    TextKeyEntry* entry = 0;
+
+    std::map<std::string, TextKeyEntry*>::iterator result = keymap.find(label);
+
+    if(result != keymap.end()) {
+        entry = result->second;
+    } else {
+        entry = new TextKeyEntry(font, label, colourHash(label));
+
+        keymap[label] = entry;
+    }
+
+    entry->inc();
+}
+
+
+//decrement value of label. if drops to zero, mark it for removal
+void TextKey::dec(const std::string &label) {
+
+    std::map<std::string, TextKeyEntry*>::iterator result = keymap.find(label);
+
+    if(result == keymap.end()) return;
+
+    TextKeyEntry* entry = result->second;
+
+    entry->dec();
+}
+
 bool file_key_entry_sort (const TextKeyEntry* a, const TextKeyEntry* b) {
 
     //sort by Value
@@ -338,4 +368,32 @@ void TextKey::draw() {
         entry->draw();
     }
 
+}
+
+AuthorKey::AuthorKey() : TextKey() {
+
+}
+
+AuthorKey::~AuthorKey() {
+
+    clear();
+}
+
+AuthorKey::AuthorKey(float update_interval) : TextKey(update_interval) {
+
+}
+
+void AuthorKey::clear() {
+
+    TextKey::clear();
+}
+
+void AuthorKey::incCommit(const std::string &author) {
+
+    TextKey::inc(author, false);
+}
+
+void AuthorKey::incFile(const std::string &author) {
+
+    TextKey::inc(author, true);
 }

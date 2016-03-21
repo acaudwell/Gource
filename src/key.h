@@ -84,7 +84,7 @@ class TextKey {
     bool show;
 public:
     TextKey();
-    ~TextKey();
+    virtual ~TextKey();
     TextKey(float update_interval);
     
     void setShow(bool show);
@@ -96,9 +96,30 @@ public:
     void inc(RFile* file);
     void dec(RFile* file);
 
+    void inc(const std::string &label, bool expires = false);
+    void dec(const std::string &label);
+
     void logic(float dt);
     
     void draw();
+};
+
+class AuthorKey : public TextKey {
+    // Prevents from being used by others
+    void inc(RFile* file);
+    void dec(RFile* file);
+    void inc(const std::string &label, bool expires = false);
+    void dec(const std::string &label);
+
+public:
+    AuthorKey();
+    ~AuthorKey();
+    AuthorKey(float update_interval);
+
+    void clear();
+
+    void incCommit(const std::string &author);
+    void incFile(const std::string &author);
 };
 
 #endif
