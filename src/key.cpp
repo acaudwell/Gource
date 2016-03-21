@@ -14,11 +14,12 @@ TextKeyEntry::TextKeyEntry(const FXFont& font, const std::string& label, const v
 
     shadow      = vec2(3.0, 3.0);
 
-    width       = std::max(90, gGourceSettings.text_rectangle_width);
-    height      = 18.0f;
-    left_margin = 20.0f;
-    brightness  = 1.0f;
-    alpha       = 0.0f;
+    width        = std::max(90, gGourceSettings.text_rectangle_width);
+    height       = 18.0f;
+    left_margin  = 20.0f;
+    right_margin = -20.0f;
+    brightness   = 1.0f;
+    alpha        = 0.0f;
 
     move_elapsed = 1.0f;
     src_y        = -1.0f;
@@ -88,6 +89,27 @@ void TextKeyEntry::setDestY(float dest_y) {
     move_elapsed = 0.0f;
 }
 
+void TextKeyEntry::setAtRight(bool at_right) {
+    this->at_right = at_right;
+}
+
+static float calculate_x_pos(const FXFont &font, float width, int count) {
+    static float lesser_pos_x = -1.0f;
+    char buf[4096];
+    int text_value;
+    float pos_x;
+
+    snprintf(buf, sizeof(buf), "%d", count);
+    text_value = font.getWidth(buf) + 4;
+
+    pos_x = display.width - width - text_value;
+
+    if(lesser_pos_x <= 0.0f || pos_x < lesser_pos_x) {
+        lesser_pos_x = pos_x;
+    }
+
+    return lesser_pos_x;
+}
 
 void TextKeyEntry::logic(float dt) {
     elapsed_time += dt;
@@ -112,7 +134,12 @@ void TextKeyEntry::logic(float dt) {
         }
     }
 
-    pos = vec2(alpha * left_margin, pos_y);
+    if(at_right) {
+        float pos_x = calculate_x_pos(font, width, getValue());
+        pos = vec2(alpha * right_margin + pos_x, pos_y);
+    } else {
+        pos = vec2(alpha * left_margin, pos_y);
+    }
 }
 
 void TextKeyEntry::draw() {
@@ -187,6 +214,7 @@ TextKey::TextKey(float update_interval) {
     font.dropShadow(false);
     font.roundCoordinates(false);
     show = true;
+    at_right = false;
 }
 
 TextKey::~TextKey() {
@@ -210,6 +238,10 @@ void TextKey::setShow(bool show) {
         entry->setShow(show);
     }
     interval_remaining = 0.0f;
+}
+
+void TextKey::changeScreenPosition() {
+    at_right = !at_right;
 }
 
 void TextKey::colourize() {
@@ -239,6 +271,8 @@ void TextKey::inc(RFile* file) {
         entry = result->second;
     } else {
         entry = new TextKeyEntry(font, file->ext, file->getFileColour());
+        entry->setAtRight(at_right);
+
         keymap[file->ext] = entry;
     }
 
@@ -268,6 +302,7 @@ void TextKey::inc(const std::string &label, bool expires) {
         entry = result->second;
     } else {
         entry = new TextKeyEntry(font, label, colourHash(label));
+        entry->setAtRight(at_right);
 
         keymap[label] = entry;
     }

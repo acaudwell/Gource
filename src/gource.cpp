@@ -127,7 +127,14 @@ Gource::Gource(FrameExporter* exporter) {
 
     file_key = TextKey(1.0f);
 
+    if(gGourceSettings.show_key_at_right) {
+        file_key.changeScreenPosition();
+    }
+
     author_key = AuthorKey(1.0f);
+    if(gGourceSettings.show_author_key_at_right) {
+        author_key.changeScreenPosition();
+    }
 
     camera = ZoomCamera(vec3(0,0, -300), vec3(0.0, 0.0, 0.0), gGourceSettings.camera_zoom_default, gGourceSettings.camera_zoom_max);
     camera.setPadding(gGourceSettings.padding);

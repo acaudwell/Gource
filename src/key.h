@@ -40,12 +40,14 @@ class TextKeyEntry {
     float dest_y;
     float move_elapsed;
     float left_margin;
+    float right_margin;
     float width;
     float height;
     float elapsed_time;
     vec2 pos;
     vec2 shadow;
     bool show;
+    bool at_right;
 public:
     TextKeyEntry(const FXFont& font, const std::string& label, const vec3& colour);
 
@@ -53,6 +55,7 @@ public:
     const std::string& getLabel() const;
 
     void setDestY(float dest_y);
+    void setAtRight(bool at_right);
 
     void colourize();
     
@@ -82,12 +85,15 @@ class TextKey {
     float update_interval;
     float interval_remaining;
     bool show;
+    bool at_right;
+
 public:
     TextKey();
     virtual ~TextKey();
     TextKey(float update_interval);
     
     void setShow(bool show);
+    void changeScreenPosition();
     
     void clear();
 

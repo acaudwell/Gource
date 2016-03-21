@@ -152,6 +152,8 @@ if(extended_help) {
     printf("  --caption-offset X          Caption horizontal offset\n\n");
 
     printf("  --text-rectangle-width SIZE Define maximum space for extension or author key\n");
+    printf("  --key-at-right              Key will be display at right of screen\n");
+    printf("  --author-at-right           Author will be display at right of screen\n");
     printf("  --author-mode MODE          Define what keep track (file,commit)\n\n");
 
     printf("  --hash-seed SEED         Change the seed of hash function.\n\n");
@@ -315,6 +317,8 @@ GourceSettings::GourceSettings() {
     arg_types["caption-offset"]     = "int";
 
     arg_types["text-rectangle-width"] = "int";
+    arg_types["key-at-right"]         = "bool";
+    arg_types["author-at-right"]      = "bool";
     arg_types["author-mode"]          = "string";
 
     arg_types["dir-name-depth"]     = "int";
@@ -353,7 +357,9 @@ void GourceSettings::setGourceDefaults() {
     dont_stop      = false;
 
     show_key = false;
+    show_key_at_right = false;
     show_author_key = false;
+    show_author_key_at_right = false;
     text_rectangle_width = 90;
     author_key_mode = "file";
 
@@ -1143,8 +1149,16 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         show_key = true;
     }
 
+    if(gource_settings->getBool("key-at-right")) {
+        show_key_at_right = true;
+    }
+
     if(gource_settings->getBool("author")) {
         show_author_key = true;
+    }
+
+    if(gource_settings->getBool("author-at-right")) {
+        show_author_key_at_right = true;
     }
 
     if((entry = gource_settings->getEntry("text-rectangle-width")) != 0) {
