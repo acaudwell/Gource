@@ -1,6 +1,7 @@
 0.44:
  * Fixed crash when taking a screenshot with an odd resolution.
  * Fixed type deduction compilation error with newer versions of GCC.
+ * Documentation improvements.
 
 0.43:
  * Updated boost autoconf macros to fix multi-arch detection.
