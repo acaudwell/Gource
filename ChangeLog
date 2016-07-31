@@ -1,3 +1,6 @@
+0.45:
+ * Fixed crash when SVN log lacks author information (obarthel).
+
 0.44:
  * Fixed crash when taking a screenshot with an odd resolution.
  * Fixed type deduction compilation error with newer versions of GCC.
