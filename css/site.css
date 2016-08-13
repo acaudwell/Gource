@@ -14,6 +14,31 @@ a:hover, a:focus {
     text-decoration: none;
 }
 
+#donate {
+    color: #AF5;
+    text-shadow: 0 0 3px #361;
+}
+
+#donate:hover {
+    text-shadow: 0 0 5px #AF5;
+}
+
+#donations-box  input, #donations-box select {
+    color: black;
+    line-height: normal !important;
+    vertical-align: bottom;
+    box-sizing: border-box;
+    height: 26px;
+}
+
+div #donations-box {
+    display: none;
+    position: relative;
+    float: left;
+    padding: 5px;
+    margin-top: 7px;
+}
+
 .navbar-nav > li > a, .index > li > a {
     color: #aaa;
 }
