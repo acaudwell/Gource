@@ -328,6 +328,18 @@ void RCommit::addFile(const std::string& filename, const  std::string& action, c
         }
     }
 
+    // Only allow files that have been whitelisted
+    if(!gGourceSettings.file_show_filters.empty()) {
+
+        for(std::vector<Regex*>::iterator ri = gGourceSettings.file_show_filters.begin(); ri != gGourceSettings.file_show_filters.end(); ri++) {
+            Regex* r = *ri;
+
+            if(!r->match(filename)) {
+                return;
+            }
+        }
+    }
+
     files.push_back(RCommitFile(filename, action, colour));
 }
 
