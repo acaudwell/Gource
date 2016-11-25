@@ -1,5 +1,6 @@
 0.45:
  * Fixed crash when SVN log lacks author information (obarthel).
+ * Additional git log command validation (cym13).
 
 0.44:
  * Fixed crash when taking a screenshot with an odd resolution.
