@@ -96,7 +96,11 @@ BaseLog* GitCommitLog::generateLog(const std::string& dir) {
     }
 
     char cmd_buff[2048];
-    snprintf(cmd_buff, 2048, "%s > %s", command.c_str(), temp_file.c_str());
+    int written = snprintf(cmd_buff, 2048, "%s > %s", command.c_str(), temp_file.c_str());
+
+    if(written < 0 || written >= 2048) {
+        return 0;
+    }
 
     int command_rc = systemCommand(cmd_buff);
 
