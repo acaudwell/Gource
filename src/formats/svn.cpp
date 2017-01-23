@@ -245,9 +245,9 @@ bool SVNCommitLog::parseCommit(RCommit& commit) {
     TiXmlElement* authorE = leE->FirstChildElement("author");
 
     if(authorE != 0) {
-
-        std::string author(authorE->GetText());
-
+        // GetText() may return NULL, causing author instantiation to crash.
+        std::string author;
+        if(authorE->GetText()) author = authorE->GetText();
         if(author.empty()) author = "Unknown";
 
         commit.username = author;

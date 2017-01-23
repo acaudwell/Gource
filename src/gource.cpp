@@ -696,11 +696,11 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             idle_time = gGourceSettings.auto_skip_seconds;
         }
 
-        if (e->keysym.sym == SDLK_t) {
+        if (e->keysym.sym == SDLK_y) {
             gGourceQuadTreeDebug = !gGourceQuadTreeDebug;
         }
 
-        if (e->keysym.sym == SDLK_y) {
+        if (e->keysym.sym == SDLK_t) {
             gGourceSettings.hide_tree = !gGourceSettings.hide_tree;
         }
 
