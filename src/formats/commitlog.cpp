@@ -316,10 +316,10 @@ void RCommit::addFile(const std::string& filename, const std::string& action) {
 }
 
 void RCommit::addFile(const std::string& filename, const  std::string& action, const vec3& colour) {
-    //check filename against filters
-    if(!gGourceSettings.file_filters.empty()) {
 
-        for(std::vector<Regex*>::iterator ri = gGourceSettings.file_filters.begin(); ri != gGourceSettings.file_filters.end(); ri++) {
+    //check filename against filters
+    if(!gGourceSettings.hidden_file_filters.empty()) {
+        for(auto ri = gGourceSettings.hidden_file_filters.begin(); ri != gGourceSettings.hidden_file_filters.end(); ri++) {
             Regex* r = *ri;
 
             if(r->match(filename)) {
@@ -328,6 +328,18 @@ void RCommit::addFile(const std::string& filename, const  std::string& action, c
         }
     }
 
+    if(!gGourceSettings.shown_file_filters.empty()) {
+        for(auto ri = gGourceSettings.shown_file_filters.begin(); ri != gGourceSettings.shown_file_filters.end(); ri++) {
+            Regex* r = *ri;
+
+            if(r->match(filename)) {
+                goto push_file;
+            }
+        }
+        return;
+    }
+
+push_file:
     files.push_back(RCommitFile(filename, action, colour));
 }
 

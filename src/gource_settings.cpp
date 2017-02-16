@@ -127,7 +127,8 @@ if(extended_help) {
     printf("  --transparent            Make the background transparent\n\n");
 
     printf("  --user-filter REGEX      Ignore usernames matching this regex\n");
-    printf("  --file-filter REGEX      Ignore files matching this regex\n\n");
+    printf("  --file-filter REGEX      Ignore files matching this regex\n");
+    printf("  --shown-filter REGEX     Shown files matching this regex only\n\n");
 
     printf("  --user-friction SECONDS  Change the rate users slow down (default: 0.67)\n");
     printf("  --user-scale SCALE       Change scale of users (default: 1.0)\n");
@@ -268,6 +269,7 @@ GourceSettings::GourceSettings() {
 
     arg_types["user-filter"]    = "multi-value";
     arg_types["file-filter"]    = "multi-value";
+    arg_types["shown-filter"]   = "multi-value";
     arg_types["follow-user"]    = "multi-value";
     arg_types["highlight-user"] = "multi-value";
 
@@ -417,12 +419,19 @@ void GourceSettings::setGourceDefaults() {
 
     gStringHashSeed = 31;
 
-    //delete file filters
-    for(std::vector<Regex*>::iterator it = file_filters.begin(); it != file_filters.end(); it++) {
+    file_extensions = false;
+
+    //delete hidden file filters
+    for(std::vector<Regex*>::iterator it = hidden_file_filters.begin(); it != hidden_file_filters.end(); it++) {
         delete (*it);
     }
-    file_filters.clear();
-    file_extensions = false;
+    hidden_file_filters.clear();
+
+    //delete shown file filters
+    for(std::vector<Regex*>::iterator it = shown_file_filters.begin(); it != shown_file_filters.end(); it++) {
+        delete (*it);
+    }
+    shown_file_filters.clear();
 
     //delete user filters
     for(std::vector<Regex*>::iterator it = user_filters.begin(); it != user_filters.end(); it++) {
@@ -1294,7 +1303,30 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
                 conffile.entryException(entry, "invalid file-filter regular expression");
             }
 
-            file_filters.push_back(r);
+            hidden_file_filters.push_back(r);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("shown-filter")) != 0) {
+
+        ConfEntryList* filters = gource_settings->getEntries("shown-filter");
+
+        for(ConfEntryList::iterator it = filters->begin(); it != filters->end(); it++) {
+
+            entry = *it;
+
+            if(!entry->hasValue()) conffile.entryException(entry, "specify shown-filter (regex)");
+
+            std::string filter_string = entry->getString();
+
+            Regex* r = new Regex(filter_string, 1);
+
+            if(!r->isValid()) {
+                delete r;
+                conffile.entryException(entry, "invalid shown-filter regular expression");
+            }
+
+            shown_file_filters.push_back(r);
         }
     }
 

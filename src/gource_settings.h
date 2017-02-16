@@ -129,7 +129,8 @@ public:
 
     std::vector<std::string> highlight_users;
     std::vector<std::string> follow_users;
-    std::vector<Regex*> file_filters;
+    std::vector<Regex*> hidden_file_filters;
+    std::vector<Regex*> shown_file_filters;
     std::vector<Regex*> user_filters;
     bool file_extensions;
 
@@ -144,7 +145,7 @@ public:
     TextureResource* file_graphic;
 
     int log_level;
-    
+
     GourceSettings();
 
     void setGourceDefaults();
