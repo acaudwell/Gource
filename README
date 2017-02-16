@@ -166,11 +166,14 @@ options:
     --dir-name-depth DEPTH
             Draw names of directories down to a specific depth in the tree.
 
+    --file-extensions
+            Show filename extensions only.
+
     --file-filter REGEX
             Filter out any files matching a specified regular expression.
 
-    --file-extensions
-            Show filename extensions only.
+    --file-show-filter REGEX
+            Show only files matching this regular expression.
 
     --user-filter REGEX
             Filter out any users matching a specified regular expression.

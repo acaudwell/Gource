@@ -127,8 +127,8 @@ if(extended_help) {
     printf("  --transparent            Make the background transparent\n\n");
 
     printf("  --user-filter REGEX      Ignore usernames matching this regex\n");
-    printf("  --file-filter REGEX      Ignore files matching this regex\n\n");
-    printf("  --file-show-filter REGEX Show files matching this regex\n\n");
+    printf("  --file-filter REGEX      Ignore files matching this regex\n");
+    printf("  --file-show-filter REGEX Show only files matching this regex\n\n");
 
     printf("  --user-friction SECONDS  Change the rate users slow down (default: 0.67)\n");
     printf("  --user-scale SCALE       Change scale of users (default: 1.0)\n");
@@ -268,10 +268,11 @@ GourceSettings::GourceSettings() {
     arg_types["hash-seed"] = "int";
 
     arg_types["user-filter"]    = "multi-value";
-    arg_types["file-filter"]    = "multi-value";
-    arg_types["file-show-filter"]    = "multi-value";
     arg_types["follow-user"]    = "multi-value";
     arg_types["highlight-user"] = "multi-value";
+
+    arg_types["file-filter"]      = "multi-value";
+    arg_types["file-show-filter"] = "multi-value";
 
     arg_types["log-level"]          = "string";
     arg_types["background-image"]   = "string";
@@ -428,7 +429,7 @@ void GourceSettings::setGourceDefaults() {
     //delete file whitelists
     for(std::vector<Regex*>::iterator it = file_show_filters.begin(); it != file_show_filters.end(); it++) {
         delete (*it);
-    }
+    }    
     file_show_filters.clear();
 
     file_extensions = false;
@@ -1315,7 +1316,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
             entry = *it;
 
-            if(!entry->hasValue()) conffile.entryException(entry, "specify file-filter (regex)");
+            if(!entry->hasValue()) conffile.entryException(entry, "specify file-show-filter (regex)");
 
             std::string filter_string = entry->getString();
 
@@ -1323,7 +1324,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
             if(!r->isValid()) {
                 delete r;
-                conffile.entryException(entry, "invalid file-filter regular expression");
+                conffile.entryException(entry, "invalid file-show-filter regular expression");
             }
 
             file_show_filters.push_back(r);
