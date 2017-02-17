@@ -140,6 +140,9 @@ public:
     int caption_size;
     int caption_offset;
 
+    vec3 filename_colour;
+    float filename_time;
+
     std::string output_custom_filename;
 
     TextureResource* file_graphic;

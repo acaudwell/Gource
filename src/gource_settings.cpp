@@ -151,6 +151,10 @@ if(extended_help) {
     printf("  --caption-duration SECONDS  Caption duration (default: 10.0)\n");
     printf("  --caption-offset X          Caption horizontal offset\n\n");
 
+    printf("  --filename-colour FFFFFF  Font colour for filenames\n");
+    printf("  --filename-time SECONDS   Duration to keep filenames on screen (4.0)\n");
+    printf("                            Must be >= 2.0 seconds\n\n");
+
     printf("  --hash-seed SEED         Change the seed of hash function.\n\n");
 
     printf("  --path PATH\n\n");
@@ -312,6 +316,9 @@ GourceSettings::GourceSettings() {
     arg_types["caption-colour"]     = "string";
     arg_types["caption-offset"]     = "int";
 
+    arg_types["filename-colour"]    = "string";
+    arg_types["filename-time"] = "float";
+
     arg_types["dir-name-depth"]     = "int";
 }
 
@@ -417,6 +424,9 @@ void GourceSettings::setGourceDefaults() {
     caption_size     = 16;
     caption_offset   = 0;
     caption_colour   = vec3(1.0f, 1.0f, 1.0f);
+
+    filename_colour  = vec3(1.0f, 1.0f, 1.0f);
+    filename_time = 4.0f;
 
     gStringHashSeed = 31;
 
@@ -813,6 +823,34 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             caption_colour = vec3(r,g,b);
             caption_colour /= 255.0f;
         } else {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("filename-colour")) != 0) {
+        if(!entry->hasValue()) conffile.entryException(entry, "specify filename colour (FFFFFF)");
+
+	int r,g,b;
+
+	std::string colstring = entry->getString();
+
+	if(entry->isVec3()) {
+	    filename_colour = entry->getVec3();
+	} else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
+            filename_colour = vec3(r,g,b);
+            filename_colour /= 255.0f;
+        } else {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("filename-time")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify duration to keep files on screen (float, >= 2.0)");
+
+        filename_time = entry->getFloat();
+
+        if(filename_time<2.0f) {
             conffile.invalidValueException(entry);
         }
     }

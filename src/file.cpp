@@ -32,7 +32,7 @@ RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, in
     setGraphic(gGourceSettings.file_graphic);
 
     speed = 5.0;
-    nametime = 4.0;
+    nametime = gGourceSettings.filename_time;
     name_interval = nametime;
 
     namecol     = vec3(1.0, 1.0, 1.0);
@@ -60,7 +60,7 @@ RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, in
         file_font = fontmanager.grab("FreeSans.ttf", 14);
         file_font.dropShadow(true);
         file_font.roundCoordinates(false);
-        file_font.setColour(vec4(1.0f, 1.0f, 1.0f, 1.0f));
+        file_font.setColour(vec4(gGourceSettings.filename_colour, 1.0f));
     }
 
     //namelist = glGenLists(1);
