@@ -160,11 +160,17 @@ options:
     --selection-colour FFFFFF
             Font colour for selected users and files.
 
+    --filename-colour FFFFFF
+            Font colour for filenames.
+
     --dir-colour FFFFFF
             Font colour for directories.
 
     --dir-name-depth DEPTH
             Draw names of directories down to a specific depth in the tree.
+
+    --filename-time SECONDS
+            Duration to keep filenames on screen (>= 2.0).
 
     --file-extensions
             Show filename extensions only.

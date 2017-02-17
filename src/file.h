@@ -27,7 +27,6 @@ class RDirNode;
 class RFile : public Pawn {
     vec3 file_colour;
     vec3 touch_colour;
-    vec3 name_colour;
 
     RDirNode* dir;
 

@@ -141,19 +141,18 @@ if(extended_help) {
 
     printf("  --highlight-colour       Font colour for highlighted users in hex.\n");
     printf("  --selection-colour       Font colour for selected users and files.\n");
+    printf("  --filename-colour        Font colour for filenames.\n");
     printf("  --dir-colour             Font colour for directories.\n\n");
 
     printf("  --dir-name-depth DEPTH   Draw names of directories down to a specific depth.\n\n");
+
+    printf("  --filename-time SECONDS  Duration to keep filenames on screen (default: 4.0)\n\n");
 
     printf("  --caption-file FILE         Caption file\n");
     printf("  --caption-size SIZE         Caption font size\n");
     printf("  --caption-colour FFFFFF     Caption colour in hex\n");
     printf("  --caption-duration SECONDS  Caption duration (default: 10.0)\n");
     printf("  --caption-offset X          Caption horizontal offset\n\n");
-
-    printf("  --filename-colour FFFFFF  Font colour for filenames\n");
-    printf("  --filename-time SECONDS   Duration to keep filenames on screen (4.0)\n");
-    printf("                            Must be >= 2.0 seconds\n\n");
 
     printf("  --hash-seed SEED         Change the seed of hash function.\n\n");
 
@@ -317,7 +316,7 @@ GourceSettings::GourceSettings() {
     arg_types["caption-offset"]     = "int";
 
     arg_types["filename-colour"]    = "string";
-    arg_types["filename-time"] = "float";
+    arg_types["filename-time"]      = "float";
 
     arg_types["dir-name-depth"]     = "int";
 }
@@ -846,12 +845,12 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if((entry = gource_settings->getEntry("filename-time")) != 0) {
 
-        if(!entry->hasValue()) conffile.entryException(entry, "specify duration to keep files on screen (float, >= 2.0)");
+        if(!entry->hasValue()) conffile.entryException(entry, "specify duration to keep files on screen (float)");
 
         filename_time = entry->getFloat();
 
         if(filename_time<2.0f) {
-            conffile.invalidValueException(entry);
+            conffile.entryException(entry, "filename-time must be >= 2.0");
         }
     }
 
