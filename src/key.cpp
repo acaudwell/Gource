@@ -1,11 +1,11 @@
 #include "key.h"
 
 
-// File Key Entry
-// a string for the file ext and a colour
+// Text Key Entry
+// a string for the file label and a colour
 
-FileKeyEntry::FileKeyEntry(const FXFont& font, const std::string& ext, const vec3& colour) {
-    this->ext    = ext;
+TextKeyEntry::TextKeyEntry(const FXFont& font, const std::string& label, const vec3& colour) {
+    this->label    = label;
     this->colour = colour;
     this->pos_y  = -1.0f;
 
@@ -14,20 +14,21 @@ FileKeyEntry::FileKeyEntry(const FXFont& font, const std::string& ext, const vec
 
     shadow      = vec2(3.0, 3.0);
 
-    width       = 90.0f;
-    height      = 18.0f;
-    left_margin = 20.0f;
-    count       = 0;
-    brightness  = 1.0f;
-    alpha       = 0.0f;
+    width        = std::max(90, gGourceSettings.text_rectangle_width);
+    height       = 18.0f;
+    left_margin  = 20.0f;
+    right_margin = -20.0f;
+    brightness   = 1.0f;
+    alpha        = 0.0f;
 
     move_elapsed = 1.0f;
     src_y        = -1.0f;
     dest_y       = -1.0f;
+    elapsed_time = 1.0f;
 
     show = true;
 
-    display_ext = ext;
+    display_ext = label;
 
     bool truncated = false;
 
@@ -39,45 +40,47 @@ FileKeyEntry::FileKeyEntry(const FXFont& font, const std::string& ext, const vec
     if(truncated) {
         display_ext += std::string("...");
     }
+
+    value.clear();
 }
 
-const vec3& FileKeyEntry::getColour() const {
+const vec3& TextKeyEntry::getColour() const {
     return colour;
 }
 
-const std::string& FileKeyEntry::getExt() const {
-    return ext;
+const std::string& TextKeyEntry::getLabel() const {
+    return label;
 }
 
-void FileKeyEntry::setShow(bool show) {
+void TextKeyEntry::setShow(bool show) {
     this->show = show;
 }
 
-bool FileKeyEntry::isFinished() const {
-    return (count<=0 && alpha <= 0.0f);
+bool TextKeyEntry::isFinished() const {
+    return (getValue()<=0 && alpha <= 0.0f);
 }
 
-void FileKeyEntry::colourize() {
-    colour = ext.empty() ? vec3(1.0f, 1.0f, 1.0f) : colourHash(ext);
+void TextKeyEntry::colourize() {
+    colour = label.empty() ? vec3(1.0f, 1.0f, 1.0f) : colourHash(label);
 }
 
-void FileKeyEntry::inc() {
-    count++;
+void TextKeyEntry::inc(bool autoexpire) {
+    value.push_back(autoexpire ? elapsed_time : std::numeric_limits<float>::max());
 }
 
-void FileKeyEntry::dec() {
-    count--;
+void TextKeyEntry::dec() {
+    value.erase(value.begin());
 }
 
-int FileKeyEntry::getCount() const {
-    return count;
+int TextKeyEntry::getValue() const {
+    return value.size();
 }
 
-void FileKeyEntry::setCount(int count) {
-    this->count = count;
+void TextKeyEntry::setValue(unsigned count, float elapsed_time) {
+    value.resize(count, elapsed_time);
 }
 
-void FileKeyEntry::setDestY(float dest_y) {
+void TextKeyEntry::setDestY(float dest_y) {
     if(dest_y == this->dest_y) return;
 
     this->dest_y = dest_y;
@@ -86,10 +89,34 @@ void FileKeyEntry::setDestY(float dest_y) {
     move_elapsed = 0.0f;
 }
 
+void TextKeyEntry::setAtRight(bool at_right) {
+    this->at_right = at_right;
+}
 
-void FileKeyEntry::logic(float dt) {
+static float calculate_x_pos(const FXFont &font, float width, int count) {
+    static float lesser_pos_x = -1.0f;
+    char buf[4096];
+    int text_value;
+    float pos_x;
 
-    if(count<=0 || !show) {
+    snprintf(buf, sizeof(buf), "%d", count);
+    text_value = font.getWidth(buf) + 4;
+
+    pos_x = display.width - width - text_value;
+
+    if(lesser_pos_x <= 0.0f || pos_x < lesser_pos_x) {
+        lesser_pos_x = pos_x;
+    }
+
+    return lesser_pos_x;
+}
+
+void TextKeyEntry::logic(float dt) {
+    elapsed_time += dt;
+
+    removeExpiredEntries();
+
+    if(getValue() <= 0 || !show) {
         alpha = std::max(0.0f, alpha - dt);
     } else if(alpha < 1.0f) {
         alpha = std::min(1.0f, alpha + dt);
@@ -107,10 +134,15 @@ void FileKeyEntry::logic(float dt) {
         }
     }
 
-    pos = vec2(alpha * left_margin, pos_y);
+    if(at_right) {
+        float pos_x = calculate_x_pos(font, width, getValue());
+        pos = vec2(alpha * right_margin + pos_x, pos_y);
+    } else {
+        pos = vec2(alpha * left_margin, pos_y);
+    }
 }
 
-void FileKeyEntry::draw() {
+void TextKeyEntry::draw() {
     if(isFinished()) return;
     //label.draw();
 
@@ -148,7 +180,22 @@ void FileKeyEntry::draw() {
     font.draw((int)pos.x+2, (int)pos.y+3,  display_ext.c_str());
 
     font.dropShadow(true);
-    font.print((int)pos.x+width+4, (int)pos.y+3, "%d", count);
+    font.print((int)pos.x+width+4, (int)pos.y+3, "%d", getValue());
+}
+
+void TextKeyEntry::removeExpiredEntries() {
+
+    float expire_time = gGourceSettings.file_idle_time;
+
+    while (expire_time > 0.0f && value.size() > 0) {
+        float diff_time = elapsed_time - value[0];
+
+        if(diff_time <= expire_time) {
+            break;
+        }
+
+        value.erase(value.begin());
+    }
 }
 
 // Key
@@ -156,69 +203,76 @@ void FileKeyEntry::draw() {
 //maintain a key of all the current file types, updated periodically.
 //new entries slide in and out / fade in fade out
 
-FileKey::FileKey() {
+TextKey::TextKey() {
 
 }
 
-FileKey::FileKey(float update_interval) {
+TextKey::TextKey(float update_interval) {
     this->update_interval = update_interval;
     interval_remaining = 1.0f;
     font = fontmanager.grab("FreeSans.ttf", 16);
     font.dropShadow(false);
     font.roundCoordinates(false);
     show = true;
+    at_right = false;
 }
 
-FileKey::~FileKey() {
+TextKey::~TextKey() {
     active_keys.clear();
 
-    for(std::map<std::string, FileKeyEntry*>::iterator it = keymap.begin(); it != keymap.end(); it++) {
-        FileKeyEntry* entry = it->second;
+    for(std::map<std::string, TextKeyEntry*>::iterator it = keymap.begin(); it != keymap.end(); it++) {
+        TextKeyEntry* entry = it->second;
         delete entry;
     }
     keymap.clear();
 
 }
 
-void FileKey::setShow(bool show) {
+void TextKey::setShow(bool show) {
     this->show = show;
 
-    for(std::vector<FileKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
+    for(std::vector<TextKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
 
-        FileKeyEntry* entry = *it;
+        TextKeyEntry* entry = *it;
 
         entry->setShow(show);
     }
     interval_remaining = 0.0f;
 }
 
-void FileKey::colourize() {
-    for(std::vector<FileKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
-        FileKeyEntry* entry = *it;
+void TextKey::changeScreenPosition() {
+    at_right = !at_right;
+}
+
+void TextKey::colourize() {
+    for(std::vector<TextKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
+        TextKeyEntry* entry = *it;
         entry->colourize();
     }
 }
 
-void FileKey::clear() {
+void TextKey::clear() {
 
-    for(std::vector<FileKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
-        FileKeyEntry* entry = *it;
-        entry->setCount(0);
+    for(std::vector<TextKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
+        TextKeyEntry* entry = *it;
+        entry->setValue(0);
     }
 
     interval_remaining = 0.0f;
 }
 
-void FileKey::inc(RFile* file) {
+void TextKey::inc(RFile* file) {
 
-    FileKeyEntry* entry = 0;
+    TextKeyEntry* entry = 0;
 
-    std::map<std::string, FileKeyEntry*>::iterator result = keymap.find(file->ext);
+    std::map<std::string, TextKeyEntry*>::iterator result = keymap.find(file->ext);
 
     if(result != keymap.end()) {
         entry = result->second;
     } else {
-        entry = new FileKeyEntry(font, file->ext, file->getFileColour());
+        entry = new TextKeyEntry(font, file->ext, file->getFileColour());
+        entry->setAtRight(at_right);
+
         keymap[file->ext] = entry;
     }
 
@@ -226,29 +280,60 @@ void FileKey::inc(RFile* file) {
 }
 
 
-//decrement count of extension. if drops to zero, mark it for removal
-void FileKey::dec(RFile* file) {
+//decrement value of extension. if drops to zero, mark it for removal
+void TextKey::dec(RFile* file) {
 
-    std::map<std::string, FileKeyEntry*>::iterator result = keymap.find(file->ext);
+    std::map<std::string, TextKeyEntry*>::iterator result = keymap.find(file->ext);
 
     if(result == keymap.end()) return;
 
-    FileKeyEntry* entry = result->second;
+    TextKeyEntry* entry = result->second;
 
     entry->dec();
 }
 
-bool file_key_entry_sort (const FileKeyEntry* a, const FileKeyEntry* b) {
+void TextKey::inc(const std::string &label, bool expires) {
 
-    //sort by count
-    if(a->getCount() != b->getCount())
-        return (a->getCount() > b->getCount());
+    TextKeyEntry* entry = 0;
 
-    //then by name (tie breaker)
-    return a->getExt().compare(b->getExt()) < 0;
+    std::map<std::string, TextKeyEntry*>::iterator result = keymap.find(label);
+
+    if(result != keymap.end()) {
+        entry = result->second;
+    } else {
+        entry = new TextKeyEntry(font, label, colourHash(label));
+        entry->setAtRight(at_right);
+
+        keymap[label] = entry;
+    }
+
+    entry->inc();
 }
 
-void FileKey::logic(float dt) {
+
+//decrement value of label. if drops to zero, mark it for removal
+void TextKey::dec(const std::string &label) {
+
+    std::map<std::string, TextKeyEntry*>::iterator result = keymap.find(label);
+
+    if(result == keymap.end()) return;
+
+    TextKeyEntry* entry = result->second;
+
+    entry->dec();
+}
+
+bool file_key_entry_sort (const TextKeyEntry* a, const TextKeyEntry* b) {
+
+    //sort by Value
+    if(a->getValue() != b->getValue())
+        return (a->getValue() > b->getValue());
+
+    //then by name (tie breaker)
+    return a->getLabel().compare(b->getLabel()) < 0;
+}
+
+void TextKey::logic(float dt) {
 
     interval_remaining -= dt;
 
@@ -257,10 +342,10 @@ void FileKey::logic(float dt) {
 
         if(show) {
             active_keys.clear();
-            std::vector<FileKeyEntry*> finished_keys;
+            std::vector<TextKeyEntry*> finished_keys;
 
-            for(std::map<std::string, FileKeyEntry*>::iterator it = keymap.begin(); it != keymap.end(); it++) {
-                FileKeyEntry* entry = it->second;
+            for(std::map<std::string, TextKeyEntry*>::iterator it = keymap.begin(); it != keymap.end(); it++) {
+                TextKeyEntry* entry = it->second;
 
                 if(!entry->isFinished()) {
                     active_keys.push_back(entry);
@@ -283,18 +368,18 @@ void FileKey::logic(float dt) {
 
             float key_y = 20.0f;
 
-            for(std::vector<FileKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
-                FileKeyEntry* entry = *it;
-                if(entry->getCount()>0) {
+            for(std::vector<TextKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
+                TextKeyEntry* entry = *it;
+                if(entry->getValue()>0) {
                     entry->setDestY(key_y);
                 }
                 key_y += 20.0f;
             }
 
             //remove and delete finished entries
-            for(std::vector<FileKeyEntry*>::iterator it = finished_keys.begin(); it != finished_keys.end(); it++) {
-                FileKeyEntry* entry = *it;
-                keymap.erase(entry->getExt());
+            for(std::vector<TextKeyEntry*>::iterator it = finished_keys.begin(); it != finished_keys.end(); it++) {
+                TextKeyEntry* entry = *it;
+                keymap.erase(entry->getLabel());
                 delete entry;
             }
         }
@@ -302,20 +387,51 @@ void FileKey::logic(float dt) {
         interval_remaining = update_interval;
     }
 
-    for(std::vector<FileKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
+    for(std::vector<TextKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
 
-        FileKeyEntry* entry = *it;
+        TextKeyEntry* entry = *it;
 
         entry->logic(dt);
     }
 }
 
-void FileKey::draw() {
+void TextKey::draw() {
 
-    for(std::vector<FileKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
-        FileKeyEntry* entry = *it;
+    for(std::vector<TextKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
+        TextKeyEntry* entry = *it;
 
         entry->draw();
     }
 
+}
+
+AuthorKey::AuthorKey() : TextKey() {
+    is_commit_mode = !strcmp("commit", gGourceSettings.author_key_mode.c_str());
+}
+
+AuthorKey::~AuthorKey() {
+
+    clear();
+}
+
+AuthorKey::AuthorKey(float update_interval) : TextKey(update_interval) {
+
+    is_commit_mode = !strcmp("commit", gGourceSettings.author_key_mode.c_str());
+}
+
+void AuthorKey::clear() {
+
+    TextKey::clear();
+}
+
+void AuthorKey::incCommit(const std::string &author) {
+    if (!is_commit_mode) return;
+
+    TextKey::inc(author, false);
+}
+
+void AuthorKey::incFile(const std::string &author) {
+    if (is_commit_mode) return;
+
+    TextKey::inc(author, true);
 }

@@ -125,7 +125,16 @@ Gource::Gource(FrameExporter* exporter) {
     textbox.setBrightness(0.5f);
     textbox.show();
 
-    file_key = FileKey(1.0f);
+    file_key = TextKey(1.0f);
+
+    if(gGourceSettings.show_key_at_right) {
+        file_key.changeScreenPosition();
+    }
+
+    author_key = AuthorKey(1.0f);
+    if(gGourceSettings.show_author_key_at_right) {
+        author_key.changeScreenPosition();
+    }
 
     camera = ZoomCamera(vec3(0,0, -300), vec3(0.0, 0.0, 0.0), gGourceSettings.camera_zoom_default, gGourceSettings.camera_zoom_max);
     camera.setPadding(gGourceSettings.padding);
@@ -764,6 +773,10 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             gGourceSettings.show_key = !gGourceSettings.show_key;
         }
 
+        if (e->keysym.sym == SDLK_a) {
+            gGourceSettings.show_author_key = !gGourceSettings.show_author_key;
+        }
+
         if(e->keysym.sym == SDLK_c) {
             splash = 15.0f;
         }
@@ -928,6 +941,7 @@ void Gource::reset() {
     last_percent = 0.0;
 
     file_key.clear();
+    author_key.clear();
 
     idle_time=0;
     currtime=0;
@@ -1204,6 +1218,8 @@ void Gource::processCommit(RCommit& commit, float t) {
 
         addFileAction(commit.username, cf, file, t);
     }
+
+    author_key.incCommit(commit.username);
 }
 
 void Gource::addFileAction(const std::string& username, const RCommitFile& cf, RFile* file, float t) {
@@ -1252,6 +1268,7 @@ void Gource::addFileAction(const std::string& username, const RCommitFile& cf, R
     }
 
     user->addAction(userAction);
+    author_key.incFile(username);
 }
 
 void Gource::interactUsers() {
@@ -1572,6 +1589,7 @@ void Gource::logic(float t, float dt) {
     }
 
     file_key.logic(dt);
+    author_key.logic(dt);
 
     slider.logic(dt);
 
@@ -2604,6 +2622,10 @@ void Gource::draw(float t, float dt) {
     //file key
     file_key.draw();
     file_key.setShow(gGourceSettings.show_key);
+
+    //author key
+    author_key.draw();
+    author_key.setShow(gGourceSettings.show_author_key);
 
     //slider
     if(canSeek()) {
