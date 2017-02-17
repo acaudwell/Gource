@@ -32,7 +32,7 @@ RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, in
     setGraphic(gGourceSettings.file_graphic);
 
     speed = 5.0;
-    nametime = 4.0;
+    nametime = 1.0;
     name_interval = nametime;
 
     namecol     = vec3(1.0, 1.0, 1.0);

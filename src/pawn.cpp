@@ -115,13 +115,20 @@ bool Pawn::nameVisible() const {
 void Pawn::drawName() {
     if(!nameVisible()) return;
 
+    // done:
+    // how much time has been spent displaying the name
+    // name_interval:
+    // how much time has left to display the name
     float done = nametime - name_interval;
 
-    if(done < 1.0) {
+    if(done < 0.5) {
+	// You have been displaying for less than a second
         drawNameText(done);
-    } else if(done > 1.0 && done < nametime - 1.0) {
+    } else if(done > 0.5 && done < nametime - 0.5) {
+	// You have been displaying for more than a second, and have more than a second left to display
         drawNameText(1.0);
     } else {
+	// You have been displaying for more than a second, and have less than a second left to display
         drawNameText((nametime - done));
     }
 }
