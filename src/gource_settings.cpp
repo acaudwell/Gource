@@ -615,7 +615,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             else if(hidestr == "files")     hide_files     = true;
             else if(hidestr == "usernames") hide_usernames = true;
             else if(hidestr == "filenames") hide_filenames = true;
-            else if(hidestr == "dirnames")  hide_dirnames  = true;
+            else if(hidestr == "dirnames" || hide_tree)  hide_dirnames  = true;
             else if(hidestr == "bloom")     hide_bloom     = true;
             else if(hidestr == "progress")  hide_progress  = true;
             else if(hidestr == "root")      hide_root      = true;
