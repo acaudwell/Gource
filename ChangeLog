@@ -1,4 +1,5 @@
 0.45:
+ * Improved handling of very low seconds-per-day values (malengrin).
  * Fixed crash when SVN log lacks author information (obarthel).
  * Additional git log command validation (cym13).
  * Added --file-show-filter REGEX option (swoogles).

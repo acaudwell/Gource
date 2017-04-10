@@ -1711,6 +1711,11 @@ void Gource::logic(float t, float dt) {
 
         processCommit(commit, t);
 
+        // allow for non linear time lines
+        if(lasttime > commit.timestamp) {
+            currtime = commit.timestamp;
+        }
+
         lasttime = commit.timestamp;
         subseconds = 0.0;
 
