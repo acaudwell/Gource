@@ -1711,7 +1711,7 @@ void Gource::logic(float t, float dt) {
 
         processCommit(commit, t);
 
-        currtime = lasttime = commit.timestamp;
+        lasttime = commit.timestamp;
         subseconds = 0.0;
 
         commitqueue.pop_front();
