@@ -103,6 +103,11 @@ void GourceShell::keyPress(SDL_KeyboardEvent *e) {
             quit();
         }
 
+#if SDL_VERSION_ATLEAST(2,0,0)
+        // ignore repeated return key which can sometimes stop the full screen toggle from working
+        if(key_return && e->repeat > 0) key_return = false;
+#endif
+
         if(key_return) {
 
 #if SDL_VERSION_ATLEAST(2,0,0)
