@@ -52,6 +52,8 @@ void GourceSettings::help(bool extended_help) {
     printf("  -f, --fullscreen                 Fullscreen\n");
     printf("      --multi-sampling             Enable multi-sampling\n");
     printf("      --no-vsync                   Disable vsync\n\n");
+    printf("  --window-position XxY            Initial window position\n");
+    printf("  --frameless                      Frameless window\n\n");
 
     printf("  --start-date 'YYYY-MM-DD hh:mm:ss +tz'  Start at a date and optional time\n");
     printf("  --stop-date  'YYYY-MM-DD hh:mm:ss +tz'  Stop at a date and optional time\n\n");

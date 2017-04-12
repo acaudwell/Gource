@@ -28,7 +28,8 @@ class GourceShell : public SDLApp {
     bool next;
 
     TextureResource* transition_texture;
-    float  transition_interval;
+    float transition_interval;
+    float toggle_delay;
 
     FrameExporter* exporter;
     ConfFile* conf;
@@ -45,6 +46,7 @@ public:
     void resize(int width, int height);
 
     void toggleFullscreen();
+    void toggleWindowFrame();
 
     void quit();
 

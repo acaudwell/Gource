@@ -35,6 +35,7 @@ GourceShell::GourceShell(ConfFile* conf, FrameExporter* exporter) {
 
     gGourceSettings.repo_count = conf->countSection("gource");
 
+    toggle_delay = 0.0;
     transition_texture = 0;
     transition_interval = 0.0f;
 
@@ -68,6 +69,31 @@ void GourceShell::toggleFullscreen() {
     if(gource!=0) gource->reload();
 }
 
+void GourceShell::toggleWindowFrame() {
+#if SDL_VERSION_ATLEAST(2,0,0)
+    if(toggle_delay > 0.0) return;
+    if(display.isFullscreen()) return;
+    if(exporter != 0) return;
+
+    texturemanager.unload();
+    shadermanager.unload();
+    fontmanager.unload();
+
+    if(gource!=0) gource->unload();
+
+    display.toggleFrameless();
+
+    texturemanager.reload();
+    shadermanager.reload();
+    fontmanager.reload();
+
+    if(gource!=0) gource->reload();
+
+    toggle_delay = 0.25f;
+#endif
+}
+
+
 void GourceShell::resize(int width, int height) {
 
     texturemanager.unload();
@@ -88,8 +114,13 @@ void GourceShell::resize(int width, int height) {
 
 void GourceShell::keyPress(SDL_KeyboardEvent *e) {
 
+    bool repeat = false;
+#if SDL_VERSION_ATLEAST(2,0,0)
+    repeat = (e->repeat > 0);
+#endif
+
     //Quit demo if the user presses ESC
-    if (e->type == SDL_KEYDOWN) {
+    if (e->type == SDL_KEYDOWN && !repeat) {
 
 #if SDL_VERSION_ATLEAST(2,0,0)
         bool key_escape = e->keysym.sym == SDLK_ESCAPE;
@@ -103,10 +134,9 @@ void GourceShell::keyPress(SDL_KeyboardEvent *e) {
             quit();
         }
 
-#if SDL_VERSION_ATLEAST(2,0,0)
-        // ignore repeated return key which can sometimes stop the full screen toggle from working
-        if(key_return && e->repeat > 0) key_return = false;
-#endif
+        if (e->keysym.sym == SDLK_F11) {
+            toggleWindowFrame();
+        }
 
         if(key_return) {
 
@@ -245,6 +275,8 @@ void GourceShell::update(float t, float dt) {
 
     gource->fps = this->fps;
     gource->update(t, dt);
+
+    if(toggle_delay > 0.0) toggle_delay -= dt;
 
     //copy last frame
     if( (next|| gource->isFinished()) && transition_texture!=0) {
