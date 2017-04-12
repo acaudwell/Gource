@@ -52,6 +52,7 @@ void GourceSettings::help(bool extended_help) {
     printf("  -f, --fullscreen                 Fullscreen\n");
     printf("      --multi-sampling             Enable multi-sampling\n");
     printf("      --no-vsync                   Disable vsync\n\n");
+    printf("  --screen SCREEN                  Screen number\n\n");
     printf("  --window-position XxY            Initial window position\n");
     printf("  --frameless                      Frameless window\n\n");
 

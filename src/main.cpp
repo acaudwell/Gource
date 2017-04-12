@@ -143,7 +143,7 @@ int main(int argc, char *argv[]) {
 
     try {
 
-        display.init("Gource", gGourceSettings.display_width, gGourceSettings.display_height, gGourceSettings.fullscreen);
+        display.init("Gource", gGourceSettings.display_width, gGourceSettings.display_height, gGourceSettings.fullscreen, gGourceSettings.screen);
 
 #if SDL_VERSION_ATLEAST(2,0,0)
         if(!display.isFullscreen() && gGourceSettings.window_x >= 0 && gGourceSettings.window_y >= 0) {

@@ -1,3 +1,6 @@
+0.46:
+ * Added --screen option.
+
 0.45:
  * Added --window-position XxY option.
  * Added --frameless option.
