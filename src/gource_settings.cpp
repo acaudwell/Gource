@@ -39,7 +39,7 @@ void GourceSettings::help(bool extended_help) {
 
 #ifdef _WIN32
     //resize window to fit help message
-    SDLApp::resizeConsole(730);
+    SDLApp::resizeConsole(770);
     SDLApp::showConsole(true);
 #endif
 
