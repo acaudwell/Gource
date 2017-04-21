@@ -5,6 +5,7 @@
  * Added --file-show-filter REGEX option (swoogles).
  * Added --filename-time and filename-colour options (gh2k).
  * Allow lower case hex colours in custom logs (HSorensen).
+ * Enabled STDOUT support with --output-stream '-' on Windows (circulosmeos).
 
 0.44:
  * Fixed crash when taking a screenshot with an odd resolution.
