@@ -110,7 +110,7 @@ options:
     -e, --elasticity FLOAT
             Elasticity of nodes.
 
-    -b, --background-colour FFFFFF
+    -b, --background, --background-colour, --background-color FFFFFF
             Background colour in hex.
 
     --background-image IMAGE
@@ -128,8 +128,20 @@ options:
     --font-size SIZE
             Font size used by the date and title.
 
-    --font-colour FFFFFF
+    --title-size SIZE
+            Font size used by just the title.
+
+    --font-colour, --font-color FFFFFF
             Font colour used by the date and title in hex.
+
+    --title-colour, --title-color FFFFFF
+            Font colour used by just the title in hex.
+
+    --date-height-pad VALUE
+            Value to add to the y position of the date.
+
+    --title-height-pad VALUE
+            Value to add to the y position of the title.
 
     --key
             Show file extension key.
@@ -160,16 +172,16 @@ options:
     --highlight-users
             Highlight the names of all users.
 
-    --highlight-colour FFFFFF
+    --highlight-colour, --highlight-color FFFFFF
             Font colour for highlighted users in hex.
 
-    --selection-colour FFFFFF
+    --selection-colour, --selection-color FFFFFF
             Font colour for selected users and files.
 
-    --filename-colour FFFFFF
+    --filename-colour, --filename-color FFFFFF
             Font colour for filenames.
 
-    --dir-colour FFFFFF
+    --dir-colour, --dir-color FFFFFF
             Font colour for directories.
 
     --dir-name-depth DEPTH
@@ -197,7 +209,7 @@ options:
     --default-user-image IMAGE
             Path of .jpg or .png to use as the default user image.
 
-    --colour-images
+    --colour-images, --color-images
             Colourize user images.
 
     --crop AXIS
@@ -269,7 +281,7 @@ options:
     --caption-size SIZE
             Caption size.
 
-    --caption-colour FFFFFF
+    --caption-colour, --caption-color FFFFFF
             Caption colour in hex.
 
     --caption-duration SECONDS
