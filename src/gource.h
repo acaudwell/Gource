@@ -117,6 +117,7 @@ class Gource : public SDLApp {
 
     std::string displaydate;
     int date_x_offset;
+    int title_x_offset;
 
     TextureResource* bloomtex;
     TextureResource* beamtex;
@@ -132,7 +133,7 @@ class Gource : public SDLApp {
 
     TextBox textbox;
 
-    FXFont font, fontlarge, fontmedium, fontcaption;
+    FXFont font, fontlarge, fontmedium, fonttitle, fontcaption;
 
     bool first_read;
     bool paused;

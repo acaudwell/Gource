@@ -114,6 +114,14 @@ if(extended_help) {
     printf("  --font-size SIZE         Font size used by date and title\n");
     printf("  --font-colour FFFFFF     Font colour used by date and title in hex\n\n");
 
+    printf("  --title-size SIZE        Font size used by title (overrides font-size)\n");
+    printf("  --title-colour FFFFFF    Font colour used by title in hex (overrides font-colour)\n\n");
+
+    printf("  --date-height-pad SIZE   Pad the date position in the y-dimension\n");
+    printf("  --title-height-pad SIZE  Pad the title position in the y-dimension\n\n");
+
+    printf("  --swap-title-and-date    Exchange the posiiton of the title and date\n\n");
+
     printf("  --file-extensions        Show filename extensions only\n\n");
 
     printf("  --git-branch             Get the git log of a particular branch\n\n");
@@ -247,6 +255,7 @@ GourceSettings::GourceSettings() {
     arg_types["key"]             = "bool";
     arg_types["ffp"]             = "bool";
 
+    arg_types["swap-title-and-date"] = "bool";
     arg_types["disable-auto-rotate"] = "bool";
     arg_types["disable-auto-skip"]   = "bool";
 
@@ -268,9 +277,13 @@ GourceSettings::GourceSettings() {
     arg_types["padding"]           = "float";
     arg_types["time-scale"]        = "float";
 
-    arg_types["max-files"] = "int";
-    arg_types["font-size"] = "int";
-    arg_types["hash-seed"] = "int";
+    arg_types["max-files"]  = "int";
+    arg_types["font-size"]  = "int";
+    arg_types["title-size"] = "int";
+    arg_types["hash-seed"]  = "int";
+
+    arg_types["date-height-pad"]  = "int";
+    arg_types["title-height-pad"] = "int";
 
     arg_types["user-filter"]    = "multi-value";
     arg_types["follow-user"]    = "multi-value";
@@ -307,6 +320,7 @@ GourceSettings::GourceSettings() {
     arg_types["camera-mode"]        = "string";
     arg_types["title"]              = "string";
     arg_types["font-colour"]        = "string";
+    arg_types["title-colour"]       = "string";
     arg_types["highlight-colour"]   = "string";
     arg_types["selection-colour"]   = "string";
     arg_types["dir-colour"]         = "string";
@@ -398,6 +412,13 @@ void GourceSettings::setGourceDefaults() {
     highlight_colour = vec3(1.0f);
     selection_colour = vec3(1.0, 1.0, 0.3f);
 
+    title_font_size = -1;
+    title_font_colour = vec3(-1.0f);
+    swap_title_and_date = false;
+
+    date_height_pad = 0;
+    title_height_pad = 0;
+
     dir_name_depth = 0;
 
     elasticity = 0.0f;
@@ -440,7 +461,7 @@ void GourceSettings::setGourceDefaults() {
     //delete file whitelists
     for(std::vector<Regex*>::iterator it = file_show_filters.begin(); it != file_show_filters.end(); it++) {
         delete (*it);
-    }    
+    }
     file_show_filters.clear();
 
     file_extensions = false;
@@ -633,6 +654,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(!entry->hasValue()) conffile.missingValueException(entry);
 
         date_format = entry->getString();
+    }
+
+    if(gource_settings->getBool("swap-title-and-date")) {
+        swap_title_and_date=true;
     }
 
     if(gource_settings->getBool("disable-auto-rotate")) {
@@ -900,6 +925,31 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         }
     }
 
+    if((entry = gource_settings->getEntry("title-size")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify title font size");
+
+        title_font_size = entry->getInt();
+
+        if(title_font_size<1 || title_font_size>100) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("date-height-pad")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify date height padding size");
+
+        date_height_pad = entry->getInt();
+    }
+
+    if((entry = gource_settings->getEntry("title-height-pad")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify title height padding size");
+
+        title_height_pad = entry->getInt();
+    }
+
     if((entry = gource_settings->getEntry("hash-seed")) != 0) {
 
         if(!entry->hasValue()) conffile.entryException(entry, "specify hash seed (integer)");
@@ -920,6 +970,24 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         } else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
             font_colour = vec3(r,g,b);
             font_colour /= 255.0f;
+        } else {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("title-colour")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify title font colour (FFFFFF)");
+
+        int r,g,b;
+
+        std::string colstring = entry->getString();
+
+        if(entry->isVec3()) {
+            title_font_colour = entry->getVec3();
+        } else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
+            title_font_colour = vec3(r,g,b);
+            title_font_colour /= 255.0f;
         } else {
             conffile.invalidValueException(entry);
         }

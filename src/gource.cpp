@@ -44,6 +44,19 @@ Gource::Gource(FrameExporter* exporter) {
     fontmedium.dropShadow(true);
     fontmedium.roundCoordinates(false);
 
+    int title_size = (gGourceSettings.title_font_size>0?gGourceSettings.title_font_size:gGourceSettings.font_size);
+    fonttitle = fontmanager.grab("FreeSans.ttf", title_size);
+    fonttitle.dropShadow(true);
+    fonttitle.roundCoordinates(false);
+    fonttitle.alignTop(false);
+
+    // Fall back to generic font color if title font color was not set
+    if(gGourceSettings.title_font_colour.x < 0) {
+        gGourceSettings.title_font_colour = gGourceSettings.font_colour;
+    }
+
+    title_x_offset = (int) fonttitle.getWidth(gGourceSettings.title) * 0.5;
+
     fontcaption = fontmanager.grab("FreeSans.ttf", gGourceSettings.caption_size);
     fontcaption.dropShadow(true);
     fontcaption.roundCoordinates(false);
@@ -2591,13 +2604,29 @@ void Gource::draw(float t, float dt) {
     fontmedium.setColour(vec4(gGourceSettings.font_colour, 1.0f));
 
     if(!gGourceSettings.hide_date) {
-        fontmedium.draw(display.width/2 - date_x_offset, 20, displaydate);
+        int x, y;
+        if(gGourceSettings.swap_title_and_date) {
+            x = 10;
+            y = display.height + fontmedium.getDescender() - 10 - gGourceSettings.date_height_pad;
+        } else {
+            x = display.width/2 - date_x_offset;
+            y = fontmedium.getAscender() + 10 + gGourceSettings.date_height_pad;
+        }
+        fontmedium.draw(x, y, displaydate);
     }
 
+    fonttitle.setColour(vec4(gGourceSettings.title_font_colour, 1.0f));
+
     if(!gGourceSettings.title.empty()) {
-        fontmedium.alignTop(false);
-        fontmedium.draw(10, display.height - 10, gGourceSettings.title);
-        fontmedium.alignTop(true);
+        int x, y;
+        if(gGourceSettings.swap_title_and_date) {
+            x = display.width/2 - title_x_offset;
+            y = fonttitle.getAscender() + 10 + gGourceSettings.title_height_pad;
+        } else {
+            x = 10;
+            y = display.height + fonttitle.getDescender() - 10 - gGourceSettings.title_height_pad;
+        }
+        fonttitle.draw(x, y, gGourceSettings.title);
     }
 
     for(std::list<RCaption*>::iterator it = active_captions.begin(); it!=active_captions.end(); it++) {
