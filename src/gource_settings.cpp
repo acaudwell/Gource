@@ -214,6 +214,17 @@ GourceSettings::GourceSettings() {
     arg_aliases["disable-progress"]    = "hide-progress";
     arg_aliases["highlight-all-users"] = "highlight-users";
 
+    //american spelling of colour (color)
+    arg_aliases["color-images"]      = "colour-images";
+    arg_aliases["background-color"]  = "background-colour";
+    arg_aliases["font-color"]        = "font-colour";
+    arg_aliases["title-color"]       = "title-colour";
+    arg_aliases["highlight-color"]   = "highlight-colour";
+    arg_aliases["selection-color"]   = "selection-colour";
+    arg_aliases["dir-color"]         = "dir-colour";
+    arg_aliases["caption-color"]     = "caption-colour";
+    arg_aliases["filename-color"]    = "filename-colour";
+
     //command line only options
     conf_sections["help"]            = "command-line";
     conf_sections["extended-help"]   = "command-line";
