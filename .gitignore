@@ -6,6 +6,7 @@ gource-*.png
 .objs
 /gource
 /gource.exe
+gource.pro.user
 gource.win32.depend
 gource.win32.layout
 debug.log
