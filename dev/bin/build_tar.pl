@@ -47,7 +47,7 @@ my @exclusions = (
 );
 
 my @inclusions = (
-    qr{^/gource\.win32\.cbp$},
+    qr{^/gource\.win64\.pro$},
     qr{^/ChangeLog$},
     qr{^/THANKS$},
     qr{^/COPYING$},

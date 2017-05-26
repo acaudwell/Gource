@@ -8,7 +8,7 @@ use File::Copy;
 
 my $base_dir     = "$FindBin::Bin/../..";
 my $build_dir    = "$base_dir/../build-gource-Desktop_Qt_MinGW_64bit-Release/release";
-my $binaries_dir = "$base_dir/dev/mingw64";
+my $binaries_dir = "$base_dir/dev/win64";
 
 my $builds_output_dir = "$base_dir/dev/builds";
 
@@ -263,7 +263,7 @@ foreach my $file (@gource_txts) {
 my $version = gource_version();
 
 my $installer_name = "gource-${version}-setup.exe";
-my $archive_name   = "gource-${version}.win32.zip";
+my $archive_name   = "gource-${version}.win64.zip";
 
 my $install_list = '';
 

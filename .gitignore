@@ -6,9 +6,7 @@ gource-*.png
 .objs
 /gource
 /gource.exe
-gource.pro.user
-gource.win32.depend
-gource.win32.layout
+gource.win64.pro.user
 debug.log
 Makefile
 Makefile.in
@@ -20,6 +18,7 @@ logs/*
 /configure
 /config.log
 /config.status
+/dev/win64
 /build-aux
 *.swp
 *.d
