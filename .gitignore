@@ -6,7 +6,7 @@ gource-*.png
 .objs
 /gource
 /gource.exe
-gource.win64.pro.user
+gource.pro.user
 debug.log
 Makefile
 Makefile.in

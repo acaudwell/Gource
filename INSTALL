@@ -55,7 +55,7 @@ Generic build instructions for Linux/Mac OS:
 
 Building on Windows:
 
-On Windows compile gource.win64.pro with Qt Creator.
+On Windows compile gource.pro with Qt Creator.
 
 A pre-built version for Windows is normally available from the homepage.
 
