@@ -34,6 +34,10 @@ SDL Image needs to have been built with support PNG and JPEG images.
 
 GLM is a header only library that you can get from http://glm.g-truc.net/ if your distribution does not include it.
 
+On Ubuntu 14.04, you can run: 
+
+sudo apt-get install libsdl2-dev libsdl2-image-dev libpcre3-dev libfreetype6-dev libglew-dev libglm-dev libboost-filesystem-dev libpng12-dev libtinyxml-dev
+
 2. Building
 ===========
 
