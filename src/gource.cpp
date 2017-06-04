@@ -2563,7 +2563,7 @@ void Gource::draw(float t, float dt) {
         int logowidth = fontlarge.getWidth("Gource");
         int logoheight = 100;
         int cwidth    = font.getWidth("Software Version Control Visualization");
-        int awidth    = font.getWidth("(C) 2009 Andrew Caudwell");
+        int awidth    = font.getWidth("(C) 2013 Andrew Caudwell");
 
         vec2 corner(display.width/2 - logowidth/2 - 30.0f, display.height/2 - 40);
 
@@ -2582,8 +2582,8 @@ void Gource::draw(float t, float dt) {
         fontlarge.draw(display.width/2 - logowidth/2,display.height/2 - 30, "Gource");
 
         font.setColour(vec4(1.0f));
-        font.draw(display.width/2 - cwidth/2,display.height/2 + 10, "Software Version Control Visualization");
-        font.draw(display.width/2 - awidth/2,display.height/2 + 30, "(C) 2009 Andrew Caudwell");
+        font.draw(display.width/2 - cwidth/2,display.height/2 + 15, "Software Version Control Visualization");
+        font.draw(display.width/2 - awidth/2,display.height/2 + 35, "(C) 2013 Andrew Caudwell");
     }
 
     // text using the specified font goes here
