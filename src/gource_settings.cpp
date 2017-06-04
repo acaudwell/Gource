@@ -77,6 +77,7 @@ void GourceSettings::help(bool extended_help) {
     printf("  --user-image-dir DIRECTORY       Dir containing images to use as avatars\n");
     printf("  --default-user-image IMAGE       Default user image file\n");
     printf("  --colour-images                  Colourize user images\n\n");
+    printf("  --user-image-never-remove          After user has been drawn they will not be removed from screen\n");
 
     printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 0)\n\n");
 
@@ -222,30 +223,31 @@ GourceSettings::GourceSettings() {
     conf_sections["log-level"]         = "command-line";
 
     //boolean args
-    arg_types["help"]            = "bool";
-    arg_types["extended-help"]   = "bool";
-    arg_types["stop-on-idle"]    = "bool";
-    arg_types["stop-at-end"]     = "bool";
-    arg_types["dont-stop"]       = "bool";
-    arg_types["loop"]            = "bool";
-    arg_types["realtime"]        = "bool";
-    arg_types["colour-images"]   = "bool";
-    arg_types["hide-date"]       = "bool";
-    arg_types["hide-files"]      = "bool";
-    arg_types["hide-users"]      = "bool";
-    arg_types["hide-tree"]       = "bool";
-    arg_types["hide-usernames"]  = "bool";
-    arg_types["hide-filenames"]  = "bool";
-    arg_types["hide-dirnames"]   = "bool";
-    arg_types["hide-progress"]   = "bool";
-    arg_types["hide-bloom"]      = "bool";
-    arg_types["hide-mouse"]      = "bool";
-    arg_types["hide-root"]       = "bool";
-    arg_types["highlight-users"] = "bool";
-    arg_types["highlight-dirs"]  = "bool";
-    arg_types["file-extensions"] = "bool";
-    arg_types["key"]             = "bool";
-    arg_types["ffp"]             = "bool";
+    arg_types["help"]                    = "bool";
+    arg_types["extended-help"]           = "bool";
+    arg_types["stop-on-idle"]            = "bool";
+    arg_types["stop-at-end"]             = "bool";
+    arg_types["dont-stop"]               = "bool";
+    arg_types["loop"]                    = "bool";
+    arg_types["realtime"]                = "bool";
+    arg_types["colour-images"]           = "bool";
+    arg_types["user-image-never-remove"] = "bool";
+    arg_types["hide-date"]               = "bool";
+    arg_types["hide-files"]              = "bool";
+    arg_types["hide-users"]              = "bool";
+    arg_types["hide-tree"]               = "bool";
+    arg_types["hide-usernames"]          = "bool";
+    arg_types["hide-filenames"]          = "bool";
+    arg_types["hide-dirnames"]           = "bool";
+    arg_types["hide-progress"]           = "bool";
+    arg_types["hide-bloom"]              = "bool";
+    arg_types["hide-mouse"]              = "bool";
+    arg_types["hide-root"]               = "bool";
+    arg_types["highlight-users"]         = "bool";
+    arg_types["highlight-dirs"]          = "bool";
+    arg_types["file-extensions"]         = "bool";
+    arg_types["key"]                     = "bool";
+    arg_types["ffp"]                     = "bool";
 
     arg_types["disable-auto-rotate"] = "bool";
     arg_types["disable-auto-skip"]   = "bool";
@@ -370,6 +372,7 @@ void GourceSettings::setGourceDefaults() {
     logo_offset = vec2(20.0f,20.0f);
 
     colour_user_images = false;
+    user_image_never_remove = false;
     default_user_image = "";
     user_image_dir     = "";
     user_image_map.clear();
@@ -664,6 +667,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if(gource_settings->getBool("colour-images")) {
         colour_user_images = true;
+    }
+
+    if(gource_settings->getBool("user-image-never-remove")) {
+        user_image_never_remove = true;
     }
 
     if((entry = gource_settings->getEntry("crop")) != 0) {

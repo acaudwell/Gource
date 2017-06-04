@@ -344,9 +344,12 @@ const std::string& RUser::getName() const {
 
 float RUser::getAlpha() const {
     float alpha = Pawn::getAlpha();
-    //user fades out if not doing anything
-    if(elapsed - last_action > gGourceSettings.user_idle_time) {
-        alpha = 1.0 - std::min(elapsed - last_action - gGourceSettings.user_idle_time, 1.0f);
+    if(!gGourceSettings.user_image_never_remove)
+    {
+        //user fades out if not doing anything
+        if(elapsed - last_action > gGourceSettings.user_idle_time) {
+            alpha = 1.0 - std::min(elapsed - last_action - gGourceSettings.user_idle_time, 1.0f);
+        }
     }
 
     return alpha;
