@@ -924,7 +924,8 @@ void RDirNode::drawDirName(FXFont& dirfont) const{
     if(parent==0) return;
     if(gGourceSettings.hide_dirnames) return;
     if(gGourceSettings.dir_name_depth > 0 && gGourceSettings.dir_name_depth < (depth-1)) return;
-
+	if(gGourceSettings.dir_name_files > 0 && gGourceSettings.dir_name_files < (visibleFileCount - 1)) return;
+	
     if(!gGourceSettings.highlight_dirs && since_last_node_change > 5.0) return;
 
     float alpha = gGourceSettings.highlight_dirs ? 1.0 : std::max(0.0f, 5.0f - since_last_node_change) / 5.0f;
