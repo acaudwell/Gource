@@ -126,6 +126,7 @@ public:
     vec3 selection_colour;
 
     int dir_name_depth;
+    int dir_name_files;
 
     std::vector<std::string> highlight_users;
     std::vector<std::string> follow_users;
