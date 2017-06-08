@@ -223,7 +223,7 @@ my @gource_dirs = qw(
     cmd
 );
 
-mkdir($builds_output_dir) unless -d $builds_output_dir;
+mkdir($binaries_dir)      unless -d $binaries_dir;
 mkdir($builds_output_dir) unless -d $builds_output_dir;
 
 my $tmp_dir = "$builds_output_dir/gource-build.$$";
