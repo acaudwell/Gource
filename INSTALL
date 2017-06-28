@@ -21,16 +21,11 @@ Gource requires the following libraries to compile (package names may vary):
     Boost Filesystem >= 1.46 (libboost-filesystem-dev)
     PNG >= 1.2 (libpng12-dev)
 
-    If SDL 2.0 is unavailable you can still use SDL 1.2, but this is deprecated:
-
-    SDL 1.2 (libsdl1.2-dev)
-    SDL Image 1.2 (libsdl-image1.2-dev)
-
 Optional:
 
    TinyXML (libtinyxml-dev)
 
-SDL Image needs to have been built with support PNG and JPEG images.
+SDL Image 2.0 needs to have been built with support PNG and JPEG images.
 
 GLM is a header only library that you can get from http://glm.g-truc.net/ if your distribution does not include it.
 

@@ -8,6 +8,7 @@
  * Additional git log command validation (cym13).
  * Allow lower case hex colours in custom logs (HSorensen).
  * Enabled STDOUT support with --output-stream '-' on Windows (circulosmeos).
+ * Now requires SDL 2 to build (deprecated SDL 1.2 support removed).
 
 0.44:
  * Fixed crash when taking a screenshot with an odd resolution.
