@@ -108,9 +108,9 @@ function donateClicked() {
 
 <p>
 <center>
-<a class="btn btn-lg btn-info" href="https://github.com/acaudwell/Gource/releases/download/gource-0.42/gource-0.42-setup.exe">gource-0.42-setup.exe</a>
-<a class="btn btn-lg btn-info" href="https://github.com/acaudwell/Gource/releases/download/gource-0.42/gource-0.42.win32.zip">gource-0.42.win32.zip</a>
-<a class="btn btn-lg btn-info" href="https://github.com/acaudwell/Gource/releases/download/gource-0.44/gource-0.44.tar.gz">gource-0.44.tar.gz</a>
+<a class="btn btn-lg btn-info" href="https://github.com/acaudwell/Gource/releases/download/gource-0.45/gource-0.45.win64-setup.exe">gource-0.45.win64-setup.exe</a>
+<a class="btn btn-lg btn-info" href="https://github.com/acaudwell/Gource/releases/download/gource-0.45/gource-0.45.win64.zip">gource-0.45.win64.zip</a>
+<a class="btn btn-lg btn-info" href="https://github.com/acaudwell/Gource/releases/download/gource-0.45/gource-0.45.tar.gz">gource-0.45.tar.gz</a>
 </center>
 </p>
 
@@ -118,8 +118,9 @@ function donateClicked() {
     <li><a href="#introduction">Introduction</a></li>
     <li><a href="#synopsis">Synopsis</a></li>
     <li><a href="#related">Related Software</a></li>
-    <li><a href="#news">News</a></li>
     <li><a href="#donations">Donations</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#news">News</a></li>
 </ul>
 
 <h2><a id="introduction"></a>Introduction</h2>
@@ -144,8 +145,48 @@ gource
 
 <p>You may also want to check out <a href="http://logstalgia.io/">Logstalgia</a>, a web server access log visualization tool.</p>
 
+<h2><a id="donations"></a>Donations</h2>
+
+<p>If you like Gource and would like to show your appreciation and encourage future work on this and other open source projects by the author, please consider making a donation!</p>
+
+<p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TZYLY4VTKC9TN&lc=NZ&item_name=Gource&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"><img src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif"></a></p>
+
+<h2><a id="contact"></a>Contact</h2>
+
+<p>If you use Gource at work and are interested in getting new features developed or maybe would like to discuss other bespoke visualization work please don't hesitate to <a href="http://www.thealphablenders.com/about/">contact me</a>.</p>
+
 <h2><a id="news"></a>News</h2>
 
+<h3>5 September 2017</h3>
+
+<p>Gource <b>0.45</b> has been released.</p>
+
+<p>There are a few new command line options around filtering and displaying files, some new display settings and some fixes.</p>
+
+<p>The Windows build is now 64-bit. Also we've enabled STDOUT with the --output-stream option on Windows so you can pipe Gource directly into ffmpeg like on Linux.</p>
+
+<p>Changes since 0.44:</p>
+
+<ul>
+    <li>Added --window-position XxY option.</li>
+    <li>Added --frameless option.</li>
+    <li>Added --file-show-filter REGEX option (swoogles).</li>
+    <li>Added --filename-time and filename-colour options (gh2k).</li>
+    <li>Improved handling of very low seconds-per-day values (malengrin).</li>
+    <li>Fixed crash when SVN log lacks author information (obarthel).</li>
+    <li>Additional git log command validation (cym13).</li>
+    <li>Allow lower case hex colours in custom logs (HSorensen).</li>
+    <li>Enabled STDOUT support with --output-stream '-' on Windows (circulosmeos).</li>
+    <li>Now requires SDL 2 to build (deprecated SDL 1.2 support removed).</li>
+</ul>
+
+Downloads:
+
+<ul>
+    <li><a href="https://github.com/acaudwell/Gource/releases/download/gource-0.45/gource-0.45.win64-setup.exe">gource-0.45.win64-setup.exe</a></li>
+    <li><a href="https://github.com/acaudwell/Gource/releases/download/gource-0.45/gource-0.45.win64.zip">gource-0.45.win64.zip</a></li>
+    <li><a href="https://github.com/acaudwell/Gource/releases/download/gource-0.45/gource-0.45.tar.gz">gource-0.45.tar.gz</a></li>
+</ul>
 
 <h3>30 July 2016</h3>
 
@@ -237,12 +278,6 @@ Gource <b>0.42</b> fixes some bugs introduced in 0.41 affecting Mercurial, Bazaa
 </ul>
 
 <p>If you package Gource for a distro, please update the dependencies to use SDL 2 instead of SDL 1.2.</p>
-
-<h2><a id="donations"></a>Donations</h2>
-
-<p>If you like Gource and would like to show your appreciation and encourage future work on this and other open source projects by the author, please consider making a donation!</p>
-
-<p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TZYLY4VTKC9TN&lc=NZ&item_name=Gource&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"><img src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif"></a></p>
 
 </div><!-- /.container -->
 

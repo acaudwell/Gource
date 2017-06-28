@@ -40,7 +40,7 @@ div #donations-box {
 }
 
 .navbar-nav > li > a, .index > li > a {
-    color: #aaa;
+    color: #ccc;
 }
 
 .navbar-nav > li > a:focus, .navbar-nav > li > a:hover, .index > li > a:focus, .index > li > a:hover {
@@ -68,14 +68,14 @@ h2 {
     font-size: 1.6em;
     font-family: arial, sans-serif;
     margin-top: 1em;
-    color: #aaa;
+    color: #fff;
 }
 
 h3 {
     font-size: 1.5em;
     font-family: arial, sans-serif;
     margin-top: 1em;
-    color: #aaa;
+    color: #eee;
 }
 
 pre {
