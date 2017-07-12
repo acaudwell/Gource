@@ -64,13 +64,15 @@ my $nsis_script = q[
 !define MULTIUSER_MUI
 !define MULTIUSER_EXECUTIONLEVEL Highest
 !define MULTIUSER_INSTALLMODE_COMMANDLINE
+!define MULTIUSER_USE_PROGRAMFILES64
 !define MULTIUSER_INSTALLMODE_DEFAULT_REGISTRY_KEY "Software\Gource"
 !define MULTIUSER_INSTALLMODE_INSTDIR_REGISTRY_KEY "Software\Gource"
 !define MULTIUSER_INSTALLMODE_DEFAULT_REGISTRY_VALUENAME "Install_Mode"
 !define MULTIUSER_INSTALLMODE_INSTDIR_REGISTRY_VALUENAME "Install_Dir"
 !define MULTIUSER_INSTALLMODE_INSTDIR "Gource"
-!include "MultiUser.nsh"
 
+!include "x64.nsh"
+!include "MultiUser.nsh"
 !include "MUI2.nsh"
 !include "LogicLib.nsh"
 !include "SafeEnvVarUpdate.nsh"
@@ -96,6 +98,10 @@ OutFile "GOURCE_INSTALLER"
 !insertmacro MUI_LANGUAGE "English"
 
 Function .onInit
+  ${IfNot} ${RunningX64}
+    MessageBox MB_OK "This installer requires 64-bit Windows"
+    Quit
+  ${EndIf}
   !insertmacro MULTIUSER_INIT
   ReadRegStr $R0 SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "UninstallString"
   StrCmp $R0 "" done
@@ -262,7 +268,7 @@ foreach my $file (@gource_txts) {
 
 my $version = gource_version();
 
-my $installer_name = "gource-${version}-setup.exe";
+my $installer_name = "gource-${version}.win64-setup.exe";
 my $archive_name   = "gource-${version}.win64.zip";
 
 my $install_list = '';
