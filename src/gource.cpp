@@ -302,6 +302,7 @@ void Gource::grabMouse(bool grab_mouse) {
         if(SDL_GetRelativeMouseMode()) {
             SDL_SetWindowGrab(display.sdl_window, SDL_FALSE);
             SDL_SetRelativeMouseMode(SDL_FALSE);
+            SDL_WarpMouseInWindow(display.sdl_window, mousepos.x, mousepos.y);
         }
     }
 #endif
