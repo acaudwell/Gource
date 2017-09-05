@@ -355,7 +355,7 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
             return;
         }
 
-        cursor_move = mag;
+        cursor_move += mag;
 
         return;
     }
