@@ -46,7 +46,7 @@ options:
             the video mode to this also. Add ! to make the window non-resizable.
 
     --screen SCREEN
-            Set number of the screen to display on.
+            Set the number of the screen to display on.
 
     --window-position XxY
             Initial window position on your desktop which may be made up of
