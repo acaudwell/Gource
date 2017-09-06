@@ -72,6 +72,7 @@ public:
     float auto_skip_seconds;
     float days_per_second;
     float file_idle_time;
+    float loop_delay_seconds;
 
     bool loop;
 

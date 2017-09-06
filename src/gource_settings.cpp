@@ -65,7 +65,8 @@ void GourceSettings::help(bool extended_help) {
     printf("  -t, --stop-at-time SECONDS       Stop after a specified number of seconds\n");
     printf("      --stop-at-end                Stop at end of the log\n");
     printf("      --dont-stop                  Keep running after the end of the log\n");
-    printf("      --loop                       Loop at the end of the log\n\n");
+    printf("      --loop                       Loop at the end of the log\n");
+    printf("      --loop-delay-seconds SECONDS Seconds to wait before looping (default: 0)\n\n");
 
     printf("  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens\n");
     printf("                                   for a number of seconds (default: 3)\n");
@@ -284,6 +285,7 @@ GourceSettings::GourceSettings() {
     arg_types["padding"]           = "float";
     arg_types["time-scale"]        = "float";
     arg_types["dir-name-position"] = "float";
+    arg_types["loop-delay-seconds"] = "float";
 
     arg_types["max-files"] = "int";
     arg_types["font-size"] = "int";
@@ -384,6 +386,7 @@ void GourceSettings::setGourceDefaults() {
     time_scale        = 1.0f;
 
     loop = false;
+    loop_delay_seconds = 0;
 
     logo = "";
     logo_offset = vec2(20.0f,20.0f);
@@ -673,6 +676,17 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if(gource_settings->getBool("loop")) {
         loop = true;
+    }
+
+    if((entry = gource_settings->getEntry("loop-delay-seconds")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify loop-delay-seconds (float)");
+
+        loop_delay_seconds = entry->getFloat();
+
+        if(loop_delay_seconds<=0.0f) {
+            conffile.invalidValueException(entry);
+        }
     }
 
     if((entry = gource_settings->getEntry("git-branch")) != 0) {
