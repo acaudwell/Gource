@@ -319,6 +319,7 @@ void Gource::grabMouse(bool grab_mouse) {
 
 void Gource::mouseMove(SDL_MouseMotionEvent *e) {
     if(commitlog==0) return;
+    if(gGourceSettings.disable_input) return;
     if(gGourceSettings.hide_mouse) return;
 
     if(grab_mouse) {
@@ -399,6 +400,7 @@ void Gource::zoom(bool zoomin) {
 
 #if SDL_VERSION_ATLEAST(2,0,0)
 void Gource::mouseWheel(SDL_MouseWheelEvent *e) {
+    if(gGourceSettings.disable_input) return;
 
     if(e->y > 0) {
         zoom(true);
@@ -413,6 +415,7 @@ void Gource::mouseWheel(SDL_MouseWheelEvent *e) {
 
 void Gource::mouseClick(SDL_MouseButtonEvent *e) {
     if(commitlog==0) return;
+    if(gGourceSettings.disable_input) return;
     if(gGourceSettings.hide_mouse) return;
 
     //mouse click should stop the cursor being idle
@@ -630,6 +633,8 @@ void Gource::selectNextUser() {
 }
 
 void Gource::keyPress(SDL_KeyboardEvent *e) {
+    if (gGourceSettings.disable_input) return;
+
     if (e->type == SDL_KEYUP) return;
 
     if (e->type == SDL_KEYDOWN) {
