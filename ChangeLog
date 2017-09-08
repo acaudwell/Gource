@@ -1,3 +1,6 @@
+0.47:
+ * Fixed low mouse movement speed with some mice while repositioning camera.
+
 0.46:
  * Added --screen option.
 
