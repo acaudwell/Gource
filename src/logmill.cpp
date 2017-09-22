@@ -168,7 +168,7 @@ bool RLogMill::findRepository(boost::filesystem::path& dir, std::string& log_for
 
     while(is_directory(dir)) {
 
-             if(is_directory(dir / ".git")) log_format = "git";
+             if(is_directory(dir / ".git") || is_regular_file(dir / ".git")) log_format = "git";
         else if(is_directory(dir / ".hg"))  log_format = "hg";
         else if(is_directory(dir / ".bzr")) log_format = "bzr";
         else if(is_directory(dir / ".svn")) log_format = "svn";
