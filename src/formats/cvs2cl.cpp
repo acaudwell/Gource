@@ -37,6 +37,19 @@ std::string CVS2CLCommitLog::logCommand() {
 CVS2CLCommitLog::CVS2CLCommitLog(const std::string& logfile) : RCommitLog(logfile, '<') {
 }
 
+vec3 CVS2CLCommitLog::parseColour(const std::string& cstr) {
+
+    vec3 colour;
+    int r,g,b;
+
+    if(sscanf(cstr.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
+        colour = vec3( r, g, b );
+        colour /= 255.0f;
+    }
+
+    return colour;
+}
+
 bool CVS2CLCommitLog::parseCommit(RCommit& commit) {
 
     //fprintf(stderr,"parsing cvs2cl log\n");
@@ -153,8 +166,18 @@ bool CVS2CLCommitLog::parseCommit(RCommit& commit) {
         std::string file(name->GetText());
 
         if(file.empty()) continue;
-        
-        commit.addFile(file, status);
+
+        TiXmlElement* colour = fileE->FirstChildElement("colour");
+        if(colour != 0) {
+           std::string colour_string(colour->GetText());
+
+           vec3 color;
+           color = parseColour(colour_string);
+           commit.addFile(file, status, color);
+        } else {
+           commit.addFile(file, status);
+        }
+
     }
     
     //fprintf(stderr,"parsed logentry\n");

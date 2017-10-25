@@ -23,6 +23,7 @@
 class CVS2CLCommitLog : public RCommitLog {
 protected:
     bool parseCommit(RCommit& commit);
+    vec3 parseColour(const std::string& cstr);
 
     std::string logentry;
 public:
