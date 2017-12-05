@@ -142,6 +142,7 @@ public:
     std::vector<Regex*> file_filters;
     std::vector<Regex*> file_show_filters;
     std::vector<Regex*> user_filters;
+    std::vector<Regex*> user_show_filters;
     bool file_extensions;
     bool file_extension_fallback;
 
