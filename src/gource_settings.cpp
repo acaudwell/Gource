@@ -39,7 +39,7 @@ void GourceSettings::help(bool extended_help) {
 
 #ifdef _WIN32
     //resize window to fit help message
-    SDLApp::resizeConsole(770);
+    SDLApp::resizeConsole(780);
     SDLApp::showConsole(true);
 #endif
 
@@ -50,6 +50,7 @@ void GourceSettings::help(bool extended_help) {
     printf("  -h, --help                       Help\n\n");
     printf("  -WIDTHxHEIGHT, --viewport        Set viewport size\n");
     printf("  -f, --fullscreen                 Fullscreen\n");
+    printf("      --screen SCREEN              Screen number\n");
     printf("      --multi-sampling             Enable multi-sampling\n");
     printf("      --no-vsync                   Disable vsync\n\n");
     printf("  --window-position XxY            Initial window position\n");
