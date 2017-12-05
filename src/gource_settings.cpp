@@ -134,6 +134,7 @@ if(extended_help) {
     printf("  --transparent            Make the background transparent\n\n");
 
     printf("  --user-filter REGEX      Ignore usernames matching this regex\n");
+    printf("  --user-show-filter REGEX Show only usernames matching this regex\n\n");
     printf("  --file-filter REGEX      Ignore file paths matching this regex\n");
     printf("  --file-show-filter REGEX Show only file paths matching this regex\n\n");
 
@@ -283,6 +284,7 @@ GourceSettings::GourceSettings() {
     arg_types["hash-seed"] = "int";
 
     arg_types["user-filter"]    = "multi-value";
+    arg_types["user-show-filter"]    = "multi-value";
     arg_types["follow-user"]    = "multi-value";
     arg_types["highlight-user"] = "multi-value";
 
@@ -463,6 +465,12 @@ void GourceSettings::setGourceDefaults() {
         delete (*it);
     }
     user_filters.clear();
+
+    //delete user whitelist
+    for(std::vector<Regex*>::iterator it = user_show_filters.begin(); it != user_show_filters.end(); it++) {
+        delete (*it);
+    }
+    user_show_filters.clear();
 }
 
 void GourceSettings::commandLineOption(const std::string& name, const std::string& value) {
@@ -1415,6 +1423,29 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             }
 
             user_filters.push_back(r);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("user-show-filter")) != 0) {
+
+        ConfEntryList* filters = gource_settings->getEntries("user-show-filter");
+
+        for(ConfEntryList::iterator it = filters->begin(); it != filters->end(); it++) {
+
+            entry = *it;
+
+            if(!entry->hasValue()) conffile.entryException(entry, "specify user-show-filter (regex)");
+
+            std::string filter_string = entry->getString();
+
+            Regex* r = new Regex(filter_string, 1);
+
+            if(!r->isValid()) {
+                delete r;
+                conffile.entryException(entry, "invalid user-show-filter regular expression");
+            }
+
+            user_show_filters.push_back(r);
         }
     }
 

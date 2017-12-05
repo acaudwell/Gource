@@ -361,6 +361,19 @@ bool RCommit::isValid() {
         }
     }
 
+    // Only allow users that have been whitelisted
+    if(!gGourceSettings.user_show_filters.empty()) {
+
+        for(std::vector<Regex*>::iterator ri = gGourceSettings.user_show_filters.begin(); ri != gGourceSettings.user_show_filters.end(); ri++) {
+            Regex* r = *ri;
+
+            if(!r->match(username)) {
+                return false;
+            }
+        }
+    }
+
+
     return !files.empty();
 }
 
