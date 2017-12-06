@@ -990,7 +990,6 @@ RFile* Gource::addFile(const RCommitFile& cf) {
     root->addFile(file);
 
     file_key.inc(file);
-    file_key.changeLines(file, cf.lines);
 
     while(root->getParent() != 0) {
         debugLog("parent changed to %s", root->getPath().c_str());
@@ -1202,8 +1201,6 @@ void Gource::processCommit(RCommit& commit, float t) {
             file = addFile(cf);
 
             if(!file) continue;
-        } else {
-            file_key.changeLines(file, cf.lines);
         }
 
         addFileAction(commit.username, cf, file, t);
@@ -1213,6 +1210,8 @@ void Gource::processCommit(RCommit& commit, float t) {
 void Gource::addFileAction(const std::string& username, const RCommitFile& cf, RFile* file, float t) {
     //create user if havent yet. do it here to ensure at least one of there files
     //was added (incase we hit gGourceSettings.max_files)
+
+    file_key.changeLines(file, cf.lines);
 
     //find user of this commit or create them
     RUser* user = 0;

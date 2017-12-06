@@ -195,7 +195,7 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
                 if(file[0] != '/') {
                     file.insert(0, 1, '/');
                 }
-                commit.addLines(file, added + removed);
+                commit.addLines(file, added - removed);
             }
         }
 
