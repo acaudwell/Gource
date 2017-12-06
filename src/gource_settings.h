@@ -45,6 +45,7 @@ public:
     bool disable_auto_rotate;
 
     bool show_key;
+    bool show_lines;
 
     std::string load_config;
     std::string save_config;

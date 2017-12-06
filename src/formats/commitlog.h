@@ -35,6 +35,7 @@ public:
     std::string filename;
     std::string action;
     vec3 colour;
+    long lines;
 
     RCommitFile(const std::string& filename, const std::string& action, vec3 colour);
 };
@@ -52,6 +53,8 @@ public:
 
     void addFile(const std::string& filename, const std::string& action);
     void addFile(const std::string& filename, const std::string& action, const vec3& colour);
+
+    void addLines(const std::string& filename, long delta);
 
     RCommit();
     void debug();
