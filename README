@@ -140,6 +140,9 @@ options:
     --key
             Show file extension key.
 
+    --lines
+            Show the number of file lines by extension.
+
     --date-format FORMAT
             Specify display date string (strftime format).
 
@@ -402,17 +405,26 @@ Interactive keyboard commands:
     (M)   Toggle mouse visibility
     (N)   Jump forward in time to next log entry
     (S)   Randomize colours
+    (P)   Toggle bloom effect
+    (Z)   Toggle gravity
     (D)   Toggle directory name display mode
     (F)   Toggle file name display mode
     (U)   Toggle user name display mode
     (G)   Toggle display of users
     (T)   Toggle display of directory tree edges
     (R)   Toggle display of root directory edges
-    (+-)  Adjust simulation speed
-    (<>)  Adjust time scale
+    (Q)   Toggle debug info
+    (W)   Toggle trace debug info
+    (Y)   Toggle quad tree debug info
+    (+-)  Adjust the simulation speed
+    (Keypad +-)  Adjust viewport zoom
+    (.,)  Adjust time scale
+    (/)   Reset time scale
+    ([])  Adjust gravity
     (TAB) Cycle through visible users
     (F12) Screenshot
     (Alt+Enter) Fullscreen toggle
+    (Space) Toggle pause
     (ESC) Quit
 
 4. Copyright
