@@ -780,6 +780,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(!entry->hasValue()) conffile.entryException(entry, "specify caption file (filename)");
 
         caption_file = entry->getString();
+
+        if(!boost::filesystem::exists(caption_file)) {
+            conffile.entryException(entry, "caption file not found");
+        }
     }
 
     if((entry = gource_settings->getEntry("caption-duration")) != 0) {
