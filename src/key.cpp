@@ -281,7 +281,8 @@ void FileKey::logic(float dt) {
                 FileKeyEntry* entry = it->second;
 
                 if(!entry->isFinished()) {
-                    active_keys.push_back(entry);
+                    if(gGourceSettings.key_threshold == 0 || entry->getCount() >= gGourceSettings.key_threshold)
+                        active_keys.push_back(entry);
                 } else {
                     finished_keys.push_back(entry);
                 }

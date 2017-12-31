@@ -74,7 +74,8 @@ void GourceSettings::help(bool extended_help) {
     printf("  -e, --elasticity FLOAT           Elasticity of nodes (default: 0.0)\n\n");
 
     printf("  --key                            Show summary of file extensions\n");
-    printf("  --lines                          Show summary of lines of code by language\n\n");
+    printf("  --key-threshold NUMBER           Show a file extension when it reaches NUMBER (0 show always)\n");
+    printf("  --lines                          Show the lines of code by file extension (git only)\n\n");
 
     printf("  --user-image-dir DIRECTORY       Dir containing images to use as avatars\n");
     printf("  --default-user-image IMAGE       Default user image file\n");
@@ -247,6 +248,7 @@ GourceSettings::GourceSettings() {
     arg_types["highlight-dirs"]  = "bool";
     arg_types["file-extensions"] = "bool";
     arg_types["key"]             = "bool";
+    arg_types["key-threshold"]   = "int";
     arg_types["lines"]           = "bool";
     arg_types["ffp"]             = "bool";
 
@@ -360,6 +362,7 @@ void GourceSettings::setGourceDefaults() {
 
     show_key = false;
     show_lines = false;
+    key_threshold = 0;
 
     disable_auto_rotate = false;
 
@@ -1183,6 +1186,13 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if(gource_settings->getBool("key")) {
         show_key = true;
+    }
+
+    if((entry = gource_settings->getEntry("key-threshold")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify key-threshold (number)");
+
+        key_threshold = entry->getInt();
     }
 
     if(gource_settings->getBool("lines")) {

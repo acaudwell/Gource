@@ -46,6 +46,7 @@ public:
 
     bool show_key;
     bool show_lines;
+    int key_threshold;
 
     std::string load_config;
     std::string save_config;
