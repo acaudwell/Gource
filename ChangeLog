@@ -1,5 +1,6 @@
 0.48:
  * Can now generate logs from git sub module directories.
+ * Fixed building with GLM 0.9.9.
 
 0.47:
  * Fixed low mouse movement speed with some mice while repositioning camera.
