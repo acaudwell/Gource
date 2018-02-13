@@ -130,8 +130,8 @@ if(extended_help) {
     printf("  --transparent            Make the background transparent\n\n");
 
     printf("  --user-filter REGEX      Ignore usernames matching this regex\n");
-    printf("  --file-filter REGEX      Ignore files matching this regex\n");
-    printf("  --file-show-filter REGEX Show only files matching this regex\n\n");
+    printf("  --file-filter REGEX      Ignore file paths matching this regex\n");
+    printf("  --file-show-filter REGEX Show only file paths matching this regex\n\n");
 
     printf("  --user-friction SECONDS  Change the rate users slow down (default: 0.67)\n");
     printf("  --user-scale SCALE       Change scale of users (default: 1.0)\n");

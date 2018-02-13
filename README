@@ -188,13 +188,13 @@ options:
             Show filename extensions only.
 
     --file-filter REGEX
-            Filter out any files matching a specified regular expression.
+            Filter out file paths matching the specified regular expression.
 
     --file-show-filter REGEX
-            Show only files matching this regular expression.
+            Show only file paths matching the specified regular expression.
 
     --user-filter REGEX
-            Filter out any users matching a specified regular expression.
+            Filter usernames matching the specified regular expression.
 
     --user-image-dir DIRECTORY
             Directory containing .jpg or .png images of users
