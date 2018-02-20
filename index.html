@@ -165,8 +165,10 @@ gource
 
 <ul>
     <li>Can now generate logs from git sub module directories.</li>
-    <li>Fixed building with GLM 0.9.9.</li>
+    <li><strike>Fixed building with GLM 0.9.9.</strike></li>
 </ul>
+
+<p><b>UPDATE</b>: this release was partly made to allow building with GLM 0.9.9 (which is in alpha). Unfortunately, on further testing it was discovered that it is unstable with this version due to a change to the library removing default constructors of vectors, resulting in uninitialized values being used. The current release of GLM 0.9.8 should be fine.</p>
 
 Downloads:
 
