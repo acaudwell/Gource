@@ -17,7 +17,6 @@ Gource requires the following libraries to compile (package names may vary):
     PCRE (libpcre3-dev)
     Freetype 2 (libfreetype6-dev)
     GLEW (libglew-dev)
-    GLM >= 0.9.3 (libglm-dev)
     Boost Filesystem >= 1.46 (libboost-filesystem-dev)
     PNG >= 1.2 (libpng12-dev)
 
@@ -26,8 +25,6 @@ Optional:
    TinyXML (libtinyxml-dev)
 
 SDL Image 2.0 needs to have been built with support PNG and JPEG images.
-
-GLM is a header only library that you can get from http://glm.g-truc.net/ if your distribution does not include it.
 
 2. Building
 ===========

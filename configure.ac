@@ -3,7 +3,7 @@
 
 AC_PREREQ(2.61)
 
-AC_INIT(Gource, 0.48, [acaudwell@gmail.com])
+AC_INIT(Gource, 0.49, [acaudwell@gmail.com])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([src/main.h])
 AM_INIT_AUTOMAKE([dist-bzip2 foreign subdir-objects])
@@ -52,9 +52,6 @@ AX_BOOST_FILESYSTEM
 
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
 LIBS="$LIBS $BOOST_SYSTEM_LIB $BOOST_FILESYSTEM_LIB"
-
-#GLM
-AC_CHECK_HEADER([glm/glm.hpp],, AC_MSG_ERROR(GLM headers are required. Please see INSTALL))
 
 #see if ttf-font-dir option is enabled
 AC_ARG_ENABLE(ttf-font-dir,[AS_HELP_STRING([--enable-ttf-font-dir=DIR],[directory containing GNU FreeFont TTF fonts])],[gourcefontdir="$enableval"],[gourcefontdir=""])
