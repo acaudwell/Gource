@@ -58,6 +58,7 @@ my @inclusions = (
     qr{^/m4/.+\.m4$},
     qr{^/configure(?:\.ac)?$},
     qr{^/src/.+\.(?:cpp|h|cc|hh)$},
+    qr{^/src/core/glm/.+$},
     qr{^/data/file\.png$},
     qr{^/data/user\.png$},
     qr{^/data/beam\.png$},
