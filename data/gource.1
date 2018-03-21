@@ -36,7 +36,7 @@ Frameless window.
 \fB\-\-transparent\fR
 Make the background transparent. Only really useful for screenshots.
 .TP
-\fB\-\-start\-date 'YYYY\-MM\-DD hh:mm:ss +tz'\fR
+\fB\-\-start\-date "YYYY\-MM\-DD hh:mm:ss +tz"\fR
 Start with the first entry after the supplied date and optional time.
 
 If a time zone offset isn't specified the local time zone is used.
@@ -47,7 +47,7 @@ Example accepted formats:
     "2012-06-30 12:00"
     "2012-06-30 12:00:00 +12"
 .TP
-\fB\-\-stop\-date 'YYYY\-MM\-DD hh:mm:ss +tz'\fR
+\fB\-\-stop\-date "YYYY\-MM\-DD hh:mm:ss +tz"\fR
 Stop at the last entry prior to the supplied date and optional time.
 
 Uses the same format as \-\-start\-date.
@@ -164,7 +164,7 @@ Show only file paths matching the specified regular expression.
 Filter usernames matching the specified regular expression.
 .TP
 \fB\-\-user\-image\-dir DIRECTORY\fR
-Directory containing .jpg or .png images of users (eg 'Full Name.png') to use as avatars.
+Directory containing .jpg or .png images of users (eg "Full Name.png") to use as avatars.
 .TP
 \fB\-\-default\-user\-image IMAGE\fR
 Path of .jpg to use as the default user image.
@@ -226,7 +226,7 @@ Hide one or more display elements from the list below:
     users     \- user avatars
     usernames \- names of users
 
-Separate multiple elements with commas (eg 'mouse,progress')
+Separate multiple elements with commas (eg "mouse,progress")
 
 .TP
 \fB\-\-hash\-seed SEED\fR
