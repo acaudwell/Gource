@@ -66,7 +66,7 @@ options:
     --transparent
             Make the background transparent. Only really useful for screenshots.
 
-    --start-date 'YYYY-MM-DD hh:mm:ss +tz'
+    --start-date "YYYY-MM-DD hh:mm:ss +tz"
             Start with the first entry after the supplied date and optional time.
 
             If a time zone offset isn't specified the local time zone is used.
@@ -77,7 +77,7 @@ options:
                 "2012-06-30 12:00"
                 "2012-06-30 12:00:00 +12"
 
-    --stop-date 'YYYY-MM-DD hh:mm:ss +tz'
+    --stop-date "YYYY-MM-DD hh:mm:ss +tz"
             Stop after the last entry prior to the supplied date and optional time.
 
             Uses the same format as --start-date.
@@ -210,7 +210,7 @@ options:
 
     --user-image-dir DIRECTORY
             Directory containing .jpg or .png images of users
-            (eg 'Full Name.png') to use as avatars.
+            (eg "Full Name.png") to use as avatars.
 
     --default-user-image IMAGE
             Path of .jpg or .png to use as the default user image.
@@ -276,7 +276,7 @@ options:
             users     - user avatars
             usernames - names of users
 
-            Separate multiple elements with commas (eg 'mouse,progress')
+            Separate multiple elements with commas (eg "mouse,progress")
 
     --hash-seed SEED
             Change the seed of hash function.
