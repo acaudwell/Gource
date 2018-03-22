@@ -58,8 +58,15 @@ AC_ARG_ENABLE(ttf-font-dir,[AS_HELP_STRING([--enable-ttf-font-dir=DIR],[director
 AM_CONDITIONAL([FONTDIR], [test "x$gourcefontdir" != "x"])
 AC_SUBST(gourcefontdir)
 
-#GLM
-AC_CHECK_FILE(src/core/glm/glm/glm.hpp,, AC_MSG_ERROR(src/core/glm submodule not found. Please re-install or run ./autogen.sh))
+#see if building against system GLM library
+use_glm_system_library=no
+AC_ARG_WITH(glm, AC_HELP_STRING([--with-glm], [Use system installed GLM header-only library]), use_glm_system_library=$withval)
+if test "x$use_glm_system_library" = "xyes"; then
+    AC_CHECK_HEADER([glm/glm.hpp],, AC_MSG_ERROR(GLM header-only library was required but not found))
+else
+    AC_CHECK_FILE(src/core/glm/glm/glm.hpp,, AC_MSG_ERROR(src/core/glm submodule not found. Please re-install or run ./autogen.sh))
+fi
+AM_CONDITIONAL(USE_BUNDLED_GLM, test "x$use_glm_system_library" != "xyes")
 
 #see if building against system TinyXML library
 use_tinyxml_system_library=no
