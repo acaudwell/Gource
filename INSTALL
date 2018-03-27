@@ -63,7 +63,7 @@ If you already have these fonts, you can configure Gource to use them with:
     ./configure --enable-ttf-font-dir=/path/to/freefont/
 
 Gource includes a copy of the GLM header-only library due to backwards
-incompatible changes in the version most recently packaged by Debain.
+incompatible changes in the version most recently packaged by Debian.
 To build against the system version of GLM use:
 
     ./configure --with-glm
