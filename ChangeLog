@@ -1,5 +1,6 @@
 0.49:
  * Use built-in GLM version to fix compatibility issues (dependency removed).
+ * Added --with-glm configure option.
 
 0.48:
  * Can now generate logs from git sub module directories.
