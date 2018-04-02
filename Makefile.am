@@ -57,10 +57,6 @@ gource_SOURCES = \
 
 AM_CPPFLAGS = -DSDLAPP_RESOURCE_DIR=\"$(pkgdatadir)\"
 
-if USE_BUNDLED_GLM
-AM_CPPFLAGS += -I src/core/glm
-endif
-
 dist_pkgdata_DATA = data/beam.png data/bloom.tga data/bloom_alpha.tga data/file.png data/user.png data/gource.style
 
 shadersdir = $(pkgdatadir)/shaders
