@@ -17,6 +17,7 @@ Gource requires the following libraries to compile (package names may vary):
     PCRE (libpcre3-dev)
     Freetype 2 (libfreetype6-dev)
     GLEW (libglew-dev)
+    GLM >= 0.9.3 (libglm-dev)
     Boost Filesystem >= 1.46 (libboost-filesystem-dev)
     PNG >= 1.2 (libpng12-dev)
 
@@ -61,12 +62,6 @@ By default Gource will install some GNU FreeFont TTF Fonts on your system.
 If you already have these fonts, you can configure Gource to use them with:
 
     ./configure --enable-ttf-font-dir=/path/to/freefont/
-
-Gource includes a copy of the GLM header-only library due to backwards
-incompatible changes in the version most recently packaged by Debian.
-To build against the system version of GLM use:
-
-    ./configure --with-glm
 
 Gource includes a copy of TinyXML. To build against the system version of the
 library use:
