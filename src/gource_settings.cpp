@@ -39,7 +39,7 @@ void GourceSettings::help(bool extended_help) {
 
 #ifdef _WIN32
     //resize window to fit help message
-    SDLApp::resizeConsole(730);
+    SDLApp::resizeConsole(780);
     SDLApp::showConsole(true);
 #endif
 
@@ -50,8 +50,11 @@ void GourceSettings::help(bool extended_help) {
     printf("  -h, --help                       Help\n\n");
     printf("  -WIDTHxHEIGHT, --viewport        Set viewport size\n");
     printf("  -f, --fullscreen                 Fullscreen\n");
+    printf("      --screen SCREEN              Screen number\n");
     printf("      --multi-sampling             Enable multi-sampling\n");
     printf("      --no-vsync                   Disable vsync\n\n");
+    printf("  --window-position XxY            Initial window position\n");
+    printf("  --frameless                      Frameless window\n\n");
 
     printf("  --start-date 'YYYY-MM-DD hh:mm:ss +tz'  Start at a date and optional time\n");
     printf("  --stop-date  'YYYY-MM-DD hh:mm:ss +tz'  Stop at a date and optional time\n\n");
@@ -127,7 +130,8 @@ if(extended_help) {
     printf("  --transparent            Make the background transparent\n\n");
 
     printf("  --user-filter REGEX      Ignore usernames matching this regex\n");
-    printf("  --file-filter REGEX      Ignore files matching this regex\n\n");
+    printf("  --file-filter REGEX      Ignore file paths matching this regex\n");
+    printf("  --file-show-filter REGEX Show only file paths matching this regex\n\n");
 
     printf("  --user-friction SECONDS  Change the rate users slow down (default: 0.67)\n");
     printf("  --user-scale SCALE       Change scale of users (default: 1.0)\n");
@@ -140,9 +144,12 @@ if(extended_help) {
 
     printf("  --highlight-colour       Font colour for highlighted users in hex.\n");
     printf("  --selection-colour       Font colour for selected users and files.\n");
+    printf("  --filename-colour        Font colour for filenames.\n");
     printf("  --dir-colour             Font colour for directories.\n\n");
 
     printf("  --dir-name-depth DEPTH   Draw names of directories down to a specific depth.\n\n");
+
+    printf("  --filename-time SECONDS  Duration to keep filenames on screen (default: 4.0)\n\n");
 
     printf("  --caption-file FILE         Caption file\n");
     printf("  --caption-size SIZE         Caption font size\n");
@@ -267,9 +274,11 @@ GourceSettings::GourceSettings() {
     arg_types["hash-seed"] = "int";
 
     arg_types["user-filter"]    = "multi-value";
-    arg_types["file-filter"]    = "multi-value";
     arg_types["follow-user"]    = "multi-value";
     arg_types["highlight-user"] = "multi-value";
+
+    arg_types["file-filter"]      = "multi-value";
+    arg_types["file-show-filter"] = "multi-value";
 
     arg_types["log-level"]          = "string";
     arg_types["background-image"]   = "string";
@@ -308,6 +317,9 @@ GourceSettings::GourceSettings() {
     arg_types["caption-duration"]   = "float";
     arg_types["caption-colour"]     = "string";
     arg_types["caption-offset"]     = "int";
+
+    arg_types["filename-colour"]    = "string";
+    arg_types["filename-time"]      = "float";
 
     arg_types["dir-name-depth"]     = "int";
 }
@@ -415,6 +427,9 @@ void GourceSettings::setGourceDefaults() {
     caption_offset   = 0;
     caption_colour   = vec3(1.0f, 1.0f, 1.0f);
 
+    filename_colour  = vec3(1.0f, 1.0f, 1.0f);
+    filename_time = 4.0f;
+
     gStringHashSeed = 31;
 
     //delete file filters
@@ -422,6 +437,13 @@ void GourceSettings::setGourceDefaults() {
         delete (*it);
     }
     file_filters.clear();
+
+    //delete file whitelists
+    for(std::vector<Regex*>::iterator it = file_show_filters.begin(); it != file_show_filters.end(); it++) {
+        delete (*it);
+    }    
+    file_show_filters.clear();
+
     file_extensions = false;
 
     //delete user filters
@@ -758,6 +780,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(!entry->hasValue()) conffile.entryException(entry, "specify caption file (filename)");
 
         caption_file = entry->getString();
+
+        if(!boost::filesystem::exists(caption_file)) {
+            conffile.entryException(entry, "caption file not found");
+        }
     }
 
     if((entry = gource_settings->getEntry("caption-duration")) != 0) {
@@ -804,6 +830,34 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             caption_colour /= 255.0f;
         } else {
             conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("filename-colour")) != 0) {
+        if(!entry->hasValue()) conffile.entryException(entry, "specify filename colour (FFFFFF)");
+
+	int r,g,b;
+
+	std::string colstring = entry->getString();
+
+	if(entry->isVec3()) {
+	    filename_colour = entry->getVec3();
+	} else if(colstring.size()==6 && sscanf(colstring.c_str(), "%02x%02x%02x", &r, &g, &b) == 3) {
+            filename_colour = vec3(r,g,b);
+            filename_colour /= 255.0f;
+        } else {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("filename-time")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify duration to keep files on screen (float)");
+
+        filename_time = entry->getFloat();
+
+        if(filename_time<2.0f) {
+            conffile.entryException(entry, "filename-time must be >= 2.0");
         }
     }
 
@@ -1295,6 +1349,29 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             }
 
             file_filters.push_back(r);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("file-show-filter")) != 0) {
+
+        ConfEntryList* filters = gource_settings->getEntries("file-show-filter");
+
+        for(ConfEntryList::iterator it = filters->begin(); it != filters->end(); it++) {
+
+            entry = *it;
+
+            if(!entry->hasValue()) conffile.entryException(entry, "specify file-show-filter (regex)");
+
+            std::string filter_string = entry->getString();
+
+            Regex* r = new Regex(filter_string, 1);
+
+            if(!r->isValid()) {
+                delete r;
+                conffile.entryException(entry, "invalid file-show-filter regular expression");
+            }
+
+            file_show_filters.push_back(r);
         }
     }
 

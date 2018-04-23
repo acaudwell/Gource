@@ -4,7 +4,7 @@ if (autoreconf -f -i) ; then
 	echo "Initializing submodules..."
 	if (git submodule init) ; then
 		echo "Updating submodules..."
-		if (git submodule update) ; then
+		if (git submodule update --init --recursive) ; then
 			echo "Run './configure && make' to continue."
 		else
 			echo "Error: could not update submodules!"

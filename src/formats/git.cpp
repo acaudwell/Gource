@@ -77,7 +77,7 @@ BaseLog* GitCommitLog::generateLog(const std::string& dir) {
     std::string gitdir = dir + std::string("/.git");
     struct stat dirinfo;
     int stat_rc = stat(gitdir.c_str(), &dirinfo);
-    if(stat_rc!=0 || !(dirinfo.st_mode & S_IFDIR)) {
+    if(stat_rc!=0 || !(dirinfo.st_mode & S_IFDIR || dirinfo.st_mode & S_IFREG)) {
         return 0;
     }
 

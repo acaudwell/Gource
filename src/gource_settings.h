@@ -18,7 +18,7 @@
 #ifndef GOURCE_SETTINGS_H
 #define GOURCE_SETTINGS_H
 
-#define GOURCE_VERSION "0.45"
+#define GOURCE_VERSION "0.49"
 
 #include "core/texture.h"
 #include "core/settings.h"
@@ -130,6 +130,7 @@ public:
     std::vector<std::string> highlight_users;
     std::vector<std::string> follow_users;
     std::vector<Regex*> file_filters;
+    std::vector<Regex*> file_show_filters;
     std::vector<Regex*> user_filters;
     bool file_extensions;
 
@@ -138,6 +139,9 @@ public:
     float caption_duration;
     int caption_size;
     int caption_offset;
+
+    vec3 filename_colour;
+    float filename_time;
 
     std::string output_custom_filename;
 

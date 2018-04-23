@@ -20,15 +20,23 @@ Help ('\fB-H\fR' for extended help).
 Set the viewport size. If \-f is also supplied, will attempt to set the video mode to this also. Add ! to make the window non-resizable.
 .TP
 \fB\-f\fR
-Fullscreen
+Fullscreen.
 .TP
-\fB\-w\fR
-Windowed
+\fB\-\-screen SCREEN\fR
+Set the number of the screen to display on.
+.TP
+\fB\-\-window\-position XxY\fR
+Initial window position on your desktop which may be made up of multiple monitors.
+
+This will override the screen setting so don't specify both.
+.TP
+\fB\-\-frameless\fR
+Frameless window.
 .TP
 \fB\-\-transparent\fR
 Make the background transparent. Only really useful for screenshots.
 .TP
-\fB\-\-start\-date 'YYYY\-MM\-DD hh:mm:ss +tz'\fR
+\fB\-\-start\-date "YYYY\-MM\-DD hh:mm:ss +tz"\fR
 Start with the first entry after the supplied date and optional time.
 
 If a time zone offset isn't specified the local time zone is used.
@@ -39,7 +47,7 @@ Example accepted formats:
     "2012-06-30 12:00"
     "2012-06-30 12:00:00 +12"
 .TP
-\fB\-\-stop\-date 'YYYY\-MM\-DD hh:mm:ss +tz'\fR
+\fB\-\-stop\-date "YYYY\-MM\-DD hh:mm:ss +tz"\fR
 Stop at the last entry prior to the supplied date and optional time.
 
 Uses the same format as \-\-start\-date.
@@ -131,23 +139,32 @@ Font colour for highlighted users in hex.
 \fB\-\-selection\-colour FFFFFF\fR
 Font colour for selected users and files.
 .TP
+\fB\-\-filename\-colour FFFFFF\fR
+Font colour for filenames.
+.TP
 \fB\-\-dir\-colour FFFFFF\fR
 Font colour for directories.
 .TP
 \fB\-\-dir\-name\-depth DEPTH\fR
 Draw names of directories down to a specific depth in the tree.
 .TP
+\fB\-\-filename\-time SECONDS\fR
+Duration to keep filenames on screen (>= 2.0).
+.TP
 \fB\-\-file\-extensions\fR
 Show filename extensions only.
 .TP
 \fB\-\-file\-filter REGEX\fR
-Filter out any files matching a specified regular expression.
+Filter out file paths matching the specified regular expression.
+.TP
+\fB\-\-file\-show\-filter REGEX\fR
+Show only file paths matching the specified regular expression.
 .TP
 \fB\-\-user\-filter REGEX\fR
-Filter out any usernames matching a specified regular expression.
+Filter usernames matching the specified regular expression.
 .TP
 \fB\-\-user\-image\-dir DIRECTORY\fR
-Directory containing .jpg or .png images of users (eg 'Full Name.png') to use as avatars.
+Directory containing .jpg or .png images of users (eg "Full Name.png") to use as avatars.
 .TP
 \fB\-\-default\-user\-image IMAGE\fR
 Path of .jpg to use as the default user image.
@@ -209,7 +226,7 @@ Hide one or more display elements from the list below:
     users     \- user avatars
     usernames \- names of users
 
-Separate multiple elements with commas (eg 'mouse,progress')
+Separate multiple elements with commas (eg "mouse,progress")
 
 .TP
 \fB\-\-hash\-seed SEED\fR

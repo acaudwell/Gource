@@ -4,10 +4,13 @@
 use strict;
 use warnings;
 use FindBin;
+use File::Copy;
 
-my $base_dir   = "$FindBin::Bin/../..";
-my $dll_dir    = "$base_dir/dev/win32";
-my $builds_dir = "$base_dir/dev/builds";
+my $base_dir     = "$FindBin::Bin/../..";
+my $build_dir    = "$base_dir/../build-gource-Desktop_Qt_MinGW_64bit-Release/release";
+my $binaries_dir = "$base_dir/dev/win64";
+
+my $builds_output_dir = "$base_dir/dev/builds";
 
 sub gource_version {
     my $version = `cat $base_dir/src/gource_settings.h | grep GOURCE_VERSION`;
@@ -35,19 +38,41 @@ sub dosify {
     close OUTPUT;
 }
 
-chdir("$base_dir") or die("chdir to $base_dir failed");
+sub update_binaries {
+    copy("$build_dir/gource.exe", "$binaries_dir/gource.exe") or die("failed to copy $build_dir/gource.exe: $!\n");
+
+    chdir($binaries_dir) or die("failed to change directory to $binaries_dir\n");
+
+    for my $existing_dll (glob("*.dll")) {
+        unlink($existing_dll) or die("failed to remove existing dll $existing_dll: $!\n");
+    }
+
+    my @dlls = `cygcheck ./gource.exe | grep msys`;
+
+    for my $dll (@dlls) {
+        $dll =~ s/^\s+//g;
+        $dll =~ s/[\r\n]//g;
+        my($name) = $dll =~ m{\\([^\\]+\.dll)$};
+        
+        warn "adding $name\n";
+            
+        copy($dll, "$binaries_dir/$name") or die "failed to copy $name: $!\n"; 
+    }
+}
 
 my $nsis_script = q[
 !define MULTIUSER_MUI
 !define MULTIUSER_EXECUTIONLEVEL Highest
 !define MULTIUSER_INSTALLMODE_COMMANDLINE
+!define MULTIUSER_USE_PROGRAMFILES64
 !define MULTIUSER_INSTALLMODE_DEFAULT_REGISTRY_KEY "Software\Gource"
 !define MULTIUSER_INSTALLMODE_INSTDIR_REGISTRY_KEY "Software\Gource"
 !define MULTIUSER_INSTALLMODE_DEFAULT_REGISTRY_VALUENAME "Install_Mode"
 !define MULTIUSER_INSTALLMODE_INSTDIR_REGISTRY_VALUENAME "Install_Dir"
 !define MULTIUSER_INSTALLMODE_INSTDIR "Gource"
-!include "MultiUser.nsh"
 
+!include "x64.nsh"
+!include "MultiUser.nsh"
 !include "MUI2.nsh"
 !include "LogicLib.nsh"
 !include "SafeEnvVarUpdate.nsh"
@@ -63,6 +88,8 @@ OutFile "GOURCE_INSTALLER"
 
 !insertmacro MULTIUSER_PAGE_INSTALLMODE
 !insertmacro MUI_PAGE_WELCOME
+!define MUI_PAGE_HEADER_TEXT "Legal Disclaimer"
+!insertmacro MUI_PAGE_LICENSE "..\..\nsis\disclaimer.txt"
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
@@ -71,6 +98,10 @@ OutFile "GOURCE_INSTALLER"
 !insertmacro MUI_LANGUAGE "English"
 
 Function .onInit
+  ${IfNot} ${RunningX64}
+    MessageBox MB_OK "This installer requires 64-bit Windows"
+    Quit
+  ${EndIf}
   !insertmacro MULTIUSER_INIT
   ReadRegStr $R0 SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "UninstallString"
   StrCmp $R0 "" done
@@ -140,7 +171,6 @@ SectionEnd
 ];
 
 my @gource_files = qw(
-    gource.exe
     data/beam.png
     data/file.png
     data/user.png
@@ -166,15 +196,30 @@ my @gource_txts = qw(
     THANKS
 );
 
-my @gource_dlls = qw(
+my @bin_files = qw(
+    gource.exe
     SDL2.dll
     SDL2_image.dll
-    libpcre-1.dll
-    libjpeg-9.dll
-    libpng16-16.dll
-    zlib1.dll
     glew32.dll
+    libboost_filesystem-mt.dll
+    libboost_system-mt.dll
+    libbz2-1.dll
     libfreetype-6.dll
+    libgcc_s_seh-1.dll
+    libglib-2.0-0.dll
+    libgraphite2.dll
+    libharfbuzz-0.dll
+    libiconv-2.dll
+    libintl-8.dll
+    libjpeg-8.dll
+    liblzma-5.dll
+    libpcre-1.dll
+    libpng16-16.dll
+    libstdc++-6.dll
+    libtiff-5.dll
+    libwebp-7.dll
+    libwinpthread-1.dll
+    zlib1.dll
 );
 
 my @gource_dirs = qw(
@@ -184,7 +229,10 @@ my @gource_dirs = qw(
     cmd
 );
 
-my $tmp_dir = "$builds_dir/gource-build.$$";
+mkdir($binaries_dir)      unless -d $binaries_dir;
+mkdir($builds_output_dir) unless -d $builds_output_dir;
+
+my $tmp_dir = "$builds_output_dir/gource-build.$$";
 
 doit("rm $tmp_dir") if -d $tmp_dir;
 mkdir($tmp_dir);
@@ -196,15 +244,19 @@ foreach my $dir (@gource_dirs) {
 
 my @gource_bundle;
 
-# copy general files
-foreach my $file (@gource_files) {
-    doit("cp $file $tmp_dir/$file");
+update_binaries();
+
+chdir("$base_dir") or die("chdir to $base_dir failed");
+
+# copy binaries
+foreach my $file (@bin_files) {
+    doit("cp $binaries_dir/$file $tmp_dir/$file");
     push @gource_bundle, $file;
 }
 
-# copy dlls
-foreach my $file (@gource_dlls) {
-    doit("cp $dll_dir/$file $tmp_dir/$file");
+# copy general files
+foreach my $file (@gource_files) {
+    doit("cp $file $tmp_dir/$file");
     push @gource_bundle, $file;
 }
 
@@ -216,8 +268,8 @@ foreach my $file (@gource_txts) {
 
 my $version = gource_version();
 
-my $installer_name = "gource-${version}-setup.exe";
-my $archive_name   = "gource-${version}.win32.zip";
+my $installer_name = "gource-${version}.win64-setup.exe";
+my $archive_name   = "gource-${version}.win64.zip";
 
 my $install_list = '';
 
@@ -250,8 +302,8 @@ chdir($tmp_dir) or die("failed to change directory to '$tmp_dir'\n");
 
 # remove existing copies of the version installer if they exist
 
-doit("rm ../$installer_name") if -e "../$installer_name";
-doit("rm ../$archive_name")   if -e "../$archive_name";
+unlink("../$installer_name") if -e "../$installer_name";
+unlink("../$archive_name")   if -e "../$archive_name";
 
 my $output_file = "gource.nsi";
 

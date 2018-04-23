@@ -120,6 +120,9 @@ int main(int argc, char *argv[]) {
         SDLAppQuit(exception.what());
     }
 
+    //enable frameless
+    display.enableFrameless(gGourceSettings.frameless);
+
     // this causes corruption on some video drivers
     if(gGourceSettings.multisample) {
         display.multiSample(4);
@@ -140,9 +143,13 @@ int main(int argc, char *argv[]) {
 
     try {
 
-        display.init("Gource", gGourceSettings.display_width, gGourceSettings.display_height, gGourceSettings.fullscreen);
+        display.init("Gource", gGourceSettings.display_width, gGourceSettings.display_height, gGourceSettings.fullscreen, gGourceSettings.screen);
 
 #if SDL_VERSION_ATLEAST(2,0,0)
+        if(!display.isFullscreen() && gGourceSettings.window_x >= 0 && gGourceSettings.window_y >= 0) {
+            SDL_SetWindowPosition(display.sdl_window, gGourceSettings.window_x, gGourceSettings.window_y);
+        }
+
         SDL_SetHint(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "0");
 #endif
         

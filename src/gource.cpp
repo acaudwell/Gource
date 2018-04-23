@@ -302,6 +302,7 @@ void Gource::grabMouse(bool grab_mouse) {
         if(SDL_GetRelativeMouseMode()) {
             SDL_SetWindowGrab(display.sdl_window, SDL_FALSE);
             SDL_SetRelativeMouseMode(SDL_FALSE);
+            SDL_WarpMouseInWindow(display.sdl_window, mousepos.x, mousepos.y);
         }
     }
 #endif
@@ -354,7 +355,7 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
             return;
         }
 
-        cursor_move = mag;
+        cursor_move += mag;
 
         return;
     }
@@ -1452,7 +1453,7 @@ void Gource::updateCamera(float dt) {
 
             vec3 cam_pos = camera.getPos();
 
-            vec2 cursor_delta = cursor_move * cam_rate * 400.0f * dt;
+            vec2 cursor_delta = cursor_move * cam_rate * 10.0f;
 
             cam_pos.x += cursor_delta.x;
             cam_pos.y += cursor_delta.y;
@@ -1711,7 +1712,12 @@ void Gource::logic(float t, float dt) {
 
         processCommit(commit, t);
 
-        currtime = lasttime = commit.timestamp;
+        // allow for non linear time lines
+        if(lasttime > commit.timestamp) {
+            currtime = commit.timestamp;
+        }
+
+        lasttime = commit.timestamp;
         subseconds = 0.0;
 
         commitqueue.pop_front();
