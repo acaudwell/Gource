@@ -34,7 +34,7 @@ card to run.
 3. Using Gource
 ===============
 
-gource <options> <path>
+gource [options] [path]
 
 options:
 
