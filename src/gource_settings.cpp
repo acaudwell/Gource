@@ -45,7 +45,7 @@ void GourceSettings::help(bool extended_help) {
 
     printf("Gource v%s\n", GOURCE_VERSION);
 
-    printf("Usage: gource [OPTIONS] [PATH]\n");
+    printf("Usage: gource [options] [path]\n");
     printf("\nOptions:\n");
     printf("  -h, --help                       Help\n\n");
     printf("  -WIDTHxHEIGHT, --viewport        Set viewport size\n");
