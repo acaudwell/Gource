@@ -206,6 +206,9 @@ options:
     --file-extensions
             Show filename extensions only.
 
+    --file-extension-fallback
+            Use filename as extension if the extension is missing or empty.
+
     --file-filter REGEX
             Filter out file paths matching the specified regular expression.
 

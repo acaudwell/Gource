@@ -127,6 +127,9 @@ if(extended_help) {
 
     printf("  --file-extensions        Show filename extensions only\n\n");
 
+    printf("  --file-extension-fallback  Use filename as extension if the\n");
+    printf("                             extension is missing or empty\n\n");
+
     printf("  --git-branch             Get the git log of a particular branch\n\n");
 
     printf("  --hide DISPLAY_ELEMENT   bloom,date,dirnames,files,filenames,mouse,progress,\n");
@@ -246,31 +249,32 @@ GourceSettings::GourceSettings() {
     conf_sections["log-level"]         = "command-line";
 
     //boolean args
-    arg_types["help"]            = "bool";
-    arg_types["extended-help"]   = "bool";
-    arg_types["stop-on-idle"]    = "bool";
-    arg_types["stop-at-end"]     = "bool";
-    arg_types["dont-stop"]       = "bool";
-    arg_types["loop"]            = "bool";
-    arg_types["realtime"]        = "bool";
-    arg_types["no-time-travel"]  = "bool";
-    arg_types["colour-images"]   = "bool";
-    arg_types["hide-date"]       = "bool";
-    arg_types["hide-files"]      = "bool";
-    arg_types["hide-users"]      = "bool";
-    arg_types["hide-tree"]       = "bool";
-    arg_types["hide-usernames"]  = "bool";
-    arg_types["hide-filenames"]  = "bool";
-    arg_types["hide-dirnames"]   = "bool";
-    arg_types["hide-progress"]   = "bool";
-    arg_types["hide-bloom"]      = "bool";
-    arg_types["hide-mouse"]      = "bool";
-    arg_types["hide-root"]       = "bool";
-    arg_types["highlight-users"] = "bool";
-    arg_types["highlight-dirs"]  = "bool";
-    arg_types["file-extensions"] = "bool";
-    arg_types["key"]             = "bool";
-    arg_types["ffp"]             = "bool";
+    arg_types["help"]                    = "bool";
+    arg_types["extended-help"]           = "bool";
+    arg_types["stop-on-idle"]            = "bool";
+    arg_types["stop-at-end"]             = "bool";
+    arg_types["dont-stop"]               = "bool";
+    arg_types["loop"]                    = "bool";
+    arg_types["realtime"]                = "bool";
+    arg_types["no-time-travel"]          = "bool";
+    arg_types["colour-images"]           = "bool";
+    arg_types["hide-date"]               = "bool";
+    arg_types["hide-files"]              = "bool";
+    arg_types["hide-users"]              = "bool";
+    arg_types["hide-tree"]               = "bool";
+    arg_types["hide-usernames"]          = "bool";
+    arg_types["hide-filenames"]          = "bool";
+    arg_types["hide-dirnames"]           = "bool";
+    arg_types["hide-progress"]           = "bool";
+    arg_types["hide-bloom"]              = "bool";
+    arg_types["hide-mouse"]              = "bool";
+    arg_types["hide-root"]               = "bool";
+    arg_types["highlight-users"]         = "bool";
+    arg_types["highlight-dirs"]          = "bool";
+    arg_types["file-extensions"]         = "bool";
+    arg_types["file-extension-fallback"] = "bool";
+    arg_types["key"]                     = "bool";
+    arg_types["ffp"]                     = "bool";
 
     arg_types["swap-title-and-date"] = "bool";
     arg_types["disable-auto-rotate"] = "bool";
@@ -485,6 +489,7 @@ void GourceSettings::setGourceDefaults() {
     file_show_filters.clear();
 
     file_extensions = false;
+    file_extension_fallback = false;
 
     //delete user filters
     for(std::vector<Regex*>::iterator it = user_filters.begin(); it != user_filters.end(); it++) {
@@ -1418,6 +1423,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if(gource_settings->getBool("file-extensions")) {
         file_extensions=true;
+    }
+
+    if(gource_settings->getBool("file-extension-fallback")) {
+        file_extension_fallback=true;
     }
 
     if((entry = gource_settings->getEntry("file-filter")) != 0) {

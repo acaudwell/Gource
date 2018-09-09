@@ -119,10 +119,12 @@ void RFile::setFilename(const std::string& abs_file_path) {
     }
 
     //trim name to just extension
-    int dotsep=0;
+    size_t dotsep = name.rfind(".");
 
-    if((dotsep=name.rfind(".")) != std::string::npos && dotsep != name.size()-1) {
+    if(dotsep != std::string::npos && dotsep != name.size()-1) {
         ext = name.substr(dotsep+1);
+    } else if(gGourceSettings.file_extension_fallback) {
+        ext = name;
     }
 }
 
