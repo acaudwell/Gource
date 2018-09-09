@@ -135,6 +135,7 @@ public:
     std::vector<Regex*> file_show_filters;
     std::vector<Regex*> user_filters;
     bool file_extensions;
+    bool file_extension_fallback;
 
     std::string caption_file;
     vec3 caption_colour;
