@@ -23,20 +23,55 @@ a:hover, a:focus {
     text-shadow: 0 0 5px #AF5;
 }
 
-#donations-box  input, #donations-box select {
+/*
     color: black;
     line-height: normal !important;
     vertical-align: bottom;
     box-sizing: border-box;
     height: 26px;
 }
+*/
+
+#donations-currency {
+    color: black;
+}
+
+#donations-amount {
+    color: black;
+    padding-left: 0.2em;
+    border-radius: 2px;
+}
+
+#donations-currency, #donations-amount {
+    height: 1.75em;
+    line-height: normal !important;
+    color:black;
+    border: none;
+}
+
+.donations-button {
+    color: #333;
+    font-weight: bold;
+    background: #fb3;
+    border: 0.75px solid #fb3;
+    border-radius: 0.4em;
+    padding: 0.28em 0.75em 0.28em 0.75em;
+    cursor: pointer;
+}
+
+.donations-button-span a:hover, .donations-button-span a:focus {
+    background: #fc0;
+    color: white;
+    border: 2px solid #fc0;
+    box-shadow: 0 0 7px #fc0;
+}
 
 div #donations-box {
     display: none;
+    font-size: 0.8em;
     position: relative;
     float: left;
-    padding: 5px;
-    margin-top: 7px;
+    margin-top: 14px;
 }
 
 .navbar-nav > li > a, .index > li > a {
@@ -83,6 +118,15 @@ pre {
     border: 1px solid #666;
     font-weight: bold;
 }
+
+.navbar > .container {
+    padding-right: 0px;
+}
+
+.navbar-collapse {
+    padding-right: 0px;
+}
+
 
 .navbar {
     margin-bottom: 0px;

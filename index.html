@@ -50,16 +50,18 @@ function donateClicked() {
                     <input type="hidden" name="cmd" value="_donations">
                     <input type="hidden" name="business" value="TZYLY4VTKC9TN">
                     <input name="item_name" value="Gource" type="hidden">
-                    <input name="amount" value="5.00" type="text" maxlength="30" size="10">
-                    <select name="currency_code">
-                        <option value="USD" selected="selected">$ (USD)</option>
-                        <option value="EUR">&euro; (EUR)</option>
-                        <option value="GBP">&pound; (GBP)</option>
-                        <option value="CAD">$ (CAD)</option>
-                        <option value="AUD">$ (AUD)</option>
-                        <option value="NZD">$ (NZD)</option>
+                    <input id="donations-amount" name="amount" value="5.00" type="text" maxlength="30" size="7">
+                    <select name="currency_code" id="donations-currency">
+                        <option value="USD" selected="selected">$ USD</option>
+                        <option value="EUR">&euro; EUR</option>
+                        <option value="GBP">&pound; GBP</option>
+                        <option value="CAD">$ CAD</option>
+                        <option value="AUD">$ AUD</option>
+                        <option value="NZD">$ NZD</option>
                     </select>
-                    <input type="image" src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" name="submit" alt="PayPal">				
+                    <span class="donations-button-span">
+                        <a href="javascript:document.forms.donateform.submit();" class="donations-button">Donate</a>
+                    </span>
                 </form>
             </div>
             </li>
@@ -149,7 +151,7 @@ gource
 
 <p>If you like Gource and would like to show your appreciation and encourage future work on this and other open source projects by the author, please consider making a donation!</p>
 
-<p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TZYLY4VTKC9TN&lc=NZ&item_name=Gource&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"><img src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif"></a></p>
+<p><span class="donations-button-span"><a class="donations-button" href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TZYLY4VTKC9TN&lc=NZ&item_name=Gource&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted">Donate</a></span></p>
 
 <h2><a id="contact"></a>Contact</h2>
 
