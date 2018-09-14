@@ -70,6 +70,8 @@ void GourceSettings::help(bool extended_help) {
     printf("      --disable-auto-skip          Disable auto skip\n");
     printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 10)\n");
     printf("      --realtime                   Realtime playback speed\n");
+    printf("      --no-time-travel             Use the time of the parent commit,\n");
+    printf("                                   if the time of a commit is in the past.\n");
     printf("  -c, --time-scale SCALE           Change simulation time scale (default: 1.0)\n");
     printf("  -e, --elasticity FLOAT           Elasticity of nodes (default: 0.0)\n\n");
 
@@ -249,6 +251,7 @@ GourceSettings::GourceSettings() {
     arg_types["dont-stop"]       = "bool";
     arg_types["loop"]            = "bool";
     arg_types["realtime"]        = "bool";
+    arg_types["no-time-travel"]  = "bool";
     arg_types["colour-images"]   = "bool";
     arg_types["hide-date"]       = "bool";
     arg_types["hide-files"]      = "bool";
@@ -380,6 +383,7 @@ void GourceSettings::setGourceDefaults() {
     stop_on_idle   = false;
     stop_at_end    = false;
     dont_stop      = false;
+    no_time_travel = false;
 
     show_key = false;
 
@@ -1271,6 +1275,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if(gource_settings->getBool("realtime")) {
         days_per_second = 1.0 / 86400.0;
+    }
+
+    if(gource_settings->getBool("no-time-travel")) {
+        no_time_travel = true;
     }
 
     if(gource_settings->getBool("dont-stop")) {
