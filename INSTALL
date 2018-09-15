@@ -30,7 +30,7 @@ SDL Image 2.0 needs to have been built with support PNG and JPEG images.
 2. Building
 ===========
 
-Gource requires a GNU compatible C++ compiler that supports c++0x features such as 'auto' and the new 'for' loop syntax.
+Gource requires a GNU compatible C++ compiler that supports c++0x features such as 'auto' and Range-based 'for' loop syntax.
 
 GCC 4.6+ or Clang recommended.
 
