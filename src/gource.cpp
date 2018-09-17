@@ -1120,6 +1120,13 @@ void Gource::readLog() {
             break;
         }
 
+        if(gGourceSettings.no_time_travel) {
+            time_t checkTime = commitqueue.empty() ? currtime : commitqueue.back().timestamp;
+            if(commit.timestamp < checkTime) {
+                commit.timestamp = checkTime;
+            }
+        }
+
         commitqueue.push_back(commit);
     }
 
