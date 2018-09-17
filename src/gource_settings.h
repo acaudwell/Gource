@@ -135,6 +135,7 @@ public:
     vec3 selection_colour;
 
     int dir_name_depth;
+    float dir_name_position;
 
     std::vector<std::string> highlight_users;
     std::vector<std::string> follow_users;

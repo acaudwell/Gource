@@ -157,7 +157,9 @@ if(extended_help) {
     printf("  --filename-colour        Font colour for filenames.\n");
     printf("  --dir-colour             Font colour for directories.\n\n");
 
-    printf("  --dir-name-depth DEPTH   Draw names of directories down to a specific depth.\n\n");
+    printf("  --dir-name-depth DEPTH    Draw names of directories down to a specific depth.\n");
+    printf("  --dir-name-position FLOAT Position for the directory name along the edge\n");
+    printf("                            (between 0.0 and 1.0, default is 0.5).\n\n");
 
     printf("  --filename-time SECONDS  Duration to keep filenames on screen (default: 4.0)\n\n");
 
@@ -291,6 +293,7 @@ GourceSettings::GourceSettings() {
     arg_types["user-friction"]     = "float";
     arg_types["padding"]           = "float";
     arg_types["time-scale"]        = "float";
+    arg_types["dir-name-position"] = "float";
 
     arg_types["max-files"]  = "int";
     arg_types["font-size"]  = "int";
@@ -436,6 +439,7 @@ void GourceSettings::setGourceDefaults() {
     title_height_pad = 0;
 
     dir_name_depth = 0;
+    dir_name_position = 0.5f;
 
     elasticity = 0.0f;
 
@@ -1493,6 +1497,17 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
         if(dir_name_depth <= 0) {
             conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("dir-name-position")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify dir-name-position (float)");
+
+        dir_name_position = entry->getFloat();
+
+        if(dir_name_position<0.0f || dir_name_position>1.0f) {
+            conffile.entryException(entry, "dir-name-position must be >= 0.0 and <= 1.0");
         }
     }
 
