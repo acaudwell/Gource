@@ -18,7 +18,7 @@
 #ifndef GOURCE_SETTINGS_H
 #define GOURCE_SETTINGS_H
 
-#define GOURCE_VERSION "0.49"
+#define GOURCE_VERSION "0.50"
 
 #include "core/texture.h"
 #include "core/settings.h"
