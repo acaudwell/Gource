@@ -130,6 +130,7 @@ bool RCommitLog::checkFormat() {
         if(seekable) {
             //if the log is seekable, go back to the start
             ((SeekLog*)logf)->seekTo(0.0);
+            lastline.clear();
         } else {
             //otherwise set the buffered flag as we have bufferd one commit
             buffered = true;
@@ -171,7 +172,7 @@ bool RCommitLog::getCommitAt(float percent, RCommit& commit) {
 bool RCommitLog::getNextLine(std::string& line) {
     if(!lastline.empty()) {
         line = lastline;
-        lastline = std::string("");
+        lastline.clear();
         return true;
     }
 
@@ -182,7 +183,7 @@ bool RCommitLog::getNextLine(std::string& line) {
 void RCommitLog::seekTo(float percent) {
     if(!seekable) return;
 
-    lastline = "";
+    lastline.clear();
 
     ((SeekLog*)logf)->seekTo(percent);
 }
