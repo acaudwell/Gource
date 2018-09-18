@@ -107,7 +107,7 @@ options:
             Realtime playback speed.
 
         --no-time-travel
-            Use the time of the parent commit, if the time of a commit is in the past.
+            Use the time of the last commit if the time of a commit is in the past.
 
     -c, --time-scale SCALE
             Change simulation time scale.
