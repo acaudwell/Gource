@@ -929,10 +929,10 @@ void RDirNode::drawDirName(FXFont& dirfont) const{
 
     float alpha = gGourceSettings.highlight_dirs ? 1.0 : std::max(0.0f, 5.0f - since_last_node_change) / 5.0f;
 
-    vec2 mid = spline.getMidPoint();
+    vec2 label_pos = spline.getLabelPos();
 
     dirfont.setAlpha(alpha);
-    dirfont.draw(mid.x, mid.y, path_token);
+    dirfont.draw(label_pos.x, label_pos.y, path_token);
 }
 
 void RDirNode::calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection) {

@@ -31,13 +31,13 @@ class SplineEdge {
     std::vector<vec2> spline_point;
     std::vector<vec4> spline_colour;
 
-    vec2 midpoint;
+    vec2 label_pos;
     
     void drawBeam(const vec2 & pos1, const vec4 & col1, const vec2 & pos2, const vec4 & col2, float radius, bool first) const;
 public:
     SplineEdge();
     
-    const vec2& getMidPoint() const;
+    const vec2& getLabelPos() const;
     
     void update(const vec2& pos1, const vec4& col1, const vec2& pos2, const vec4& col2, const vec2& spos);
 
