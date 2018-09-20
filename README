@@ -197,8 +197,8 @@ options:
             Draw names of directories down to a specific depth in the tree.
 
     --dir-name-position FLOAT
-            Position for the directory name along the edge
-            (between 0.0 and 1.0, default is 0.5).
+            Position along edge of the directory name
+            (between 0.1 and 1.0, default is 0.5).
 
     --filename-time SECONDS
             Duration to keep filenames on screen (>= 2.0).

@@ -17,8 +17,6 @@
 
 #include "spline.h"
 
-#include <cmath>
-
 SplineEdge::SplineEdge() {
 }
 
@@ -63,13 +61,15 @@ void SplineEdge::update(const vec2& pos1, const vec4& col1, const vec2& pos2, co
     }
 
     const float pos = gGourceSettings.dir_name_position;
-    const float s_quota = 0.5f - std::abs(pos - 0.5f);
+
+    const float s_quota = 0.5f - glm::abs(pos - 0.5f);
     const float p_quota = 1.0f - s_quota;
-    midpoint = pos1 * (p_quota * (1.0f - pos)) + pos2 * (p_quota * pos) + spos * s_quota;
+
+    label_pos = pos1 * (p_quota * (1.0f - pos)) + pos2 * (p_quota * pos) + spos * s_quota;
 }
 
-const vec2& SplineEdge::getMidPoint() const {
-    return midpoint;
+const vec2& SplineEdge::getLabelPos() const {
+    return label_pos;
 }
 
 void SplineEdge::drawToVBO(quadbuf& buffer) const {

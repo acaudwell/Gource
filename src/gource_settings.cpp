@@ -158,7 +158,7 @@ if(extended_help) {
     printf("  --dir-colour             Font colour for directories.\n\n");
 
     printf("  --dir-name-depth DEPTH    Draw names of directories down to a specific depth.\n");
-    printf("  --dir-name-position FLOAT Position for the directory name along the edge\n");
+    printf("  --dir-name-position FLOAT Position along edge of the directory name\n");
     printf("                            (between 0.0 and 1.0, default is 0.5).\n\n");
 
     printf("  --filename-time SECONDS  Duration to keep filenames on screen (default: 4.0)\n\n");
@@ -1506,8 +1506,8 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
         dir_name_position = entry->getFloat();
 
-        if(dir_name_position<0.0f || dir_name_position>1.0f) {
-            conffile.entryException(entry, "dir-name-position must be >= 0.0 and <= 1.0");
+        if(dir_name_position < 0.1f || dir_name_position > 1.0f) {
+            conffile.entryException(entry, "dir-name-position outside of range 0.1 - 1.0 (inclusive)");
         }
     }
 
