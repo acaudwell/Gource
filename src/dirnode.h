@@ -50,6 +50,7 @@ class RDirNode : public QuadItem {
     vec4 col;
 
     vec2 spos;
+    vec2 label_delta;
 
     vec2 projected_pos;
     vec2 projected_spos;
@@ -98,7 +99,7 @@ class RDirNode : public QuadItem {
 
     void adjustDepth();
     void adjustPath();
-    void drawDirName(FXFont& dirfont) const;
+    void drawDirName(FXFont& dirfont);
 public:
     RDirNode(RDirNode* parent, const std::string & abspath);
     ~RDirNode();

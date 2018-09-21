@@ -38,7 +38,7 @@ RDirNode::RDirNode(RDirNode* parent, const std::string & abspath) {
     parent = 0;
     setParent(parent);
 
-    accel = spos = prev_accel = vel = vec2(0.0f);
+    accel = spos = label_delta = prev_accel = vel = vec2(0.0f);
 
     //NOTE: parent is always being set to 0 so this never gets called ...
 
@@ -927,7 +927,7 @@ void RDirNode::logic(float dt) {
     since_last_node_change += dt;
 }
 
-void RDirNode::drawDirName(FXFont& dirfont) const{
+void RDirNode::drawDirName(FXFont& dirfont) {
     if(parent==0) return;
     if(gGourceSettings.hide_dirnames) return;
     if(gGourceSettings.dir_name_depth > 0 && gGourceSettings.dir_name_depth < (depth-1)) return;
@@ -935,10 +935,45 @@ void RDirNode::drawDirName(FXFont& dirfont) const{
     if(!gGourceSettings.highlight_dirs && since_last_node_change > 5.0) return;
 
     float alpha = gGourceSettings.highlight_dirs ? 1.0 : std::max(0.0f, 5.0f - since_last_node_change) / 5.0f;
-
-    vec2 label_pos = spline.getLabelPos();
-
     dirfont.setAlpha(alpha);
+
+    const vec2 size(dirfont.getWidth(path_token), dirfont.getHeight());
+
+    vec2 new_delta(0.0f, 0.0f);
+    if (parent->getProjectedPos().x < projected_pos.x) {
+        // alignRight
+        new_delta.x = size.x;
+    }
+    if (parent->getProjectedPos().y > projected_pos.y) {
+        // alignBottom
+        new_delta.y = size.y;
+    }
+
+    if(gGourceSettings.dir_name_position < 0.5) {
+        // reverse alignment
+        new_delta.x = (new_delta.x == 0 ? size.x : 0);
+        new_delta.y = (new_delta.y == 0 ? size.y : 0);
+    }
+
+    if (label_delta != new_delta) {
+        const vec2 label_diff = new_delta - label_delta;
+        if (glm::length2(label_diff) < 0.25f) {
+            label_delta = new_delta;
+        } else {
+            vec2 move;
+            move.x = glm::max(0.5f - glm::abs(label_delta.x / size.x - 0.5f), 0.1f);
+            move.y = glm::max(0.5f - glm::abs(label_delta.y / size.y - 0.5f), 0.1f);
+
+            if (label_diff.x < 0.0f)
+                move.x *= -1.0f;
+            if (label_diff.y < 0.0f)
+                move.y *= -1.0f;
+
+            label_delta += move;
+        }
+    }
+
+    const vec2 label_pos = spline.getLabelPos() - label_delta;
     dirfont.draw(label_pos.x, label_pos.y, path_token);
 }
 
