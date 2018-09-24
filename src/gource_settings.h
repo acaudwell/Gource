@@ -103,6 +103,14 @@ public:
     int font_size;
     vec3 font_colour;
 
+    int title_font_size;
+    vec3 title_font_colour;
+
+    int date_height_pad;
+    int title_height_pad;
+
+    bool swap_title_and_date;
+
     float elasticity;
 
     std::string git_branch;
@@ -150,7 +158,7 @@ public:
     TextureResource* file_graphic;
 
     int log_level;
-    
+
     GourceSettings();
 
     void setGourceDefaults();
