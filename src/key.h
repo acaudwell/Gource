@@ -35,6 +35,7 @@ class FileKeyEntry {
     float alpha;
     float brightness;
     int count;
+    unsigned long lines;
     float pos_y;
     float src_y;
     float dest_y;
@@ -57,6 +58,8 @@ public:
     
     void inc();
     void dec();
+
+    void changeLines(long delta);
     
     void setShow(bool show);
     
@@ -92,6 +95,8 @@ public:
     
     void inc(RFile* file);
     void dec(RFile* file);
+
+    void changeLines(RFile* file, long lines);
 
     void logic(float dt);
     

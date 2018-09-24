@@ -18,6 +18,7 @@ FileKeyEntry::FileKeyEntry(const FXFont& font, const std::string& ext, const vec
     height      = 18.0f;
     left_margin = 20.0f;
     count       = 0;
+    lines       = 0;
     brightness  = 1.0f;
     alpha       = 0.0f;
 
@@ -67,6 +68,10 @@ void FileKeyEntry::inc() {
 
 void FileKeyEntry::dec() {
     count--;
+}
+
+void FileKeyEntry::changeLines(long delta) {
+    lines += delta;
 }
 
 int FileKeyEntry::getCount() const {
@@ -148,7 +153,11 @@ void FileKeyEntry::draw() {
     font.draw((int)pos.x+2, (int)pos.y+3,  display_ext.c_str());
 
     font.dropShadow(true);
-    font.print((int)pos.x+width+4, (int)pos.y+3, "%d", count);
+    if(gGourceSettings.show_lines) {
+        font.print((int)pos.x+width+4, (int)pos.y+3, "%d / %ld", count, lines);
+    } else {
+        font.print((int)pos.x+width+4, (int)pos.y+3, "%d", count);
+    }
 }
 
 // Key
@@ -238,6 +247,15 @@ void FileKey::dec(RFile* file) {
     entry->dec();
 }
 
+void FileKey::changeLines(RFile *file, long lines) {
+    std::map<std::string, FileKeyEntry*>::iterator result = keymap.find(file->ext);
+
+    if(result == keymap.end()) return;
+
+    FileKeyEntry* entry = result->second;
+    entry->changeLines(lines);
+}
+
 bool file_key_entry_sort (const FileKeyEntry* a, const FileKeyEntry* b) {
 
     //sort by count
@@ -263,7 +281,8 @@ void FileKey::logic(float dt) {
                 FileKeyEntry* entry = it->second;
 
                 if(!entry->isFinished()) {
-                    active_keys.push_back(entry);
+                    if(gGourceSettings.key_threshold == 0 || entry->getCount() >= gGourceSettings.key_threshold)
+                        active_keys.push_back(entry);
                 } else {
                     finished_keys.push_back(entry);
                 }

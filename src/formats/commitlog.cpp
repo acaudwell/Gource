@@ -292,6 +292,7 @@ RCommitFile::RCommitFile(const std::string& filename, const std::string& action,
 
     this->action   = action;
     this->colour   = colour;
+    this->lines    = 0;
 }
 
 RCommit::RCommit() {
@@ -342,6 +343,17 @@ void RCommit::addFile(const std::string& filename, const  std::string& action, c
     }
 
     files.push_back(RCommitFile(filename, action, colour));
+}
+
+void RCommit::addLines(const std::string &filename, long delta) {
+    for(std::list<RCommitFile>::iterator it = files.begin(); it != files.end(); it++) {
+        RCommitFile& cf = *it;
+        if (cf.filename == filename) {
+            //std::cout << filename << ": delta " << delta << std::endl;
+            cf.lines = delta;
+            return;
+        }
+    }
 }
 
 void RCommit::postprocess() {

@@ -1218,6 +1218,8 @@ void Gource::addFileAction(const std::string& username, const RCommitFile& cf, R
     //create user if havent yet. do it here to ensure at least one of there files
     //was added (incase we hit gGourceSettings.max_files)
 
+    file_key.changeLines(file, cf.lines);
+
     //find user of this commit or create them
     RUser* user = 0;
 

@@ -47,6 +47,10 @@ std::string GitCommitLog::logCommand() {
         log_command += gGourceSettings.git_branch;
     }
 
+    if(gGourceSettings.show_lines) {
+        log_command += " --numstat ";
+    }
+
     return log_command;
 }
 
@@ -167,19 +171,34 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
         //incorrect log format
         if(tab == std::string::npos || tab == 0 || tab == line.size()-1) continue;
 
-        std::string status = line.substr(tab - 1, 1);
-        std::string file   = line.substr(tab + 1);
+        if(line[0] == ':') {
+            std::string file   = line.substr(tab + 1);
+            std::string status = line.substr(tab - 1, 1);
 
-        if(file.empty()) continue;
+            if(file.empty()) continue;
 
-        //check for and remove double quotes
-        if(file.find('"') == 0 && file.rfind('"') == file.size()-1) {
-            if(file.size()<=2) continue;
+            //check for and remove double quotes
+            if(file.find('"') == 0 && file.rfind('"') == file.size()-1) {
+                if(file.size()<=2) continue;
 
-            file = file.substr(1,file.size()-2);
+                file = file.substr(1,file.size()-2);
+            }
+
+            commit.addFile(file, status);
+        } else if(gGourceSettings.show_lines) {
+            long added = 0, removed = 0;
+            std::string file;
+            std::istringstream line_stream(line);
+            line_stream >> added >> removed >> file;
+            //std::cout << file << ": added " << added << ", removed " << removed << std::endl;
+            if(!file.empty()) {
+                if(file[0] != '/') {
+                    file.insert(0, 1, '/');
+                }
+                commit.addLines(file, added - removed);
+            }
         }
 
-        commit.addFile(file, status);
     }
 
     //check we at least got a username
