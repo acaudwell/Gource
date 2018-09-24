@@ -346,6 +346,12 @@ void RCommit::addFile(const std::string& filename, const  std::string& action, c
 
 void RCommit::postprocess() {
     username = RCommitLog::filter_utf8(username);
+
+#ifdef _WIN32
+    // On Windows replace '?' with '.' to allow setting a custom avatar
+    // as '?' is not allowed in Windows filenames
+    std::replace(username.begin(), username.end(), '?', '.');
+#endif
 }
 
 bool RCommit::isValid() {

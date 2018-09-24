@@ -3,6 +3,8 @@
  * Added --dir-name-position option (Lars Schmertmann).
  * Fixed a bug in the log file format detection that could result in the wrong
    first entry being displayed for a custom log.
+ * Replace question marks in username with fullstops on Windows to allow
+   setting custom avatars as '?' is not valid in a Windows filename.
 
 0.49:
  * Fixed compatibility with GLM 0.9.9.0.
