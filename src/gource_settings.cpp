@@ -308,13 +308,12 @@ GourceSettings::GourceSettings() {
     arg_types["date-height-pad"]  = "int";
     arg_types["title-height-pad"] = "int";
 
-    arg_types["user-filter"]    = "multi-value";
-    arg_types["user-show-filter"]    = "multi-value";
-    arg_types["follow-user"]    = "multi-value";
-    arg_types["highlight-user"] = "multi-value";
-
+    arg_types["user-filter"]      = "multi-value";
+    arg_types["user-show-filter"] = "multi-value";
     arg_types["file-filter"]      = "multi-value";
     arg_types["file-show-filter"] = "multi-value";
+    arg_types["follow-user"]      = "multi-value";
+    arg_types["highlight-user"]   = "multi-value";
 
     arg_types["log-level"]          = "string";
     arg_types["background-image"]   = "string";
