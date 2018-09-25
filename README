@@ -206,6 +206,9 @@ options:
     --user-filter REGEX
             Filter usernames matching the specified regular expression.
 
+    --user-show-filter REGEX
+            Show only usernames matching the specified regular expression.
+
     --user-image-dir DIRECTORY
             Directory containing .jpg or .png images of users
             (eg "Full Name.png") to use as avatars.
