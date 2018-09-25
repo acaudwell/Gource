@@ -117,10 +117,9 @@ if(extended_help) {
     printf("  --font-size SIZE         Font size used by date and title\n");
     printf("  --font-colour FFFFFF     Font colour used by date and title in hex\n\n");
 
-    printf("  --file-extensions        Show filename extensions only\n\n");
-
-    printf("  --file-extension-fallback  Use filename as extension if the\n");
-    printf("                             extension is missing or empty\n\n");
+    printf("  --file-extensions          Show filename extensions only\n");
+    printf("  --file-extension-fallback  Use filename as extension if the extension\n");
+    printf("                             is missing or empty\n\n");
 
     printf("  --git-branch             Get the git log of a particular branch\n\n");
 
