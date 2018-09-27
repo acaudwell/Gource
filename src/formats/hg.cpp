@@ -114,7 +114,7 @@ bool MercurialLog::parseCommitEntry(RCommit& commit) {
     std::string line;
     std::vector<std::string> entries;
 
-    if(!logf->getNextLine(line)) return false;
+    if(!getNextLine(line)) return false;
 
     //custom line
     if(!hg_regex.match(line, &entries)) return false;
