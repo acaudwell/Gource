@@ -183,7 +183,6 @@ class Gource : public SDLApp {
     std::deque<RCommit> commitqueue;
     std::map<std::string, RUser*> users;
     std::map<std::string, RFile*> files;
-    std::map<int, RFile*> tagfilemap;
     std::map<int, RUser*> tagusermap;
 
     std::list<RCaption*> captions;

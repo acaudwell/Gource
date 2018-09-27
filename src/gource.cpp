@@ -870,7 +870,6 @@ void Gource::reset() {
     active_user_bounds.reset();
     dir_bounds.reset();
     commitqueue.clear();
-    tagfilemap.clear();
     tagusermap.clear();
     gGourceRemovedFiles.clear();
 
@@ -972,7 +971,6 @@ void Gource::deleteFile(RFile* file) {
     }
 
     files.erase(file->fullpath);
-    tagfilemap.erase(file->getTagID());
     file_key.dec(file);
 
     //debugLog("removed file %s\n", file->fullpath.c_str());
@@ -998,7 +996,6 @@ RFile* Gource::addFile(const RCommitFile& cf) {
     RFile* file = new RFile(cf.filename, cf.colour, vec2(0.0,0.0), tagid);
 
     files[cf.filename] = file;
-    tagfilemap[tagid]  = file;
 
     root->addFile(file);
 
