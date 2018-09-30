@@ -32,12 +32,13 @@ public:
     RUser* source;
     RFile* target;
 
-    float addedtime;
+    time_t timestamp;
+    float t;
 
     float progress;
     float rate;
 
-    RAction(RUser* source, RFile* target, float addedtime);
+    RAction(RUser* source, RFile* target, time_t timestamp, float t, const vec3& colour);
     virtual ~RAction() {};
     
     inline bool isFinished() const { return (progress >= 1.0); };
@@ -50,12 +51,12 @@ public:
 
 class CreateAction : public RAction {
 public:
-    CreateAction(RUser* source, RFile* target, float addedtime);
+    CreateAction(RUser* source, RFile* target, time_t timestamp, float t);
 };
 
 class RemoveAction : public RAction {
 public:
-    RemoveAction(RUser* source, RFile* target, float addedtime);
+    RemoveAction(RUser* source, RFile* target, time_t timestamp, float t);
 
     void logic(float dt);
 };
@@ -64,7 +65,7 @@ class ModifyAction : public RAction {
 protected:
     vec3 modify_colour;
 public:
-    ModifyAction(RUser* source, RFile* target, float addedtime, const vec3& modify_colour);
+    ModifyAction(RUser* source, RFile* target, time_t timestamp, float t, const vec3& modify_colour);
 
     void apply();
 };

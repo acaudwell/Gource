@@ -1155,12 +1155,12 @@ void Gource::readLog() {
     //debugLog("current date: %s\n", displaydate.c_str());
 }
 
-void Gource::processCommit(RCommit& commit, float t) {
+void Gource::processCommit(const RCommit& commit, float t) {
 
     //find files of this commit or create it
-    for(std::list<RCommitFile>::iterator it = commit.files.begin(); it != commit.files.end(); it++) {
+    for(std::list<RCommitFile>::const_iterator it = commit.files.begin(); it != commit.files.end(); it++) {
 
-        RCommitFile& cf = *it;
+        const RCommitFile& cf = *it;
         RFile* file = 0;
 
         //is this a directory (ends in slash)
@@ -1191,7 +1191,7 @@ void Gource::processCommit(RCommit& commit, float t) {
                 for(std::list<RFile*>::iterator it = dir_files.begin(); it != dir_files.end(); it++) {
                     RFile* file = *it;
 
-                    addFileAction(commit.username, cf, file, t);
+                    addFileAction(commit, cf, file, t);
                 }
             }
 
@@ -1207,11 +1207,11 @@ void Gource::processCommit(RCommit& commit, float t) {
             if(!file) continue;
         }
 
-        addFileAction(commit.username, cf, file, t);
+        addFileAction(commit, cf, file, t);
     }
 }
 
-void Gource::addFileAction(const std::string& username, const RCommitFile& cf, RFile* file, float t) {
+void Gource::addFileAction(const RCommit& commit, const RCommitFile& cf, RFile* file, float t) {
     //create user if havent yet. do it here to ensure at least one of there files
     //was added (incase we hit gGourceSettings.max_files)
 
@@ -1219,11 +1219,11 @@ void Gource::addFileAction(const std::string& username, const RCommitFile& cf, R
     RUser* user = 0;
 
     //see if user already exists
-    std::map<std::string, RUser*>::iterator seen_user = users.find(username);
+    std::map<std::string, RUser*>::iterator seen_user = users.find(commit.username);
     if(seen_user != users.end()) user = seen_user->second;
 
     if(user == 0) {
-        user = addUser(username);
+        user = addUser(commit.username);
 
         if(gGourceSettings.highlight_all_users) user->setHighlighted(true);
         else {
@@ -1247,12 +1247,12 @@ void Gource::addFileAction(const std::string& username, const RCommitFile& cf, R
     commit_seq++;
 
     if(cf.action == "D") {
-        userAction = new RemoveAction(user, file, t);
+        userAction = new RemoveAction(user, file, commit.timestamp, t);
     } else {
         if(cf.action == "A") {
-            userAction = new CreateAction(user, file, t);
+            userAction = new CreateAction(user, file, commit.timestamp, t);
         } else {
-            userAction = new ModifyAction(user, file, t, cf.colour);
+            userAction = new ModifyAction(user, file, commit.timestamp, t, cf.colour);
         }
     }
 

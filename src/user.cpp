@@ -246,7 +246,7 @@ void RUser::logic(float t, float dt) {
         RAction* action = *it;
 
         //add all files which are too old
-        if(gGourceSettings.max_file_lag>=0.0 && action->addedtime < t - gGourceSettings.max_file_lag) {
+        if(gGourceSettings.max_file_lag>=0.0 && action->t < t - gGourceSettings.max_file_lag) {
             it = actions.erase(it);
             actionCount--;
             action->rate = 2.0;

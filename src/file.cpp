@@ -40,8 +40,10 @@ RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, in
 
     last_action    = 0.0f;
     fade_start     = -1.0f;
+    removed_timestamp = 0;
     expired        = false;
     forced_removal = false;
+    removing       = false;
 
     shadow = true;
 
@@ -74,10 +76,16 @@ RFile::~RFile() {
     //glDeleteLists(namelist, 1);
 }
 
-void RFile::remove(bool force) {
+void RFile::remove(time_t removed_timestamp) {
     last_action = elapsed;
     fade_start  = elapsed;
-    if(force) forced_removal = true;
+    removing = true;
+    this->removed_timestamp = removed_timestamp;
+}
+
+void RFile::remove() {
+    forced_removal = true;
+    remove(0);
 }
 
 void RFile::setDir(RDirNode* dir) {
@@ -248,17 +256,18 @@ void RFile::logic(float dt) {
     if(isHidden() && !forced_removal) elapsed = 0.0;
 }
 
-void RFile::touch(const vec3 & colour) {
-    if(forced_removal) return;
+void RFile::touch(time_t touched_timestamp, const vec3 & colour) {
+    if(forced_removal || (removing && touched_timestamp < removed_timestamp)) return;
 
-    fade_start = -1.0f;
-    
     //fprintf(stderr, "touch %s\n", fullpath.c_str());
 
+    fade_start = -1.0f;
+    removing = false;
+    removed_timestamp = 0;
     last_action = elapsed;
     touch_colour = colour;
 
-    //un expire file
+    //un expire file if touched after being removed
     if(expired) {
         for(std::vector<RFile*>::iterator it = gGourceRemovedFiles.begin(); it != gGourceRemovedFiles.end(); it++) {
             if((*it) == this) {
