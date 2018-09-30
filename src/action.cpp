@@ -28,7 +28,7 @@ RAction::RAction(RUser* source, RFile* target, float addedtime) {
 }
 
 void RAction::apply() {
-    target->touch(colour);
+    target->touch(addedtime, colour);
 }
 
 void RAction::logic(float dt) {
@@ -118,7 +118,7 @@ void RemoveAction::logic(float dt) {
     RAction::logic(dt);
 
     if(old_progress < 1.0 && progress >= 1.0) {
-        target->remove();
+        target->remove(addedtime);
     }
 }
 
