@@ -430,7 +430,7 @@ bool RDirNode::addFile(RFile* f) {
 
         if(f->path.find(file->fullpath) == 0) {
             //fprintf(stderr, "removing %s as is actually the directory of %s\n", file->fullpath.c_str(), f->fullpath.c_str());
-            file->remove(true);
+            file->remove();
             break;
         }
     }

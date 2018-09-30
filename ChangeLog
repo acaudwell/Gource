@@ -4,6 +4,7 @@
  * Added --file-extension-fallback option (Lars Schmertmann).
  * Added --user-show-filter option (Victor Lopez).
  * Fixed a bug in the Mercurial log parser that caused changes to be missed.
+ * Fixed file removal being cancelled by an action with an earlier timestamp.
  * Fixed a bug in the log file format detection that could result in the wrong
    first entry being displayed for a custom log.
 

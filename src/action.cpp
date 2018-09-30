@@ -17,18 +17,12 @@
 
 #include "action.h"
 
-RAction::RAction(RUser* source, RFile* target, float addedtime) {
-    this->source    = source;
-    this->target    = target;
-    this->addedtime = addedtime;
-
-    progress = 0.0;
-
-    rate = 0.5;
+RAction::RAction(RUser* source, RFile* target, time_t timestamp, float t, const vec3& colour)
+    : colour(colour), source(source), target(target), timestamp(timestamp), t(t), progress(0.0f), rate(0.5f) {
 }
 
 void RAction::apply() {
-    target->touch(colour);
+    target->touch(timestamp, colour);
 }
 
 void RAction::logic(float dt) {
@@ -104,12 +98,12 @@ void RAction::draw(float dt) {
     glEnd();
 }
 
-CreateAction::CreateAction(RUser* source, RFile* target, float addedtime) : RAction(source, target, addedtime) {
-    colour = vec3(0.0, 1.0, 0.0);
+CreateAction::CreateAction(RUser* source, RFile* target, time_t timestamp, float t)
+    : RAction(source, target, timestamp, t, vec3(0.0f, 1.0f, 0.0f)) {
 }
 
-RemoveAction::RemoveAction(RUser* source, RFile* target, float addedtime): RAction(source, target, addedtime) {
-    colour = vec3(1.0, 0.0, 0.0);
+RemoveAction::RemoveAction(RUser* source, RFile* target, time_t timestamp, float t)
+    : RAction(source, target, timestamp, t, vec3(1.0f, 0.0f, 0.0f)) {
 }
 
 void RemoveAction::logic(float dt) {
@@ -118,13 +112,12 @@ void RemoveAction::logic(float dt) {
     RAction::logic(dt);
 
     if(old_progress < 1.0 && progress >= 1.0) {
-        target->remove();
+        target->remove(timestamp);
     }
 }
 
-ModifyAction::ModifyAction(RUser* source, RFile* target, float addedtime, const vec3& modify_colour)
-    : modify_colour(modify_colour), RAction(source, target, addedtime) {
-    colour = vec3(1.0, 0.7, 0.3);
+ModifyAction::ModifyAction(RUser* source, RFile* target, time_t timestamp, float t, const vec3& modify_colour)
+    : RAction(source, target, timestamp, t, vec3(1.0f, 0.7f, 0.3f)), modify_colour(modify_colour) {
 }
 
 void ModifyAction::apply() {
