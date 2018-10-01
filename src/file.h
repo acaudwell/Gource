@@ -32,8 +32,8 @@ class RFile : public Pawn {
 
     time_t removed_timestamp;
     bool forced_removal;
-    bool removing;
     bool expired;
+    bool removing;
 
     float fade_start;
     
@@ -70,10 +70,6 @@ public:
     float getAlpha() const;
 
     void touch(time_t touch_timestamp, const vec3& colour);
-
-    void setSelected(bool selected);
-
-    void updateLabel();
 
     void setHidden(bool hidden);
 

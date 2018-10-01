@@ -81,8 +81,6 @@ class Gource : public SDLApp {
 
     bool recolour;
 
-    bool update_file_labels;
-
     bool use_selection_bounds;
     Bounds2D selection_bounds;
 
