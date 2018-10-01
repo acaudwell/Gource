@@ -753,8 +753,6 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
                 gGourceSettings.file_extensions = true;
                 gGourceSettings.hide_filenames  = false;
             }
-
-            update_file_labels = true;
         }
 
         if (e->keysym.sym == SDLK_r) {
@@ -864,7 +862,6 @@ void Gource::reset() {
     if(dirNodeTree!=0) delete dirNodeTree;
 
     recolour = false;
-    update_file_labels = false;
 
     userTree = 0;
     dirNodeTree = 0;
@@ -1643,13 +1640,6 @@ void Gource::logic(float t, float dt) {
     if(recolour) {
         changeColours();
         recolour = false;
-    }
-
-    if(update_file_labels) {
-        for(std::map<std::string,RFile*>::iterator it = files.begin(); it != files.end(); it++) {
-            it->second->updateLabel();
-        }
-        update_file_labels = false;
     }
 
     //still want to update camera while paused

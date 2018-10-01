@@ -65,15 +65,12 @@ RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, in
         file_font.setColour(vec4(gGourceSettings.filename_colour, 1.0f));
     }
 
-    //namelist = glGenLists(1);
-    //label = 0;
     setSelected(false);
 
     dir = 0;
 }
 
 RFile::~RFile() {
-    //glDeleteLists(namelist, 1);
 }
 
 void RFile::remove(time_t removed_timestamp) {
@@ -134,35 +131,6 @@ void RFile::setFilename(const std::string& abs_file_path) {
     } else if(gGourceSettings.file_extension_fallback) {
         ext = name;
     }
-}
-
-int call_count = 0;
-
-
-void RFile::setSelected(bool selected) {
-//    if(font.getFTFont()!=0 && this->selected==selected) return;
-    //if(label && this->selected==selected) return;
-
-//    if(!label) label = new FXLabel();
-
-    Pawn::setSelected(selected);
-
-//    updateLabel();
-
-    //pre-compile name display list
-    //glNewList(namelist, GL_COMPILE);
-    //   font.draw(0.0f, 0.0f, (selected || shortname.size()==0) ? name : shortname);
-    //glEndList();
-}
-
-void RFile::updateLabel() {
-/*    bool show_file_ext = gGourceSettings.file_extensions;
-
-    if(selected) {
-        label->setText(file_selected_font, (selected || !show_file_ext) ? name : ext);
-    } else {
-        label->setText(file_font,          (selected || !show_file_ext) ? name : ext);
-    }*/
 }
 
 void RFile::colourize() {
