@@ -38,7 +38,7 @@ RDirNode::RDirNode(RDirNode* parent, const std::string & abspath) {
     parent = 0;
     setParent(parent);
 
-    accel = spos = label_delta = prev_accel = vel = vec2(0.0f);
+    accel = spos = label_offset = prev_accel = vel = vec2(0.0f);
 
     //NOTE: parent is always being set to 0 so this never gets called ...
 
@@ -927,7 +927,7 @@ void RDirNode::logic(float dt) {
     since_last_node_change += dt;
 }
 
-void RDirNode::drawDirName(FXFont& dirfont) {
+void RDirNode::drawDirName(FXFont& dirfont, float dt) {
     if(parent==0) return;
     if(gGourceSettings.hide_dirnames) return;
     if(gGourceSettings.dir_name_depth > 0 && gGourceSettings.dir_name_depth < (depth-1)) return;
@@ -938,35 +938,23 @@ void RDirNode::drawDirName(FXFont& dirfont) {
     dirfont.setAlpha(alpha);
 
     vec2 size(dirfont.getWidth(path_token), glm::ceil(dirfont.getAscender()+dirfont.getDescender()));
-    vec2 new_delta(0.0f, 0.0f);
+
+    vec2 new_offset(0.0f, 0.0f);
+
     if (parent->getProjectedPos().y > projected_pos.y) {
         // alignBottom
-        new_delta.y = size.y;
+        new_offset.y = -size.y;
     }
-    if (parent->getProjectedPos().x < projected_pos.x) {
+
+    if (   (gGourceSettings.dir_name_position <= 0.5f && parent->getProjectedPos().x < projected_pos.x)
+        || (gGourceSettings.dir_name_position  > 0.5f && parent->getProjectedPos().x > projected_pos.x)) {
         // alignRight
-        new_delta.x = size.x;
+        new_offset.x = -size.x;
     }
 
-    if (label_delta != new_delta) {
-        vec2 label_diff = new_delta - label_delta;
-        if (glm::length2(label_diff) < 0.25f) {
-            label_delta = new_delta;
-        } else {
-            vec2 move;
-            move.x = glm::max(0.5f - glm::abs(label_delta.x / size.x - 0.5f), 0.1f);
-            move.y = glm::max(0.5f - glm::abs(label_delta.y / size.y - 0.5f), 0.1f);
+    label_offset += (new_offset - label_offset) * glm::min(1.0f, dt * 0.5f);
 
-            if (label_diff.x < 0.0f)
-                move.x *= -1.0f;
-            if (label_diff.y < 0.0f)
-                move.y *= -1.0f;
-
-            label_delta += move;
-        }
-    }
-
-    vec2 label_pos = spline.getLabelPos() - label_delta;
+    vec2 label_pos = spline.getLabelPos() + label_offset;
     dirfont.draw(label_pos.x, label_pos.y, path_token);
 }
 
@@ -1002,10 +990,10 @@ void RDirNode::calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* pro
     }
 }
 
-void RDirNode::drawNames(FXFont& dirfont) {
+void RDirNode::drawNames(FXFont& dirfont, float dt) {
 
     if(!gGourceSettings.hide_dirnames && isVisible()) {
-        drawDirName(dirfont);
+        drawDirName(dirfont, dt);
     }
 
     if(!gGourceSettings.hide_filenames) {
@@ -1021,7 +1009,7 @@ void RDirNode::drawNames(FXFont& dirfont) {
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
-        node->drawNames(dirfont);
+        node->drawNames(dirfont, dt);
     }
 }
 

@@ -2448,7 +2448,7 @@ void Gource::draw(float t, float dt) {
     font.roundCoordinates(false);
     font.setColour(vec4(gGourceSettings.dir_colour, 1.0f));
 
-    root->drawNames(font);
+    root->drawNames(font, dt);
 
    if(!(gGourceSettings.hide_usernames || gGourceSettings.hide_users)) {
         for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
