@@ -1624,14 +1624,28 @@ void Gource::logic(float t, float dt) {
         float s = sinf(rotate_angle);
         float c = cosf(rotate_angle);
 
-        root->rotate(s, c);
+        if(manual_rotate) {
+            // rotate around camera position if manual
+            vec2 centre = vec2(camera.getPos());
 
-        for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
-            RUser* user = it->second;
+            root->rotate(s, c, centre);
 
-            vec2 userpos = user->getPos();
+            for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
+                RUser* user = it->second;
 
-            user->setPos(rotate_vec2(userpos, s, c));
+                vec2 rotated_user_pos = rotate_vec2(user->getPos() - centre, s, c) + centre;
+                user->setPos(rotated_user_pos);
+            }
+        } else {
+            root->rotate(s, c);
+
+            for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
+                RUser* user = it->second;
+
+                vec2 rotated_user_pos = rotate_vec2(user->getPos(), s, c);
+                user->setPos(rotated_user_pos);
+            }
+
         }
 
         rotate_angle = 0.0f;
