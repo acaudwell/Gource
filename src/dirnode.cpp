@@ -114,15 +114,23 @@ void RDirNode::nodeUpdated(bool userInitiated) {
 }
 
 void RDirNode::rotate(float s, float c) {
-
-    if(parent != 0) {
-        pos  = rotate_vec2(pos,  s, c);
-        spos = rotate_vec2(spos, s, c);
-    }
+    pos  = rotate_vec2(pos,  s, c);
+    spos = rotate_vec2(spos, s, c);
 
     for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* child = (*it);
         child->rotate(s, c);
+    }
+}
+
+void RDirNode::rotate(float s, float c, const vec2& centre) {
+
+    pos  = rotate_vec2(pos - centre,  s, c) + centre;
+    spos = rotate_vec2(spos - centre, s, c) + centre;
+
+    for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
+        RDirNode* child = (*it);
+        child->rotate(s, c, centre);
     }
 }
 
@@ -792,7 +800,6 @@ void RDirNode::move(float dt) {
 
     //the root node is the centre of the world
     if(parent == 0) {
-        pos = vec2(0.0f);
         return;
     }
 
