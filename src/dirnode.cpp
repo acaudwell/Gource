@@ -937,7 +937,7 @@ void RDirNode::drawDirName(FXFont& dirfont) {
     float alpha = gGourceSettings.highlight_dirs ? 1.0 : std::max(0.0f, 5.0f - since_last_node_change) / 5.0f;
     dirfont.setAlpha(alpha);
 
-    vec2 size(dirfont.getWidth(path_token), dirfont.getHeight());
+    vec2 size(dirfont.getWidth(path_token), glm::ceil(dirfont.getAscender()+dirfont.getDescender()));
     vec2 new_delta(0.0f, 0.0f);
     if (parent->getProjectedPos().y > projected_pos.y) {
         // alignBottom
