@@ -50,6 +50,7 @@ class RDirNode : public QuadItem {
     vec4 col;
 
     vec2 spos;
+    vec2 label_size;
     vec2 label_offset;
 
     vec2 projected_pos;
@@ -84,6 +85,8 @@ class RDirNode : public QuadItem {
     void calcRadius();
     void calcColour();
 
+    static FXFont dirfont;
+
     std::string commonPathPrefix(const std::string& str) const;
 
     void changePath(const std::string & abspath);
@@ -99,10 +102,12 @@ class RDirNode : public QuadItem {
 
     void adjustDepth();
     void adjustPath();
-    void drawDirName(FXFont& dirfont, float dt);
+    void drawDirName(float dt);
 public:
     RDirNode(RDirNode* parent, const std::string & abspath);
     ~RDirNode();
+
+    static void setFont(const FXFont& font);
 
     void printFiles();
 
@@ -203,7 +208,7 @@ public:
     void drawFiles(float dt) const;
     void drawBloom(float dt);
 
-    void drawNames(FXFont& dirfont, float dt);
+    void drawNames(float dt);
 
     void calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection);
 
