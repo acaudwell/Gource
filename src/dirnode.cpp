@@ -898,12 +898,31 @@ void RDirNode::calcEdges() {
     }
 }
 
+void RDirNode::updateLabelOffset(float dt) {
+    if(!parent) return;
+
+    vec2 new_offset(0.0f);
+
+    if (parent->getProjectedPos().y > projected_pos.y) {
+        // alignBottom
+        new_offset.y = -label_size.y;
+    }
+
+    if (   (gGourceSettings.dir_name_position <= 0.5f && parent->getProjectedPos().x < projected_pos.x)
+        || (gGourceSettings.dir_name_position  > 0.5f && parent->getProjectedPos().x > projected_pos.x)) {
+        // alignRight
+        new_offset.x = -label_size.x;
+    }
+
+    label_offset += (new_offset - label_offset) * glm::min(1.0f, dt * 3.0f);
+}
+
 void RDirNode::logic(float dt) {
 
     //move
     move(dt);
     updateSplinePoint(dt);
-
+    updateLabelOffset(dt);
     //update node normal
     if(parent != 0) {
         node_normal = normalise(pos - parent->getPos());
@@ -933,7 +952,7 @@ void RDirNode::logic(float dt) {
     since_last_node_change += dt;
 }
 
-void RDirNode::drawDirName(float dt) {
+void RDirNode::drawDirName() const {
     if(parent==0) return;
     if(gGourceSettings.hide_dirnames) return;
     if(gGourceSettings.dir_name_depth > 0 && gGourceSettings.dir_name_depth < (depth-1)) return;
@@ -941,22 +960,8 @@ void RDirNode::drawDirName(float dt) {
     if(!gGourceSettings.highlight_dirs && since_last_node_change > 5.0) return;
 
     float alpha = gGourceSettings.highlight_dirs ? 1.0 : std::max(0.0f, 5.0f - since_last_node_change) / 5.0f;
+
     dirfont.setAlpha(alpha);
-
-    vec2 new_offset(0.0f);
-
-    if (parent->getProjectedPos().y > projected_pos.y) {
-        // alignBottom
-        new_offset.y = -label_size.y;
-    }
-
-    if (   (gGourceSettings.dir_name_position <= 0.5f && parent->getProjectedPos().x < projected_pos.x)
-        || (gGourceSettings.dir_name_position  > 0.5f && parent->getProjectedPos().x > projected_pos.x)) {
-        // alignRight
-        new_offset.x = -label_size.x;
-    }
-
-    label_offset += (new_offset - label_offset) * glm::min(1.0f, dt * 0.5f);
 
     vec2 label_pos = spline.getLabelPos() + label_offset;
     dirfont.draw(label_pos.x, label_pos.y, path_token);
@@ -994,10 +999,10 @@ void RDirNode::calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* pro
     }
 }
 
-void RDirNode::drawNames(float dt) {
+void RDirNode::drawNames() {
 
     if(!gGourceSettings.hide_dirnames && isVisible()) {
-        drawDirName(dt);
+        drawDirName();
     }
 
     if(!gGourceSettings.hide_filenames) {
@@ -1013,7 +1018,7 @@ void RDirNode::drawNames(float dt) {
 
     for(std::list<RDirNode*>::const_iterator it = children.begin(); it != children.end(); it++) {
         RDirNode* node = (*it);
-        node->drawNames(dt);
+        node->drawNames();
     }
 }
 

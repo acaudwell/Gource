@@ -2451,7 +2451,7 @@ void Gource::draw(float t, float dt) {
         fontmanager.startBuffer();
     }
 
-    root->drawNames(dt);
+    root->drawNames();
 
     if(!(gGourceSettings.hide_usernames || gGourceSettings.hide_users)) {
         for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {

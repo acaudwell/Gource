@@ -95,6 +95,7 @@ class RDirNode : public QuadItem {
 
     void drawEdge(RDirNode* child) const;
     void updateSplinePoint(float dt);
+    void updateLabelOffset(float dt);
     void move(float dt);
 
     vec2 calcFileDest(int layer_no, int file_no);
@@ -102,7 +103,7 @@ class RDirNode : public QuadItem {
 
     void adjustDepth();
     void adjustPath();
-    void drawDirName(float dt);
+    void drawDirName() const;
 public:
     RDirNode(RDirNode* parent, const std::string & abspath);
     ~RDirNode();
@@ -208,7 +209,7 @@ public:
     void drawFiles(float dt) const;
     void drawBloom(float dt);
 
-    void drawNames(float dt);
+    void drawNames();
 
     void calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection);
 
