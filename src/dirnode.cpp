@@ -905,16 +905,26 @@ void RDirNode::updateLabelOffset(float dt) {
 
     if (parent->getProjectedPos().y > projected_pos.y) {
         // alignBottom
-        new_offset.y = -label_size.y;
+        new_offset.y = label_size.y;
     }
 
     if (   (gGourceSettings.dir_name_position <= 0.5f && parent->getProjectedPos().x < projected_pos.x)
         || (gGourceSettings.dir_name_position  > 0.5f && parent->getProjectedPos().x > projected_pos.x)) {
         // alignRight
-        new_offset.x = -label_size.x;
+        new_offset.x = label_size.x;
     }
 
-    label_offset += (new_offset - label_offset) * glm::min(1.0f, dt * 3.0f);
+    if (label_offset != new_offset) {
+        const vec2 label_diff = new_offset - label_offset;
+        if (glm::length2(label_diff) < 0.25f) {
+            label_offset = new_offset;
+        } else {
+            vec2 l = glm::max(0.5f - glm::abs(label_offset / label_size - 0.5f), 0.1f);
+            vec2 move = l * label_diff * glm::min(1.0f, 5.0f * dt);
+
+            label_offset += move;
+        }
+    }
 }
 
 void RDirNode::logic(float dt) {
@@ -963,7 +973,7 @@ void RDirNode::drawDirName() const {
 
     dirfont.setAlpha(alpha);
 
-    vec2 label_pos = spline.getLabelPos() + label_offset;
+    vec2 label_pos = spline.getLabelPos() - label_offset;
     dirfont.draw(label_pos.x, label_pos.y, path_token);
 }
 
