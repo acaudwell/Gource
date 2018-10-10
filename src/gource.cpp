@@ -769,6 +769,10 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
             gGourceSettings.show_key = !gGourceSettings.show_key;
         }
 
+        if (e->keysym.sym == SDLK_j) {
+            gGourceSettings.symmetric_dir_names = !gGourceSettings.symmetric_dir_names;
+        }
+
         if(e->keysym.sym == SDLK_c) {
             splash = 15.0f;
         }

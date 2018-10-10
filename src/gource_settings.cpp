@@ -370,6 +370,7 @@ void GourceSettings::setGourceDefaults() {
     show_key = false;
 
     disable_auto_rotate = false;
+    symmetric_dir_names = false;
 
     auto_skip_seconds = 3.0f;
     days_per_second   = 0.1f; // TODO: check this is right

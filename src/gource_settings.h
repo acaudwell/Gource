@@ -43,6 +43,7 @@ public:
     bool hide_root;
 
     bool disable_auto_rotate;
+    bool symmetric_dir_names;
 
     bool show_key;
 

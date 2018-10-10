@@ -932,7 +932,11 @@ void RDirNode::logic(float dt) {
     //move
     move(dt);
     updateSplinePoint(dt);
-    updateLabelOffset(dt);
+
+    if(gGourceSettings.symmetric_dir_names) {
+        updateLabelOffset(dt);
+    }
+
     //update node normal
     if(parent != 0) {
         node_normal = normalise(pos - parent->getPos());
@@ -973,7 +977,12 @@ void RDirNode::drawDirName() const {
 
     dirfont.setAlpha(alpha);
 
-    vec2 label_pos = spline.getLabelPos() - label_offset;
+    vec2 label_pos = spline.getLabelPos();
+
+    if(gGourceSettings.symmetric_dir_names) {
+       label_pos -= label_offset;
+    }
+
     dirfont.draw(label_pos.x, label_pos.y, path_token);
 }
 
