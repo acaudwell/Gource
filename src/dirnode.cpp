@@ -899,19 +899,22 @@ void RDirNode::calcEdges() {
 }
 
 void RDirNode::updateLabelOffset(float dt) {
-    if(!parent) return;
+    if (!parent) return;
 
     vec2 new_offset(0.0f);
-
-    if (parent->getProjectedPos().y > projected_pos.y) {
-        // alignBottom
+    if (parent->getProjectedPos().x > projected_pos.x) {
+        new_offset.x = label_size.x;
+    }
+    if (parent->getProjectedPos().y < projected_pos.y) {
         new_offset.y = label_size.y;
     }
 
-    if (   (gGourceSettings.dir_name_position <= 0.5f && parent->getProjectedPos().x < projected_pos.x)
-        || (gGourceSettings.dir_name_position  > 0.5f && parent->getProjectedPos().x > projected_pos.x)) {
-        // alignRight
-        new_offset.x = label_size.x;
+    if (gGourceSettings.dir_name_position > 0.5f) {
+        const vec2 dirVec = glm::abs(parent->getProjectedPos() - projected_pos);
+        if (dirVec.x > dirVec.y) {
+            new_offset.x = (new_offset.x == 0.0 ? label_size.x : 0.0);
+            new_offset.y = (new_offset.y == 0.0 ? label_size.y : 0.0);
+        }
     }
 
     if (label_offset != new_offset) {
