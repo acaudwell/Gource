@@ -1116,8 +1116,8 @@ void Gource::readLog() {
 
         if(gGourceSettings.no_time_travel) {
             time_t check_time = commitqueue.empty() ? lasttime : commitqueue.back().timestamp;
-            if(commit.timestamp < check_time) {
-                commit.timestamp = check_time;
+            if(commit.timestamp <= check_time) {
+                commit.timestamp = check_time + 1;
             }
         }
 
