@@ -28,6 +28,7 @@
 std::string GitCommitLog::logCommand() {
 
     std::string log_command = "git log "
+    "--no-show-signature "
     "--pretty=format:user:%aN%n%ct "
     "--reverse --raw --encoding=UTF-8 "
     "--no-renames";
