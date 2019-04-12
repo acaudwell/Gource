@@ -1,0 +1,228 @@
+cmake_minimum_required(VERSION 3.13)
+project(gource)
+
+set(CMAKE_CXX_STANDARD 14)
+
+include_directories(.)
+include_directories(src)
+include_directories(src/core)
+include_directories(src/core/ftgl)
+include_directories(src/core/ui)
+include_directories(src/core/utf8)
+include_directories(src/formats)
+include_directories(src/tinyxml)
+include_directories(/usr/local/include/libpng16)
+include_directories(/usr/local/include/SDL2)
+include_directories(/usr/local/include)
+include_directories(/usr/local/Cellar/glew/2.1.0/include)
+include_directories(/usr/local/opt/freetype/include/freetype2)
+
+link_directories(/usr/local/lib)
+
+add_executable(gource
+        src/core/ftgl/FTUnicode.h
+        src/core/ui/action.h
+        src/core/ui/button.cpp
+        src/core/ui/button.h
+        src/core/ui/checkbox.cpp
+        src/core/ui/checkbox.h
+        src/core/ui/colour.cpp
+        src/core/ui/colour.h
+        src/core/ui/console.cpp
+        src/core/ui/console.h
+        src/core/ui/element.cpp
+        src/core/ui/element.h
+        src/core/ui/file_selector.cpp
+        src/core/ui/file_selector.h
+        src/core/ui/group.cpp
+        src/core/ui/group.h
+        src/core/ui/image.cpp
+        src/core/ui/image.h
+        src/core/ui/label.cpp
+        src/core/ui/label.h
+        src/core/ui/layout.cpp
+        src/core/ui/layout.h
+        src/core/ui/scroll_bar.cpp
+        src/core/ui/scroll_bar.h
+        src/core/ui/scroll_layout.cpp
+        src/core/ui/scroll_layout.h
+        src/core/ui/select.cpp
+        src/core/ui/select.h
+        src/core/ui/slider.cpp
+        src/core/ui/slider.h
+        src/core/ui/solid_layout.cpp
+        src/core/ui/solid_layout.h
+        src/core/ui/subgroup.cpp
+        src/core/ui/subgroup.h
+        src/core/ui/ui.cpp
+        src/core/ui/ui.h
+        src/core/utf8/checked.h
+        src/core/utf8/core.h
+        src/core/utf8/unchecked.h
+        src/core/utf8/utf8.h
+        src/core/bounds.h
+        src/core/conffile.cpp
+        src/core/conffile.h
+        src/core/display.cpp
+        src/core/display.h
+        src/core/frustum.cpp
+        src/core/frustum.h
+        src/core/fxfont.cpp
+        src/core/fxfont.h
+        src/core/gl.h
+        src/core/logger.cpp
+        src/core/logger.h
+        src/core/mousecursor.cpp
+        src/core/mousecursor.h
+        src/core/pi.h
+        src/core/plane.cpp
+        src/core/plane.h
+        src/core/png_writer.cpp
+        src/core/png_writer.h
+        src/core/ppm.cpp
+        src/core/ppm.h
+        src/core/quadtree.cpp
+        src/core/quadtree.h
+        src/core/regex.cpp
+        src/core/regex.h
+        src/core/resource.cpp
+        src/core/resource.h
+        src/core/sdlapp.cpp
+        src/core/sdlapp.h
+        src/core/seeklog.cpp
+        src/core/seeklog.h
+        src/core/settings.cpp
+        src/core/settings.h
+        src/core/shader.cpp
+        src/core/shader.h
+        src/core/shader.hh
+        src/core/shader_common.cpp
+        src/core/shader_common.h
+        src/core/stringhash.cpp
+        src/core/stringhash.h
+        src/core/texture.cpp
+        src/core/texture.h
+        src/core/tga.cpp
+        src/core/tga.h
+        src/core/timer.cpp
+        src/core/timer.h
+        src/core/timezone.cpp
+        src/core/timezone.h
+        src/core/vbo.cpp
+        src/core/vbo.h
+        src/core/vectors.cpp
+        src/core/vectors.h
+        src/formats/apache.cpp
+        src/formats/apache.h
+        src/formats/bzr.cpp
+        src/formats/bzr.h
+        src/formats/commitlog.cpp
+        src/formats/commitlog.h
+        src/formats/custom.cpp
+        src/formats/custom.h
+        src/formats/cvs-exp.cpp
+        src/formats/cvs-exp.h
+        src/formats/cvs2cl.cpp
+        src/formats/cvs2cl.h
+        src/formats/git.cpp
+        src/formats/git.h
+        src/formats/gitraw.cpp
+        src/formats/gitraw.h
+        src/formats/hg.cpp
+        src/formats/hg.h
+        src/formats/svn.cpp
+        src/formats/svn.h
+        src/tinyxml/tinystr.cpp
+        src/tinyxml/tinystr.h
+        src/tinyxml/tinyxml.cpp
+        src/tinyxml/tinyxml.h
+        src/tinyxml/tinyxmlerror.cpp
+        src/tinyxml/tinyxmlparser.cpp
+        src/action.cpp
+        src/action.h
+        src/bloom.cpp
+        src/bloom.h
+        src/caption.cpp
+        src/caption.h
+        src/dirnode.cpp
+        src/dirnode.h
+        src/file.cpp
+        src/file.h
+        src/gource.cpp
+        src/gource.h
+        src/gource_settings.cpp
+        src/gource_settings.h
+        src/gource_shell.cpp
+        src/gource_shell.h
+        src/key.cpp
+        src/key.h
+        src/logmill.cpp
+        src/logmill.h
+        src/main.cpp
+        src/main.h
+        src/pawn.cpp
+        src/pawn.h
+        src/slider.cpp
+        src/slider.h
+        src/spline.cpp
+        src/spline.h
+        src/textbox.cpp
+        src/textbox.h
+        src/user.cpp
+        src/user.h
+        src/zoomcamera.cpp
+        src/zoomcamera.h
+        "tests/images/Árvíztűrő tükörfúrógép.png"
+        tests/logs/custom-dir-delete.log
+        tests/logs/file-removal.log
+        tests/logs/file-to-dir.log
+        tests/logs/svn-dir-delete.log
+        tests/logs/utf8-caption.log
+        tests/logs/utf8.log
+        tests/test.conf
+        aclocal.m4
+        autogen.sh
+        ChangeLog
+        config.log
+        config.status
+        configure
+        configure.ac
+        COPYING
+        gource.pro
+        INSTALL
+        Makefile
+        Makefile.am
+        Makefile.in
+        README
+        THANKS)
+
+target_link_libraries(gource
+        stdc++
+        "-framework Foundation"
+        "-framework CoreFoundation"
+        "-framework OpenGL"
+        "-framework Cocoa"
+        "-framework CoreVideo"
+        "-framework CoreAudio"
+        "-framework ForceFeedback"
+        "-framework AudioToolbox"
+        "-framework IOKit"
+        "-framework Carbon"
+        "-framework Metal"
+        /usr/local/opt/freetype/lib/libfreetype.a
+        /usr/local/lib/libSDL2_image.a
+        /usr/local/lib/libSDL2.dylib
+        /usr/local/lib/libjpeg.a
+        /usr/local/lib/libGLEW.a
+        /usr/local/lib/libpcre32.dylib
+        /usr/local/lib/libpng.dylib
+        /usr/local/lib/libboost_system.a
+        /usr/local/lib/libboost_filesystem.a
+        /usr/local/lib/libtiff.a
+        /usr/local/lib/libfreeimage.dylib
+        /usr/lib/libbz2.dylib
+        /usr/lib/libz.dylib
+        /usr/local/lib/libpcre.dylib
+        objc)
+
+#LIBS = -L/usr/local/lib

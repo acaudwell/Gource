@@ -31,6 +31,27 @@ directories.
 Gource's display is rendered using OpenGL and requires a 3D accelerated video
 card to run.
 
+2.1 Build requirements for Mac
+------------------------------
+
+Install dependencies:
+
+brew install autoconf automake freetype glew sdl2 sdl2_image boost glm pcre freeimage
+
+Prepare the build:
+./autogen.sh
+./configure
+
+Build with make:
+make
+Build with CMake:
+mkdir build
+cd build
+cmake ..
+make
+cp -R ../data data
+./gource
+
 3. Using Gource
 ===============
 
