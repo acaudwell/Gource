@@ -901,22 +901,24 @@ void RDirNode::calcEdges() {
 void RDirNode::updateLabelOffset(float dt) {
     if (!parent) return;
 
-    const vec2 topLeft_align(-0.25f * label_size.y);
-    const vec2 bottomRight_align = label_size - topLeft_align;
+    vec2 new_offset;
+    if (gGourceSettings.dir_name_position == 0.5f) {
+        //center the label
+        new_offset = label_size / vec2(2.0f);
+    } else {
+        const vec2 topLeft_align(-0.25f * label_size.y);
+        const vec2 bottomRight_align = label_size - topLeft_align;
 
-    vec2 new_offset(topLeft_align);
-    if (parent->getProjectedPos().x > projected_pos.x) {
-        new_offset.x = bottomRight_align.x;
-    }
-    if (parent->getProjectedPos().y < projected_pos.y) {
-        new_offset.y = bottomRight_align.y;
-    }
+        new_offset.x = (parent->getProjectedPos().x > projected_pos.x ? bottomRight_align.x : topLeft_align.x);
+        new_offset.y = (parent->getProjectedPos().y < projected_pos.y ? bottomRight_align.y : topLeft_align.y);
 
-    if (gGourceSettings.dir_name_position > 0.5f) {
-        const vec2 dirVec = glm::abs(parent->getProjectedPos() - projected_pos);
-        if (dirVec.x > dirVec.y) {
-            new_offset.x = (new_offset.x == topLeft_align.x ? bottomRight_align.x : topLeft_align.x);
-            new_offset.y = (new_offset.y == topLeft_align.y ? bottomRight_align.y : topLeft_align.y);
+        //invert the alignment if dir_name_position > 0.5 and the angle is flat
+        if (gGourceSettings.dir_name_position > 0.5f) {
+            const vec2 dirVec = glm::abs(parent->getProjectedPos() - projected_pos);
+            if (dirVec.x > dirVec.y) {
+                new_offset.x = (new_offset.x == topLeft_align.x ? bottomRight_align.x : topLeft_align.x);
+                new_offset.y = (new_offset.y == topLeft_align.y ? bottomRight_align.y : topLeft_align.y);
+            }
         }
     }
 
