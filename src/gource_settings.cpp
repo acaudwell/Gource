@@ -71,7 +71,7 @@ void GourceSettings::help(bool extended_help) {
     printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 10)\n");
     printf("      --realtime                   Realtime playback speed\n");
     printf("      --no-time-travel             Use the time of the last commit if the\n");
-    printf("                                   of a commit is in the past\n");
+    printf("                                   time of a commit is in the past\n");
     printf("  -c, --time-scale SCALE           Change simulation time scale (default: 1.0)\n");
     printf("  -e, --elasticity FLOAT           Elasticity of nodes (default: 0.0)\n\n");
 
