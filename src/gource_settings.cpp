@@ -39,7 +39,7 @@ void GourceSettings::help(bool extended_help) {
 
 #ifdef _WIN32
     //resize window to fit help message
-    SDLApp::resizeConsole(780);
+    SDLApp::resizeConsole(1000);
     SDLApp::showConsole(true);
 #endif
 
@@ -53,8 +53,6 @@ void GourceSettings::help(bool extended_help) {
     printf("      --screen SCREEN              Screen number\n");
     printf("      --multi-sampling             Enable multi-sampling\n");
     printf("      --no-vsync                   Disable vsync\n\n");
-    printf("  --window-position XxY            Initial window position\n");
-    printf("  --frameless                      Frameless window\n\n");
 
     printf("  --start-date 'YYYY-MM-DD hh:mm:ss +tz'  Start at a date and optional time\n");
     printf("  --stop-date  'YYYY-MM-DD hh:mm:ss +tz'  Stop at a date and optional time\n\n");
@@ -97,6 +95,9 @@ void GourceSettings::help(bool extended_help) {
 
 if(extended_help) {
     printf("Extended Options:\n\n");
+
+    printf("  --window-position XxY    Initial window position\n");
+    printf("  --frameless              Frameless window\n\n");
 
     printf("  --output-custom-log FILE  Output a custom format log file ('-' for STDOUT).\n\n");
 
