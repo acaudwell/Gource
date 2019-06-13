@@ -25,7 +25,53 @@
 // - 'user:' prefix allows us to quickly tell if the log is the wrong format
 //   and try a different format (eg cvs-exp)
 
+Regex git_version("([0-9]+)(?:\\.([0-9]+))?");
+
+int git_version_major = 0;
+int git_version_minor = 0;
+
+void GitCommitLog::readGitVersion() {
+
+    std::string temp_file;
+
+    if(!createTempFile(temp_file)) {
+        return;
+    }
+
+    char cmd_buff[2048];
+    int result = snprintf(cmd_buff, sizeof(cmd_buff), "git --version > %s", temp_file.c_str());
+    if(result < 0 || result >= sizeof(cmd_buff)) {
+        remove(temp_file.c_str());
+        return;
+    }
+
+    std::ifstream in(temp_file.c_str());
+    char version_str[1024];
+    in.read(version_str, sizeof(version_str));
+    in.close();
+
+    remove(temp_file.c_str());
+
+    version_str[sizeof(version_str)-1] = '\0';
+
+    std::vector<std::string> entries;
+    std::string line = version_str;
+
+    //commit
+    if(!git_version.match(line, &entries)) return;
+
+    git_version_major = atoi(entries[0].c_str());
+
+    if(entries.size() > 1) {
+        git_version_minor = atoi(entries[1].c_str());
+    }
+
+    fprintf(stderr, "git version %d.%d\r\n", git_version_major, git_version_minor);
+}
+
 std::string GitCommitLog::logCommand() {
+
+    readGitVersion();
 
     std::string log_command = "git log "
     "--no-show-signature "
