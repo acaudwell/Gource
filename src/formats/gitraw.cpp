@@ -26,14 +26,15 @@ Regex git_raw_file("^:[0-9]+ [0-9]+ [0-9a-z]+\\.* ([0-9a-z]+)\\.* ([A-Z])[ \\t]+
 
 // parse git log entries
 
-std::string gGourceGitRawLogCommand = "git log --no-show-signature --reverse --raw --pretty=raw";
+// NOTE: this format is deprecated and exists
+// to allow existing log files produced in this format to work
+
+std::string gGourceGitRawLogCommand = "git log --reverse --raw --pretty=raw";
 
 GitRawCommitLog::GitRawCommitLog(const std::string& logfile) : RCommitLog(logfile, 'c') {
 
     log_command = gGourceGitRawLogCommand;
 }
-
-// parse modified cvs format log entries
 
 bool GitRawCommitLog::parseCommit(RCommit& commit) {
 

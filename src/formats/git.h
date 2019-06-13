@@ -24,6 +24,7 @@ class GitCommitLog : public RCommitLog {
 protected:
     bool parseCommit(RCommit& commit);
     BaseLog* generateLog(const std::string& dir);
+    static void readGitVersion();
 public:
     GitCommitLog(const std::string& logfile);
     

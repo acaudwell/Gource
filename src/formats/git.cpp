@@ -25,13 +25,81 @@
 // - 'user:' prefix allows us to quickly tell if the log is the wrong format
 //   and try a different format (eg cvs-exp)
 
+int git_version_major = 0;
+int git_version_minor = 0;
+int git_version_patch = 0;
+
+Regex git_version_regex("([0-9]+)(?:\\.([0-9]+))?(?:\\.([0-9]+))?");
+
+void GitCommitLog::readGitVersion() {
+    if(git_version_major != 0) return;
+
+    std::string temp_file;
+    if(!createTempFile(temp_file)) {
+        return;
+    }
+
+    char cmd_buff[2048];
+    int result = snprintf(cmd_buff, sizeof(cmd_buff), "git --version > %s", temp_file.c_str());
+
+    if(result < 0 || result >= sizeof(cmd_buff)) {
+        remove(temp_file.c_str());
+        return;
+    }
+
+    int command_rc = systemCommand(cmd_buff);
+
+    if(command_rc != 0) {
+        remove(temp_file.c_str());
+        return;
+    }
+
+    std::ifstream in(temp_file.c_str());
+
+    if(!in.is_open()) {
+        remove(temp_file.c_str());
+        return;
+    }
+
+    char version_str[1024];
+    in.read(version_str, sizeof(version_str));
+    version_str[sizeof(version_str)-1] = '\0';
+    in.close();
+
+    remove(temp_file.c_str());
+
+    std::vector<std::string> entries;
+    if(!git_version_regex.match(version_str, &entries)) return;
+
+    git_version_major = atoi(entries[0].c_str());
+
+    if(entries.size() > 1) {
+        git_version_minor = atoi(entries[1].c_str());
+    }
+
+    if(entries.size() > 2) {
+        git_version_patch = atoi(entries[2].c_str());
+    }
+}
+
 std::string GitCommitLog::logCommand() {
 
     std::string log_command = "git log "
-    "--no-show-signature "
     "--pretty=format:user:%aN%n%ct "
     "--reverse --raw --encoding=UTF-8 "
     "--no-renames";
+
+    readGitVersion();
+
+    // Add --no-show-signature either
+    // if git version couldn't be determined or if version
+    // is at least 2.10
+    if(   git_version_major == 0
+       || git_version_major > 2
+       || (git_version_major == 2 && git_version_minor >= 10))
+    {
+        log_command.append(" --no-show-signature");
+    }
 
     if(!gGourceSettings.start_date.empty()) {
         log_command += " --since ";

@@ -246,20 +246,24 @@ bool RCommitLog::hasBufferedCommit() {
 }
 
 //create temp file
-void RCommitLog::createTempLog() {
+bool RCommitLog::createTempLog() {
+    return createTempFile(temp_file);
+}
+
+bool RCommitLog::createTempFile(std::string& temp_file) {
 
     std::string tempdir;
 
 #ifdef _WIN32
     DWORD tmplen = GetTempPath(0, 0);
 
-    if(tmplen == 0) return;
+    if(tmplen == 0) return false;
 
     std::vector<TCHAR> temp(tmplen+1);
 
     tmplen = GetTempPath(static_cast<DWORD>(temp.size()), &temp[0]);
 
-    if(tmplen == 0 || tmplen >= temp.size()) return;
+    if(tmplen == 0 || tmplen >= temp.size()) return false;
 
     tempdir = std::string(temp.begin(), temp.begin() + static_cast<std::size_t>(tmplen));
     tempdir += "\\";
@@ -271,12 +275,14 @@ void RCommitLog::createTempLog() {
     snprintf(tmplate, 1024, "%sgource-XXXXXX", tempdir.c_str());
 
 #ifdef _WIN32
-    if(mktemp(tmplate) < 0) return;
+    if(mktemp(tmplate) < 0) return false;
 #else
-    if(mkstemp(tmplate) < 0) return;
+    if(mkstemp(tmplate) < 0) return false;
 #endif
 
     temp_file = std::string(tmplate);
+
+    return true;
 }
 
 // RCommitFile

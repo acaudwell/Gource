@@ -76,7 +76,8 @@ protected:
 
     bool checkFirstChar(int firstChar, std::istream& stream);
 
-    void createTempLog();
+    bool createTempLog();
+    static bool createTempFile(std::string& temp_file);
 
     bool getNextLine(std::string& line);
 
@@ -93,7 +94,7 @@ public:
 
     std::string getLogCommand();
 
-    int systemCommand(const std::string& command);
+    static int systemCommand(const std::string& command);
     void requireExecutable(const std::string& exename);
 
     void bufferCommit(RCommit& commit);
