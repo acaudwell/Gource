@@ -36,20 +36,20 @@ Gource::Gource(FrameExporter* exporter) {
         gGourceSettings.file_graphic = texturemanager.grab("file.png", true, GL_CLAMP_TO_EDGE);
     }
 
-    fontlarge = fontmanager.grab("FreeSans.ttf", 42);
+    fontlarge = fontmanager.grab(gGourceSettings.font_file, 42);
     fontlarge.dropShadow(true);
     fontlarge.roundCoordinates(true);
 
-    fontmedium = fontmanager.grab("FreeSans.ttf", gGourceSettings.font_size);
+    fontmedium = fontmanager.grab(gGourceSettings.font_file, gGourceSettings.font_size);
     fontmedium.dropShadow(true);
     fontmedium.roundCoordinates(false);
 
-    fontcaption = fontmanager.grab("FreeSans.ttf", gGourceSettings.caption_size);
+    fontcaption = fontmanager.grab(gGourceSettings.font_file, gGourceSettings.caption_size);
     fontcaption.dropShadow(true);
     fontcaption.roundCoordinates(false);
     fontcaption.alignTop(false);
 
-    font = fontmanager.grab("FreeSans.ttf", 14);
+    font = fontmanager.grab(gGourceSettings.font_file, 14);
     font.dropShadow(true);
     font.roundCoordinates(true);
 
@@ -121,7 +121,7 @@ Gource::Gource(FrameExporter* exporter) {
 
     date_x_offset = 0;
 
-    textbox = TextBox(fontmanager.grab("FreeSans.ttf", 18));
+    textbox = TextBox(fontmanager.grab(gGourceSettings.font_file, 18));
     textbox.setBrightness(0.5f);
     textbox.show();
 

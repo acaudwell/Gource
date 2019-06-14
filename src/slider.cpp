@@ -16,13 +16,14 @@
 */
 
 #include "slider.h"
+#include "gource_settings.h"
 
 // PositionSlider
 
 PositionSlider::PositionSlider(float percent) {
     this->percent = percent;
 
-    font = fontmanager.grab("FreeSans.ttf", 16);
+    font = fontmanager.grab(gGourceSettings.font_file, 16);
     font.dropShadow(true);
 
     slidercol = vec3(1.0, 1.0, 1.0);

@@ -32,6 +32,10 @@
 #include "formats/cvs2cl.h"
 #include "formats/svn.h"
 
+#ifndef GOURCE_FONT_FILE
+#define GOURCE_FONT_FILE "FreeSans.ttf"
+#endif
+
 GourceSettings gGourceSettings;
 
 //display help message
@@ -115,6 +119,7 @@ if(extended_help) {
 
     printf("  --date-format FORMAT     Specify display date string (strftime format)\n\n");
 
+    printf("  --font-file FILE         Specify the font\n");
     printf("  --font-size SIZE         Font size used by date and title\n");
     printf("  --font-colour FFFFFF     Font colour used by date and title in hex\n\n");
 
@@ -318,6 +323,7 @@ GourceSettings::GourceSettings() {
     arg_types["user-scale"]         = "string";
     arg_types["camera-mode"]        = "string";
     arg_types["title"]              = "string";
+    arg_types["font-file"]          = "string";
     arg_types["font-colour"]        = "string";
     arg_types["highlight-colour"]   = "string";
     arg_types["selection-colour"]   = "string";
@@ -405,6 +411,7 @@ void GourceSettings::setGourceDefaults() {
 
     title             = "";
 
+    font_file = GOURCE_FONT_FILE;
     font_size = 16;
     dir_colour       = vec3(1.0f);
     font_colour      = vec3(1.0f);
@@ -911,6 +918,17 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
         if(elasticity<=0.0f) {
             conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("font-file")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify font file");
+
+        font_file = entry->getString();
+
+        if(font_file.empty()) {
+           conffile.invalidValueException(entry);
         }
     }
 

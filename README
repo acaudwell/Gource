@@ -134,6 +134,9 @@ options:
     --title TITLE
             Set a title.
 
+    --font-file FILE
+            Specify the font. Should work with most font file formats supported by FreeType, such as TTF and OTF, among others.
+
     --font-size SIZE
             Font size used by the date and title.
 

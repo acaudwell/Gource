@@ -163,7 +163,7 @@ FileKey::FileKey() {
 FileKey::FileKey(float update_interval) {
     this->update_interval = update_interval;
     interval_remaining = 1.0f;
-    font = fontmanager.grab("FreeSans.ttf", 16);
+    font = fontmanager.grab(gGourceSettings.font_file, 16);
     font.dropShadow(false);
     font.roundCoordinates(false);
     show = true;

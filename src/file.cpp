@@ -52,14 +52,14 @@ RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, in
     setFilename(name);
 
     if(!file_selected_font.initialized()) {
-        file_selected_font = fontmanager.grab("FreeSans.ttf", 18);
+        file_selected_font = fontmanager.grab(gGourceSettings.font_file, 18);
         file_selected_font.dropShadow(true);
         file_selected_font.roundCoordinates(false);
         file_selected_font.setColour(vec4(gGourceSettings.selection_colour, 1.0f));
     }
 
     if(!file_font.initialized()) {
-        file_font = fontmanager.grab("FreeSans.ttf", 14);
+        file_font = fontmanager.grab(gGourceSettings.font_file, 14);
         file_font.dropShadow(true);
         file_font.roundCoordinates(false);
         file_font.setColour(vec4(gGourceSettings.filename_colour, 1.0f));

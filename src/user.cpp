@@ -305,10 +305,10 @@ void RUser::logic(float t, float dt) {
 
 void RUser::updateFont() {
     if(selected) {
-        font = fontmanager.grab("FreeSans.ttf", 18);
+        font = fontmanager.grab(gGourceSettings.font_file, 18);
         font.dropShadow(true);
     } else {
-        font = fontmanager.grab("FreeSans.ttf", 14);
+        font = fontmanager.grab(gGourceSettings.font_file, 14);
         font.dropShadow(true);
     }
 

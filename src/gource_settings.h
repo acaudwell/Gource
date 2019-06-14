@@ -100,6 +100,7 @@ public:
 
     std::string title;
 
+    std::string font_file;
     int font_size;
     vec3 font_colour;
 
