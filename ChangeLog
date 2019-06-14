@@ -1,6 +1,7 @@
 0.50:
  * Right mouse button rotation now pivots around the camera.
  * Added --font-file option.
+ * Added --enable-font-file option to configure.
  * Added --no-time-travel option (Lars Schmertmann).
  * Added --dir-name-position option (Lars Schmertmann).
  * Added --file-extension-fallback option (Lars Schmertmann).

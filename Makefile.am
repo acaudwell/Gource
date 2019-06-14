@@ -78,6 +78,10 @@ gource_SOURCES += \
 	src/tinyxml/tinyxmlparser.cpp
 endif
 
+if FONTFILE
+AM_CPPFLAGS += -DGOURCE_FONT_FILE=\"$(gourcefontfile)\"
+endif
+
 if FONTDIR
 AM_CPPFLAGS += -DSDLAPP_FONT_DIR=\"$(gourcefontdir)\"
 else

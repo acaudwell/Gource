@@ -53,6 +53,10 @@ AX_BOOST_FILESYSTEM
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
 LIBS="$LIBS $BOOST_SYSTEM_LIB $BOOST_FILESYSTEM_LIB"
 
+AC_ARG_ENABLE(font-file,[AS_HELP_STRING([--enable-font-file=FILE],[override the default font])],[gourcefontfile="$enableval"],[gourcefontfile=""])
+AM_CONDITIONAL([FONTFILE], [test "x$gourcefontfile" != "x"])
+AC_SUBST(gourcefontfile)
+
 #see if ttf-font-dir option is enabled
 AC_ARG_ENABLE(ttf-font-dir,[AS_HELP_STRING([--enable-ttf-font-dir=DIR],[directory containing GNU FreeFont TTF fonts])],[gourcefontdir="$enableval"],[gourcefontdir=""])
 AM_CONDITIONAL([FONTDIR], [test "x$gourcefontdir" != "x"])
