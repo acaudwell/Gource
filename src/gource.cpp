@@ -1114,13 +1114,6 @@ void Gource::readLog() {
             break;
         }
 
-        if(gGourceSettings.no_time_travel) {
-            time_t check_time = commitqueue.empty() ? lasttime : commitqueue.back().timestamp;
-            if(commit.timestamp < check_time) {
-                commit.timestamp = check_time;
-            }
-        }
-
         commitqueue.push_back(commit);
     }
 
@@ -1720,12 +1713,19 @@ void Gource::logic(float t, float dt) {
 
         processCommit(commit, t);
 
-        // allow for non linear time lines
-        if(lasttime > commit.timestamp) {
-            currtime = commit.timestamp;
+        if(gGourceSettings.no_time_travel) {
+            if(commit.timestamp > lasttime) {
+                lasttime = commit.timestamp;
+            }
+
+        } else {
+            // allow for non linear time lines
+            if(lasttime > commit.timestamp) {
+                currtime = commit.timestamp;
+            }
+            lasttime = commit.timestamp;
         }
 
-        lasttime = commit.timestamp;
         subseconds = 0.0;
 
         commitqueue.pop_front();
