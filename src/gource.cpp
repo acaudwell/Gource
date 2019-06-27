@@ -963,7 +963,7 @@ void Gource::deleteFile(RFile* file) {
 }
 
 
-RFile* Gource::addFile(const RCommitFile& cf) {
+RFile* Gource::addFile(const RCommit& commit, const RCommitFile& cf) {
 
     //if we already have max files in circulation
     //we cant add any more
@@ -975,9 +975,10 @@ RFile* Gource::addFile(const RCommitFile& cf) {
 
     if(root->isDir(file_as_dir)) return 0;
 
-    int tagid = tag_seq++;
+    int commit_id = commit.commit_id;
+    int tag_id    = tag_seq++;
 
-    RFile* file = new RFile(cf.filename, cf.colour, vec2(0.0,0.0), tagid);
+    RFile* file = new RFile(cf.filename, cf.colour, vec2(0.0,0.0), commit_id, tag_id);
 
     files[cf.filename] = file;
 
@@ -1098,7 +1099,9 @@ void Gource::readLog() {
     //debugLog("readLog()\n");
 
     // read commits until either we are ahead of currtime
-    while((commitlog->hasBufferedCommit() || !commitlog->isFinished()) && (commitqueue.empty() || (commitqueue.back().timestamp <= currtime && commitqueue.size() < commitqueue_max_size)) ) {
+    while(   (commitlog->hasBufferedCommit()
+          || !commitlog->isFinished()) && (commitqueue.empty()
+          || (commitqueue.back().timestamp <= currtime && commitqueue.size() < commitqueue_max_size)) ) {
 
         RCommit commit;
 
@@ -1109,7 +1112,8 @@ void Gource::readLog() {
             continue;
         }
 
-        if(gGourceSettings.stop_timestamp != 0 && commit.timestamp > gGourceSettings.stop_timestamp) {
+        if(   gGourceSettings.stop_timestamp != 0
+           && commit.timestamp > gGourceSettings.stop_timestamp) {
             stop_position_reached = true;
             break;
         }
@@ -1120,6 +1124,12 @@ void Gource::readLog() {
                 commit.timestamp = check_time;
             }
         }
+
+        // decouple the order changes are applied from commit timestamps
+        // by treating the order commits appear in the log file as canon.
+        // E.g. a file wont be removed if the previous action against it
+        // has a higher commit_id than the removal action
+        commit.commit_id = commit_seq++;
 
         commitqueue.push_back(commit);
     }
@@ -1199,7 +1209,7 @@ void Gource::processCommit(const RCommit& commit, float t) {
         if(seen_file != files.end()) file = seen_file->second;
 
         if(file == 0) {
-            file = addFile(cf);
+            file = addFile(commit, cf);
 
             if(!file) continue;
         }
@@ -1241,15 +1251,15 @@ void Gource::addFileAction(const RCommit& commit, const RCommitFile& cf, RFile* 
 
     RAction* userAction = 0;
 
-    commit_seq++;
+    int commit_id = commit.commit_id;
 
     if(cf.action == "D") {
-        userAction = new RemoveAction(user, file, commit.timestamp, t);
+        userAction = new RemoveAction(user, file, commit_id, t);
     } else {
         if(cf.action == "A") {
-            userAction = new CreateAction(user, file, commit.timestamp, t);
+            userAction = new CreateAction(user, file, commit_id, t);
         } else {
-            userAction = new ModifyAction(user, file, commit.timestamp, t, cf.colour);
+            userAction = new ModifyAction(user, file, commit_id, t, cf.colour);
         }
     }
 

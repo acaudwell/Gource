@@ -24,7 +24,8 @@ std::vector<RFile*> gGourceRemovedFiles;
 FXFont file_selected_font;
 FXFont file_font;
 
-RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, int tagid) : Pawn(name,pos,tagid) {
+RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, int commit_id, int tagid)
+    : Pawn(name,pos,tagid), last_commit_id(commit_id) {
     hidden = true;
     size = gGourceFileDiameter * 1.05;
     radius = size * 0.5;
@@ -40,7 +41,6 @@ RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, in
 
     last_action    = 0.0f;
     fade_start     = -1.0f;
-    removed_timestamp = 0;
     expired        = false;
     forced_removal = false;
     removing       = false;
@@ -73,11 +73,11 @@ RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, in
 RFile::~RFile() {
 }
 
-void RFile::remove(time_t removed_timestamp) {
+void RFile::remove(int removal_commit_id) {
+    last_commit_id = removal_commit_id;
     last_action = elapsed;
     fade_start  = elapsed;
     removing = true;
-    this->removed_timestamp = removed_timestamp;
 }
 
 void RFile::remove() {
@@ -224,14 +224,22 @@ void RFile::logic(float dt) {
     if(isHidden() && !forced_removal) elapsed = 0.0;
 }
 
-void RFile::touch(time_t touched_timestamp, const vec3 & colour) {
-    if(forced_removal || (removing && touched_timestamp < removed_timestamp)) return;
+void RFile::touch(int touch_commit_id, const vec3 & colour) {
+    if(forced_removal) return;
+
+    // ignore touch as a more recent commit has removed this file
+    if(removing && last_commit_id > touch_commit_id) {
+        return;
+    }
+
+    if(touch_commit_id > last_commit_id) {
+        last_commit_id = touch_commit_id;
+    }
 
     //fprintf(stderr, "touch %s\n", fullpath.c_str());
 
     fade_start = -1.0f;
     removing = false;
-    removed_timestamp = 0;
     last_action = elapsed;
     touch_colour = colour;
 

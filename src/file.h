@@ -25,12 +25,12 @@
 class RDirNode;
 
 class RFile : public Pawn {
+    int last_commit_id;
     vec3 file_colour;
     vec3 touch_colour;
 
     RDirNode* dir;
 
-    time_t removed_timestamp;
     bool forced_removal;
     bool expired;
     bool removing;
@@ -57,7 +57,7 @@ public:
     std::string fullpath;
     std::string ext;
 
-    RFile(const std::string & name, const vec3 & colour, const vec2 & pos, int tagid);
+    RFile(const std::string & name, const vec3 & colour, const vec2 & pos, int commit_id, int tagid);
     ~RFile();
 
     bool overlaps(const vec2& pos) const;
@@ -69,7 +69,7 @@ public:
 
     float getAlpha() const;
 
-    void touch(time_t touch_timestamp, const vec3& colour);
+    void touch(int touch_commit_id, const vec3& colour);
 
     void setHidden(bool hidden);
 
@@ -81,7 +81,7 @@ public:
     void logic(float dt);
     void draw(float dt);
 
-    void remove(time_t removed_timestamp);
+    void remove(int removal_commit_id);
     void remove();
 
     vec2 getAbsolutePos() const;

@@ -302,6 +302,7 @@ RCommitFile::RCommitFile(const std::string& filename, const std::string& action,
 
 RCommit::RCommit() {
     timestamp = 0;
+    commit_id = -1;
 }
 
 vec3 RCommit::fileColour(const std::string& filename) {
