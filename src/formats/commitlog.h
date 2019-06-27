@@ -42,7 +42,6 @@ public:
 class RCommit {
     vec3 fileColour(const std::string& filename);
 public:
-    int commit_id;
     time_t timestamp;
     std::string username;
 

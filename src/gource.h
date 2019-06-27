@@ -196,7 +196,7 @@ class Gource : public SDLApp {
     void reset();
 
     RUser* addUser(const std::string& username);
-    RFile* addFile(const RCommit& commit, const RCommitFile& cf);
+    RFile* addFile(const RCommitFile& cf);
 
     void deleteUser(RUser* user);
     void deleteFile(RFile* file);
