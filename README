@@ -265,6 +265,9 @@ options:
     --disable-auto-rotate
             Disable automatic camera rotation.
 
+    --disable-input
+            Disable keyboard and mouse input.
+
     --hide DISPLAY_ELEMENT
             Hide one or more display elements from the list below:
 

@@ -134,6 +134,11 @@ void GourceShell::keyPress(SDL_KeyboardEvent *e) {
             quit();
         }
 
+        if(gGourceSettings.disable_input) {
+            // disable keyboard input other than the escape key
+            return;
+        }
+
         if (e->keysym.sym == SDLK_F11) {
             toggleWindowFrame();
         }
