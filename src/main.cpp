@@ -19,7 +19,14 @@
 
 int main(int argc, char *argv[]) {
 
-    SDLAppInit("Gource", "gource");
+    std::string exepath;
+#ifndef _WIN32
+    if(argc > 0) {
+        exepath = std::string(argv[0]);
+    }
+#endif
+
+    SDLAppInit("Gource", "gource", exepath);
 
 #ifdef _WIN32
         SDLApp::initConsole();
