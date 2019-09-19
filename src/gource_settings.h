@@ -44,6 +44,8 @@ public:
 
     bool disable_auto_rotate;
 
+    bool disable_input;
+
     bool show_key;
 
     std::string load_config;

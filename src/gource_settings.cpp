@@ -117,6 +117,8 @@ if(extended_help) {
 
     printf("  --disable-auto-rotate    Disable automatic camera rotation\n\n");
 
+    printf("  --disable-input          Disable keyboard and mouse input\n\n");
+
     printf("  --date-format FORMAT     Specify display date string (strftime format)\n\n");
 
     printf("  --font-file FILE         Specify the font\n");
@@ -265,6 +267,7 @@ GourceSettings::GourceSettings() {
 
     arg_types["disable-auto-rotate"] = "bool";
     arg_types["disable-auto-skip"]   = "bool";
+    arg_types["disable-input"]       = "bool";
 
     arg_types["git-log-command"]= "bool";
     arg_types["cvs-exp-command"]= "bool";
@@ -377,6 +380,8 @@ void GourceSettings::setGourceDefaults() {
     show_key = false;
 
     disable_auto_rotate = false;
+
+    disable_input = false;
 
     auto_skip_seconds = 3.0f;
     days_per_second   = 0.1f; // TODO: check this is right
@@ -669,6 +674,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if(gource_settings->getBool("disable-auto-skip")) {
         auto_skip_seconds = -1.0;
+    }
+
+    if(gource_settings->getBool("disable-input")) {
+        disable_input=true;
     }
 
     if(gource_settings->getBool("loop")) {
