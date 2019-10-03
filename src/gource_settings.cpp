@@ -65,8 +65,7 @@ void GourceSettings::help(bool extended_help) {
     printf("  -t, --stop-at-time SECONDS       Stop after a specified number of seconds\n");
     printf("      --stop-at-end                Stop at end of the log\n");
     printf("      --dont-stop                  Keep running after the end of the log\n");
-    printf("      --loop                       Loop at the end of the log\n");
-    printf("      --loop-delay-seconds SECONDS Seconds to wait before looping (default: 0)\n\n");
+    printf("      --loop                       Loop at the end of the log\n\n");
 
     printf("  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens\n");
     printf("                                   for a number of seconds (default: 3)\n");
@@ -137,6 +136,8 @@ if(extended_help) {
 
     printf("  --logo IMAGE             Logo to display in the foreground\n");
     printf("  --logo-offset XxY        Offset position of the logo\n\n");
+
+    printf("  --loop-delay-seconds SECONDS Seconds to delay before looping (default: 3)\n\n");
 
     printf("  --title TITLE            Set a title\n\n");
 
@@ -391,7 +392,7 @@ void GourceSettings::setGourceDefaults() {
     time_scale        = 1.0f;
 
     loop = false;
-    loop_delay_seconds = 0;
+    loop_delay_seconds = 3.0f;
 
     logo = "";
     logo_offset = vec2(20.0f,20.0f);

@@ -1669,10 +1669,12 @@ void Gource::logic(float t, float dt) {
     }
 
     //loop in attempt to find commits
-    if(commitqueue.empty() && commitlog->isSeekable() && gGourceSettings.loop && idle_time >= gGourceSettings.loop_delay_seconds) {
-        first_read=true;
-        seekTo(0.0);
-        readLog();
+    if(gGourceSettings.loop && commitqueue.empty() && commitlog->isSeekable()) {
+        if(idle_time >= gGourceSettings.loop_delay_seconds) {
+            first_read=true;
+            seekTo(0.0);
+            readLog();
+        }
     }
 
     if(currtime==0 && !commitqueue.empty()) {

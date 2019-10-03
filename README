@@ -97,6 +97,9 @@ options:
         --loop
             Loop back to the start of the log when the end is reached.
 
+        --loop-delay-seconds
+            Seconds to delay before looping.
+
     -a, --auto-skip-seconds SECONDS
             Skip to next entry if nothing happens for a number of seconds.
 
