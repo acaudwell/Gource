@@ -121,12 +121,12 @@ if(extended_help) {
 
     printf("  --date-format FORMAT     Specify display date string (strftime format)\n\n");
 
-    printf("  --font-file FILE         Specify the font\n");
-    printf("  --font-size SIZE         Font size used by date and title\n");
-    printf("  --filename-font-size SIZE         Font size for filenames\n");
-    printf("  --dirname-font-size SIZE         Font size for directory names\n");
-    printf("  --user-font-size SIZE    Font size for user names\n");
-    printf("  --font-colour FFFFFF     Font colour used by date and title in hex\n\n");
+    printf("  --font-file FILE              Specify the font\n");
+    printf("  --font-size SIZE              Font size used by date and title\n");
+    printf("  --filename-font-size SIZE     Font size for filenames\n");
+    printf("  --dirname-font-size SIZE      Font size for directory names\n");
+    printf("  --user-font-size SIZE         Font size for user names\n");
+    printf("  --font-colour FFFFFF          Font colour used by date and title in hex\n\n");
 
     printf("  --file-extensions          Show filename extensions only\n");
     printf("  --file-extension-fallback  Use filename as extension if the extension\n");
