@@ -59,7 +59,7 @@ RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, in
     }
 
     if(!file_font.initialized()) {
-        file_font = fontmanager.grab(gGourceSettings.font_file, 14);
+        file_font = fontmanager.grab(gGourceSettings.font_file, gGourceSettings.filename_font_size);
         file_font.dropShadow(true);
         file_font.roundCoordinates(false);
         file_font.setColour(vec4(gGourceSettings.filename_colour, 1.0f));

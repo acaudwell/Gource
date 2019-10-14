@@ -53,6 +53,10 @@ Gource::Gource(FrameExporter* exporter) {
     font.dropShadow(true);
     font.roundCoordinates(true);
 
+    fontdirname = fontmanager.grab(gGourceSettings.font_file, gGourceSettings.dirname_font_size);
+    fontdirname.dropShadow(true);
+    fontdirname.roundCoordinates(true);
+
     //only use bloom with alpha channel if transparent due to artifacts on some video cards
     std::string bloom_tga = gGourceSettings.transparent ? "bloom_alpha.tga" : "bloom.tga";
 
@@ -2452,10 +2456,10 @@ void Gource::draw(float t, float dt) {
         fontmanager.startBuffer();
     }
 
-    font.roundCoordinates(false);
-    font.setColour(vec4(gGourceSettings.dir_colour, 1.0f));
+    fontdirname.roundCoordinates(false);
+    fontdirname.setColour(vec4(gGourceSettings.dir_colour, 1.0f));
 
-    root->drawNames(font);
+    root->drawNames(fontdirname);
 
    if(!(gGourceSettings.hide_usernames || gGourceSettings.hide_users)) {
         for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {

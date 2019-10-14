@@ -105,6 +105,9 @@ public:
 
     std::string font_file;
     int font_size;
+    int filename_font_size;
+    int dirname_font_size;
+    int user_font_size;
     vec3 font_colour;
 
     float elasticity;
