@@ -8,6 +8,7 @@
  * Added --user-show-filter option (Victor Lopez).
  * Added --disable-input option (Joey Parrish).
  * Added --loop-delay-seconds option (Joey Parrish).
+ * Added --filename-font-size, --dirname-font-size, and --user-font-size options (Carl Colena).
  * Fixed a bug in the Mercurial log parser that caused changes to be missed.
  * Fixed file removal being cancelled by an action with an earlier timestamp.
  * Fixed a bug in the log file format detection that could result in the wrong
