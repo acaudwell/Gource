@@ -143,6 +143,15 @@ options:
     --font-size SIZE
             Font size used by the date and title.
 
+    --filename-font-size SIZE
+            Font size of filenames.
+
+    --dirname-font-size SIZE
+            Font size of directory names
+
+    --user-font-size SIZE
+            Font size of user names.
+
     --font-colour FFFFFF
             Font colour used by the date and title in hex.
 

@@ -130,7 +130,7 @@ class Gource : public SDLApp {
 
     TextBox textbox;
 
-    FXFont font, fontlarge, fontmedium, fontcaption;
+    FXFont font, fontlarge, fontmedium, fontcaption, fontdirname;
 
     bool first_read;
     bool paused;
