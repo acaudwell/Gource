@@ -122,6 +122,7 @@ if(extended_help) {
     printf("  --date-format FORMAT     Specify display date string (strftime format)\n\n");
 
     printf("  --font-file FILE         Specify the font\n");
+    printf("  --font-scale SCALE       Scale the size of all fonts\n");
     printf("  --font-size SIZE         Font size used by date and title\n");
     printf("  --file-font-size SIZE    Font size for filenames\n");
     printf("  --dir-font-size SIZE     Font size for directory names\n");
@@ -296,6 +297,7 @@ GourceSettings::GourceSettings() {
 
     arg_types["max-files"] = "int";
     arg_types["font-size"] = "int";
+    arg_types["font-scale"] = "float";
     arg_types["file-font-size"] = "int";
     arg_types["dir-font-size"] = "int";
     arg_types["user-font-size"] = "int";
@@ -1008,6 +1010,21 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             conffile.invalidValueException(entry);
         }
     }
+
+    if((entry = gource_settings->getEntry("font-scale")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify font scale");
+
+        float font_scale = entry->getFloat();
+
+        if(font_scale<0.0f || font_scale>10.0f) {
+            conffile.invalidValueException(entry);
+        }
+
+        font_size         = glm::clamp((int)(font_size * font_scale), 1, 100);
+        user_font_size    = glm::clamp((int)(user_font_size * font_scale), 1, 100);
+        dirname_font_size = glm::clamp((int)(dirname_font_size * font_scale), 1, 100);
+    }    
 
     if((entry = gource_settings->getEntry("hash-seed")) != 0) {
 

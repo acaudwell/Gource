@@ -8,6 +8,7 @@
  * Added --user-show-filter option (Victor Lopez).
  * Added --disable-input option (Joey Parrish).
  * Added --loop-delay-seconds option (Joey Parrish).
+ * Added --font-scale option.
  * Added filename, dirname and user font size options (Carl Colena).
  * Added workaround for FFMpeg error parsing Gource PPM video output.
  * Fixed a bug in the Mercurial log parser that caused changes to be missed.

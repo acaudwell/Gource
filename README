@@ -140,6 +140,9 @@ options:
     --font-file FILE
             Specify the font. Should work with most font file formats supported by FreeType, such as TTF and OTF, among others.
 
+    --font-scale SCALE
+            Scale the size of all fonts.
+
     --font-size SIZE
             Font size used by the date and title.
 
