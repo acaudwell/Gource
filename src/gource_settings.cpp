@@ -121,12 +121,12 @@ if(extended_help) {
 
     printf("  --date-format FORMAT     Specify display date string (strftime format)\n\n");
 
-    printf("  --font-file FILE              Specify the font\n");
-    printf("  --font-size SIZE              Font size used by date and title\n");
-    printf("  --filename-font-size SIZE     Font size for filenames\n");
-    printf("  --dirname-font-size SIZE      Font size for directory names\n");
-    printf("  --user-font-size SIZE         Font size for user names\n");
-    printf("  --font-colour FFFFFF          Font colour used by date and title in hex\n\n");
+    printf("  --font-file FILE         Specify the font\n");
+    printf("  --font-size SIZE         Font size used by date and title\n");
+    printf("  --file-font-size SIZE    Font size for filenames\n");
+    printf("  --dir-font-size SIZE     Font size for directory names\n");
+    printf("  --user-font-size SIZE    Font size for user names\n");
+    printf("  --font-colour FFFFFF     Font colour used by date and title in hex\n\n");
 
     printf("  --file-extensions          Show filename extensions only\n");
     printf("  --file-extension-fallback  Use filename as extension if the extension\n");
@@ -296,8 +296,8 @@ GourceSettings::GourceSettings() {
 
     arg_types["max-files"] = "int";
     arg_types["font-size"] = "int";
-    arg_types["filename-font-size"] = "int";
-    arg_types["dirname-font-size"] = "int";
+    arg_types["file-font-size"] = "int";
+    arg_types["dir-font-size"] = "int";
     arg_types["user-font-size"] = "int";
     arg_types["hash-seed"] = "int";
 
@@ -976,7 +976,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         }
     }
 
-    if((entry = gource_settings->getEntry("filename-font-size")) != 0) {
+    if((entry = gource_settings->getEntry("file-font-size")) != 0) {
 
         if(!entry->hasValue()) conffile.entryException(entry, "specify font size");
 
@@ -987,7 +987,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         }
     }
 
-    if((entry = gource_settings->getEntry("dirname-font-size")) != 0) {
+    if((entry = gource_settings->getEntry("dir-font-size")) != 0) {
 
         if(!entry->hasValue()) conffile.entryException(entry, "specify font size");
 

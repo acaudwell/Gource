@@ -143,10 +143,10 @@ options:
     --font-size SIZE
             Font size used by the date and title.
 
-    --filename-font-size SIZE
+    --file-font-size SIZE
             Font size of filenames.
 
-    --dirname-font-size SIZE
+    --dir-font-size SIZE
             Font size of directory names
 
     --user-font-size SIZE
