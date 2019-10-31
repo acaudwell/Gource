@@ -81,7 +81,7 @@ my $nsis_script = q[
 !include "MultiUser.nsh"
 !include "MUI2.nsh"
 !include "LogicLib.nsh"
-!include "EnvVarUpdate.nsh"
+!include "SafeEnvVarUpdate.nsh"
 
 Name "Gource GOURCE_VERSION"
 
