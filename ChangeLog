@@ -15,6 +15,8 @@
  * Fixed file removal being cancelled by an action with an earlier timestamp.
  * Fixed a bug in the log file format detection that could result in the wrong
    first entry being displayed for a custom log.
+ * Fixed a bug where automatically cycling through a config with multiple
+   repositories reset settings to their defaults.
 
 0.49:
  * Fixed compatibility with GLM 0.9.9.0.
