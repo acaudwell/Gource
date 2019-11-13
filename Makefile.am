@@ -80,12 +80,11 @@ endif
 
 if FONTFILE
 AM_CPPFLAGS += -DGOURCE_FONT_FILE=\"$(gourcefontfile)\"
-endif
-
+else
 if FONTDIR
 AM_CPPFLAGS += -DSDLAPP_FONT_DIR=\"$(gourcefontdir)\"
 else
 fontsdir = $(pkgdatadir)/fonts
 dist_fonts_DATA = data/fonts/README data/fonts/FreeSans.ttf
 endif
-
+endif

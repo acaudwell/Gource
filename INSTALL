@@ -63,6 +63,12 @@ If you already have these fonts, you can configure Gource to use them with:
 
     ./configure --enable-ttf-font-dir=/path/to/freefont/
 
+You can also build Gource with a different font:
+
+    ./configure --enable-font-file=/path/to/alternate/font.ttf
+
+The font file format must be supported by Free Type 2.
+
 Gource includes a copy of TinyXML. To build against the system version of the
 library use:
 
