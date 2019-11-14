@@ -968,7 +968,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             conffile.invalidValueException(entry);
         }
 
-        font_file = boost::filesystem::absolute(font_file_path).string();
+        font_file = boost::filesystem::canonical(font_file_path).string();
 
         if(font_file.empty()) {
            conffile.invalidValueException(entry);
