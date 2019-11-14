@@ -2,15 +2,16 @@ body {
     font-size: 1.6em;
     font-family: Helvetica,Arial,sans-serif;
     background-color: #222;
-    color: #fff;
+    color: #bbb;
 }
 
 a {
     color: #0ee;
+    text-shadow: 1px 1px 3px #000;
 }
 
 a:hover, a:focus {
-    color: #ff0;
+    color: #ff3;
     text-decoration: none;
 }
 
@@ -50,12 +51,14 @@ a:hover, a:focus {
 }
 
 .donations-button {
-    color: #333;
+    color: #555;
     font-weight: bold;
     background: #fb3;
     border: 0.75px solid #fb3;
     border-radius: 0.4em;
     padding: 0.28em 0.75em 0.28em 0.75em;
+    text-shadow: none;
+    box-shadow: 1 1 5px #000;
     cursor: pointer;
 }
 
@@ -99,18 +102,24 @@ div #donations-box {
     color: #fff !important;
 }
 
+body {
+    font-size: 1.7em;
+}
+
 h2 {
     font-size: 1.6em;
     font-family: arial, sans-serif;
     margin-top: 1em;
-    color: #fff;
+    color: #eee;
+    text-shadow: 1px 1px 3px #000;
 }
 
 h3 {
     font-size: 1.5em;
     font-family: arial, sans-serif;
     margin-top: 1em;
-    color: #eee;
+    color: #ddd;
+    text-shadow: 1px 1px 3px #000;
 }
 
 pre {

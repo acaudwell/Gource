@@ -112,7 +112,7 @@ function donateClicked() {
 <center>
 <a class="btn btn-lg btn-info" href="https://github.com/acaudwell/Gource/releases/download/gource-0.47/gource-0.47.win64-setup.exe">gource-0.47.win64-setup.exe</a>
 <a class="btn btn-lg btn-info" href="https://github.com/acaudwell/Gource/releases/download/gource-0.47/gource-0.47.win64.zip">gource-0.47.win64.zip</a>
-<a class="btn btn-lg btn-info" href="https://github.com/acaudwell/Gource/releases/download/gource-0.49/gource-0.49.tar.gz">gource-0.49.tar.gz</a>
+<a class="btn btn-lg btn-info" href="https://github.com/acaudwell/Gource/releases/download/gource-0.50/gource-0.50.tar.gz">gource-0.50.tar.gz</a>
 </center>
 </p>
 
@@ -158,6 +158,41 @@ gource
 <p>If you use Gource at work and are interested in getting new features developed or maybe would like to discuss other bespoke visualization work please don't hesitate to <a href="http://www.thealphablenders.com/about/">contact me</a>.</p>
 
 <h2><a id="news"></a>News</h2>
+
+<h3>14 November 2019</h3>
+
+<p>Gource <b>0.50</b> has been released.</p>
+
+<p>Changes since 0.49:</p>
+
+<ul>
+  <li>Right mouse button rotation now pivots around the camera.</li>
+  <li>Added --font-file option.</li>
+  <li>Added --enable-font-file option to configure.</li>
+  <li>Added --no-time-travel option (Lars Schmertmann).</li>
+  <li>Added --dir-name-position option (Lars Schmertmann).</li>
+  <li>Added --file-extension-fallback option (Lars Schmertmann).</li>
+  <li>Added --user-show-filter option (Victor Lopez).</li>
+  <li>Added --disable-input option (Joey Parrish).</li>
+  <li>Added --loop-delay-seconds option (Joey Parrish).</li>
+  <li>Added --font-scale option.</li>
+  <li>Added filename, dirname and user font size options (Carl Colena).</li>
+  <li>Added workaround for FFMpeg error parsing Gource PPM video output.</li>
+  <li>Fixed a bug in the Mercurial log parser that caused changes to be missed.</li>
+  <li>Fixed file removal being cancelled by an action with an earlier timestamp.</li>
+  <li>Fixed a bug in the log file format detection that could result in the wrong<br>
+  first entry being displayed for a custom log.</li>
+  <li>Fixed a bug where automatically cycling through a config with multiple<br>
+  repositories reset settings to their defaults.</li>
+  </ul>
+
+  <p>Thanks to everyone who contributed to this release.</p>
+
+  </p>Downloads:</p>
+
+  <ul>
+      <li><a href="https://github.com/acaudwell/Gource/releases/download/gource-0.50/gource-0.50.tar.gz">gource-0.50.tar.gz</a></li>
+  </ul>
 
 <h3>14 June 2018</h3>
 
