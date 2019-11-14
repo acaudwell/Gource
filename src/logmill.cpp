@@ -162,7 +162,7 @@ RCommitLog* RLogMill::getLog() {
 
 bool RLogMill::findRepository(boost::filesystem::path& dir, std::string& log_format) {
 
-    dir = absolute(dir);
+    dir = canonical(dir);
 
     //fprintf(stderr, "find repository from initial path: %s\n", dir.string().c_str());
 

@@ -1,5 +1,6 @@
 0.51:
  * Fixed --font-file relative path handling.
+ * Fixed a bug in resolving the repository root directory from a relative path.
 
 0.50:
  * Right mouse button rotation now pivots around the camera.
