@@ -21,6 +21,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 
 #include "core/utf8/utf8.h"
 #include <time.h>
@@ -961,6 +962,14 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(!entry->hasValue()) conffile.entryException(entry, "specify font file");
 
         font_file = entry->getString();
+
+        boost::filesystem::path font_file_path(font_file);
+
+        if(!boost::filesystem::exists(font_file_path)) {
+            conffile.invalidValueException(entry);
+        }
+
+        font_file = boost::filesystem::absolute(font_file_path).string();
 
         if(font_file.empty()) {
            conffile.invalidValueException(entry);

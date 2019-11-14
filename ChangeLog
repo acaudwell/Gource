@@ -1,3 +1,6 @@
+0.51:
+ * Fixed --font-file relative path handling.
+
 0.50:
  * Right mouse button rotation now pivots around the camera.
  * Added --font-file option.
