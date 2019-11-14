@@ -24,15 +24,6 @@ a:hover, a:focus {
     text-shadow: 0 0 5px #AF5;
 }
 
-/*
-    color: black;
-    line-height: normal !important;
-    vertical-align: bottom;
-    box-sizing: border-box;
-    height: 26px;
-}
-*/
-
 #donations-currency {
     color: black;
 }
@@ -67,6 +58,11 @@ a:hover, a:focus {
     color: white;
     border: 2px solid #fc0;
     box-shadow: 0 0 7px #fc0;
+}
+
+.option {
+    color: rgb(93, 214, 168);
+    text-shadow: 1px 1px 3px #000;
 }
 
 div #donations-box {

@@ -167,15 +167,15 @@ gource
 
 <ul>
   <li>Right mouse button rotation now pivots around the camera.</li>
-  <li>Added --font-file option.</li>
-  <li>Added --enable-font-file option to configure.</li>
-  <li>Added --no-time-travel option (Lars Schmertmann).</li>
-  <li>Added --dir-name-position option (Lars Schmertmann).</li>
-  <li>Added --file-extension-fallback option (Lars Schmertmann).</li>
-  <li>Added --user-show-filter option (Victor Lopez).</li>
-  <li>Added --disable-input option (Joey Parrish).</li>
-  <li>Added --loop-delay-seconds option (Joey Parrish).</li>
-  <li>Added --font-scale option.</li>
+  <li>Added <span class="option">--font-file</span> option.</li>
+  <li>Added <span class="option">--enable-font-file</span> option to configure.</li>
+  <li>Added <span class="option">--no-time-travel</span> option (Lars Schmertmann).</li>
+  <li>Added <span class="option">--dir-name-position</span> option (Lars Schmertmann).</li>
+  <li>Added <span class="option">--file-extension-fallback</span> option (Lars Schmertmann).</li>
+  <li>Added <span class="option">--user-show-filter</span> option (Victor Lopez).</li>
+  <li>Added <span class="option">--disable-input</span> option (Joey Parrish).</li>
+  <li>Added <span class="option">--loop-delay-seconds</span> option (Joey Parrish).</li>
+  <li>Added <span class="option">--font-scale</span> option.</li>
   <li>Added filename, dirname and user font size options (Carl Colena).</li>
   <li>Added workaround for FFMpeg error parsing Gource PPM video output.</li>
   <li>Fixed a bug in the Mercurial log parser that caused changes to be missed.</li>
@@ -235,22 +235,22 @@ Downloads:
 
 <p>There are a few new command line options around filtering and displaying files, some new display settings and some fixes.</p>
 
-<p>The Windows build is now 64-bit. Also we've enabled STDOUT with the --output-stream option on Windows so you can pipe Gource directly into ffmpeg like on Linux.</p>
+<p>The Windows build is now 64-bit. Also we've enabled STDOUT with the <span class="option">--output-stream</span> option on Windows so you can pipe Gource directly into ffmpeg like on Linux.</p>
 
 <p>Changes since 0.44:</p>
 
 <ul>
-    <li>Added --screen option.</li>
-    <li>Added --window-position XxY option.</li>
-    <li>Added --frameless option.</li>
-    <li>Added --file-show-filter REGEX option (swoogles).</li>
-    <li>Added --filename-time and filename-colour options (gh2k).</li>
+    <li>Added <span class="option">--screen</span> option.</li>
+    <li>Added <span class="option">--window-position XxY</span> option.</li>
+    <li>Added <span class="option">--frameless</span> option.</li>
+    <li>Added <span class="option">--file-show-filter REGEX</span> option (swoogles).</li>
+    <li>Added <span class="option">--filename-time</span> and <span class="option">--filename-colour</span> options (gh2k).</li>
     <li>Improved handling of very low seconds-per-day values (malengrin).</li>
     <li>Fixed crash when SVN log lacks author information (obarthel).</li>
     <li>Fixed low mouse movement speed with some mice while repositioning camera.</li>
     <li>Additional git log command validation (cym13).</li>
     <li>Allow lower case hex colours in custom logs (HSorensen).</li>
-    <li>Enabled STDOUT support with --output-stream '-' on Windows (circulosmeos).</li>
+    <li>Enabled STDOUT support with <span class="option">--output-stream</span> '-' on Windows (circulosmeos).</li>
     <li>Now requires SDL 2 to build (deprecated SDL 1.2 support removed).</li>
 </ul>
 
@@ -327,7 +327,7 @@ Gource <b>0.42</b> fixes some bugs introduced in 0.41 affecting Mercurial, Bazaa
 
 <p>Gource <b>0.41</b> has been released.</p>
 
-<p>You can now specify a date range directly with --start-date and --stop-date (using 'YYYY-MM-DD hh:mm:ss' ISO format).</p>
+<p>You can now specify a date range directly with <span class="option">--start-date</span> and <span class="option">--stop-date</span> (using 'YYYY-MM-DD hh:mm:ss' ISO format).</p>
 
 <p>Gource now uses SDL 2.0 when available, providing much better multi-monitor support.</p>
 
@@ -337,9 +337,9 @@ Gource <b>0.42</b> fixes some bugs introduced in 0.41 affecting Mercurial, Bazaa
 <li>Multi-monitor support using SDL 2.0 when available.</li>
 <li>SDL 1.2 support is deprecated.</li>
 <li>Full screen mode now uses desktop resolution by default.</li>
-<li>Added --start-date, --stop-date 'YYYY-MM-DD hh:mm:ss' options.</li>
-<li>Added --dir-name-depth option.</li>
-<li>Changed --file-idle-time default value to 0.</li>
+<li>Added <span class="option">--start-date</span>, <span class="option">--stop-date</span> 'YYYY-MM-DD hh:mm:ss' options.</li>
+<li>Added <span class="option">--dir-name-depth</span> option.</li>
+<li>Changed <span class="option">--file-idle-time</span> default value to 0.</li>
 <li>Changed screenshot format to PNG.</li>
 </ul>
 
