@@ -34,6 +34,8 @@ PositionSlider::PositionSlider(float percent) {
     fade_time = 1.0;
     alpha = 0.0;
 
+    capwidth = 0.0f;
+
     resize();
 }
 

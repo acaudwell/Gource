@@ -42,6 +42,7 @@ Pawn::Pawn(const std::string& name, vec2 pos, int tagid) {
 
     this->graphic = 0;
     this->graphic_ratio = 1.0;
+    size = 0.0f;
 }
 
 float Pawn::getSize() {
