@@ -1029,9 +1029,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             conffile.invalidValueException(entry);
         }
 
-        font_size         = glm::clamp((int)(font_size * font_scale), 1, 100);
-        user_font_size    = glm::clamp((int)(user_font_size * font_scale), 1, 100);
-        dirname_font_size = glm::clamp((int)(dirname_font_size * font_scale), 1, 100);
+        font_size           = glm::clamp((int)(font_size * font_scale), 1, 100);
+        user_font_size      = glm::clamp((int)(user_font_size * font_scale), 1, 100);
+        dirname_font_size   = glm::clamp((int)(dirname_font_size * font_scale), 1, 100);
+        filename_font_size  = glm::clamp((int)(filename_font_size * font_scale), 1, 100);
     }    
 
     if((entry = gource_settings->getEntry("hash-seed")) != 0) {
