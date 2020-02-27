@@ -1,3 +1,6 @@
+0.52:
+ * Fixed filenames not being affected by --font-scale (Carl Colena).
+
 0.51:
  * Fixed --font-file relative path handling.
  * Fixed a bug in resolving the repository root directory from a relative path.
