@@ -18,6 +18,10 @@
 #include "git.h"
 #include "../gource_settings.h"
 
+#ifndef _MSC_VER
+#include <unistd.h>
+#endif
+
 // parse git log entries
 
 //git-log command notes:
