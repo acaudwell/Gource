@@ -428,6 +428,7 @@ void GourceSettings::setGourceDefaults() {
 
     title             = "";
 
+    font_scale = 1.0f;
     font_file = GOURCE_FONT_FILE;
     font_size = 16;
     filename_font_size = 14;
@@ -1023,7 +1024,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
         if(!entry->hasValue()) conffile.entryException(entry, "specify font scale");
 
-        float font_scale = entry->getFloat();
+        font_scale = entry->getFloat();
 
         if(font_scale<0.0f || font_scale>10.0f) {
             conffile.invalidValueException(entry);

@@ -109,6 +109,7 @@ public:
     int dirname_font_size;
     int user_font_size;
     vec3 font_colour;
+    float font_scale;
 
     float elasticity;
 
