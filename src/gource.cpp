@@ -1150,6 +1150,10 @@ void Gource::readLog() {
         stop_position_reached = true;
     }
 
+    if (stop_position_reached && gGourceSettings.file_idle_time_at_end > 0.0f) {
+      gGourceSettings.file_idle_time = gGourceSettings.file_idle_time_at_end;
+    }
+
     // useful to figure out where we have crashes
     //debugLog("current date: %s\n", displaydate.c_str());
 }
