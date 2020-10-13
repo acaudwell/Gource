@@ -70,6 +70,7 @@ public:
     bool stop_at_end;
     bool dont_stop;
     bool no_time_travel;
+    bool fixed_user_size;
 
     float auto_skip_seconds;
     float days_per_second;
