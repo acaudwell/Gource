@@ -1150,7 +1150,7 @@ void Gource::readLog() {
         stop_position_reached = true;
     }
 
-    if (stop_position_reached && gGourceSettings.file_idle_time_at_end > 0.0f) {
+    if((is_finished || stop_position_reached) && gGourceSettings.file_idle_time_at_end > 0.0f) {
       gGourceSettings.file_idle_time = gGourceSettings.file_idle_time_at_end;
     }
 
