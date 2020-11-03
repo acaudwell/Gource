@@ -124,6 +124,7 @@ Gource::Gource(FrameExporter* exporter) {
     hoverUser = 0;
 
     date_x_offset = 0;
+    starting_z = -300.0f;
 
     textbox = TextBox(fontmanager.grab(gGourceSettings.font_file, 18));
     textbox.setBrightness(0.5f);
@@ -901,7 +902,6 @@ void Gource::reset() {
     mousedragged = false;
 
     commitqueue_max_size = 100;
-    starting_z = -300;
 
     rotate_angle = 0.0f;
 
