@@ -84,7 +84,8 @@ void GourceSettings::help(bool extended_help) {
     printf("  --fixed-user-size                Use a fixed size throughout\n");
     printf("  --colour-images                  Colourize user images\n\n");
 
-    printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 0)\n\n");
+    printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 0)\n");
+    printf("  --file-idle-time-at-end SECONDS  Time files remain idle at end (default: 0)\n\n");
 
     printf("  --max-files NUMBER      Max number of files or 0 for no limit\n");
     printf("  --max-file-lag SECONDS  Max time files of a commit can take to appear\n\n");
@@ -324,6 +325,7 @@ GourceSettings::GourceSettings() {
     arg_types["log-command"]        = "string";
     arg_types["background-colour"]  = "string";
     arg_types["file-idle-time"]     = "string";
+    arg_types["file-idle-time-at-end"] = "string";
     arg_types["user-image-dir"]     = "string";
     arg_types["default-user-image"] = "string";
     arg_types["date-format"]        = "string";
@@ -397,10 +399,11 @@ void GourceSettings::setGourceDefaults() {
 
     disable_input = false;
 
-    auto_skip_seconds = 3.0f;
-    days_per_second   = 0.1f; // TODO: check this is right
-    file_idle_time    = 0.0f;
-    time_scale        = 1.0f;
+    auto_skip_seconds     = 3.0f;
+    days_per_second       = 0.1f; // TODO: check this is right
+    file_idle_time        = 0.0f;
+    file_idle_time_at_end = 0.0f;
+    time_scale            = 1.0f;
 
     loop = false;
     loop_delay_seconds = 3.0f;
@@ -1208,6 +1211,19 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         file_idle_time = (float) atoi(file_idle_str.c_str());
 
         if(file_idle_time<0.0f || (file_idle_time == 0.0f && file_idle_str[0] != '0') ) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("file-idle-time-at-end")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify file-idle-time-at-end (seconds)");
+
+        std::string file_idle_at_end_str = entry->getString();
+
+        file_idle_time_at_end = (float) atoi(file_idle_at_end_str.c_str());
+
+        if(file_idle_time_at_end<0.0f || (file_idle_time_at_end == 0.0f && file_idle_at_end_str[0] != '0') ) {
             conffile.invalidValueException(entry);
         }
     }

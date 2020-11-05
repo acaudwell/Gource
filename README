@@ -119,6 +119,10 @@ options:
             Time in seconds files remain idle before they are removed or 0
             for no limit.
 
+        --file-idle-time-at-end SECONDS
+            Time in seconds files remain idle at the end before they are
+            removed.
+
     -e, --elasticity FLOAT
             Elasticity of nodes.
 
