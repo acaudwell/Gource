@@ -2,6 +2,7 @@
  * Fixed filenames not being affected by --font-scale (Carl Colena).
  * Fixed file key not being affected by --font-scale.
  * Added --file-idle-time-at-end option.
+ * Added --fixed-user-size option.
 
 0.51:
  * Fixed --font-file relative path handling.

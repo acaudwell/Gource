@@ -81,6 +81,7 @@ void GourceSettings::help(bool extended_help) {
 
     printf("  --user-image-dir DIRECTORY       Dir containing images to use as avatars\n");
     printf("  --default-user-image IMAGE       Default user image file\n");
+    printf("  --fixed-user-size                Use a fixed size throughout\n");
     printf("  --colour-images                  Colourize user images\n\n");
 
     printf("  -i, --file-idle-time SECONDS     Time files remain idle (default: 0)\n");
@@ -269,6 +270,7 @@ GourceSettings::GourceSettings() {
     arg_types["highlight-dirs"]          = "bool";
     arg_types["file-extensions"]         = "bool";
     arg_types["file-extension-fallback"] = "bool";
+    arg_types["fixed-user-size"]         = "bool";
     arg_types["key"]                     = "bool";
     arg_types["ffp"]                     = "bool";
 
@@ -382,13 +384,14 @@ void GourceSettings::setGourceDefaults() {
     stop_timestamp = 0;
     stop_date = "";
 
-    start_position = 0.0f;
-    stop_position  = 0.0f;
-    stop_at_time   = -1.0f;
-    stop_on_idle   = false;
-    stop_at_end    = false;
-    dont_stop      = false;
-    no_time_travel = false;
+    start_position  = 0.0f;
+    stop_position   = 0.0f;
+    stop_at_time    = -1.0f;
+    stop_on_idle    = false;
+    stop_at_end     = false;
+    dont_stop       = false;
+    no_time_travel  = false;
+    fixed_user_size = false;
 
     show_key = false;
 
@@ -1356,6 +1359,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
     //NOTE: this no longer does anything
     if(gource_settings->getBool("stop-on-idle")) {
         stop_on_idle = true;
+    }
+
+    if(gource_settings->getBool("fixed-user-size")) {
+        fixed_user_size = true;
     }
 
     if((entry = gource_settings->getEntry("max-files")) != 0) {

@@ -238,6 +238,9 @@ options:
     --default-user-image IMAGE
             Path of .jpg or .png to use as the default user image.
 
+    --fixed-user-size
+            Forces the size of the user image to remain fixed throughout.
+
     --colour-images
             Colourize user images.
 

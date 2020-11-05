@@ -124,6 +124,7 @@ Gource::Gource(FrameExporter* exporter) {
     hoverUser = 0;
 
     date_x_offset = 0;
+    starting_z = -300.0f;
 
     textbox = TextBox(fontmanager.grab(gGourceSettings.font_file, 18));
     textbox.setBrightness(0.5f);
@@ -131,7 +132,7 @@ Gource::Gource(FrameExporter* exporter) {
 
     file_key = FileKey(1.0f);
 
-    camera = ZoomCamera(vec3(0,0, -300), vec3(0.0, 0.0, 0.0), gGourceSettings.camera_zoom_default, gGourceSettings.camera_zoom_max);
+    camera = ZoomCamera(vec3(0,0, starting_z), vec3(0.0, 0.0, 0.0), gGourceSettings.camera_zoom_default, gGourceSettings.camera_zoom_max);
     camera.setPadding(gGourceSettings.padding);
 
     setCameraMode(gGourceSettings.camera_mode);
@@ -2241,7 +2242,11 @@ void Gource::updateVBOs(float dt) {
             float alpha = user->getAlpha();
             vec3 col   = user->getColour();
 
-            user_vbo.add(user->graphic->textureid, user->getPos() - user->dims*0.5f, user->dims, vec4(col.x, col.y, col.z, alpha));
+            vec2 scaled_dims = user->dims;
+
+            if(gGourceSettings.fixed_user_size) scaled_dims *= (-camera.getPos().z / -starting_z);
+
+            user_vbo.add(user->graphic->textureid, user->getPos() - scaled_dims*0.5f, scaled_dims, vec4(col.x, col.y, col.z, alpha));
 
             //draw actions
             user->updateActionsVBO(action_vbo);

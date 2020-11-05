@@ -176,6 +176,7 @@ class Gource : public SDLApp {
     Bounds2D active_user_bounds;
 
     int commitqueue_max_size;
+    float starting_z;
 
     std::deque<RCommit> commitqueue;
     std::map<std::string, RUser*> users;
