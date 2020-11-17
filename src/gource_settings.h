@@ -24,6 +24,8 @@
 #include "core/settings.h"
 #include "core/regex.h"
 
+#include <deque>
+
 class GourceSettings : public SDLAppSettings {
 protected:
     void commandLineOption(const std::string& name, const std::string& value);
@@ -145,6 +147,8 @@ public:
     std::vector<Regex*> file_show_filters;
     std::vector<Regex*> user_filters;
     std::vector<Regex*> user_show_filters;
+    std::deque<float> days_per_second_list;
+    std::deque<time_t> transitions;
     bool file_extensions;
     bool file_extension_fallback;
 

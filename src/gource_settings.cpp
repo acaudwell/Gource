@@ -71,6 +71,7 @@ void GourceSettings::help(bool extended_help) {
     printf("                                   for a number of seconds (default: 3)\n");
     printf("      --disable-auto-skip          Disable auto skip\n");
     printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 10)\n");
+    printf("      --transition TIMESTAMP       Timestamp for transitions\n");
     printf("      --realtime                   Realtime playback speed\n");
     printf("      --no-time-travel             Use the time of the last commit if the\n");
     printf("                                   time of a commit is in the past\n");
@@ -288,7 +289,7 @@ GourceSettings::GourceSettings() {
     arg_types["bloom-intensity"]   = "float";
     arg_types["bloom-multiplier"]  = "float";
     arg_types["elasticity"]        = "float";
-    arg_types["seconds-per-day"]   = "float";
+    arg_types["seconds-per-day"]   = "multi-value";
     arg_types["auto-skip-seconds"] = "float";
     arg_types["stop-at-time"]      = "float";
     arg_types["max-user-speed"]    = "float";
@@ -312,6 +313,7 @@ GourceSettings::GourceSettings() {
     arg_types["file-show-filter"] = "multi-value";
     arg_types["follow-user"]      = "multi-value";
     arg_types["highlight-user"]   = "multi-value";
+    arg_types["transition"]       = "multi-value";
 
     arg_types["log-level"]          = "string";
     arg_types["background-image"]   = "string";
@@ -1179,16 +1181,56 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if((entry = gource_settings->getEntry("seconds-per-day")) != 0) {
 
-        if(!entry->hasValue()) conffile.entryException(entry, "specify seconds-per-day (seconds)");
+        ConfEntryList* seconds_list = gource_settings->getEntries("seconds-per-day");
 
-        float seconds_per_day = entry->getFloat();
+        for(ConfEntryList::iterator it = seconds_list->begin(); it != seconds_list->end(); it++) {
 
-        if(seconds_per_day<=0.0f) {
-            conffile.invalidValueException(entry);
+            entry = *it;
+
+            if(!entry->hasValue()) conffile.entryException(entry, "specify seconds-per-day (seconds)");
+
+            float seconds_per_day = entry->getFloat();
+            if(seconds_per_day<=0.0f) {
+                conffile.invalidValueException(entry);
+            }
+
+            // convert seconds-per-day to days-per-second
+            days_per_second_list.push_back(1.0 / seconds_per_day);
         }
 
-        // convert seconds-per-day to days-per-second
-        days_per_second = 1.0 / seconds_per_day;
+        // initialize with first value
+        days_per_second = days_per_second_list.front();
+        days_per_second_list.pop_front();
+    }
+
+    if((entry = gource_settings->getEntry("transition")) != 0) {
+
+        ConfEntryList* timestamps = gource_settings->getEntries("transition");
+
+        for(ConfEntryList::iterator it = timestamps->begin(); it != timestamps->end(); it++) {
+
+            entry = *it;
+
+            if(!entry->hasValue()) conffile.entryException(entry, "specify transition timestamp (YYYY-MM-DD hh:mm:ss)");
+
+            std::string timestamp_string = entry->getString();
+
+            time_t transition;
+
+            if (parseDateTime(timestamp_string, transition)) {
+                transitions.push_back(transition);
+            } else {
+                conffile.invalidValueException(entry);
+            }
+        }
+
+        // Make sure that seconds-per-day is specified and that there are
+        // exactly 1 more seconds-per-day specified than transitions.
+        if(gource_settings->getEntry("seconds-per-day") == 0 || (
+                gource_settings->getEntries("seconds-per-day")->size() !=
+                timestamps->size() + 1)) {
+            conffile.entryException(entry, "transition requires exactly 1 more seconds-per-day specified");
+        }
     }
 
     if((entry = gource_settings->getEntry("auto-skip-seconds")) != 0) {

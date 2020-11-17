@@ -1725,6 +1725,12 @@ void Gource::logic(float t, float dt) {
             idle_time = 0.0;
         }
 
+        if(gGourceSettings.transitions.size() > 0 && commit.timestamp > gGourceSettings.transitions.front()) {
+            gGourceSettings.days_per_second = gGourceSettings.days_per_second_list.front();
+            gGourceSettings.days_per_second_list.pop_front();
+            gGourceSettings.transitions.pop_front();
+        }
+
         if(commit.timestamp > currtime) break;
 
         processCommit(commit, t);
