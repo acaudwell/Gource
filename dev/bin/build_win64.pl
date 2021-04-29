@@ -195,7 +195,7 @@ my @gource_files = qw(
 );
 
 my @gource_txts = qw(
-    README
+    README.md
     ChangeLog
     data/fonts/README
     COPYING
@@ -246,8 +246,10 @@ foreach my $file (@gource_files) {
 
 # convert text files
 foreach my $file (@gource_txts) {
-    dosify("$file", "$tmp_dir/$file.txt");
-    push @gource_bundle, "$file.txt";
+    (my $file_prefix = $file) =~ s/\..+$//;
+    my $txt_file = "$file_prefix.txt";
+    dosify("$file", "$tmp_dir/$txt_file");
+    push @gource_bundle, $txt_file;
 }
 
 my $version = gource_version();

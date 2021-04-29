@@ -1,39 +1,28 @@
+Gource
+======
 
-                             Gource
+https://gource.io
 
-              software version control visualization
+Description
+===========
 
-                Copyright (C) 2009 Andrew Caudwell
-
-                         http://gource.io
-
-Contents
-========
-
-1. Description
-2. Requirements
-3. Using Gource
-4. Copyright
-
-1. Description
-==============
-
-OpenGL-based 3D visualisation tool for source control repositories.
+Gource is a visualization tool for source control repositories.
 
 The repository is displayed as a tree where the root of the repository is the
 centre, directories are branches and files are leaves. Contributors to the
 source code appear and disappear as they contribute to specific files and
 directories.
 
-2. Requirements
-===============
+Requirements
+============
 
 Gource's display is rendered using OpenGL and requires a 3D accelerated video
 card to run.
 
-3. Using Gource
-===============
+Using Gource
+============
 
+```
 gource [options] [path]
 
 options:
@@ -351,16 +340,21 @@ options:
 
             If path is omitted, gource will attempt to read a log from the
             current directory.
+```
 
 Git, Bazaar, Mercurial and SVN Examples:
 
 View the log of the repository in the current path:
 
+```
     gource
+```
 
 View the log of a project in the specified directory:
 
+```
     gource my-project-dir
+```
 
 For large projects, generating a log of the project history may take a long
 time. For centralized VCS like SVN, generating the log may also put load on
@@ -371,20 +365,26 @@ In these cases, you may like to save a copy of the log for later use.
 You can generate a log in the VCS specific log format using
 the --log-command VCS option:
 
+```
     cd my-svn-project
     `gource --log-command svn` > my-svn-project.log
     gource my-svn-project.log
+```
 
 You can also have Gource write a copy of the log file in its own format:
 
+```
     gource --output-custom-log my-project-custom.log
+```
 
 CVS Support:
 
 Use 'cvs2cl' to generate the log and then pass it to Gource:
 
+```
     cvs2cl --chrono --stdout --xml -g-q > my-cvs-project.log
     gource my-cvs-project.log
+```
 
 Custom Log Format:
 
@@ -409,14 +409,14 @@ Recording Videos:
 
 See the guide on the homepage for examples of recording videos with Gource:
 
-    https://github.com/acaudwell/Gource/wiki/Videos
+https://github.com/acaudwell/Gource/wiki/Videos
 
 More Information:
 
 Visit the Gource homepage for guides and examples of using Gource with various
 version control systems:
 
-    http://gource.io
+https://gource.io
 
 Interface:
 
@@ -456,8 +456,8 @@ Interactive keyboard commands:
     (Alt+Enter) Fullscreen toggle
     (ESC) Quit
 
-4. Copyright
-============
+Copyright
+=========
 
 Gource - software version control visualization
 Copyright (C) 2009 Andrew Caudwell <acaudwell@gmail.com>

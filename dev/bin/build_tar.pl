@@ -52,7 +52,7 @@ my @inclusions = (
     qr{^/THANKS$},
     qr{^/COPYING$},
     qr{^/INSTALL$},
-    qr{^/README$},
+    qr{^/README\.md$},
     qr{/Makefile\.(?:am|in)$},
     qr{^/aclocal\.m4$},
     qr{^/m4/.+\.m4$},
