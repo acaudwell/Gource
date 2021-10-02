@@ -1,3 +1,5 @@
 [submodule "src/core"]
 	path = src/core
 	url = https://github.com/acaudwell/Core.git
+[submodule "cmake/sdl2/"]
+	url = https://github.com/bensuperpc/sdl2-cmake-modules.git
