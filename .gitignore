@@ -24,6 +24,4 @@ logs/*
 *.d
 .deps
 .dirstamp
-cmake-build-debug/
 build/
-**/*.o

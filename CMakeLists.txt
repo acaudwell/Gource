@@ -102,8 +102,6 @@ add_executable(gource
     )
 
 
-#include_directories(gource ${SDL2_INCLUDE_DIRS})
-#target_link_libraries(gource ${SDL2_LIBRARIES})
 target_link_libraries(gource SDL2::Main SDL2::Image)
 
 include_directories(gource ${FREETYPE_INCLUDE_DIRS})
@@ -115,18 +113,9 @@ target_link_libraries(gource ${PNG_LIBRARY})
 add_dependencies(gource libpcre)
 target_link_libraries(gource pcre)
 
-
-#add_dependencies(gource OpenGL::OpenGL)
-#target_include_directories(gource PRIVATE ${GLUT_INCLUDE_DIRS})
-#target_link_libraries(gource OpenGL::OpenGL ${GLUT_LIBRARY})
-
-
-#add_dependencies(gource OpenGL::OpenGL)
 include_directories(${GLUT_INCLUDE_DIRS} )
 
 target_link_libraries(gource OpenGL::OpenGL ${GLUT_LIBRARY} ${OPENGL_glu_LIBRARY})
-
-
 
 include_directories(gource ${GLEW_INCLUDE_DIRS})
 target_link_libraries(gource ${GLEW_LIBRARIES})
