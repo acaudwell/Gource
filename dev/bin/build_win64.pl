@@ -140,6 +140,7 @@ Section "Gource" SecGource
 
   WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "DisplayName"          "Gource"
   WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "DisplayVersion"       "GOURCE_VERSION"
+  WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "Publisher"            "acaudwell"
   WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "UninstallString"      '"$INSTDIR\uninstall.exe"'
   WriteRegStr   SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "QuietUninstallString" '"$INSTDIR\uninstall.exe" /S'
   WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Gource" "NoModify" 1
