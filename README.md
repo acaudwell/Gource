@@ -391,7 +391,7 @@ Custom Log Format:
 If you want to use Gource with something other than the supported systems,
 there is a pipe ('|') delimited custom log format:
 
-    timestamp - A unix timestamp of when the update occured.
+    timestamp - An ISO 8601 or unix timestamp of when the update occured.
     username  - The name of the user who made the update.
     type      - initial for the update type - (A)dded, (M)odified or (D)eleted.
     file      - Path of the file updated.

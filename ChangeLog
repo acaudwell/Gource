@@ -1,4 +1,6 @@
 0.52:
+ * Allow custom log timestamp to be a string.
+ * Support ISO 8601 timestamp format.
  * Fixed filenames not being affected by --font-scale (Carl Colena).
  * Fixed file key not being affected by --font-scale.
  * Added --file-idle-time-at-end option.
