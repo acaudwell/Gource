@@ -94,6 +94,10 @@ gource_tests_CPPFLAGS = -I src/test/ ${BOOST_CPPFLAGS}
 gource_tests_LDFLAGS = ${BOOST_LDFLAGS}
 gource_tests_LDADD = ${BOOST_UNIT_TEST_FRAMEWORK_LIB}
 
-gource_tests_SOURCES = src/test/main.cpp src/test/datetime_tests.cpp ${sources}
+gource_tests_SOURCES = \
+	src/test/main.cpp \
+	src/test/datetime_tests.cpp \
+	src/test/regex_tests.cpp \
+	${sources}
 
 TESTS = gource_tests
