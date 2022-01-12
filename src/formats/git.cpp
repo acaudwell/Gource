@@ -65,9 +65,8 @@ void GitCommitLog::readGitVersion() {
         return;
     }
 
-    char version_str[1024];
-    in.read(version_str, sizeof(version_str));
-    version_str[sizeof(version_str)-1] = '\0';
+    std::string version_str;
+    std::getline(in, version_str);
     in.close();
 
     remove(temp_file.c_str());
@@ -177,25 +176,7 @@ BaseLog* GitCommitLog::generateLog(const std::string& dir) {
 
     int command_rc = systemCommand(cmd_buff);
 
-    if(command_rc != 0) {
-        chdir(cwd_buff);
-        return 0;
-    }
-
-    // check for new-enough Git version
-    // if %aN does not appear to be supported try %an
-    std::ifstream in(temp_file.c_str());
-    char firstBytes[9];
-    in.read(firstBytes, 8);
-    in.close();
-    firstBytes[8] = '\0';
-    if(!strcmp(firstBytes, "user:%aN")) {
-        char *pos = strstr(cmd_buff, "%aN");
-        pos[2] = 'n';
-        command_rc = systemCommand(cmd_buff);
-    }
-
-    //change back to original directoy
+    //change back to original directory
     chdir(cwd_buff);
 
     if(command_rc != 0) {
