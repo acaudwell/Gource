@@ -275,7 +275,7 @@ bool RCommitLog::createTempFile(std::string& temp_file) {
     snprintf(tmplate, 1024, "%sgource-XXXXXX", tempdir.c_str());
 
 #ifdef _WIN32
-    if(mktemp(tmplate) < 0) return false;
+    if(mktemp(tmplate) == NULL) return false;
 #else
     if(mkstemp(tmplate) < 0) return false;
 #endif

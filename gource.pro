@@ -23,7 +23,7 @@ mingw {
     INCLUDEPATH += C:\msys64\mingw64\include\freetype2
 
     LIBS += -lmingw32 -lSDL2main -lSDL2.dll
-    LIBS += -lSDL2_image.dll -lfreetype.dll -lpcre.dll -lpng.dll -lglew32.dll -lboost_system-mt -lboost_filesystem-mt -lopengl32 -lglu32
+    LIBS += -lSDL2_image.dll -lfreetype.dll -lpcre2-8.dll -lpng.dll -lglew32.dll -lboost_system-mt -lboost_filesystem-mt -lopengl32 -lglu32
     LIBS += -static-libgcc -static-libstdc++
     LIBS += -lcomdlg32
 }
@@ -82,7 +82,6 @@ SOURCES += \
     core/stringhash.cpp \
     core/texture.cpp \
     core/tga.cpp \
-    core/timer.cpp \
     core/timezone.cpp \
     core/vbo.cpp \
     core/vectors.cpp
@@ -140,7 +139,6 @@ HEADERS += \
     core/stringhash.h \
     core/texture.h \
     core/tga.h \
-    core/timer.h \
     core/timezone.h \
     core/vbo.h \
     core/vectors.h

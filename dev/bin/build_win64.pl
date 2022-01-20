@@ -7,7 +7,7 @@ use FindBin;
 use File::Copy;
 
 my $base_dir     = "$FindBin::Bin/../..";
-my $build_dir    = "$base_dir/../build-gource-Desktop_Qt_MinGW_64bit-Release/release";
+my $build_dir    = "$base_dir/../build-gource-Msys2_64_bit-Release/release";
 my $binaries_dir = "$base_dir/dev/win64";
 
 my $builds_output_dir = "$base_dir/dev/builds";
