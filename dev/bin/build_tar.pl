@@ -71,7 +71,7 @@ my @inclusions = (
     qr{^/data/shaders/bloom\.(?:vert|frag)$},
     qr{^/data/shaders/shadow\.(?:vert|frag)$},
     qr{^/data/shaders/text\.(?:vert|frag)$},
-    qr{^/build-aux/(?:compile|config.(?:guess|sub)|depcomp|install-sh|missing)$},
+    qr{^/build-aux/(?:compile|config.(?:guess|sub)|depcomp|install-sh|missing|test-driver)$},
 );
 
 my $tmp_path = "/var/tmp/gource-$VERSION";
