@@ -1,6 +1,6 @@
 0.52:
- * Allow custom log timestamp to be a string.
  * Support ISO 8601 timestamp format.
+ * Allow custom log and caption file timestamps to be strings.
  * Change regular expression library to PCRE2.
  * Fixed filenames not being affected by --font-scale (Carl Colena).
  * Fixed file key not being affected by --font-scale.

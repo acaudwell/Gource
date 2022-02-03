@@ -391,7 +391,7 @@ Custom Log Format:
 If you want to use Gource with something other than the supported systems,
 there is a pipe ('|') delimited custom log format:
 
-    timestamp - An ISO 8601 or unix timestamp of when the update occured.
+    timestamp - An ISO 8601 or unix timestamp of when the update occurred.
     username  - The name of the user who made the update.
     type      - initial for the update type - (A)dded, (M)odified or (D)eleted.
     file      - Path of the file updated.
@@ -402,7 +402,7 @@ Caption Log Format:
 Gource can display captions along the timeline by specifying a caption file
 (using --caption-file) in the pipe ('|') delimited format below:
 
-    timestamp - A unix timestamp of when to display the caption.
+    timestamp - An ISO 8601 or A unix timestamp of when to display the caption.
     caption   - The caption
 
 Recording Videos:

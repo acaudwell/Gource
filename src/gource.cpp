@@ -1062,7 +1062,7 @@ void Gource::seekTo(float percent) {
     commitlog->seekTo(percent);
 }
 
-Regex caption_regex("^(?:\\xEF\\xBB\\xBF)?([0-9]+)\\|(.+)$");
+Regex caption_regex("^(?:\\xEF\\xBB\\xBF)?([^|]+)\\|(.+)$");
 
 void Gource::loadCaptions() {
     if(!gGourceSettings.caption_file.size()) return;
@@ -1082,7 +1082,18 @@ void Gource::loadCaptions() {
 
         if(!caption_regex.match(line, &matches)) continue;
 
-        time_t timestamp    = atol(matches[0].c_str());
+        time_t timestamp;
+
+        // Allow timestamp to be a string
+        if(matches[0].size() > 1 && matches[0].find("-", 1) != std::string::npos) {
+            if(!SDLAppSettings::parseDateTime(matches[0], timestamp))
+                continue;
+        } else {
+            timestamp = (time_t) atoll(matches[0].c_str());
+            if(!timestamp && matches[0] != "0")
+                continue;
+        }
+
         std::string caption = RCommitLog::filter_utf8(matches[1]);
 
         //ignore older captions
