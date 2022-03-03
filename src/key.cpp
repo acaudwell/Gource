@@ -15,8 +15,8 @@ FileKeyEntry::FileKeyEntry(const FXFont& font, const std::string& ext, const vec
     shadow      = vec2(3.0, 3.0);
 
     width       = 90.0f * gGourceSettings.font_scale;
-    height      = gGourceSettings.font_size + 4.0f;
-    left_margin = gGourceSettings.font_size + 4.0f;
+    height      = gGourceSettings.scaled_font_size + 4.0f;
+    left_margin = gGourceSettings.scaled_font_size + 4.0f;
     count       = 0;
     brightness  = 1.0f;
     alpha       = 0.0f;
@@ -163,7 +163,7 @@ FileKey::FileKey() {
 FileKey::FileKey(float update_interval) {
     this->update_interval = update_interval;
     interval_remaining = 1.0f;
-    font = fontmanager.grab(gGourceSettings.font_file, gGourceSettings.font_size);
+    font = fontmanager.grab(gGourceSettings.font_file, gGourceSettings.scaled_font_size);
     font.dropShadow(false);
     font.roundCoordinates(false);
     show = true;
@@ -280,7 +280,7 @@ void FileKey::logic(float dt) {
             }
 
             //set position
-            float offset_y = gGourceSettings.font_size + 6.0f;
+            float offset_y = gGourceSettings.scaled_font_size + 6.0f;
             float key_y = offset_y;
 
             for(std::vector<FileKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {

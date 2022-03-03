@@ -36,11 +36,17 @@ Gource::Gource(FrameExporter* exporter) {
         gGourceSettings.file_graphic = texturemanager.grab("file.png", true, GL_CLAMP_TO_EDGE);
     }
 
-    fontlarge = fontmanager.grab(gGourceSettings.font_file, 42);
+    if(gGourceSettings.default_font_scale) {
+        gGourceSettings.font_scale = (float) glm::max(1, display.width / 1920);
+        debugLog("setting font scale for resolution %d x %d to %.2f", display.width, display.height, gGourceSettings.font_scale);
+        gGourceSettings.setScaledFontSizes();
+    }
+
+    fontlarge = fontmanager.grab(gGourceSettings.font_file, 42 * gGourceSettings.font_scale);
     fontlarge.dropShadow(true);
     fontlarge.roundCoordinates(true);
 
-    fontmedium = fontmanager.grab(gGourceSettings.font_file, gGourceSettings.font_size);
+    fontmedium = fontmanager.grab(gGourceSettings.font_file, gGourceSettings.scaled_font_size);
     fontmedium.dropShadow(true);
     fontmedium.roundCoordinates(false);
 
@@ -49,11 +55,11 @@ Gource::Gource(FrameExporter* exporter) {
     fontcaption.roundCoordinates(false);
     fontcaption.alignTop(false);
 
-    font = fontmanager.grab(gGourceSettings.font_file, 14);
+    font = fontmanager.grab(gGourceSettings.font_file, 14 * gGourceSettings.font_scale);
     font.dropShadow(true);
     font.roundCoordinates(true);
 
-    fontdirname = fontmanager.grab(gGourceSettings.font_file, gGourceSettings.dirname_font_size);
+    fontdirname = fontmanager.grab(gGourceSettings.font_file, gGourceSettings.scaled_dirname_font_size);
     fontdirname.dropShadow(true);
     fontdirname.roundCoordinates(true);
 
@@ -126,7 +132,7 @@ Gource::Gource(FrameExporter* exporter) {
     date_x_offset = 0;
     starting_z = -300.0f;
 
-    textbox = TextBox(fontmanager.grab(gGourceSettings.font_file, 18));
+    textbox = TextBox(fontmanager.grab(gGourceSettings.font_file, 18 * gGourceSettings.font_scale));
     textbox.setBrightness(0.5f);
     textbox.show();
 
@@ -2601,11 +2607,11 @@ void Gource::draw(float t, float dt) {
 
     if(splash>0.0f) {
         int logowidth = fontlarge.getWidth("Gource");
-        int logoheight = 100;
+        int logoheight = 100 * gGourceSettings.font_scale;
         int cwidth    = font.getWidth("Software Version Control Visualization");
         int awidth    = font.getWidth("(C) 2009 Andrew Caudwell");
 
-        vec2 corner(display.width/2 - logowidth/2 - 30.0f, display.height/2 - 40);
+        vec2 corner(display.width/2 - logowidth/2 - 30.0f * gGourceSettings.font_scale, display.height/2 - 40 * gGourceSettings.font_scale);
 
         glDisable(GL_TEXTURE_2D);
         glColor4f(0.0f, 0.5f, 1.0f, splash * 0.015f);
@@ -2619,11 +2625,11 @@ void Gource::draw(float t, float dt) {
         glEnable(GL_TEXTURE_2D);
 
         fontlarge.setColour(vec4(1.0f));
-        fontlarge.draw(display.width/2 - logowidth/2,display.height/2 - 30, "Gource");
+        fontlarge.draw(display.width/2 - logowidth/2,display.height/2 - 30 * gGourceSettings.font_scale, "Gource");
 
         font.setColour(vec4(1.0f));
-        font.draw(display.width/2 - cwidth/2,display.height/2 + 10, "Software Version Control Visualization");
-        font.draw(display.width/2 - awidth/2,display.height/2 + 30, "(C) 2009 Andrew Caudwell");
+        font.draw(display.width/2 - cwidth/2,display.height/2 + 10 * gGourceSettings.font_scale, "Software Version Control Visualization");
+        font.draw(display.width/2 - awidth/2,display.height/2 + 30 * gGourceSettings.font_scale, "(C) 2009 Andrew Caudwell");
     }
 
     // text using the specified font goes here

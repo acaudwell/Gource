@@ -148,6 +148,9 @@ int main(int argc, char *argv[]) {
         display.enableResize(true);
     }
 
+    //Stop OS interfering with the requested resolution on Retina / Ultra HD displays
+    display.enableHighDPIAwareness(true);
+
     try {
 
         display.init("Gource", gGourceSettings.display_width, gGourceSettings.display_height, gGourceSettings.fullscreen, gGourceSettings.screen);

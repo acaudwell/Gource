@@ -308,7 +308,7 @@ void RUser::updateFont() {
         font = fontmanager.grab(gGourceSettings.font_file, 18);
         font.dropShadow(true);
     } else {
-        font = fontmanager.grab(gGourceSettings.font_file, gGourceSettings.user_font_size);
+        font = fontmanager.grab(gGourceSettings.font_file, gGourceSettings.scaled_user_font_size);
         font.dropShadow(true);
     }
 

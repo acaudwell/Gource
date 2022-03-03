@@ -435,11 +435,13 @@ void GourceSettings::setGourceDefaults() {
     title             = "";
 
     font_scale = 1.0f;
+    default_font_scale = true;
     font_file = GOURCE_FONT_FILE;
     font_size = 16;
     filename_font_size = 14;
     dirname_font_size = 14;
     user_font_size = 14;
+
     dir_colour       = vec3(1.0f);
     font_colour      = vec3(1.0f);
     highlight_colour = vec3(1.0f);
@@ -505,6 +507,16 @@ void GourceSettings::setGourceDefaults() {
         delete (*it);
     }
     user_show_filters.clear();
+
+
+    setScaledFontSizes();
+}
+
+void GourceSettings::setScaledFontSizes() {
+    scaled_font_size           = glm::clamp((int)(font_size * font_scale), 1, 100);
+    scaled_user_font_size      = glm::clamp((int)(user_font_size * font_scale), 1, 100);
+    scaled_dirname_font_size   = glm::clamp((int)(dirname_font_size * font_scale), 1, 100);
+    scaled_filename_font_size  = glm::clamp((int)(filename_font_size * font_scale), 1, 100);
 }
 
 void GourceSettings::commandLineOption(const std::string& name, const std::string& value) {
@@ -1031,16 +1043,14 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(!entry->hasValue()) conffile.entryException(entry, "specify font scale");
 
         font_scale = entry->getFloat();
+        default_font_scale = false;
 
         if(font_scale<0.0f || font_scale>10.0f) {
             conffile.invalidValueException(entry);
         }
 
-        font_size           = glm::clamp((int)(font_size * font_scale), 1, 100);
-        user_font_size      = glm::clamp((int)(user_font_size * font_scale), 1, 100);
-        dirname_font_size   = glm::clamp((int)(dirname_font_size * font_scale), 1, 100);
-        filename_font_size  = glm::clamp((int)(filename_font_size * font_scale), 1, 100);
-    }    
+        setScaledFontSizes();
+    }
 
     if((entry = gource_settings->getEntry("hash-seed")) != 0) {
 

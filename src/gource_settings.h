@@ -112,6 +112,12 @@ public:
     int user_font_size;
     vec3 font_colour;
     float font_scale;
+    bool default_font_scale;
+
+    int scaled_font_size;
+    int scaled_filename_font_size;
+    int scaled_dirname_font_size;
+    int scaled_user_font_size;
 
     float elasticity;
 
@@ -166,6 +172,8 @@ public:
     GourceSettings();
 
     void setGourceDefaults();
+
+    void setScaledFontSizes();
 
     void importGourceSettings(ConfFile& conf, ConfSection* gource_settings = 0);
 

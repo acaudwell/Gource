@@ -142,3 +142,11 @@ HEADERS += \
     core/timezone.h \
     core/vbo.h \
     core/vectors.h
+
+DISTFILES += \
+    data/shaders/bloom.frag \
+    data/shaders/shadow.frag \
+    data/shaders/text.frag \
+    data/shaders/bloom.vert \
+    data/shaders/shadow.vert \
+    data/shaders/text.vert
