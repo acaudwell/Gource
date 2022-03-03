@@ -112,6 +112,20 @@ void GourceShell::resize(int width, int height) {
     if(gource!=0) gource->reload();
 }
 
+void GourceShell::reload() {
+    texturemanager.unload();
+    shadermanager.unload();
+    fontmanager.unload();
+
+    if(gource!=0) gource->unload();
+
+    texturemanager.reload();
+    shadermanager.reload(true);
+    fontmanager.reload();
+
+    if(gource!=0) gource->reload();
+}
+
 void GourceShell::keyPress(SDL_KeyboardEvent *e) {
 
     bool repeat = false;
@@ -137,6 +151,10 @@ void GourceShell::keyPress(SDL_KeyboardEvent *e) {
         if(gGourceSettings.disable_input) {
             // disable keyboard input other than the escape key
             return;
+        }
+
+        if (e->keysym.sym == SDLK_F5) {
+            reload();
         }
 
         if (e->keysym.sym == SDLK_F11) {

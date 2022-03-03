@@ -45,6 +45,8 @@ public:
 
     void resize(int width, int height);
 
+    void reload();
+
     void toggleFullscreen();
     void toggleWindowFrame();
 
