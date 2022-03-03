@@ -1,4 +1,5 @@
 0.52:
+ * Support rendering at native resolution on Retina / Ultra HD displays.
  * Support ISO 8601 timestamp format.
  * Allow custom log and caption file timestamps to be strings.
  * Change regular expression library to PCRE2.
