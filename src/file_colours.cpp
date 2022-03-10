@@ -19,6 +19,40 @@
 #include <iostream>
 
 RFileColours gRFileColours;
+
+std::string RFileColours::find(std::string ext) {
+    auto it = colours.find(ext);
+    if(it != colours.end()) {
+        return it->second;
+    }
+
+    return "#ffffff";
+}
+
 void RFileColours::init() {
-    std::printf("I'm in parse colours\n");
+    colours["c"] = "#555555";
+    colours["h"] = "#555555";
+    colours["cpp"] = "#f34b7d";
+    colours["hpp"] = "#f34b7d";
+    colours["html"] = "#e34c26";
+    colours["xml"] = "#ff9900";
+    colours["svg"] = "#ff9900";
+    colours["go"] = "#00add8";
+    colours["mod"] = "#00add8";
+    colours["sum"] = "#00add8";
+    colours["scss"] = "#c6538c";
+    colours["sass"] = "#c6538c";
+    colours["css"] = "#563d7c";
+    colours["js"] = "#f1e05a";
+    colours["ts"] = "#2b7489";
+    colours["sh"] = "#89e051";
+    colours["bash"] = "#89e051";
+    colours["json"] = "#292929";
+    colours["http"] = "#005C9C";
+    colours["yml"] = "#cb171e";
+    colours["yaml"] = "#cb171e";
+    colours["toml"] = "#9c4221";
+    colours["md"] = "#083fa1";
+    colours["markdown"] = "#083fa1";
+    colours["org"] = "#77aa99";
 }

@@ -23,7 +23,10 @@
 
 class RFileColours {
 public:
+    std::map<std::string, std::string> colours;
+
     void init();
+    std::string find(std::string);
 };
 
 extern RFileColours gRFileColours;

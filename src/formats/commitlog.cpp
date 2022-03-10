@@ -17,6 +17,7 @@
 
 #include "commitlog.h"
 #include "../gource_settings.h"
+#include "../file_colours.h"
 #include "../core/sdlapp.h"
 
 #include "../core/utf8/utf8.h"
@@ -311,43 +312,7 @@ vec3 RCommit::fileColour(const std::string& filename) {
 
     if(dot != std::string::npos && dot+1<filename.size() && (slash == std::string::npos || slash < dot)) {
         std::string file_ext = filename.substr(dot+1);
-        std::string colour;
-
-        if (file_ext == "c" || file_ext == "h") {
-            colour = "#555555";
-        } else if (file_ext == "cpp" || file_ext == "hpp") {
-            colour = "#f34b7d";
-        } else if (file_ext == "html") {
-            colour = "#e34c26";
-        } else if (file_ext == "xml" || file_ext == "svg") {
-            colour = "#ff9900";
-        } else if (file_ext == "go" || file_ext == "mod" || file_ext == "sum") {
-            colour = "#00add8";
-        } else if (file_ext == "scss" || file_ext == "sass") {
-            colour = "#c6538c";
-        } else if (file_ext == "css") {
-            colour = "#563d7c";
-        } else if (file_ext == "js") {
-            colour = "#f1e05a";
-        } else if (file_ext == "ts") {
-            colour = "#2b7489";
-        } else if (file_ext == "sh" || file_ext == "bash") {
-            colour = "#89e051";
-        } else if (file_ext == "json") {
-            colour = "#292929";
-        } else if (file_ext == "http") {
-            colour = "#005C9C";
-        } else if (file_ext == "yml" || file_ext == "yaml") {
-            colour = "#cb171e";
-        } else if (file_ext == "toml") {
-            colour = "#9c4221";
-        } else if (file_ext == "md" || file_ext == "markdown") {
-            colour = "#083fa1";
-        } else if (file_ext == "org") {
-            colour = "#77aa99";
-        } else {
-            colour = "#ffeeee";
-        }
+        std::string colour = gRFileColours.find(file_ext);
 
         vec3 col;
         int r,g,b;
