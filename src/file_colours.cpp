@@ -16,17 +16,22 @@
 */
 
 #include "file_colours.h"
-#include <iostream>
 
 RFileColours gRFileColours;
 
-std::string RFileColours::find(std::string ext) {
+vec3 RFileColours::find(std::string ext) {
     auto it = colours.find(ext);
     if(it != colours.end()) {
-        return it->second;
+        vec3 col;
+        int r,g,b;
+        sscanf(it->second.c_str(), "#%02x%02x%02x", &r, &g, &b);
+        col = vec3(r,g,b);
+        col /= 255.0f;
+
+        return col;
     }
 
-    return "#ffffff";
+    return vec3(1.0, 1.0, 1.0);
 }
 
 void RFileColours::init() {

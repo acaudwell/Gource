@@ -18,6 +18,7 @@
 #ifndef FILE_COLOURS_H_
 #define FILE_COLOURS_H_
 
+#include "core/vectors.h"
 #include <map>
 #include <string>
 
@@ -26,7 +27,7 @@ public:
     std::map<std::string, std::string> colours;
 
     void init();
-    std::string find(std::string);
+    vec3 find(std::string);
 };
 
 extern RFileColours gRFileColours;

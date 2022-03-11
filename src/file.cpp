@@ -135,15 +135,7 @@ void RFile::setFilename(const std::string& abs_file_path) {
 }
 
 void RFile::colourize() {
-    std::string colour = gRFileColours.find(ext);
-
-    vec3 col;
-    int r,g,b;
-    sscanf(colour.c_str(), "#%02x%02x%02x", &r, &g, &b);
-    col = vec3(r,g,b);
-    col /= 255.0f;
-
-    file_colour = col;
+    file_colour = gRFileColours.find(ext);
 }
 
 const vec3& RFile::getNameColour() const{

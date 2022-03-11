@@ -312,14 +312,8 @@ vec3 RCommit::fileColour(const std::string& filename) {
 
     if(dot != std::string::npos && dot+1<filename.size() && (slash == std::string::npos || slash < dot)) {
         std::string file_ext = filename.substr(dot+1);
-        std::string colour = gRFileColours.find(file_ext);
 
-        vec3 col;
-        int r,g,b;
-        sscanf(colour.c_str(), "#%02x%02x%02x", &r, &g, &b);
-        col = vec3(r,g,b);
-        col /= 255.0f;
-        return col;
+        return gRFileColours.find(file_ext);
     }
 
     return vec3(1.0, 1.0, 1.0);
