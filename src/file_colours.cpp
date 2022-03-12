@@ -36,1254 +36,1256 @@ vec3 RFileColours::find(std::string ext) {
 
 void RFileColours::init() {
     // TODO: Find a way to de-duplicate map keys.
-    colours["asddls"] = "#555e25";
-    colours["apacheconf"] = "#d12127";
-    colours["vhost"] = "#d12127";
-    colours["csv"] = "#237346";
-    colours["apl"] = "#5A8164";
-    colours["dyalog"] = "#5A8164";
-    colours["odin"] = "#60AFFE";
-    colours["qs"] = "#fed659";
-    colours["shader"] = "#222c37";
-    colours["fut"] = "#5f021f";
-    colours["jsonnet"] = "#0064bd";
-    colours["libsonnet"] = "#0064bd";
-    colours["robot"] = "#00c0b5";
-    colours["au3"] = "#1C3552";
-    colours["erl"] = "#B83998";
-    colours["app.src"] = "#B83998";
-    colours["es"] = "#B83998";
-    colours["escript"] = "#B83998";
-    colours["hrl"] = "#B83998";
-    colours["xrl"] = "#B83998";
-    colours["yrl"] = "#B83998";
-    colours["gms"] = "#f49a22";
-    colours["nginx"] = "#009639";
-    colours["nginxconf"] = "#009639";
-    colours["vhost"] = "#009639";
-    colours["omgrofl"] = "#cabbff";
-    colours["sh"] = "#89e051";
-    colours["bash"] = "#89e051";
-    colours["bats"] = "#89e051";
-    colours["cgi"] = "#89e051";
-    colours["command"] = "#89e051";
-    colours["env"] = "#89e051";
-    colours["fcgi"] = "#89e051";
-    colours["ksh"] = "#89e051";
-    colours["sh.in"] = "#89e051";
-    colours["tmux"] = "#89e051";
-    colours["tool"] = "#89e051";
-    colours["zsh"] = "#89e051";
-    colours["zsh-theme"] = "#89e051";
-    colours["st"] = "#3fb34f";
-    colours["mu"] = "#244963";
-    colours["n"] = "#3d3c6e";
-    colours["pcss"] = "#dc3a0c";
-    colours["postcss"] = "#dc3a0c";
-    colours["bf"] = "#a52f4e";
-    colours["kt"] = "#A97BFF";
-    colours["ktm"] = "#A97BFF";
-    colours["kts"] = "#A97BFF";
-    colours["xsh"] = "#285EEF";
-    colours["hx"] = "#df7900";
-    colours["hxsl"] = "#df7900";
-    colours["pas"] = "#E3F171";
-    colours["dfm"] = "#E3F171";
-    colours["dpr"] = "#E3F171";
-    colours["inc"] = "#E3F171";
-    colours["lpr"] = "#E3F171";
-    colours["pascal"] = "#E3F171";
-    colours["pp"] = "#E3F171";
-    colours["ecl"] = "#8a1267";
-    colours["eclxml"] = "#8a1267";
-    colours["mq4"] = "#62A8D6";
-    colours["mqh"] = "#62A8D6";
-    colours["graphql"] = "#e10098";
-    colours["gql"] = "#e10098";
-    colours["graphqls"] = "#e10098";
-    colours["pike"] = "#005390";
-    colours["pmod"] = "#005390";
-    colours["ecl"] = "#001d9d";
-    colours["kak"] = "#6f8042";
-    colours["pep"] = "#C76F5B";
-    colours["sc"] = "#46390b";
-    colours["scd"] = "#46390b";
-    colours["v"] = "#b2b7f8";
-    colours["veo"] = "#b2b7f8";
-    colours["ahk"] = "#6594b9";
-    colours["ahkl"] = "#6594b9";
-    colours["mint"] = "#02b046";
-    colours["apib"] = "#2ACCA8";
-    colours["bi"] = "#867db1";
-    colours["bas"] = "#867db1";
-    colours["gsp"] = "#4298b8";
-    colours["toml"] = "#9c4221";
-    colours["vim"] = "#199f4b";
-    colours["vba"] = "#199f4b";
-    colours["vimrc"] = "#199f4b";
-    colours["vmb"] = "#199f4b";
-    colours["dwl"] = "#003a52";
-    colours["ebuild"] = "#9400ff";
-    colours["thy"] = "#FEFE00";
-    colours["jisonlex"] = "#56b3cb";
-    colours["ice"] = "#003fa2";
-    colours["csd"] = "#1a1a1a";
-    colours["elm"] = "#60B5CC";
-    colours["lgt"] = "#295b9a";
-    colours["logtalk"] = "#295b9a";
-    colours["ooc"] = "#b0b77e";
-    colours["cr"] = "#000100";
-    colours["mako"] = "#7e858d";
-    colours["mao"] = "#7e858d";
-    colours["ring"] = "#2D54CB";
-    colours["reg"] = "#52d5ff";
-    colours["gsc"] = "#FF6800";
-    colours["csc"] = "#FF6800";
-    colours["gsh"] = "#FF6800";
-    colours["ini"] = "#d1dbe0";
-    colours["cfg"] = "#d1dbe0";
-    colours["dof"] = "#d1dbe0";
-    colours["lektorproject"] = "#d1dbe0";
-    colours["prefs"] = "#d1dbe0";
-    colours["pro"] = "#d1dbe0";
-    colours["properties"] = "#d1dbe0";
-    colours["6pl"] = "#0000fb";
-    colours["6pm"] = "#0000fb";
-    colours["nqp"] = "#0000fb";
-    colours["p6"] = "#0000fb";
-    colours["p6l"] = "#0000fb";
-    colours["p6m"] = "#0000fb";
-    colours["pl"] = "#0000fb";
-    colours["pl6"] = "#0000fb";
-    colours["pm"] = "#0000fb";
-    colours["pm6"] = "#0000fb";
-    colours["raku"] = "#0000fb";
-    colours["rakumod"] = "#0000fb";
-    colours["t"] = "#0000fb";
-    colours["ftl"] = "#0050b2";
-    colours["ged"] = "#003058";
-    colours["jl"] = "#a270ba";
-    colours["kicad_pcb"] = "#2f4aab";
-    colours["kicad_mod"] = "#2f4aab";
-    colours["kicad_wks"] = "#2f4aab";
-    colours["lua"] = "#000080";
-    colours["fcgi"] = "#000080";
-    colours["nse"] = "#000080";
-    colours["p8"] = "#000080";
-    colours["pd_lua"] = "#000080";
-    colours["rbxs"] = "#000080";
-    colours["rockspec"] = "#000080";
-    colours["wlua"] = "#000080";
-    colours["do"] = "#1a5f91";
-    colours["ado"] = "#1a5f91";
-    colours["doh"] = "#1a5f91";
-    colours["ihlp"] = "#1a5f91";
-    colours["mata"] = "#1a5f91";
-    colours["matah"] = "#1a5f91";
-    colours["sthlp"] = "#1a5f91";
-    colours["8xp"] = "#A0AA87";
-    colours["8xk"] = "#A0AA87";
-    colours["8xk.txt"] = "#A0AA87";
-    colours["8xp.txt"] = "#A0AA87";
-    colours["ec"] = "#913960";
-    colours["eh"] = "#913960";
-    colours["ampl"] = "#E6EFBB";
-    colours["mod"] = "#E6EFBB";
-    colours["avdl"] = "#0040FF";
-    colours["numpy"] = "#9C8AF9";
-    colours["numpyw"] = "#9C8AF9";
-    colours["numsc"] = "#9C8AF9";
-    colours["vdf"] = "#f26025";
-    colours["wlk"] = "#a23738";
-    colours["2da"] = "#38761D";
-    colours["awk"] = "#c30e9b";
-    colours["auk"] = "#c30e9b";
-    colours["gawk"] = "#c30e9b";
-    colours["mawk"] = "#c30e9b";
-    colours["nawk"] = "#c30e9b";
-    colours["lark"] = "#2980B9";
-    colours["pp"] = "#302B6D";
-    colours["swift"] = "#F05138";
-    colours["twig"] = "#c1d026";
-    colours["ms"] = "#00a6a6";
-    colours["mcr"] = "#00a6a6";
-    colours["py"] = "#3572A5";
-    colours["cgi"] = "#3572A5";
-    colours["fcgi"] = "#3572A5";
-    colours["gyp"] = "#3572A5";
-    colours["gypi"] = "#3572A5";
-    colours["lmi"] = "#3572A5";
-    colours["py3"] = "#3572A5";
-    colours["pyde"] = "#3572A5";
-    colours["pyi"] = "#3572A5";
-    colours["pyp"] = "#3572A5";
-    colours["pyt"] = "#3572A5";
-    colours["pyw"] = "#3572A5";
-    colours["rpy"] = "#3572A5";
-    colours["smk"] = "#3572A5";
-    colours["spec"] = "#3572A5";
-    colours["tac"] = "#3572A5";
-    colours["wsgi"] = "#3572A5";
-    colours["xpy"] = "#3572A5";
-    colours["t"] = "#cf142b";
-    colours["tu"] = "#cf142b";
-    colours["bas"] = "#ff0000";
-    colours["css"] = "#563d7c";
-    colours["dhall"] = "#dfafff";
-    colours["gradle"] = "#02303a";
-    colours["ly"] = "#9ccc7c";
-    colours["ily"] = "#9ccc7c";
-    colours["pan"] = "#cc0000";
-    colours["rb"] = "#701516";
-    colours["builder"] = "#701516";
-    colours["eye"] = "#701516";
-    colours["fcgi"] = "#701516";
-    colours["gemspec"] = "#701516";
-    colours["god"] = "#701516";
-    colours["jbuilder"] = "#701516";
-    colours["mspec"] = "#701516";
-    colours["pluginspec"] = "#701516";
-    colours["podspec"] = "#701516";
-    colours["prawn"] = "#701516";
-    colours["rabl"] = "#701516";
-    colours["rake"] = "#701516";
-    colours["rbi"] = "#701516";
-    colours["rbuild"] = "#701516";
-    colours["rbw"] = "#701516";
-    colours["rbx"] = "#701516";
-    colours["ru"] = "#701516";
-    colours["ruby"] = "#701516";
-    colours["spec"] = "#701516";
-    colours["thor"] = "#701516";
-    colours["watchr"] = "#701516";
-    colours["glf"] = "#c1ac7f";
-    colours["ipynb"] = "#DA5B0B";
-    colours["rst"] = "#141414";
-    colours["rest"] = "#141414";
-    colours["rest.txt"] = "#141414";
-    colours["rst.txt"] = "#141414";
-    colours["clar"] = "#5546ff";
-    colours["fth"] = "#341708";
-    colours["4th"] = "#341708";
-    colours["f"] = "#341708";
-    colours["for"] = "#341708";
-    colours["forth"] = "#341708";
-    colours["fr"] = "#341708";
-    colours["frt"] = "#341708";
-    colours["fs"] = "#341708";
-    colours["pde"] = "#0096D8";
-    colours["bsv"] = "#12223c";
-    colours["golo"] = "#88562A";
-    colours["pl"] = "#74283c";
-    colours["pro"] = "#74283c";
-    colours["prolog"] = "#74283c";
-    colours["yap"] = "#74283c";
-    colours["clp"] = "#00A300";
-    colours["clw"] = "#db901e";
-    colours["icl"] = "#3F85AF";
-    colours["dcl"] = "#3F85AF";
-    colours["cp"] = "#B0CE4E";
-    colours["cps"] = "#B0CE4E";
-    colours["go"] = "#00ADD8";
-    colours["gitignore"] = "#000000";
-    colours["lhs"] = "#5e5086";
-    colours["mustache"] = "#724b3b";
-    colours["pb"] = "#5a6986";
-    colours["pbi"] = "#5a6986";
-    colours["scala"] = "#c22d40";
-    colours["kojo"] = "#c22d40";
-    colours["sbt"] = "#c22d40";
-    colours["sc"] = "#c22d40";
-    colours["chpl"] = "#8dc63f";
-    colours["lvproj"] = "#fede06";
-    colours["lvlib"] = "#fede06";
-    colours["p"] = "#5ce600";
-    colours["cls"] = "#5ce600";
-    colours["w"] = "#5ce600";
-    colours["jade"] = "#a86454";
-    colours["pug"] = "#a86454";
-    colours["zil"] = "#dc75e5";
-    colours["mud"] = "#dc75e5";
-    colours["e"] = "#4d6977";
-    colours["matlab"] = "#e16737";
-    colours["m"] = "#e16737";
-    colours["mediawiki"] = "#fc5757";
-    colours["wiki"] = "#fc5757";
-    colours["wikitext"] = "#fc5757";
-    colours["cirru"] = "#ccccff";
-    colours["hb"] = "#0e60e3";
-    colours["xml"] = "#0060ac";
-    colours["adml"] = "#0060ac";
-    colours["admx"] = "#0060ac";
-    colours["ant"] = "#0060ac";
-    colours["axaml"] = "#0060ac";
-    colours["axml"] = "#0060ac";
-    colours["builds"] = "#0060ac";
-    colours["ccproj"] = "#0060ac";
-    colours["ccxml"] = "#0060ac";
-    colours["clixml"] = "#0060ac";
-    colours["cproject"] = "#0060ac";
-    colours["cscfg"] = "#0060ac";
-    colours["csdef"] = "#0060ac";
-    colours["csl"] = "#0060ac";
-    colours["csproj"] = "#0060ac";
-    colours["ct"] = "#0060ac";
-    colours["depproj"] = "#0060ac";
-    colours["dita"] = "#0060ac";
-    colours["ditamap"] = "#0060ac";
-    colours["ditaval"] = "#0060ac";
-    colours["dll.config"] = "#0060ac";
-    colours["dotsettings"] = "#0060ac";
-    colours["filters"] = "#0060ac";
-    colours["fsproj"] = "#0060ac";
-    colours["fxml"] = "#0060ac";
-    colours["glade"] = "#0060ac";
-    colours["gml"] = "#0060ac";
-    colours["gmx"] = "#0060ac";
-    colours["grxml"] = "#0060ac";
-    colours["gst"] = "#0060ac";
-    colours["hzp"] = "#0060ac";
-    colours["iml"] = "#0060ac";
-    colours["ivy"] = "#0060ac";
-    colours["jelly"] = "#0060ac";
-    colours["jsproj"] = "#0060ac";
-    colours["kml"] = "#0060ac";
-    colours["launch"] = "#0060ac";
-    colours["mdpolicy"] = "#0060ac";
-    colours["mjml"] = "#0060ac";
-    colours["mm"] = "#0060ac";
-    colours["mod"] = "#0060ac";
-    colours["mxml"] = "#0060ac";
-    colours["natvis"] = "#0060ac";
-    colours["ncl"] = "#0060ac";
-    colours["ndproj"] = "#0060ac";
-    colours["nproj"] = "#0060ac";
-    colours["nuspec"] = "#0060ac";
-    colours["odd"] = "#0060ac";
-    colours["osm"] = "#0060ac";
-    colours["pkgproj"] = "#0060ac";
-    colours["pluginspec"] = "#0060ac";
-    colours["proj"] = "#0060ac";
-    colours["props"] = "#0060ac";
-    colours["ps1xml"] = "#0060ac";
-    colours["psc1"] = "#0060ac";
-    colours["pt"] = "#0060ac";
-    colours["rdf"] = "#0060ac";
-    colours["res"] = "#0060ac";
-    colours["resx"] = "#0060ac";
-    colours["rs"] = "#0060ac";
-    colours["rss"] = "#0060ac";
-    colours["sch"] = "#0060ac";
-    colours["scxml"] = "#0060ac";
-    colours["sfproj"] = "#0060ac";
-    colours["shproj"] = "#0060ac";
-    colours["srdf"] = "#0060ac";
-    colours["storyboard"] = "#0060ac";
-    colours["sublime-snippet"] = "#0060ac";
-    colours["targets"] = "#0060ac";
-    colours["tml"] = "#0060ac";
-    colours["ts"] = "#0060ac";
-    colours["tsx"] = "#0060ac";
-    colours["ui"] = "#0060ac";
-    colours["urdf"] = "#0060ac";
-    colours["ux"] = "#0060ac";
-    colours["vbproj"] = "#0060ac";
-    colours["vcxproj"] = "#0060ac";
-    colours["vsixmanifest"] = "#0060ac";
-    colours["vssettings"] = "#0060ac";
-    colours["vstemplate"] = "#0060ac";
-    colours["vxml"] = "#0060ac";
-    colours["wixproj"] = "#0060ac";
-    colours["workflow"] = "#0060ac";
-    colours["wsdl"] = "#0060ac";
-    colours["wsf"] = "#0060ac";
-    colours["wxi"] = "#0060ac";
-    colours["wxl"] = "#0060ac";
-    colours["wxs"] = "#0060ac";
-    colours["x3d"] = "#0060ac";
-    colours["xacro"] = "#0060ac";
-    colours["xaml"] = "#0060ac";
-    colours["xib"] = "#0060ac";
-    colours["xlf"] = "#0060ac";
-    colours["xliff"] = "#0060ac";
-    colours["xmi"] = "#0060ac";
-    colours["xml.dist"] = "#0060ac";
-    colours["xmp"] = "#0060ac";
-    colours["xproj"] = "#0060ac";
-    colours["xsd"] = "#0060ac";
-    colours["xspec"] = "#0060ac";
-    colours["xul"] = "#0060ac";
-    colours["zcml"] = "#0060ac";
-    colours["zs"] = "#00BCD1";
-    colours["ftl"] = "#ffcc33";
-    colours["bison"] = "#6A463F";
-    colours["cairo"] = "#ff4a48";
-    colours["liquid"] = "#67b8de";
-    colours["eex"] = "#6e4a7e";
-    colours["html.heex"] = "#6e4a7e";
-    colours["html.leex"] = "#6e4a7e";
-    colours["rego"] = "#7d9199";
-    colours["anim"] = "#222c37";
-    colours["asset"] = "#222c37";
-    colours["mask"] = "#222c37";
-    colours["mat"] = "#222c37";
-    colours["meta"] = "#222c37";
-    colours["prefab"] = "#222c37";
-    colours["unity"] = "#222c37";
-    colours["adb"] = "#02f88c";
-    colours["ada"] = "#02f88c";
-    colours["ads"] = "#02f88c";
-    colours["capnp"] = "#c42727";
-    colours["ne"] = "#990000";
-    colours["nearley"] = "#990000";
-    colours["nf"] = "#3ac486";
-    colours["rnh"] = "#665a4e";
-    colours["rno"] = "#665a4e";
-    colours["x10"] = "#4B6BEF";
-    colours["as"] = "#C7D7DC";
-    colours["angelscript"] = "#C7D7DC";
-    colours["ql"] = "#140f46";
-    colours["qll"] = "#140f46";
-    colours["cu"] = "#3A4E3A";
-    colours["cuh"] = "#3A4E3A";
-    colours["dart"] = "#00B4AB";
-    colours["re"] = "#ff5847";
-    colours["rei"] = "#ff5847";
-    colours["tsx"] = "#2b7489";
-    colours["bas"] = "#867db1";
-    colours["cls"] = "#867db1";
-    colours["frm"] = "#867db1";
-    colours["frx"] = "#867db1";
-    colours["vba"] = "#867db1";
-    colours["xquery"] = "#5232e7";
-    colours["xq"] = "#5232e7";
-    colours["xql"] = "#5232e7";
-    colours["xqm"] = "#5232e7";
-    colours["xqy"] = "#5232e7";
-    colours["json"] = "#292929";
-    colours["avsc"] = "#292929";
-    colours["geojson"] = "#292929";
-    colours["gltf"] = "#292929";
-    colours["har"] = "#292929";
-    colours["ice"] = "#292929";
-    colours["JSON-tmLanguage"] = "#292929";
-    colours["jsonl"] = "#292929";
-    colours["mcmeta"] = "#292929";
-    colours["tfstate"] = "#292929";
-    colours["tfstate.backup"] = "#292929";
-    colours["topojson"] = "#292929";
-    colours["webapp"] = "#292929";
-    colours["webmanifest"] = "#292929";
-    colours["yy"] = "#292929";
-    colours["yyp"] = "#292929";
-    colours["java"] = "#b07219";
-    colours["jav"] = "#b07219";
-    colours["less"] = "#1d365d";
-    colours["v"] = "#4f87c4";
-    colours["js"] = "#f1e05a";
-    colours["_js"] = "#f1e05a";
-    colours["bones"] = "#f1e05a";
-    colours["cjs"] = "#f1e05a";
-    colours["es"] = "#f1e05a";
-    colours["es6"] = "#f1e05a";
-    colours["frag"] = "#f1e05a";
-    colours["gs"] = "#f1e05a";
-    colours["jake"] = "#f1e05a";
-    colours["javascript"] = "#f1e05a";
-    colours["jsb"] = "#f1e05a";
-    colours["jscad"] = "#f1e05a";
-    colours["jsfl"] = "#f1e05a";
-    colours["jsm"] = "#f1e05a";
-    colours["jss"] = "#f1e05a";
-    colours["jsx"] = "#f1e05a";
-    colours["mjs"] = "#f1e05a";
-    colours["njs"] = "#f1e05a";
-    colours["pac"] = "#f1e05a";
-    colours["sjs"] = "#f1e05a";
-    colours["ssjs"] = "#f1e05a";
-    colours["xsjs"] = "#f1e05a";
-    colours["xsjslib"] = "#f1e05a";
-    colours["mask"] = "#f97732";
-    colours["vhdl"] = "#adb2cb";
-    colours["vhd"] = "#adb2cb";
-    colours["vhf"] = "#adb2cb";
-    colours["vhi"] = "#adb2cb";
-    colours["vho"] = "#adb2cb";
-    colours["vhs"] = "#adb2cb";
-    colours["vht"] = "#adb2cb";
-    colours["vhw"] = "#adb2cb";
-    colours["gbr"] = "#d20b00";
-    colours["cmp"] = "#d20b00";
-    colours["gbl"] = "#d20b00";
-    colours["gbo"] = "#d20b00";
-    colours["gbp"] = "#d20b00";
-    colours["gbs"] = "#d20b00";
-    colours["gko"] = "#d20b00";
-    colours["gml"] = "#d20b00";
-    colours["gpb"] = "#d20b00";
-    colours["gpt"] = "#d20b00";
-    colours["gtl"] = "#d20b00";
-    colours["gto"] = "#d20b00";
-    colours["gtp"] = "#d20b00";
-    colours["gts"] = "#d20b00";
-    colours["ncl"] = "#d20b00";
-    colours["sol"] = "#d20b00";
-    colours["druby"] = "#c7a938";
-    colours["duby"] = "#c7a938";
-    colours["mirah"] = "#c7a938";
-    colours["nu"] = "#c9df40";
-    colours["pwn"] = "#dbb284";
-    colours["inc"] = "#dbb284";
-    colours["sma"] = "#dbb284";
-    colours["scm"] = "#1e4aec";
-    colours["sch"] = "#1e4aec";
-    colours["sld"] = "#1e4aec";
-    colours["sls"] = "#1e4aec";
-    colours["sps"] = "#1e4aec";
-    colours["ss"] = "#1e4aec";
-    colours["sed"] = "#64b970";
-    colours["aug"] = "#9CC134";
-    colours["flf"] = "#FFDDBB";
-    colours["hc"] = "#ffefaf";
-    colours["pogo"] = "#d80074";
-    colours["pig"] = "#fcd7de";
-    colours["rkt"] = "#3c5caa";
-    colours["rktd"] = "#3c5caa";
-    colours["rktl"] = "#3c5caa";
-    colours["scrbl"] = "#3c5caa";
-    colours["res"] = "#ed5051";
-    colours["mo"] = "#de1d31";
-    colours["nix"] = "#7e7eff";
-    colours["pls"] = "#dad8d8";
-    colours["bdy"] = "#dad8d8";
-    colours["ddl"] = "#dad8d8";
-    colours["fnc"] = "#dad8d8";
-    colours["pck"] = "#dad8d8";
-    colours["pkb"] = "#dad8d8";
-    colours["pks"] = "#dad8d8";
-    colours["plb"] = "#dad8d8";
-    colours["plsql"] = "#dad8d8";
-    colours["prc"] = "#dad8d8";
-    colours["spc"] = "#dad8d8";
-    colours["sql"] = "#dad8d8";
-    colours["tpb"] = "#dad8d8";
-    colours["tps"] = "#dad8d8";
-    colours["trg"] = "#dad8d8";
-    colours["vw"] = "#dad8d8";
-    colours["fish"] = "#4aae47";
-    colours["st"] = "#596706";
-    colours["cs"] = "#596706";
-    colours["owl"] = "#5b70bd";
-    colours["brs"] = "#662D91";
-    colours["em"] = "#FFF4F3";
-    colours["emberscript"] = "#FFF4F3";
-    colours["gs"] = "#fb855d";
-    colours["ecr"] = "#2e1052";
-    colours["ck"] = "#3f8000";
-    colours["reb"] = "#358a5b";
-    colours["r"] = "#358a5b";
-    colours["r2"] = "#358a5b";
-    colours["r3"] = "#358a5b";
-    colours["rebol"] = "#358a5b";
-    colours["cue"] = "#5886E1";
-    colours["sol"] = "#AA6746";
-    colours["uno"] = "#9933cc";
-    colours["vala"] = "#fbe5cd";
-    colours["vapi"] = "#fbe5cd";
-    colours["orc"] = "#1a1a1a";
-    colours["udo"] = "#1a1a1a";
-    colours["mo"] = "#fbb03b";
-    colours["rs"] = "#dea584";
-    colours["rs.in"] = "#dea584";
-    colours["nanorc"] = "#2d004d";
-    colours["cabal"] = "#483465";
-    colours["kid"] = "#951531";
-    colours["sls"] = "#646464";
-    colours["mcfunction"] = "#E22837";
-    colours["bat"] = "#C1F12E";
-    colours["cmd"] = "#C1F12E";
-    colours["gaml"] = "#FFC766";
-    colours["svg"] = "#ff9900";
-    colours["io"] = "#a9188d";
-    colours["axs"] = "#0aa0ff";
-    colours["axi"] = "#0aa0ff";
-    colours["raml"] = "#77d9fb";
-    colours["1"] = "#ecdebe";
-    colours["1in"] = "#ecdebe";
-    colours["1m"] = "#ecdebe";
-    colours["1x"] = "#ecdebe";
-    colours["2"] = "#ecdebe";
-    colours["3"] = "#ecdebe";
-    colours["3in"] = "#ecdebe";
-    colours["3m"] = "#ecdebe";
-    colours["3p"] = "#ecdebe";
-    colours["3pm"] = "#ecdebe";
-    colours["3qt"] = "#ecdebe";
-    colours["3x"] = "#ecdebe";
-    colours["4"] = "#ecdebe";
-    colours["5"] = "#ecdebe";
-    colours["6"] = "#ecdebe";
-    colours["7"] = "#ecdebe";
-    colours["8"] = "#ecdebe";
-    colours["9"] = "#ecdebe";
-    colours["man"] = "#ecdebe";
-    colours["mdoc"] = "#ecdebe";
-    colours["sql"] = "#e38c00";
-    colours["mrc"] = "#3d57c3";
-    colours["pyx"] = "#fedf5b";
-    colours["pxd"] = "#fedf5b";
-    colours["pxi"] = "#fedf5b";
-    colours["asp"] = "#6a40fd";
-    colours["dockerfile"] = "#384d54";
-    colours["md"] = "#FFCFAB";
-    colours["sch"] = "#2f4aab";
-    colours["scad"] = "#e5cd45";
-    colours["oz"] = "#fab738";
-    colours["vy"] = "#2980b9";
-    colours["abap"] = "#E8274B";
-    colours["g4"] = "#9DC3FF";
-    colours["curry"] = "#531242";
-    colours["fan"] = "#14253c";
-    colours["mod"] = "#10253f";
-    colours["cwl"] = "#B5314C";
-    colours["l"] = "#DBCA00";
-    colours["lex"] = "#DBCA00";
-    colours["j"] = "#ff0c5a";
-    colours["sj"] = "#ff0c5a";
-    colours["php"] = "#4F5D95";
-    colours["aw"] = "#4F5D95";
-    colours["ctp"] = "#4F5D95";
-    colours["fcgi"] = "#4F5D95";
-    colours["inc"] = "#4F5D95";
-    colours["php3"] = "#4F5D95";
-    colours["php4"] = "#4F5D95";
-    colours["php5"] = "#4F5D95";
-    colours["phps"] = "#4F5D95";
-    colours["phpt"] = "#4F5D95";
-    colours["riot"] = "#A71E49";
-    colours["ts"] = "#2b7489";
-    colours["vb"] = "#945db7";
-    colours["vbhtml"] = "#945db7";
-    colours["wdl"] = "#42f1f4";
-    colours["gp"] = "#f0a9f0";
-    colours["gnu"] = "#f0a9f0";
-    colours["gnuplot"] = "#f0a9f0";
-    colours["p"] = "#f0a9f0";
-    colours["plot"] = "#f0a9f0";
-    colours["plt"] = "#f0a9f0";
-    colours["ksy"] = "#773b37";
-    colours["yml"] = "#cb171e";
-    colours["mir"] = "#cb171e";
-    colours["reek"] = "#cb171e";
-    colours["rviz"] = "#cb171e";
-    colours["sublime-syntax"] = "#cb171e";
-    colours["syntax"] = "#cb171e";
-    colours["yaml"] = "#cb171e";
-    colours["yaml-tmlanguage"] = "#cb171e";
-    colours["yaml.sed"] = "#cb171e";
-    colours["yml.mysql"] = "#cb171e";
-    colours["aj"] = "#a957b0";
-    colours["x"] = "#aace60";
-    colours["ejs"] = "#a91e50";
-    colours["ect"] = "#a91e50";
-    colours["ejs.t"] = "#a91e50";
-    colours["jst"] = "#a91e50";
-    colours["psc"] = "#6600cc";
-    colours["agc"] = "#0B3D91";
-    colours["brd"] = "#2f4aab";
-    colours["lsl"] = "#3d9970";
-    colours["lslp"] = "#3d9970";
-    colours["dylan"] = "#6c616e";
-    colours["dyl"] = "#6c616e";
-    colours["intr"] = "#6c616e";
-    colours["lid"] = "#6c616e";
-    colours["mq5"] = "#4A76B8";
-    colours["mqh"] = "#4A76B8";
-    colours["sas"] = "#B34936";
-    colours["tpl"] = "#f0c040";
-    colours["sp"] = "#f69e1d";
-    colours["inc"] = "#f69e1d";
-    colours["dot"] = "#2596be";
-    colours["gv"] = "#2596be";
-    colours["ll"] = "#185619";
-    colours["nim"] = "#ffc200";
-    colours["nim.cfg"] = "#ffc200";
-    colours["nimble"] = "#ffc200";
-    colours["nimrod"] = "#ffc200";
-    colours["nims"] = "#ffc200";
-    colours["svelte"] = "#ff3e00";
-    colours["bmx"] = "#cd6400";
-    colours["cson"] = "#244776";
-    colours["glsl"] = "#5686a5";
-    colours["fp"] = "#5686a5";
-    colours["frag"] = "#5686a5";
-    colours["frg"] = "#5686a5";
-    colours["fs"] = "#5686a5";
-    colours["fsh"] = "#5686a5";
-    colours["fshader"] = "#5686a5";
-    colours["geo"] = "#5686a5";
-    colours["geom"] = "#5686a5";
-    colours["glslf"] = "#5686a5";
-    colours["glslv"] = "#5686a5";
-    colours["gs"] = "#5686a5";
-    colours["gshader"] = "#5686a5";
-    colours["rchit"] = "#5686a5";
-    colours["rmiss"] = "#5686a5";
-    colours["shader"] = "#5686a5";
-    colours["tesc"] = "#5686a5";
-    colours["tese"] = "#5686a5";
-    colours["vert"] = "#5686a5";
-    colours["vrx"] = "#5686a5";
-    colours["vsh"] = "#5686a5";
-    colours["vshader"] = "#5686a5";
-    colours["cfg"] = "#106da9";
-    colours["volt"] = "#1F1F1F";
-    colours["feature"] = "#5B2063";
-    colours["story"] = "#5B2063";
-    colours["grace"] = "#615f8b";
-    colours["js.erb"] = "#f1e05a";
-    colours["jison"] = "#56b3cb";
-    colours["ml"] = "#dc566d";
-    colours["fun"] = "#dc566d";
-    colours["sig"] = "#dc566d";
-    colours["sml"] = "#dc566d";
-    colours["properties"] = "#2A6277";
-    colours["m"] = "#438eff";
-    colours["h"] = "#438eff";
-    colours["scss"] = "#c6538c";
-    colours["oxygene"] = "#cdd0e3";
-    colours["sl"] = "#007eff";
-    colours["zig"] = "#ec915c";
-    colours["applescript"] = "#101F1F";
-    colours["scpt"] = "#101F1F";
-    colours["fy"] = "#7b9db4";
-    colours["fancypack"] = "#7b9db4";
-    colours["groovy"] = "#4298b8";
-    colours["grt"] = "#4298b8";
-    colours["gtpl"] = "#4298b8";
-    colours["gvy"] = "#4298b8";
-    colours["ijs"] = "#9EEDFF";
-    colours["mtml"] = "#b7e1f4";
-    colours["pbt"] = "#8f0f8d";
-    colours["sra"] = "#8f0f8d";
-    colours["sru"] = "#8f0f8d";
-    colours["srw"] = "#8f0f8d";
-    colours["spin"] = "#7fa2a7";
-    colours["sv"] = "#DAE1C2";
-    colours["svh"] = "#DAE1C2";
-    colours["vh"] = "#DAE1C2";
-    colours["vbs"] = "#15dcdc";
-    colours["darcspatch"] = "#8eff23";
-    colours["dpatch"] = "#8eff23";
-    colours["ijm"] = "#99AAFF";
-    colours["jinja"] = "#a52a22";
-    colours["j2"] = "#a52a22";
-    colours["jinja2"] = "#a52a22";
-    colours["red"] = "#f50000";
-    colours["reds"] = "#f50000";
-    colours["eb"] = "#069406";
-    colours["factor"] = "#636746";
-    colours["f"] = "#F6B900";
-    colours["metal"] = "#8f14e9";
-    colours["asm"] = "#005daa";
-    colours["i"] = "#005daa";
-    colours["inc"] = "#005daa";
-    colours["s"] = "#005daa";
-    colours["x68"] = "#005daa";
-    colours["org"] = "#77aa99";
-    colours["rpy"] = "#ff7f7f";
-    colours["sqf"] = "#3F3F3F";
-    colours["hqf"] = "#3F3F3F";
-    colours["erb"] = "#701516";
-    colours["erb.deface"] = "#701516";
-    colours["rhtml"] = "#701516";
-    colours["roff"] = "#ecdebe";
-    colours["1"] = "#ecdebe";
-    colours["1in"] = "#ecdebe";
-    colours["1m"] = "#ecdebe";
-    colours["1x"] = "#ecdebe";
-    colours["2"] = "#ecdebe";
-    colours["3"] = "#ecdebe";
-    colours["3in"] = "#ecdebe";
-    colours["3m"] = "#ecdebe";
-    colours["3p"] = "#ecdebe";
-    colours["3pm"] = "#ecdebe";
-    colours["3qt"] = "#ecdebe";
-    colours["3x"] = "#ecdebe";
-    colours["4"] = "#ecdebe";
-    colours["5"] = "#ecdebe";
-    colours["6"] = "#ecdebe";
-    colours["7"] = "#ecdebe";
-    colours["8"] = "#ecdebe";
-    colours["9"] = "#ecdebe";
-    colours["l"] = "#ecdebe";
-    colours["man"] = "#ecdebe";
-    colours["mdoc"] = "#ecdebe";
-    colours["me"] = "#ecdebe";
-    colours["ms"] = "#ecdebe";
-    colours["n"] = "#ecdebe";
-    colours["nr"] = "#ecdebe";
-    colours["rno"] = "#ecdebe";
-    colours["tmac"] = "#ecdebe";
-    colours["cls"] = "#424893";
-    colours["toc"] = "#f7e43f";
-    colours["c"] = "#555555";
-    colours["cats"] = "#555555";
-    colours["h"] = "#555555";
-    colours["idc"] = "#555555";
-    colours["cs"] = "#178600";
-    colours["cake"] = "#178600";
-    colours["csx"] = "#178600";
-    colours["linq"] = "#178600";
-    colours["d"] = "#ba595e";
-    colours["di"] = "#ba595e";
-    colours["eq"] = "#a78649";
-    colours["gf"] = "#ff0000";
-    colours["ml"] = "#3be133";
-    colours["eliom"] = "#3be133";
-    colours["eliomi"] = "#3be133";
-    colours["ml4"] = "#3be133";
-    colours["mli"] = "#3be133";
-    colours["mll"] = "#3be133";
-    colours["mly"] = "#3be133";
-    colours["nc"] = "#94B0C7";
-    colours["njk"] = "#3d8137";
-    colours["m2"] = "#d8ffff";
-    colours["l"] = "#6067af";
-    colours["ceylon"] = "#dfa535";
-    colours["clj"] = "#db5855";
-    colours["boot"] = "#db5855";
-    colours["cl2"] = "#db5855";
-    colours["cljc"] = "#db5855";
-    colours["cljs"] = "#db5855";
-    colours["cljs.hl"] = "#db5855";
-    colours["cljscm"] = "#db5855";
-    colours["cljx"] = "#db5855";
-    colours["hic"] = "#db5855";
-    colours["ps1"] = "#012456";
-    colours["psd1"] = "#012456";
-    colours["psm1"] = "#012456";
-    colours["pml"] = "#de0000";
-    colours["srt"] = "#9e0101";
-    colours["b"] = "#2F2530";
-    colours["bf"] = "#2F2530";
-    colours["sco"] = "#1a1a1a";
-    colours["jsonc"] = "#292929";
-    colours["code-snippets"] = "#292929";
-    colours["sublime-build"] = "#292929";
-    colours["sublime-commands"] = "#292929";
-    colours["sublime-completions"] = "#292929";
-    colours["sublime-keymap"] = "#292929";
-    colours["sublime-macro"] = "#292929";
-    colours["sublime-menu"] = "#292929";
-    colours["sublime-mousemap"] = "#292929";
-    colours["sublime-project"] = "#292929";
-    colours["sublime-settings"] = "#292929";
-    colours["sublime-theme"] = "#292929";
-    colours["sublime-workspace"] = "#292929";
-    colours["sublime_metrics"] = "#292929";
-    colours["sublime_session"] = "#292929";
-    colours["json5"] = "#267CB9";
-    colours["jsp"] = "#2A6277";
-    colours["nss"] = "#111522";
-    colours["mm"] = "#6866fb";
-    colours["asax"] = "#9400ff";
-    colours["ascx"] = "#9400ff";
-    colours["ashx"] = "#9400ff";
-    colours["asmx"] = "#9400ff";
-    colours["aspx"] = "#9400ff";
-    colours["axd"] = "#9400ff";
-    colours["lisp"] = "#3fb68b";
-    colours["asd"] = "#3fb68b";
-    colours["cl"] = "#3fb68b";
-    colours["l"] = "#3fb68b";
-    colours["lsp"] = "#3fb68b";
-    colours["ny"] = "#3fb68b";
-    colours["podsl"] = "#3fb68b";
-    colours["sexp"] = "#3fb68b";
-    colours["dsp"] = "#c37240";
-    colours["gd"] = "#355570";
-    colours["coq"] = "#d0b68c";
-    colours["v"] = "#d0b68c";
-    colours["purs"] = "#1D222D";
-    colours["cocci"] = "#c94949";
-    colours["tcl"] = "#e4cc98";
-    colours["adp"] = "#e4cc98";
-    colours["tcl.in"] = "#e4cc98";
-    colours["tm"] = "#e4cc98";
-    colours["snip"] = "#199f4b";
-    colours["snippet"] = "#199f4b";
-    colours["snippets"] = "#199f4b";
-    colours["el"] = "#c065db";
-    colours["emacs"] = "#c065db";
-    colours["emacs.desktop"] = "#c065db";
-    colours["g"] = "#0000cc";
-    colours["gap"] = "#0000cc";
-    colours["gd"] = "#0000cc";
-    colours["gi"] = "#0000cc";
-    colours["tst"] = "#0000cc";
-    colours["m"] = "#ff2b2b";
-    colours["moo"] = "#ff2b2b";
-    colours["p4"] = "#7055b5";
-    colours["ur"] = "#ccccee";
-    colours["urs"] = "#ccccee";
-    colours["hy"] = "#7790B2";
-    colours["upc"] = "#4e3617";
-    colours["cmake"] = "#DA3434";
-    colours["cmake.in"] = "#DA3434";
-    colours["dsc"] = "#FBEE96";
-    colours["http"] = "#005C9C";
-    colours["pgsql"] = "#336790";
-    colours["sql"] = "#336790";
-    colours["asciidoc"] = "#73a0c5";
-    colours["adoc"] = "#73a0c5";
-    colours["asc"] = "#73a0c5";
-    colours["asy"] = "#ff0000";
-    colours["f"] = "#4d41b1";
-    colours["f77"] = "#4d41b1";
-    colours["for"] = "#4d41b1";
-    colours["fpp"] = "#4d41b1";
-    colours["fr"] = "#00cafe";
-    colours["qasm"] = "#AA70FF";
-    colours["coffee"] = "#244776";
-    colours["_coffee"] = "#244776";
-    colours["cake"] = "#244776";
-    colours["cjsx"] = "#244776";
-    colours["iced"] = "#244776";
-    colours["krl"] = "#28430A";
-    colours["sparql"] = "#0C4597";
-    colours["rq"] = "#0C4597";
-    colours["xslt"] = "#EB8CEB";
-    colours["xsl"] = "#EB8CEB";
-    colours["OutJob"] = "#A89663";
-    colours["PcbDoc"] = "#A89663";
-    colours["PrjPCB"] = "#A89663";
-    colours["SchDoc"] = "#A89663";
-    colours["qml"] = "#44a51c";
-    colours["qbs"] = "#44a51c";
-    colours["stan"] = "#b2011d";
-    colours["tla"] = "#4b0079";
-    colours["zep"] = "#118f9e";
-    colours["ex"] = "#6e4a7e";
-    colours["exs"] = "#6e4a7e";
-    colours["hs"] = "#5e5086";
-    colours["hs-boot"] = "#5e5086";
-    colours["hsc"] = "#5e5086";
-    colours["boo"] = "#d4bec1";
-    colours["epj"] = "#913960";
-    colours["fx"] = "#88ccff";
-    colours["flux"] = "#88ccff";
-    colours["mak"] = "#427819";
-    colours["d"] = "#427819";
-    colours["make"] = "#427819";
-    colours["makefile"] = "#427819";
-    colours["mk"] = "#427819";
-    colours["mkfile"] = "#427819";
-    colours["parrot"] = "#f3ca0a";
-    colours["pl"] = "#0298c3";
-    colours["al"] = "#0298c3";
-    colours["cgi"] = "#0298c3";
-    colours["fcgi"] = "#0298c3";
-    colours["perl"] = "#0298c3";
-    colours["ph"] = "#0298c3";
-    colours["plx"] = "#0298c3";
-    colours["pm"] = "#0298c3";
-    colours["psgi"] = "#0298c3";
-    colours["t"] = "#0298c3";
-    colours["thrift"] = "#D12127";
-    colours["y"] = "#4B6C4B";
-    colours["yacc"] = "#4B6C4B";
-    colours["yy"] = "#4B6C4B";
-    colours["nl"] = "#87AED7";
-    colours["lisp"] = "#87AED7";
-    colours["lsp"] = "#87AED7";
-    colours["rmd"] = "#198ce7";
-    colours["sass"] = "#a53b70";
-    colours["dfy"] = "#FFEC25";
-    colours["fs"] = "#b845fc";
-    colours["fsi"] = "#b845fc";
-    colours["fsx"] = "#b845fc";
-    colours["moon"] = "#ff4585";
-    colours["self"] = "#0579aa";
-    colours["sss"] = "#2fcc9f";
-    colours["gitconfig"] = "#F44D27";
-    colours["gleam"] = "#ffaff3";
-    colours["idr"] = "#b30000";
-    colours["lidr"] = "#b30000";
-    colours["litcoffee"] = "#244776";
-    colours["coffee.md"] = "#244776";
-    colours["rexx"] = "#d90e09";
-    colours["pprx"] = "#d90e09";
-    colours["rex"] = "#d90e09";
-    colours["sql"] = "#e38c00";
-    colours["cql"] = "#e38c00";
-    colours["ddl"] = "#e38c00";
-    colours["inc"] = "#e38c00";
-    colours["mysql"] = "#e38c00";
-    colours["prc"] = "#e38c00";
-    colours["tab"] = "#e38c00";
-    colours["udf"] = "#e38c00";
-    colours["viw"] = "#e38c00";
-    colours["arc"] = "#aa2afe";
-    colours["blade"] = "#f7523f";
-    colours["blade.php"] = "#f7523f";
-    colours["al"] = "#3AA2B5";
-    colours["agda"] = "#315665";
-    colours["bal"] = "#FF5000";
-    colours["hack"] = "#878787";
-    colours["hh"] = "#878787";
-    colours["hhi"] = "#878787";
-    colours["php"] = "#878787";
-    colours["iss"] = "#264b99";
-    colours["isl"] = "#264b99";
-    colours["uc"] = "#a54c4d";
-    colours["janet"] = "#0886a5";
-    colours["i3"] = "#223388";
-    colours["ig"] = "#223388";
-    colours["m3"] = "#223388";
-    colours["mg"] = "#223388";
-    colours["opal"] = "#f7ede0";
-    colours["4dm"] = "#004289";
-    colours["ws"] = "#ff0000";
-    colours["dats"] = "#1ac620";
-    colours["hats"] = "#1ac620";
-    colours["sats"] = "#1ac620";
-    colours["cl"] = "#ed2e2d";
-    colours["opencl"] = "#ed2e2d";
-    colours["vue"] = "#41b883";
-    colours["cpp"] = "#f34b7d";
-    colours["c++"] = "#f34b7d";
-    colours["cc"] = "#f34b7d";
-    colours["cp"] = "#f34b7d";
-    colours["cxx"] = "#f34b7d";
-    colours["h"] = "#f34b7d";
-    colours["h++"] = "#f34b7d";
-    colours["hh"] = "#f34b7d";
-    colours["hpp"] = "#f34b7d";
-    colours["hxx"] = "#f34b7d";
-    colours["inc"] = "#f34b7d";
-    colours["inl"] = "#f34b7d";
-    colours["ino"] = "#f34b7d";
-    colours["ipp"] = "#f34b7d";
-    colours["ixx"] = "#f34b7d";
-    colours["re"] = "#f34b7d";
-    colours["tcc"] = "#f34b7d";
-    colours["tpp"] = "#f34b7d";
-    colours["r"] = "#198CE7";
-    colours["rd"] = "#198CE7";
-    colours["rsx"] = "#198CE7";
-    colours["fst"] = "#572e30";
-    colours["html"] = "#e34c26";
-    colours["hta"] = "#e34c26";
-    colours["htm"] = "#e34c26";
-    colours["html.hl"] = "#e34c26";
-    colours["inc"] = "#e34c26";
-    colours["xht"] = "#e34c26";
-    colours["xhtml"] = "#e34c26";
-    colours["ls"] = "#499886";
-    colours["_ls"] = "#499886";
-    colours["pytb"] = "#3572A5";
-    colours["rsc"] = "#fffaa0";
-    colours["tsv"] = "#237346";
-    colours["wisp"] = "#7582D1";
-    colours["e"] = "#ccce35";
-    colours["soy"] = "#0d948f";
-    colours["lfe"] = "#4C3023";
-    colours["latte"] = "#f2a542";
-    colours["ncl"] = "#28431f";
-    colours["afm"] = "#fa0f00";
-    colours["bb"] = "#00bce4";
-    colours["sci"] = "#ca0f21";
-    colours["sce"] = "#ca0f21";
-    colours["tst"] = "#ca0f21";
-    colours["nut"] = "#800000";
-    colours["cls"] = "#1797c0";
-    colours["cfm"] = "#ed2cd6";
-    colours["cfml"] = "#ed2cd6";
-    colours["ik"] = "#078193";
-    colours["txl"] = "#0178b8";
-    colours["plist"] = "#0060ac";
-    colours["stTheme"] = "#0060ac";
-    colours["tmCommand"] = "#0060ac";
-    colours["tmLanguage"] = "#0060ac";
-    colours["tmPreferences"] = "#0060ac";
-    colours["tmSnippet"] = "#0060ac";
-    colours["tmTheme"] = "#0060ac";
-    colours["aidl"] = "#34EB6B";
-    colours["bicep"] = "#519aba";
-    colours["pov"] = "#6bac65";
-    colours["inc"] = "#6bac65";
-    colours["fnl"] = "#fff3d7";
-    colours["regexp"] = "#009a00";
-    colours["regex"] = "#009a00";
-    colours["srt"] = "#348a34";
-    colours["bzl"] = "#76d275";
-    colours["jsonld"] = "#0c479c";
-    colours["snap"] = "#15c213";
-    colours["rg"] = "#cc0088";
-    colours["als"] = "#64C800";
-    colours["astro"] = "#ff5a03";
-    colours["scaml"] = "#bd181a";
-    colours["xtend"] = "#24255d";
-    colours["djs"] = "#cca760";
-    colours["hlsl"] = "#aace60";
-    colours["cginc"] = "#aace60";
-    colours["fx"] = "#aace60";
-    colours["fxh"] = "#aace60";
-    colours["hlsli"] = "#aace60";
-    colours["t"] = "#00004c";
-    colours["xojo_code"] = "#81bd41";
-    colours["xojo_menu"] = "#81bd41";
-    colours["xojo_report"] = "#81bd41";
-    colours["xojo_script"] = "#81bd41";
-    colours["xojo_toolbar"] = "#81bd41";
-    colours["xojo_window"] = "#81bd41";
-    colours["marko"] = "#42bff2";
-    colours["asc"] = "#B9D9FF";
-    colours["ash"] = "#B9D9FF";
-    colours["click"] = "#E4E6F3";
-    colours["axs.erb"] = "#747faa";
-    colours["axi.erb"] = "#747faa";
-    colours["slim"] = "#2b2b2b";
-    colours["xc"] = "#99DA07";
-    colours["zimpl"] = "#d67711";
-    colours["zmpl"] = "#d67711";
-    colours["zpl"] = "#d67711";
-    colours["hoon"] = "#00b171";
-    colours["cfc"] = "#ed2cd6";
-    colours["as"] = "#882B0F";
-    colours["dae"] = "#F1A42B";
-    colours["jq"] = "#40d47e";
-    colours["j"] = "#d03600";
-    colours["rpgle"] = "#2BDE21";
-    colours["sqlrpgle"] = "#2BDE21";
-    colours["handlebars"] = "#f7931e";
-    colours["hbs"] = "#f7931e";
-    colours["lagda"] = "#315665";
-    colours["yaml"] = "#ff1111";
-    colours["w"] = "#00007a";
-    colours["cshtml"] = "#512be4";
-    colours["razor"] = "#512be4";
-    colours["maxpat"] = "#c4a79c";
-    colours["maxhelp"] = "#c4a79c";
-    colours["maxproj"] = "#c4a79c";
-    colours["mxt"] = "#c4a79c";
-    colours["pat"] = "#c4a79c";
-    colours["nlogo"] = "#ff6375";
-    colours["wast"] = "#04133b";
-    colours["wat"] = "#04133b";
-    colours["yasnippet"] = "#32AB90";
-    colours["q"] = "#0040cd";
-    colours["bb"] = "#00FFAE";
-    colours["decls"] = "#00FFAE";
-    colours["md"] = "#083fa1";
-    colours["markdown"] = "#083fa1";
-    colours["mdown"] = "#083fa1";
-    colours["mdwn"] = "#083fa1";
-    colours["mdx"] = "#083fa1";
-    colours["mkd"] = "#083fa1";
-    colours["mkdn"] = "#083fa1";
-    colours["mkdown"] = "#083fa1";
-    colours["ronn"] = "#083fa1";
-    colours["scd"] = "#083fa1";
-    colours["workbook"] = "#083fa1";
-    colours["sql"] = "#e38c00";
-    colours["db2"] = "#e38c00";
-    colours["q"] = "#dce200";
-    colours["hql"] = "#dce200";
-    colours["rdoc"] = "#701516";
-    colours["txt"] = "#199f4b";
-    colours["prg"] = "#403a40";
-    colours["ch"] = "#403a40";
-    colours["prw"] = "#403a40";
-    colours["hxml"] = "#f68712";
-    colours["tex"] = "#3D6117";
-    colours["aux"] = "#3D6117";
-    colours["bbx"] = "#3D6117";
-    colours["cbx"] = "#3D6117";
-    colours["cls"] = "#3D6117";
-    colours["dtx"] = "#3D6117";
-    colours["ins"] = "#3D6117";
-    colours["lbx"] = "#3D6117";
-    colours["ltx"] = "#3D6117";
-    colours["mkii"] = "#3D6117";
-    colours["mkiv"] = "#3D6117";
-    colours["mkvi"] = "#3D6117";
-    colours["sty"] = "#3D6117";
-    colours["toc"] = "#3D6117";
-    colours["vcl"] = "#148AA8";
-    colours["yar"] = "#220000";
-    colours["yara"] = "#220000";
-    colours["bpl"] = "#c80fa0";
-    colours["ipf"] = "#0000cc";
-    colours["ol"] = "#843179";
-    colours["iol"] = "#843179";
-    colours["bib"] = "#778899";
-    colours["bibtex"] = "#778899";
-    colours["pro"] = "#a3522f";
-    colours["dlm"] = "#a3522f";
-    colours["lol"] = "#cc9900";
-    colours["lookml"] = "#652B81";
-    colours["model.lkml"] = "#652B81";
-    colours["view.lkml"] = "#652B81";
-    colours["prisma"] = "#0c344b";
-    colours["shen"] = "#120F14";
-    colours["styl"] = "#ff6347";
-    colours["dm"] = "#447265";
-    colours["f90"] = "#4d41b1";
-    colours["f03"] = "#4d41b1";
-    colours["f08"] = "#4d41b1";
-    colours["f95"] = "#4d41b1";
-    colours["flex"] = "#DBCA00";
-    colours["jflex"] = "#DBCA00";
-    colours["zap"] = "#0d665e";
-    colours["xzap"] = "#0d665e";
-    colours["asm"] = "#6E4C13";
-    colours["a51"] = "#6E4C13";
-    colours["i"] = "#6E4C13";
-    colours["inc"] = "#6E4C13";
-    colours["nasm"] = "#6E4C13";
-    colours["dsc"] = "#D70751";
-    colours["eclass"] = "#9400ff";
-    colours["gs"] = "#82937f";
-    colours["gst"] = "#82937f";
-    colours["gsx"] = "#82937f";
-    colours["vark"] = "#82937f";
-    colours["mlir"] = "#5EC8DB";
-    colours["pegjs"] = "#234d6b";
-    colours["qs"] = "#00b841";
-    colours["g"] = "#D08CF2";
-    colours["cnc"] = "#D08CF2";
-    colours["gco"] = "#D08CF2";
-    colours["gcode"] = "#D08CF2";
-    colours["gml"] = "#71b417";
-    colours["phtml"] = "#4f5d95";
-    colours["mathematica"] = "#dd1100";
-    colours["cdf"] = "#dd1100";
-    colours["m"] = "#dd1100";
-    colours["ma"] = "#dd1100";
-    colours["mt"] = "#dd1100";
-    colours["nb"] = "#dd1100";
-    colours["nbp"] = "#dd1100";
-    colours["wl"] = "#dd1100";
-    colours["wlt"] = "#dd1100";
-    colours["rl"] = "#9d5200";
-    colours["kv"] = "#1da6e0";
-    colours["e"] = "#FF790B";
-    colours["ex"] = "#FF790B";
-    colours["haml"] = "#ece2a9";
-    colours["haml.deface"] = "#ece2a9";
-    colours["lasso"] = "#999999";
-    colours["las"] = "#999999";
-    colours["lasso8"] = "#999999";
-    colours["lasso9"] = "#999999";
-    colours["nit"] = "#009917";
-    colours["textile"] = "#ffe7ac";
-    colours["bsl"] = "#814CCC";
-    colours["os"] = "#814CCC";
-    colours["ps"] = "#da291c";
-    colours["eps"] = "#da291c";
-    colours["epsi"] = "#da291c";
-    colours["pfa"] = "#da291c";
-    colours["jq"] = "#c7254e";
+    colours = {
+        {"apacheconf", "#d12127"},
+        {"vhost", "#d12127"},
+        {"ps1", "#012456"},
+        {"psd1", "#012456"},
+        {"psm1", "#012456"},
+        {"sass", "#a53b70"},
+        {"yasnippet", "#32AB90"},
+        {"ec", "#913960"},
+        {"eh", "#913960"},
+        {"ex", "#6e4a7e"},
+        {"exs", "#6e4a7e"},
+        {"numpy", "#9C8AF9"},
+        {"numpyw", "#9C8AF9"},
+        {"numsc", "#9C8AF9"},
+        {"fr", "#00cafe"},
+        {"jsp", "#2A6277"},
+        {"gsc", "#FF6800"},
+        {"csc", "#FF6800"},
+        {"gsh", "#FF6800"},
+        {"opal", "#f7ede0"},
+        {"f", "#F6B900"},
+        {"pov", "#6bac65"},
+        {"inc", "#6bac65"},
+        {"epj", "#913960"},
+        {"ini", "#d1dbe0"},
+        {"cfg", "#d1dbe0"},
+        {"dof", "#d1dbe0"},
+        {"lektorproject", "#d1dbe0"},
+        {"prefs", "#d1dbe0"},
+        {"pro", "#d1dbe0"},
+        {"properties", "#d1dbe0"},
+        {"reb", "#358a5b"},
+        {"r", "#358a5b"},
+        {"r2", "#358a5b"},
+        {"r3", "#358a5b"},
+        {"rebol", "#358a5b"},
+        {"scss", "#c6538c"},
+        {"rkt", "#3c5caa"},
+        {"rktd", "#3c5caa"},
+        {"rktl", "#3c5caa"},
+        {"scrbl", "#3c5caa"},
+        {"rpy", "#ff7f7f"},
+        {"d", "#ba595e"},
+        {"di", "#ba595e"},
+        {"dsc", "#FBEE96"},
+        {"gml", "#71b417"},
+        {"pls", "#dad8d8"},
+        {"bdy", "#dad8d8"},
+        {"ddl", "#dad8d8"},
+        {"fnc", "#dad8d8"},
+        {"pck", "#dad8d8"},
+        {"pkb", "#dad8d8"},
+        {"pks", "#dad8d8"},
+        {"plb", "#dad8d8"},
+        {"plsql", "#dad8d8"},
+        {"prc", "#dad8d8"},
+        {"spc", "#dad8d8"},
+        {"sql", "#dad8d8"},
+        {"tpb", "#dad8d8"},
+        {"tps", "#dad8d8"},
+        {"trg", "#dad8d8"},
+        {"vw", "#dad8d8"},
+        {"apib", "#2ACCA8"},
+        {"go", "#00ADD8"},
+        {"idr", "#b30000"},
+        {"lidr", "#b30000"},
+        {"x", "#aace60"},
+        {"sls", "#646464"},
+        {"tla", "#4b0079"},
+        {"dart", "#00B4AB"},
+        {"jq", "#40d47e"},
+        {"lgt", "#295b9a"},
+        {"logtalk", "#295b9a"},
+        {"pike", "#005390"},
+        {"pmod", "#005390"},
+        {"pcss", "#dc3a0c"},
+        {"postcss", "#dc3a0c"},
+        {"cls", "#1797c0"},
+        {"bb", "#00FFAE"},
+        {"decls", "#00FFAE"},
+        {"el", "#c065db"},
+        {"emacs", "#c065db"},
+        {"emacs.desktop", "#c065db"},
+        {"gp", "#f0a9f0"},
+        {"gnu", "#f0a9f0"},
+        {"gnuplot", "#f0a9f0"},
+        {"p", "#f0a9f0"},
+        {"plot", "#f0a9f0"},
+        {"plt", "#f0a9f0"},
+        {"res", "#ed5051"},
+        {"xml", "#0060ac"},
+        {"adml", "#0060ac"},
+        {"admx", "#0060ac"},
+        {"ant", "#0060ac"},
+        {"axaml", "#0060ac"},
+        {"axml", "#0060ac"},
+        {"builds", "#0060ac"},
+        {"ccproj", "#0060ac"},
+        {"ccxml", "#0060ac"},
+        {"clixml", "#0060ac"},
+        {"cproject", "#0060ac"},
+        {"cscfg", "#0060ac"},
+        {"csdef", "#0060ac"},
+        {"csl", "#0060ac"},
+        {"csproj", "#0060ac"},
+        {"ct", "#0060ac"},
+        {"depproj", "#0060ac"},
+        {"dita", "#0060ac"},
+        {"ditamap", "#0060ac"},
+        {"ditaval", "#0060ac"},
+        {"dll.config", "#0060ac"},
+        {"dotsettings", "#0060ac"},
+        {"filters", "#0060ac"},
+        {"fsproj", "#0060ac"},
+        {"fxml", "#0060ac"},
+        {"glade", "#0060ac"},
+        {"gml", "#0060ac"},
+        {"gmx", "#0060ac"},
+        {"grxml", "#0060ac"},
+        {"gst", "#0060ac"},
+        {"hzp", "#0060ac"},
+        {"iml", "#0060ac"},
+        {"ivy", "#0060ac"},
+        {"jelly", "#0060ac"},
+        {"jsproj", "#0060ac"},
+        {"kml", "#0060ac"},
+        {"launch", "#0060ac"},
+        {"mdpolicy", "#0060ac"},
+        {"mjml", "#0060ac"},
+        {"mm", "#0060ac"},
+        {"mod", "#0060ac"},
+        {"mxml", "#0060ac"},
+        {"natvis", "#0060ac"},
+        {"ncl", "#0060ac"},
+        {"ndproj", "#0060ac"},
+        {"nproj", "#0060ac"},
+        {"nuspec", "#0060ac"},
+        {"odd", "#0060ac"},
+        {"osm", "#0060ac"},
+        {"pkgproj", "#0060ac"},
+        {"pluginspec", "#0060ac"},
+        {"proj", "#0060ac"},
+        {"props", "#0060ac"},
+        {"ps1xml", "#0060ac"},
+        {"psc1", "#0060ac"},
+        {"pt", "#0060ac"},
+        {"rdf", "#0060ac"},
+        {"res", "#0060ac"},
+        {"resx", "#0060ac"},
+        {"rs", "#0060ac"},
+        {"rss", "#0060ac"},
+        {"sch", "#0060ac"},
+        {"scxml", "#0060ac"},
+        {"sfproj", "#0060ac"},
+        {"shproj", "#0060ac"},
+        {"srdf", "#0060ac"},
+        {"storyboard", "#0060ac"},
+        {"sublime-snippet", "#0060ac"},
+        {"targets", "#0060ac"},
+        {"tml", "#0060ac"},
+        {"ts", "#0060ac"},
+        {"tsx", "#0060ac"},
+        {"ui", "#0060ac"},
+        {"urdf", "#0060ac"},
+        {"ux", "#0060ac"},
+        {"vbproj", "#0060ac"},
+        {"vcxproj", "#0060ac"},
+        {"vsixmanifest", "#0060ac"},
+        {"vssettings", "#0060ac"},
+        {"vstemplate", "#0060ac"},
+        {"vxml", "#0060ac"},
+        {"wixproj", "#0060ac"},
+        {"workflow", "#0060ac"},
+        {"wsdl", "#0060ac"},
+        {"wsf", "#0060ac"},
+        {"wxi", "#0060ac"},
+        {"wxl", "#0060ac"},
+        {"wxs", "#0060ac"},
+        {"x3d", "#0060ac"},
+        {"xacro", "#0060ac"},
+        {"xaml", "#0060ac"},
+        {"xib", "#0060ac"},
+        {"xlf", "#0060ac"},
+        {"xliff", "#0060ac"},
+        {"xmi", "#0060ac"},
+        {"xml.dist", "#0060ac"},
+        {"xmp", "#0060ac"},
+        {"xproj", "#0060ac"},
+        {"xsd", "#0060ac"},
+        {"xspec", "#0060ac"},
+        {"xul", "#0060ac"},
+        {"zcml", "#0060ac"},
+        {"snip", "#199f4b"},
+        {"snippet", "#199f4b"},
+        {"snippets", "#199f4b"},
+        {"cairo", "#ff4a48"},
+        {"coq", "#d0b68c"},
+        {"v", "#d0b68c"},
+        {"yaml", "#ff1111"},
+        {"pan", "#cc0000"},
+        {"erb", "#701516"},
+        {"erb.deface", "#701516"},
+        {"rhtml", "#701516"},
+        {"srt", "#348a34"},
+        {"stan", "#b2011d"},
+        {"4dm", "#004289"},
+        {"cfc", "#ed2cd6"},
+        {"pyx", "#fedf5b"},
+        {"pxd", "#fedf5b"},
+        {"pxi", "#fedf5b"},
+        {"gaml", "#FFC766"},
+        {"mint", "#02b046"},
+        {"asm", "#005daa"},
+        {"i", "#005daa"},
+        {"inc", "#005daa"},
+        {"s", "#005daa"},
+        {"x68", "#005daa"},
+        {"pas", "#E3F171"},
+        {"dfm", "#E3F171"},
+        {"dpr", "#E3F171"},
+        {"inc", "#E3F171"},
+        {"lpr", "#E3F171"},
+        {"pascal", "#E3F171"},
+        {"pp", "#E3F171"},
+        {"svg", "#ff9900"},
+        {"xc", "#99DA07"},
+        {"bison", "#6A463F"},
+        {"odin", "#60AFFE"},
+        {"spin", "#7fa2a7"},
+        {"pp", "#302B6D"},
+        {"rb", "#701516"},
+        {"builder", "#701516"},
+        {"eye", "#701516"},
+        {"fcgi", "#701516"},
+        {"gemspec", "#701516"},
+        {"god", "#701516"},
+        {"jbuilder", "#701516"},
+        {"mspec", "#701516"},
+        {"pluginspec", "#701516"},
+        {"podspec", "#701516"},
+        {"prawn", "#701516"},
+        {"rabl", "#701516"},
+        {"rake", "#701516"},
+        {"rbi", "#701516"},
+        {"rbuild", "#701516"},
+        {"rbw", "#701516"},
+        {"rbx", "#701516"},
+        {"ru", "#701516"},
+        {"ruby", "#701516"},
+        {"spec", "#701516"},
+        {"thor", "#701516"},
+        {"watchr", "#701516"},
+        {"phtml", "#4f5d95"},
+        {"nginx", "#009639"},
+        {"nginxconf", "#009639"},
+        {"vhost", "#009639"},
+        {"pbt", "#8f0f8d"},
+        {"sra", "#8f0f8d"},
+        {"sru", "#8f0f8d"},
+        {"srw", "#8f0f8d"},
+        {"tpl", "#f0c040"},
+        {"omgrofl", "#cabbff"},
+        {"dae", "#F1A42B"},
+        {"asp", "#6a40fd"},
+        {"gbr", "#d20b00"},
+        {"cmp", "#d20b00"},
+        {"gbl", "#d20b00"},
+        {"gbo", "#d20b00"},
+        {"gbp", "#d20b00"},
+        {"gbs", "#d20b00"},
+        {"gko", "#d20b00"},
+        {"gml", "#d20b00"},
+        {"gpb", "#d20b00"},
+        {"gpt", "#d20b00"},
+        {"gtl", "#d20b00"},
+        {"gto", "#d20b00"},
+        {"gtp", "#d20b00"},
+        {"gts", "#d20b00"},
+        {"ncl", "#d20b00"},
+        {"sol", "#d20b00"},
+        {"properties", "#2A6277"},
+        {"ksy", "#773b37"},
+        {"cocci", "#c94949"},
+        {"bsl", "#814CCC"},
+        {"os", "#814CCC"},
+        {"f90", "#4d41b1"},
+        {"f03", "#4d41b1"},
+        {"f08", "#4d41b1"},
+        {"f95", "#4d41b1"},
+        {"pro", "#a3522f"},
+        {"dlm", "#a3522f"},
+        {"nl", "#87AED7"},
+        {"lisp", "#87AED7"},
+        {"lsp", "#87AED7"},
+        {"rmd", "#198ce7"},
+        {"bi", "#867db1"},
+        {"bas", "#867db1"},
+        {"mo", "#fbb03b"},
+        {"8xp", "#A0AA87"},
+        {"8xk", "#A0AA87"},
+        {"8xk.txt", "#A0AA87"},
+        {"8xp.txt", "#A0AA87"},
+        {"bat", "#C1F12E"},
+        {"cmd", "#C1F12E"},
+        {"clar", "#5546ff"},
+        {"gd", "#355570"},
+        {"cfg", "#106da9"},
+        {"hlsl", "#aace60"},
+        {"cginc", "#aace60"},
+        {"fx", "#aace60"},
+        {"fxh", "#aace60"},
+        {"hlsli", "#aace60"},
+        {"owl", "#5b70bd"},
+        {"as", "#882B0F"},
+        {"arc", "#aa2afe"},
+        {"darcspatch", "#8eff23"},
+        {"dpatch", "#8eff23"},
+        {"lfe", "#4C3023"},
+        {"haml", "#ece2a9"},
+        {"haml.deface", "#ece2a9"},
+        {"vbs", "#15dcdc"},
+        {"zig", "#ec915c"},
+        {"mu", "#244963"},
+        {"afm", "#fa0f00"},
+        {"au3", "#1C3552"},
+        {"handlebars", "#f7931e"},
+        {"hbs", "#f7931e"},
+        {"nlogo", "#ff6375"},
+        {"scad", "#e5cd45"},
+        {"gsp", "#4298b8"},
+        {"md", "#083fa1"},
+        {"markdown", "#083fa1"},
+        {"mdown", "#083fa1"},
+        {"mdwn", "#083fa1"},
+        {"mdx", "#083fa1"},
+        {"mkd", "#083fa1"},
+        {"mkdn", "#083fa1"},
+        {"mkdown", "#083fa1"},
+        {"ronn", "#083fa1"},
+        {"scd", "#083fa1"},
+        {"workbook", "#083fa1"},
+        {"sv", "#DAE1C2"},
+        {"svh", "#DAE1C2"},
+        {"vh", "#DAE1C2"},
+        {"vue", "#41b883"},
+        {"prg", "#403a40"},
+        {"ch", "#403a40"},
+        {"prw", "#403a40"},
+        {"eex", "#6e4a7e"},
+        {"html.heex", "#6e4a7e"},
+        {"html.leex", "#6e4a7e"},
+        {"oxygene", "#cdd0e3"},
+        {"rexx", "#d90e09"},
+        {"pprx", "#d90e09"},
+        {"rex", "#d90e09"},
+        {"g4", "#9DC3FF"},
+        {"awk", "#c30e9b"},
+        {"auk", "#c30e9b"},
+        {"gawk", "#c30e9b"},
+        {"mawk", "#c30e9b"},
+        {"nawk", "#c30e9b"},
+        {"cson", "#244776"},
+        {"chpl", "#8dc63f"},
+        {"fish", "#4aae47"},
+        {"md", "#FFCFAB"},
+        {"grace", "#615f8b"},
+        {"vy", "#2980b9"},
+        {"als", "#64C800"},
+        {"e", "#FF790B"},
+        {"ex", "#FF790B"},
+        {"m2", "#d8ffff"},
+        {"uno", "#9933cc"},
+        {"dot", "#2596be"},
+        {"gv", "#2596be"},
+        {"java", "#b07219"},
+        {"jav", "#b07219"},
+        {"qml", "#44a51c"},
+        {"qbs", "#44a51c"},
+        {"re", "#ff5847"},
+        {"rei", "#ff5847"},
+        {"asddls", "#555e25"},
+        {"adb", "#02f88c"},
+        {"ada", "#02f88c"},
+        {"ads", "#02f88c"},
+        {"soy", "#0d948f"},
+        {"ck", "#3f8000"},
+        {"glsl", "#5686a5"},
+        {"fp", "#5686a5"},
+        {"frag", "#5686a5"},
+        {"frg", "#5686a5"},
+        {"fs", "#5686a5"},
+        {"fsh", "#5686a5"},
+        {"fshader", "#5686a5"},
+        {"geo", "#5686a5"},
+        {"geom", "#5686a5"},
+        {"glslf", "#5686a5"},
+        {"glslv", "#5686a5"},
+        {"gs", "#5686a5"},
+        {"gshader", "#5686a5"},
+        {"rchit", "#5686a5"},
+        {"rmiss", "#5686a5"},
+        {"shader", "#5686a5"},
+        {"tesc", "#5686a5"},
+        {"tese", "#5686a5"},
+        {"vert", "#5686a5"},
+        {"vrx", "#5686a5"},
+        {"vsh", "#5686a5"},
+        {"vshader", "#5686a5"},
+        {"wisp", "#7582D1"},
+        {"c", "#555555"},
+        {"cats", "#555555"},
+        {"h", "#555555"},
+        {"idc", "#555555"},
+        {"css", "#563d7c"},
+        {"as", "#C7D7DC"},
+        {"angelscript", "#C7D7DC"},
+        {"less", "#1d365d"},
+        {"1", "#ecdebe"},
+        {"1in", "#ecdebe"},
+        {"1m", "#ecdebe"},
+        {"1x", "#ecdebe"},
+        {"2", "#ecdebe"},
+        {"3", "#ecdebe"},
+        {"3in", "#ecdebe"},
+        {"3m", "#ecdebe"},
+        {"3p", "#ecdebe"},
+        {"3pm", "#ecdebe"},
+        {"3qt", "#ecdebe"},
+        {"3x", "#ecdebe"},
+        {"4", "#ecdebe"},
+        {"5", "#ecdebe"},
+        {"6", "#ecdebe"},
+        {"7", "#ecdebe"},
+        {"8", "#ecdebe"},
+        {"9", "#ecdebe"},
+        {"man", "#ecdebe"},
+        {"mdoc", "#ecdebe"},
+        {"ts", "#2b7489"},
+        {"jsonnet", "#0064bd"},
+        {"libsonnet", "#0064bd"},
+        {"cl", "#ed2e2d"},
+        {"opencl", "#ed2e2d"},
+        {"pde", "#0096D8"},
+        {"xslt", "#EB8CEB"},
+        {"xsl", "#EB8CEB"},
+        {"pegjs", "#234d6b"},
+        {"red", "#f50000"},
+        {"reds", "#f50000"},
+        {"tex", "#3D6117"},
+        {"aux", "#3D6117"},
+        {"bbx", "#3D6117"},
+        {"cbx", "#3D6117"},
+        {"cls", "#3D6117"},
+        {"dtx", "#3D6117"},
+        {"ins", "#3D6117"},
+        {"lbx", "#3D6117"},
+        {"ltx", "#3D6117"},
+        {"mkii", "#3D6117"},
+        {"mkiv", "#3D6117"},
+        {"mkvi", "#3D6117"},
+        {"sty", "#3D6117"},
+        {"toc", "#3D6117"},
+        {"w", "#00007a"},
+        {"ql", "#140f46"},
+        {"qll", "#140f46"},
+        {"dsc", "#D70751"},
+        {"fst", "#572e30"},
+        {"g", "#D08CF2"},
+        {"cnc", "#D08CF2"},
+        {"gco", "#D08CF2"},
+        {"gcode", "#D08CF2"},
+        {"aug", "#9CC134"},
+        {"2da", "#38761D"},
+        {"ceylon", "#dfa535"},
+        {"dockerfile", "#384d54"},
+        {"mak", "#427819"},
+        {"d", "#427819"},
+        {"make", "#427819"},
+        {"makefile", "#427819"},
+        {"mk", "#427819"},
+        {"mkfile", "#427819"},
+        {"axs", "#0aa0ff"},
+        {"axi", "#0aa0ff"},
+        {"ahk", "#6594b9"},
+        {"ahkl", "#6594b9"},
+        {"bib", "#778899"},
+        {"bibtex", "#778899"},
+        {"hs", "#5e5086"},
+        {"hs-boot", "#5e5086"},
+        {"hsc", "#5e5086"},
+        {"bmx", "#cd6400"},
+        {"feature", "#5B2063"},
+        {"story", "#5B2063"},
+        {"sparql", "#0C4597"},
+        {"rq", "#0C4597"},
+        {"agda", "#315665"},
+        {"6pl", "#0000fb"},
+        {"6pm", "#0000fb"},
+        {"nqp", "#0000fb"},
+        {"p6", "#0000fb"},
+        {"p6l", "#0000fb"},
+        {"p6m", "#0000fb"},
+        {"pl", "#0000fb"},
+        {"pl6", "#0000fb"},
+        {"pm", "#0000fb"},
+        {"pm6", "#0000fb"},
+        {"raku", "#0000fb"},
+        {"rakumod", "#0000fb"},
+        {"t", "#0000fb"},
+        {"rsc", "#fffaa0"},
+        {"sl", "#007eff"},
+        {"mediawiki", "#fc5757"},
+        {"wiki", "#fc5757"},
+        {"wikitext", "#fc5757"},
+        {"wdl", "#42f1f4"},
+        {"brs", "#662D91"},
+        {"sco", "#1a1a1a"},
+        {"g", "#0000cc"},
+        {"gap", "#0000cc"},
+        {"gd", "#0000cc"},
+        {"gi", "#0000cc"},
+        {"tst", "#0000cc"},
+        {"ly", "#9ccc7c"},
+        {"ily", "#9ccc7c"},
+        {"rpgle", "#2BDE21"},
+        {"sqlrpgle", "#2BDE21"},
+        {"clw", "#db901e"},
+        {"ftl", "#ffcc33"},
+        {"ftl", "#0050b2"},
+        {"maxpat", "#c4a79c"},
+        {"maxhelp", "#c4a79c"},
+        {"maxproj", "#c4a79c"},
+        {"mxt", "#c4a79c"},
+        {"pat", "#c4a79c"},
+        {"moon", "#ff4585"},
+        {"yml", "#cb171e"},
+        {"mir", "#cb171e"},
+        {"reek", "#cb171e"},
+        {"rviz", "#cb171e"},
+        {"sublime-syntax", "#cb171e"},
+        {"syntax", "#cb171e"},
+        {"yaml", "#cb171e"},
+        {"yaml-tmlanguage", "#cb171e"},
+        {"yaml.sed", "#cb171e"},
+        {"yml.mysql", "#cb171e"},
+        {"gs", "#fb855d"},
+        {"lagda", "#315665"},
+        {"t", "#00004c"},
+        {"wast", "#04133b"},
+        {"wat", "#04133b"},
+        {"fan", "#14253c"},
+        {"hb", "#0e60e3"},
+        {"ll", "#185619"},
+        {"ne", "#990000"},
+        {"nearley", "#990000"},
+        {"oz", "#fab738"},
+        {"djs", "#cca760"},
+        {"lookml", "#652B81"},
+        {"model.lkml", "#652B81"},
+        {"view.lkml", "#652B81"},
+        {"t", "#cf142b"},
+        {"tu", "#cf142b"},
+        {"twig", "#c1d026"},
+        {"rst", "#141414"},
+        {"rest", "#141414"},
+        {"rest.txt", "#141414"},
+        {"rst.txt", "#141414"},
+        {"cu", "#3A4E3A"},
+        {"cuh", "#3A4E3A"},
+        {"graphql", "#e10098"},
+        {"gql", "#e10098"},
+        {"graphqls", "#e10098"},
+        {"mathematica", "#dd1100"},
+        {"cdf", "#dd1100"},
+        {"m", "#dd1100"},
+        {"ma", "#dd1100"},
+        {"mt", "#dd1100"},
+        {"nb", "#dd1100"},
+        {"nbp", "#dd1100"},
+        {"wl", "#dd1100"},
+        {"wlt", "#dd1100"},
+        {"sql", "#e38c00"},
+        {"cql", "#e38c00"},
+        {"ddl", "#e38c00"},
+        {"inc", "#e38c00"},
+        {"mysql", "#e38c00"},
+        {"prc", "#e38c00"},
+        {"tab", "#e38c00"},
+        {"udf", "#e38c00"},
+        {"viw", "#e38c00"},
+        {"xtend", "#24255d"},
+        {"dfy", "#FFEC25"},
+        {"flex", "#DBCA00"},
+        {"jflex", "#DBCA00"},
+        {"nu", "#c9df40"},
+        {"toc", "#f7e43f"},
+        {"gitignore", "#000000"},
+        {"ls", "#499886"},
+        {"_ls", "#499886"},
+        {"anim", "#222c37"},
+        {"asset", "#222c37"},
+        {"mask", "#222c37"},
+        {"mat", "#222c37"},
+        {"meta", "#222c37"},
+        {"prefab", "#222c37"},
+        {"unity", "#222c37"},
+        {"orc", "#1a1a1a"},
+        {"udo", "#1a1a1a"},
+        {"ecl", "#001d9d"},
+        {"zap", "#0d665e"},
+        {"xzap", "#0d665e"},
+        {"styl", "#ff6347"},
+        {"vdf", "#f26025"},
+        {"fs", "#b845fc"},
+        {"fsi", "#b845fc"},
+        {"fsx", "#b845fc"},
+        {"gs", "#82937f"},
+        {"gst", "#82937f"},
+        {"gsx", "#82937f"},
+        {"vark", "#82937f"},
+        {"json5", "#267CB9"},
+        {"nss", "#111522"},
+        {"pl", "#74283c"},
+        {"pro", "#74283c"},
+        {"prolog", "#74283c"},
+        {"yap", "#74283c"},
+        {"mq5", "#4A76B8"},
+        {"mqh", "#4A76B8"},
+        {"php", "#4F5D95"},
+        {"aw", "#4F5D95"},
+        {"ctp", "#4F5D95"},
+        {"fcgi", "#4F5D95"},
+        {"inc", "#4F5D95"},
+        {"php3", "#4F5D95"},
+        {"php4", "#4F5D95"},
+        {"php5", "#4F5D95"},
+        {"phps", "#4F5D95"},
+        {"phpt", "#4F5D95"},
+        {"sci", "#ca0f21"},
+        {"sce", "#ca0f21"},
+        {"tst", "#ca0f21"},
+        {"em", "#FFF4F3"},
+        {"emberscript", "#FFF4F3"},
+        {"lol", "#cc9900"},
+        {"zep", "#118f9e"},
+        {"cirru", "#ccccff"},
+        {"n", "#3d3c6e"},
+        {"shen", "#120F14"},
+        {"xojo_code", "#81bd41"},
+        {"xojo_menu", "#81bd41"},
+        {"xojo_report", "#81bd41"},
+        {"xojo_script", "#81bd41"},
+        {"xojo_toolbar", "#81bd41"},
+        {"xojo_window", "#81bd41"},
+        {"qasm", "#AA70FF"},
+        {"ijs", "#9EEDFF"},
+        {"psc", "#6600cc"},
+        {"pogo", "#d80074"},
+        {"tsv", "#237346"},
+        {"vhdl", "#adb2cb"},
+        {"vhd", "#adb2cb"},
+        {"vhf", "#adb2cb"},
+        {"vhi", "#adb2cb"},
+        {"vho", "#adb2cb"},
+        {"vhs", "#adb2cb"},
+        {"vht", "#adb2cb"},
+        {"vhw", "#adb2cb"},
+        {"ecr", "#2e1052"},
+        {"org", "#77aa99"},
+        {"py", "#3572A5"},
+        {"cgi", "#3572A5"},
+        {"fcgi", "#3572A5"},
+        {"gyp", "#3572A5"},
+        {"gypi", "#3572A5"},
+        {"lmi", "#3572A5"},
+        {"py3", "#3572A5"},
+        {"pyde", "#3572A5"},
+        {"pyi", "#3572A5"},
+        {"pyp", "#3572A5"},
+        {"pyt", "#3572A5"},
+        {"pyw", "#3572A5"},
+        {"rpy", "#3572A5"},
+        {"smk", "#3572A5"},
+        {"spec", "#3572A5"},
+        {"tac", "#3572A5"},
+        {"wsgi", "#3572A5"},
+        {"xpy", "#3572A5"},
+        {"capnp", "#c42727"},
+        {"icl", "#3F85AF"},
+        {"dcl", "#3F85AF"},
+        {"thrift", "#D12127"},
+        {"scala", "#c22d40"},
+        {"kojo", "#c22d40"},
+        {"sbt", "#c22d40"},
+        {"sc", "#c22d40"},
+        {"applescript", "#101F1F"},
+        {"scpt", "#101F1F"},
+        {"litcoffee", "#244776"},
+        {"coffee.md", "#244776"},
+        {"nix", "#7e7eff"},
+        {"uc", "#a54c4d"},
+        {"abap", "#E8274B"},
+        {"mo", "#de1d31"},
+        {"nut", "#800000"},
+        {"cpp", "#f34b7d"},
+        {"c++", "#f34b7d"},
+        {"cc", "#f34b7d"},
+        {"cp", "#f34b7d"},
+        {"cxx", "#f34b7d"},
+        {"h", "#f34b7d"},
+        {"h++", "#f34b7d"},
+        {"hh", "#f34b7d"},
+        {"hpp", "#f34b7d"},
+        {"hxx", "#f34b7d"},
+        {"inc", "#f34b7d"},
+        {"inl", "#f34b7d"},
+        {"ino", "#f34b7d"},
+        {"ipp", "#f34b7d"},
+        {"ixx", "#f34b7d"},
+        {"re", "#f34b7d"},
+        {"tcc", "#f34b7d"},
+        {"tpp", "#f34b7d"},
+        {"cp", "#B0CE4E"},
+        {"cps", "#B0CE4E"},
+        {"jinja", "#a52a22"},
+        {"j2", "#a52a22"},
+        {"jinja2", "#a52a22"},
+        {"druby", "#c7a938"},
+        {"duby", "#c7a938"},
+        {"mirah", "#c7a938"},
+        {"l", "#6067af"},
+        {"sqf", "#3F3F3F"},
+        {"hqf", "#3F3F3F"},
+        {"dylan", "#6c616e"},
+        {"dyl", "#6c616e"},
+        {"intr", "#6c616e"},
+        {"lid", "#6c616e"},
+        {"zimpl", "#d67711"},
+        {"zmpl", "#d67711"},
+        {"zpl", "#d67711"},
+        {"csv", "#237346"},
+        {"hack", "#878787"},
+        {"hh", "#878787"},
+        {"hhi", "#878787"},
+        {"php", "#878787"},
+        {"marko", "#42bff2"},
+        {"axs.erb", "#747faa"},
+        {"axi.erb", "#747faa"},
+        {"mask", "#f97732"},
+        {"ur", "#ccccee"},
+        {"urs", "#ccccee"},
+        {"ampl", "#E6EFBB"},
+        {"mod", "#E6EFBB"},
+        {"mq4", "#62A8D6"},
+        {"mqh", "#62A8D6"},
+        {"vim", "#199f4b"},
+        {"vba", "#199f4b"},
+        {"vimrc", "#199f4b"},
+        {"vmb", "#199f4b"},
+        {"fnl", "#fff3d7"},
+        {"js", "#f1e05a"},
+        {"_js", "#f1e05a"},
+        {"bones", "#f1e05a"},
+        {"cjs", "#f1e05a"},
+        {"es", "#f1e05a"},
+        {"es6", "#f1e05a"},
+        {"frag", "#f1e05a"},
+        {"gs", "#f1e05a"},
+        {"jake", "#f1e05a"},
+        {"javascript", "#f1e05a"},
+        {"jsb", "#f1e05a"},
+        {"jscad", "#f1e05a"},
+        {"jsfl", "#f1e05a"},
+        {"jsm", "#f1e05a"},
+        {"jss", "#f1e05a"},
+        {"jsx", "#f1e05a"},
+        {"mjs", "#f1e05a"},
+        {"njs", "#f1e05a"},
+        {"pac", "#f1e05a"},
+        {"sjs", "#f1e05a"},
+        {"ssjs", "#f1e05a"},
+        {"xsjs", "#f1e05a"},
+        {"xsjslib", "#f1e05a"},
+        {"snap", "#15c213"},
+        {"kak", "#6f8042"},
+        {"matlab", "#e16737"},
+        {"m", "#e16737"},
+        {"cshtml", "#512be4"},
+        {"razor", "#512be4"},
+        {"hxml", "#f68712"},
+        {"krl", "#28430A"},
+        {"lhs", "#5e5086"},
+        {"mcfunction", "#E22837"},
+        {"bas", "#ff0000"},
+        {"i3", "#223388"},
+        {"ig", "#223388"},
+        {"m3", "#223388"},
+        {"mg", "#223388"},
+        {"p", "#5ce600"},
+        {"cls", "#5ce600"},
+        {"w", "#5ce600"},
+        {"self", "#0579aa"},
+        {"bb", "#00bce4"},
+        {"cfm", "#ed2cd6"},
+        {"cfml", "#ed2cd6"},
+        {"kicad_pcb", "#2f4aab"},
+        {"kicad_mod", "#2f4aab"},
+        {"kicad_wks", "#2f4aab"},
+        {"flf", "#FFDDBB"},
+        {"glf", "#c1ac7f"},
+        {"bzl", "#76d275"},
+        {"toml", "#9c4221"},
+        {"lasso", "#999999"},
+        {"las", "#999999"},
+        {"lasso8", "#999999"},
+        {"lasso9", "#999999"},
+        {"rs", "#dea584"},
+        {"rs.in", "#dea584"},
+        {"factor", "#636746"},
+        {"dsp", "#c37240"},
+        {"textile", "#ffe7ac"},
+        {"js.erb", "#f1e05a"},
+        {"ipynb", "#DA5B0B"},
+        {"qs", "#00b841"},
+        {"v", "#b2b7f8"},
+        {"veo", "#b2b7f8"},
+        {"aidl", "#34EB6B"},
+        {"pytb", "#3572A5"},
+        {"bas", "#867db1"},
+        {"cls", "#867db1"},
+        {"frm", "#867db1"},
+        {"frx", "#867db1"},
+        {"vba", "#867db1"},
+        {"OutJob", "#A89663"},
+        {"PcbDoc", "#A89663"},
+        {"PrjPCB", "#A89663"},
+        {"SchDoc", "#A89663"},
+        {"asy", "#ff0000"},
+        {"ncl", "#28431f"},
+        {"dwl", "#003a52"},
+        {"ps", "#da291c"},
+        {"eps", "#da291c"},
+        {"epsi", "#da291c"},
+        {"pfa", "#da291c"},
+        {"ice", "#003fa2"},
+        {"srt", "#9e0101"},
+        {"f", "#4d41b1"},
+        {"f77", "#4d41b1"},
+        {"for", "#4d41b1"},
+        {"fpp", "#4d41b1"},
+        {"prisma", "#0c344b"},
+        {"rl", "#9d5200"},
+        {"plist", "#0060ac"},
+        {"stTheme", "#0060ac"},
+        {"tmCommand", "#0060ac"},
+        {"tmLanguage", "#0060ac"},
+        {"tmPreferences", "#0060ac"},
+        {"tmSnippet", "#0060ac"},
+        {"tmTheme", "#0060ac"},
+        {"hy", "#7790B2"},
+        {"jisonlex", "#56b3cb"},
+        {"kt", "#A97BFF"},
+        {"ktm", "#A97BFF"},
+        {"kts", "#A97BFF"},
+        {"pig", "#fcd7de"},
+        {"upc", "#4e3617"},
+        {"zil", "#dc75e5"},
+        {"mud", "#dc75e5"},
+        {"blade", "#f7523f"},
+        {"blade.php", "#f7523f"},
+        {"dhall", "#dfafff"},
+        {"ijm", "#99AAFF"},
+        {"jison", "#56b3cb"},
+        {"ged", "#003058"},
+        {"v", "#4f87c4"},
+        {"agc", "#0B3D91"},
+        {"kid", "#951531"},
+        {"nf", "#3ac486"},
+        {"b", "#2F2530"},
+        {"bf", "#2F2530"},
+        {"j", "#ff0c5a"},
+        {"sj", "#ff0c5a"},
+        {"sh", "#89e051"},
+        {"bash", "#89e051"},
+        {"bats", "#89e051"},
+        {"cgi", "#89e051"},
+        {"command", "#89e051"},
+        {"env", "#89e051"},
+        {"fcgi", "#89e051"},
+        {"ksh", "#89e051"},
+        {"sh.in", "#89e051"},
+        {"tmux", "#89e051"},
+        {"tool", "#89e051"},
+        {"zsh", "#89e051"},
+        {"zsh-theme", "#89e051"},
+        {"ejs", "#a91e50"},
+        {"ect", "#a91e50"},
+        {"ejs.t", "#a91e50"},
+        {"jst", "#a91e50"},
+        {"rg", "#cc0088"},
+        {"st", "#596706"},
+        {"cs", "#596706"},
+        {"yar", "#220000"},
+        {"yara", "#220000"},
+        {"ecl", "#8a1267"},
+        {"eclxml", "#8a1267"},
+        {"fx", "#88ccff"},
+        {"flux", "#88ccff"},
+        {"lua", "#000080"},
+        {"fcgi", "#000080"},
+        {"nse", "#000080"},
+        {"p8", "#000080"},
+        {"pd_lua", "#000080"},
+        {"rbxs", "#000080"},
+        {"rockspec", "#000080"},
+        {"wlua", "#000080"},
+        {"groovy", "#4298b8"},
+        {"grt", "#4298b8"},
+        {"gtpl", "#4298b8"},
+        {"gvy", "#4298b8"},
+        {"zs", "#00BCD1"},
+        {"nanorc", "#2d004d"},
+        {"bicep", "#519aba"},
+        {"rego", "#7d9199"},
+        {"pl", "#0298c3"},
+        {"al", "#0298c3"},
+        {"cgi", "#0298c3"},
+        {"fcgi", "#0298c3"},
+        {"perl", "#0298c3"},
+        {"ph", "#0298c3"},
+        {"plx", "#0298c3"},
+        {"pm", "#0298c3"},
+        {"psgi", "#0298c3"},
+        {"t", "#0298c3"},
+        {"bal", "#FF5000"},
+        {"hc", "#ffefaf"},
+        {"io", "#a9188d"},
+        {"nit", "#009917"},
+        {"kv", "#1da6e0"},
+        {"jsonc", "#292929"},
+        {"code-snippets", "#292929"},
+        {"sublime-build", "#292929"},
+        {"sublime-commands", "#292929"},
+        {"sublime-completions", "#292929"},
+        {"sublime-keymap", "#292929"},
+        {"sublime-macro", "#292929"},
+        {"sublime-menu", "#292929"},
+        {"sublime-mousemap", "#292929"},
+        {"sublime-project", "#292929"},
+        {"sublime-settings", "#292929"},
+        {"sublime-theme", "#292929"},
+        {"sublime-workspace", "#292929"},
+        {"sublime_metrics", "#292929"},
+        {"sublime_session", "#292929"},
+        {"mtml", "#b7e1f4"},
+        {"mm", "#6866fb"},
+        {"asc", "#B9D9FF"},
+        {"ash", "#B9D9FF"},
+        {"e", "#ccce35"},
+        {"sch", "#2f4aab"},
+        {"mlir", "#5EC8DB"},
+        {"iss", "#264b99"},
+        {"isl", "#264b99"},
+        {"ws", "#ff0000"},
+        {"volt", "#1F1F1F"},
+        {"asm", "#6E4C13"},
+        {"a51", "#6E4C13"},
+        {"i", "#6E4C13"},
+        {"inc", "#6E4C13"},
+        {"nasm", "#6E4C13"},
+        {"clp", "#00A300"},
+        {"eq", "#a78649"},
+        {"brd", "#2f4aab"},
+        {"scm", "#1e4aec"},
+        {"sch", "#1e4aec"},
+        {"sld", "#1e4aec"},
+        {"sls", "#1e4aec"},
+        {"sps", "#1e4aec"},
+        {"ss", "#1e4aec"},
+        {"m", "#438eff"},
+        {"h", "#438eff"},
+        {"p4", "#7055b5"},
+        {"bsv", "#12223c"},
+        {"cabal", "#483465"},
+        {"mustache", "#724b3b"},
+        {"y", "#4B6C4B"},
+        {"yacc", "#4B6C4B"},
+        {"yy", "#4B6C4B"},
+        {"txt", "#199f4b"},
+        {"reg", "#52d5ff"},
+        {"sed", "#64b970"},
+        {"gms", "#f49a22"},
+        {"sss", "#2fcc9f"},
+        {"coffee", "#244776"},
+        {"_coffee", "#244776"},
+        {"cake", "#244776"},
+        {"cjsx", "#244776"},
+        {"iced", "#244776"},
+        {"eclass", "#9400ff"},
+        {"regexp", "#009a00"},
+        {"regex", "#009a00"},
+        {"sql", "#e38c00"},
+        {"jade", "#a86454"},
+        {"pug", "#a86454"},
+        {"hoon", "#00b171"},
+        {"gf", "#ff0000"},
+        {"json", "#292929"},
+        {"avsc", "#292929"},
+        {"geojson", "#292929"},
+        {"gltf", "#292929"},
+        {"har", "#292929"},
+        {"ice", "#292929"},
+        {"JSON-tmLanguage", "#292929"},
+        {"jsonl", "#292929"},
+        {"mcmeta", "#292929"},
+        {"tfstate", "#292929"},
+        {"tfstate.backup", "#292929"},
+        {"topojson", "#292929"},
+        {"webapp", "#292929"},
+        {"webmanifest", "#292929"},
+        {"yy", "#292929"},
+        {"yyp", "#292929"},
+        {"nim", "#ffc200"},
+        {"nim.cfg", "#ffc200"},
+        {"nimble", "#ffc200"},
+        {"nimrod", "#ffc200"},
+        {"nims", "#ffc200"},
+        {"njk", "#3d8137"},
+        {"ms", "#00a6a6"},
+        {"mcr", "#00a6a6"},
+        {"rnh", "#665a4e"},
+        {"rno", "#665a4e"},
+        {"txl", "#0178b8"},
+        {"fth", "#341708"},
+        {"4th", "#341708"},
+        {"f", "#341708"},
+        {"for", "#341708"},
+        {"forth", "#341708"},
+        {"fr", "#341708"},
+        {"frt", "#341708"},
+        {"fs", "#341708"},
+        {"q", "#dce200"},
+        {"hql", "#dce200"},
+        {"mod", "#10253f"},
+        {"do", "#1a5f91"},
+        {"ado", "#1a5f91"},
+        {"doh", "#1a5f91"},
+        {"ihlp", "#1a5f91"},
+        {"mata", "#1a5f91"},
+        {"matah", "#1a5f91"},
+        {"sthlp", "#1a5f91"},
+        {"cwl", "#B5314C"},
+        {"ipf", "#0000cc"},
+        {"lvproj", "#fede06"},
+        {"lvlib", "#fede06"},
+        {"liquid", "#67b8de"},
+        {"apl", "#5A8164"},
+        {"dyalog", "#5A8164"},
+        {"gitconfig", "#F44D27"},
+        {"gleam", "#ffaff3"},
+        {"ml", "#3be133"},
+        {"eliom", "#3be133"},
+        {"eliomi", "#3be133"},
+        {"ml4", "#3be133"},
+        {"mli", "#3be133"},
+        {"mll", "#3be133"},
+        {"mly", "#3be133"},
+        {"sas", "#B34936"},
+        {"pwn", "#dbb284"},
+        {"inc", "#dbb284"},
+        {"sma", "#dbb284"},
+        {"pb", "#5a6986"},
+        {"pbi", "#5a6986"},
+        {"bf", "#a52f4e"},
+        {"elm", "#60B5CC"},
+        {"mako", "#7e858d"},
+        {"mao", "#7e858d"},
+        {"cls", "#424893"},
+        {"asciidoc", "#73a0c5"},
+        {"adoc", "#73a0c5"},
+        {"asc", "#73a0c5"},
+        {"astro", "#ff5a03"},
+        {"sc", "#46390b"},
+        {"scd", "#46390b"},
+        {"vb", "#945db7"},
+        {"vbhtml", "#945db7"},
+        {"ooc", "#b0b77e"},
+        {"erl", "#B83998"},
+        {"app.src", "#B83998"},
+        {"es", "#B83998"},
+        {"escript", "#B83998"},
+        {"hrl", "#B83998"},
+        {"xrl", "#B83998"},
+        {"yrl", "#B83998"},
+        {"sol", "#AA6746"},
+        {"q", "#0040cd"},
+        {"purs", "#1D222D"},
+        {"vala", "#fbe5cd"},
+        {"vapi", "#fbe5cd"},
+        {"clj", "#db5855"},
+        {"boot", "#db5855"},
+        {"cl2", "#db5855"},
+        {"cljc", "#db5855"},
+        {"cljs", "#db5855"},
+        {"cljs.hl", "#db5855"},
+        {"cljscm", "#db5855"},
+        {"cljx", "#db5855"},
+        {"hic", "#db5855"},
+        {"ebuild", "#9400ff"},
+        {"gradle", "#02303a"},
+        {"latte", "#f2a542"},
+        {"janet", "#0886a5"},
+        {"parrot", "#f3ca0a"},
+        {"swift", "#F05138"},
+        {"avdl", "#0040FF"},
+        {"lisp", "#3fb68b"},
+        {"asd", "#3fb68b"},
+        {"cl", "#3fb68b"},
+        {"l", "#3fb68b"},
+        {"lsp", "#3fb68b"},
+        {"ny", "#3fb68b"},
+        {"podsl", "#3fb68b"},
+        {"sexp", "#3fb68b"},
+        {"fy", "#7b9db4"},
+        {"fancypack", "#7b9db4"},
+        {"html", "#e34c26"},
+        {"hta", "#e34c26"},
+        {"htm", "#e34c26"},
+        {"html.hl", "#e34c26"},
+        {"inc", "#e34c26"},
+        {"xht", "#e34c26"},
+        {"xhtml", "#e34c26"},
+        {"xsh", "#285EEF"},
+        {"lsl", "#3d9970"},
+        {"lslp", "#3d9970"},
+        {"pgsql", "#336790"},
+        {"sql", "#336790"},
+        {"asax", "#9400ff"},
+        {"ascx", "#9400ff"},
+        {"ashx", "#9400ff"},
+        {"asmx", "#9400ff"},
+        {"aspx", "#9400ff"},
+        {"axd", "#9400ff"},
+        {"csd", "#1a1a1a"},
+        {"dm", "#447265"},
+        {"ik", "#078193"},
+        {"raml", "#77d9fb"},
+        {"shader", "#222c37"},
+        {"x10", "#4B6BEF"},
+        {"xquery", "#5232e7"},
+        {"xq", "#5232e7"},
+        {"xql", "#5232e7"},
+        {"xqm", "#5232e7"},
+        {"xqy", "#5232e7"},
+        {"boo", "#d4bec1"},
+        {"cue", "#5886E1"},
+        {"ol", "#843179"},
+        {"iol", "#843179"},
+        {"roff", "#ecdebe"},
+        {"1", "#ecdebe"},
+        {"1in", "#ecdebe"},
+        {"1m", "#ecdebe"},
+        {"1x", "#ecdebe"},
+        {"2", "#ecdebe"},
+        {"3", "#ecdebe"},
+        {"3in", "#ecdebe"},
+        {"3m", "#ecdebe"},
+        {"3p", "#ecdebe"},
+        {"3pm", "#ecdebe"},
+        {"3qt", "#ecdebe"},
+        {"3x", "#ecdebe"},
+        {"4", "#ecdebe"},
+        {"5", "#ecdebe"},
+        {"6", "#ecdebe"},
+        {"7", "#ecdebe"},
+        {"8", "#ecdebe"},
+        {"9", "#ecdebe"},
+        {"l", "#ecdebe"},
+        {"man", "#ecdebe"},
+        {"mdoc", "#ecdebe"},
+        {"me", "#ecdebe"},
+        {"ms", "#ecdebe"},
+        {"n", "#ecdebe"},
+        {"nr", "#ecdebe"},
+        {"rno", "#ecdebe"},
+        {"tmac", "#ecdebe"},
+        {"wlk", "#a23738"},
+        {"golo", "#88562A"},
+        {"r", "#198CE7"},
+        {"rd", "#198CE7"},
+        {"rsx", "#198CE7"},
+        {"slim", "#2b2b2b"},
+        {"ml", "#dc566d"},
+        {"fun", "#dc566d"},
+        {"sig", "#dc566d"},
+        {"sml", "#dc566d"},
+        {"bpl", "#c80fa0"},
+        {"cmake", "#DA3434"},
+        {"cmake.in", "#DA3434"},
+        {"hx", "#df7900"},
+        {"hxsl", "#df7900"},
+        {"qs", "#fed659"},
+        {"ring", "#2D54CB"},
+        {"cs", "#178600"},
+        {"cake", "#178600"},
+        {"csx", "#178600"},
+        {"linq", "#178600"},
+        {"mrc", "#3d57c3"},
+        {"cr", "#000100"},
+        {"m", "#ff2b2b"},
+        {"moo", "#ff2b2b"},
+        {"riot", "#A71E49"},
+        {"al", "#3AA2B5"},
+        {"eb", "#069406"},
+        {"pml", "#de0000"},
+        {"metal", "#8f14e9"},
+        {"thy", "#FEFE00"},
+        {"scaml", "#bd181a"},
+        {"svelte", "#ff3e00"},
+        {"dats", "#1ac620"},
+        {"hats", "#1ac620"},
+        {"sats", "#1ac620"},
+        {"click", "#E4E6F3"},
+        {"curry", "#531242"},
+        {"aj", "#a957b0"},
+        {"e", "#4d6977"},
+        {"j", "#d03600"},
+        {"lark", "#2980B9"},
+        {"tcl", "#e4cc98"},
+        {"adp", "#e4cc98"},
+        {"tcl.in", "#e4cc98"},
+        {"tm", "#e4cc98"},
+        {"fut", "#5f021f"},
+        {"jl", "#a270ba"},
+        {"l", "#DBCA00"},
+        {"lex", "#DBCA00"},
+        {"rdoc", "#701516"},
+        {"nc", "#94B0C7"},
+        {"st", "#3fb34f"},
+        {"tsx", "#2b7489"},
+        {"vcl", "#148AA8"},
+        {"http", "#005C9C"},
+        {"jsonld", "#0c479c"},
+        {"sql", "#e38c00"},
+        {"db2", "#e38c00"},
+        {"jq", "#c7254e"},
+        {"pep", "#C76F5B"},
+        {"robot", "#00c0b5"},
+        {"sp", "#f69e1d"},
+        {"inc", "#f69e1d"},
+    };
 }
