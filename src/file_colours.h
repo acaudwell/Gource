@@ -24,7 +24,7 @@
 
 class RFileColours {
 public:
-    std::map<std::string, std::string> colours;
+    std::map<std::string, vec3> colours;
 
     void init();
     vec3 find(std::string);
