@@ -311,9 +311,7 @@ vec3 RCommit::fileColour(const std::string& filename) {
     size_t dot   = filename.rfind('.');
 
     if(dot != std::string::npos && dot+1<filename.size() && (slash == std::string::npos || slash < dot)) {
-        std::string file_ext = filename.substr(dot+1);
-
-        return gRFileColours.find(file_ext);
+        return gRFileColours.find(filename.substr(dot+1));
     }
 
     return vec3(1.0, 1.0, 1.0);
