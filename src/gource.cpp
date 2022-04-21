@@ -37,7 +37,11 @@ Gource::Gource(FrameExporter* exporter) {
     }
 
     if(gGourceSettings.default_font_scale) {
-        gGourceSettings.font_scale = (float) glm::max(1, display.width / 1920);
+        if(display.viewport_dpi_ratio.x > 1.0f) {
+            gGourceSettings.font_scale = display.viewport_dpi_ratio.x;
+        } else {
+            gGourceSettings.font_scale = (float) glm::max(1, display.width / 1920);
+        }
         debugLog("setting font scale for resolution %d x %d to %.2f", display.width, display.height, gGourceSettings.font_scale);
         gGourceSettings.setScaledFontSizes();
     }
@@ -62,6 +66,8 @@ Gource::Gource(FrameExporter* exporter) {
     fontdirname = fontmanager.grab(gGourceSettings.font_file, gGourceSettings.scaled_dirname_font_size);
     fontdirname.dropShadow(true);
     fontdirname.roundCoordinates(true);
+
+    slider.init();
 
     //only use bloom with alpha channel if transparent due to artifacts on some video cards
     std::string bloom_tga = gGourceSettings.transparent ? "bloom_alpha.tga" : "bloom.tga";
@@ -332,6 +338,8 @@ void Gource::mouseMove(SDL_MouseMotionEvent *e) {
     if(commitlog==0) return;
     if(gGourceSettings.disable_input) return;
     if(gGourceSettings.hide_mouse) return;
+
+    // debugLog("mouse move %d, %d (change %d, %d)", e->x, e->y, e->xrel, e->yrel);
 
     if(grab_mouse) {
 #if not SDL_VERSION_ATLEAST(2,0,0)
