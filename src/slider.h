@@ -42,6 +42,8 @@ class PositionSlider {
 public:
     PositionSlider(float percent = 0.0f);
 
+    void init();
+
     void setColour(vec3 col);
 
     void setCaption(const std::string& cap);
