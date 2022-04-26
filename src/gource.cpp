@@ -40,7 +40,8 @@ Gource::Gource(FrameExporter* exporter) {
         if(display.viewport_dpi_ratio.x > 1.0f) {
             gGourceSettings.font_scale = display.viewport_dpi_ratio.x;
         } else {
-            gGourceSettings.font_scale = (float) glm::max(1, display.width / 1920);
+            int threshold = 1600;
+            gGourceSettings.font_scale = (float) (1 + glm::max(0, display.height / threshold));
         }
         debugLog("setting font scale for resolution %d x %d to %.2f", display.width, display.height, gGourceSettings.font_scale);
         gGourceSettings.setScaledFontSizes();
