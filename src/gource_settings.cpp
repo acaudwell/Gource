@@ -56,6 +56,9 @@ void GourceSettings::help(bool extended_help) {
     printf("  -f, --fullscreen                 Fullscreen\n");
     printf("      --screen SCREEN              Screen number\n");
     printf("      --multi-sampling             Enable multi-sampling\n");
+#ifndef _WIN32
+    printf("      --high-dpi                   Request a high DPI display\n");
+#endif
     printf("      --no-vsync                   Disable vsync\n\n");
 
     printf("  --start-date 'YYYY-MM-DD hh:mm:ss +tz'  Start at a date and optional time\n");

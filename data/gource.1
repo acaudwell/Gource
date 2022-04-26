@@ -25,6 +25,14 @@ Fullscreen.
 \fB\-\-screen SCREEN\fR
 Set the number of the screen to display on.
 .TP
+\fB\-\-high\-dpi\fR
+Request a high DPI display when creating the window.
+
+On some platforms such as MacOS, the window resolution is specified in points instead of pixels. The \-\-high-dpi flag may be required to access some higher resolutions.
+
+For example requesting a high DPI 800x600 window may produce a window that is 1600x1200 pixels.
+
+.TP
 \fB\-\-window\-position XxY\fR
 Initial window position on your desktop which may be made up of multiple monitors.
 

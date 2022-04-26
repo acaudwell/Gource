@@ -1,4 +1,5 @@
 0.53:
+ * Add --high-dpi option.
  * Fixed various bugs with Retina displays on MacOS.
  * Fixed slider timestamp font not affected by --font-scale.
 

@@ -148,8 +148,19 @@ int main(int argc, char *argv[]) {
         display.enableResize(true);
     }
 
-    //Stop OS interfering with the requested resolution on Retina / Ultra HD displays
-    display.enableHighDPIAwareness(true);
+    // Change OS High DPI display behaviour
+    // On Windows this behaves differently, it seems safe to always enable it
+    bool high_dpi = true;
+#ifndef _WIN32
+    // Requesting High DPI on MacOS may cause the pixel resolution to be doubled.
+    // If a resolution has been specified this may not be appropriate
+    // E.g. if you are recording a video at a specific resolution
+    // Can override by supplying --high-dpi option.
+    if(gGourceSettings.viewport_specified && !gGourceSettings.high_dpi) {
+        high_dpi = false;
+    }
+#endif
+    display.enableHighDPIAwareness(high_dpi);
 
     try {
 
