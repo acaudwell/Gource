@@ -40,9 +40,10 @@ options:
     --high-dpi
             Request a high DPI display when creating the window.
 
-            On some platforms such as MacOS, the window resolution is specified in points instead of pixels. The --high-dpi flag may be required to access some higher resolutions.
+            On some platforms such as MacOS, the window resolution is specified in points instead of pixels.
+            The --high-dpi flag may be required to access some higher resolutions.
 
-            For example requesting a high DPI 800x600 window may produce a window that is 1600x1200 pixels.
+            E.g. requesting a high DPI 800x600 window may produce a window that is 1600x1200 pixels.
 
     --window-position XxY
             Initial window position on your desktop which may be made up of
