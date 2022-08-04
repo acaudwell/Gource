@@ -11,7 +11,7 @@ Gource is a visualization tool for source control repositories.
 The repository is displayed as a tree where the root of the repository is the
 centre, directories are branches and files are leaves. Contributors to the
 source code appear and disappear as they contribute to specific files and
-directories.
+directories. Red is file deletion, Orange is modification and Green is file creation
 
 Requirements
 ============
