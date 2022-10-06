@@ -1,3 +1,6 @@
+0.54:
+ * Added support for running on Wayland (beroset).
+
 0.53:
  * Added --high-dpi option.
  * Fixed various bugs with Retina displays on MacOS.
