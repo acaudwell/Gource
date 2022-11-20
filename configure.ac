@@ -67,9 +67,10 @@ AC_CHECK_HEADER([glm/glm.hpp],, AC_MSG_ERROR(GLM headers are required. Please se
 
 #see if building against system TinyXML library
 use_tinyxml_system_library=no
-AC_ARG_WITH(tinyxml, AC_HELP_STRING([--with-tinyxml], [Use system installed TinyXML library]), use_tinyxml_system_library=$withval)
+AC_ARG_WITH(tinyxml, AS_HELP_STRING([--with-tinyxml],[Use system installed TinyXML library]), use_tinyxml_system_library=$withval)
 if test "x$use_tinyxml_system_library" = "xyes"; then
-    AC_HAVE_LIBRARY(tinyxml,, AC_MSG_ERROR([TinyXML library was requested but not found]))
+    AC_CHECK_LIB([tinyxml],[main],[],[AC_MSG_ERROR(TinyXML library was requested but not found)],[])ac_cv_lib_tinyxml=ac_cv_lib_tinyxml_main
+
 fi
 AM_CONDITIONAL(USE_BUNDLED_TINYXML, test "x$use_tinyxml_system_library" != "xyes")
 
