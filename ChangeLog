@@ -1,5 +1,6 @@
 0.54:
  * Added experimental support for Wayland (beroset).
+ * Fixed building on Apple M1 by updating autoconf macros (Ckhardin).
 
 0.53:
  * Added --high-dpi option.
