@@ -112,6 +112,8 @@ options:
     -c, --time-scale SCALE
             Change simulation time scale.
 
+            E.g. 0.5 for half speed, 2 for double speed.
+
     -i, --file-idle-time SECONDS
             Time in seconds files remain idle before they are removed or 0
             for no limit.
