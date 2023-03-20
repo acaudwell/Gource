@@ -89,7 +89,7 @@ std::string GitCommitLog::logCommand() {
 
     std::string log_command = "git log "
     "--pretty=format:user:%aN%n%ct "
-    "--reverse --raw --encoding=UTF-8 "
+    "--reverse --raw --encoding=UTF-8 --first-parent "
     "--no-renames";
 
     readGitVersion();
