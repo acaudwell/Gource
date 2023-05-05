@@ -66,7 +66,7 @@ bool GitRawCommitLog::parseCommit(RCommit& commit) {
 
     if(!logf->getNextLine(line)) return false;
 
-    //committer - used for time (most likely cronological)
+    //committer - used for time (most likely chronological)
     if(!git_raw_committer.match(line, &entries)) return false;
 
     commit.timestamp = atol(entries[3].c_str());
