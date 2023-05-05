@@ -169,8 +169,6 @@ void RUser::applyForceToActions() {
 
         break;
     }
-
-
 }
 
 void RUser::colourize() {
@@ -184,7 +182,7 @@ void RUser::assignUserImage() {
 
     if(gGourceSettings.user_image_dir.size() > 0) {
 
-        //try thier username
+        //try their username
         // TODO: replace with map of name -> image of all pngs and jpgs in directory
         //gGourceSettings.user_image_dir + name + std::string(".jpg");
 

@@ -152,7 +152,7 @@ Gource::Gource(FrameExporter* exporter) {
 
     root = 0;
 
-    //min phsyics rate 60fps (ie maximum allowed delta 1.0/60)
+    //min physics rate 60fps (ie maximum allowed delta 1.0/60)
     max_tick_rate = 1.0 / 60.0;
     runtime = 0.0f;
     frameskip = 0;
@@ -705,7 +705,7 @@ void Gource::keyPress(SDL_KeyboardEvent *e) {
 
         if (e->keysym.sym == SDLK_m) {
 
-            //toggle mouse visiblity unless mouse clicked/pressed/dragged
+            //toggle mouse visibility unless mouse clicked/pressed/dragged
             if(!(mousedragged || mouseclicked || cursor.leftButtonPressed() )) {
 
                 if(!cursor.isHidden()) {

@@ -37,7 +37,7 @@ distribution.
 #	endif
 #endif
 
-// Note tha "PutString" hardcodes the same list. This
+// Note that "PutString" hardcodes the same list. This
 // is less flexible than it appears. Changing the entries
 // or order will break putstring.	
 TiXmlBase::Entity TiXmlBase::entity[ TiXmlBase::NUM_ENTITY ] = 
@@ -130,7 +130,7 @@ void TiXmlBase::ConvertUTF32ToUTF8( unsigned long input, char* output, int* leng
 {
 	// This will only work for low-ascii, everything else is assumed to be a valid
 	// letter. I'm not sure this is the best approach, but it is quite tricky trying
-	// to figure out alhabetical vs. not across encoding. So take a very 
+	// to figure out alphabetical vs. not across encoding. So take a very 
 	// conservative approach.
 
 //	if ( encoding == TIXML_ENCODING_UTF8 )
@@ -151,7 +151,7 @@ void TiXmlBase::ConvertUTF32ToUTF8( unsigned long input, char* output, int* leng
 {
 	// This will only work for low-ascii, everything else is assumed to be a valid
 	// letter. I'm not sure this is the best approach, but it is quite tricky trying
-	// to figure out alhabetical vs. not across encoding. So take a very 
+	// to figure out alphabetical vs. not across encoding. So take a very 
 	// conservative approach.
 
 //	if ( encoding == TIXML_ENCODING_UTF8 )
@@ -400,7 +400,7 @@ const char* TiXmlBase::SkipWhiteSpace( const char* p, TiXmlEncoding encoding )
 //
 const char* TiXmlBase::ReadName( const char* p, TIXML_STRING * name, TiXmlEncoding encoding )
 {
-	// Oddly, not supported on some comilers,
+	// Oddly, not supported on some compilers,
 	//name->clear();
 	// So use this:
 	*name = "";
@@ -411,7 +411,7 @@ const char* TiXmlBase::ReadName( const char* p, TIXML_STRING * name, TiXmlEncodi
 	// algorithm is generous.
 	//
 	// After that, they can be letters, underscores, numbers,
-	// hyphens, or colons. (Colons are valid ony for namespaces,
+	// hyphens, or colons. (Colons are valid only for namespaces,
 	// but tinyxml can't tell namespaces from names.)
 	if (    p && *p 
 		 && ( IsAlpha( (unsigned char) *p, encoding ) || *p == '_' ) )
@@ -835,8 +835,8 @@ TiXmlNode* TiXmlNode::Identify( const char* p, TiXmlEncoding encoding )
 	// What is this thing? 
 	// - Elements start with a letter or underscore, but xml is reserved.
 	// - Comments: <!--
-	// - Decleration: <?xml
-	// - Everthing else is unknown to tinyxml.
+	// - Declaration: <?xml
+	// - Everything else is unknown to tinyxml.
 	//
 
 	const char* xmlHeader = { "<?xml" };
