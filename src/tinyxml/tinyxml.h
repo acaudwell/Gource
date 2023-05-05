@@ -188,7 +188,7 @@ const TiXmlEncoding TIXML_DEFAULT_ENCODING = TIXML_ENCODING_UNKNOWN;
 							Comment (leaf)
 							Unknown (leaf)
 
-	A Decleration contains: Attributes (not on tree)
+	A Declaration contains: Attributes (not on tree)
 	@endverbatim
 */
 class TiXmlBase
@@ -248,7 +248,7 @@ public:
 	void* GetUserData()						{ return userData; }	///< Get a pointer to arbitrary user data.
 	const void* GetUserData() const 		{ return userData; }	///< Get a pointer to arbitrary user data.
 
-	// Table that returs, for a given lead byte, the total number of bytes
+	// Table that returns, for a given lead byte, the total number of bytes
 	// in the UTF-8 sequence.
 	static const int utf8ByteTable[256];
 
@@ -256,7 +256,7 @@ public:
 								TiXmlParsingData* data, 
 								TiXmlEncoding encoding /*= TIXML_ENCODING_UNKNOWN */ ) = 0;
 
-	/** Expands entities in a string. Note this should not contian the tag's '<', '>', etc, 
+	/** Expands entities in a string. Note this should not contain the tag's '<', '>', etc, 
 		or they will be transformed into entities!
 	*/
 	static void EncodeString( const TIXML_STRING& str, TIXML_STRING* out );
@@ -924,7 +924,7 @@ public:
 
 
 private:
-	//*ME:	Because of hidden/disabled copy-construktor in TiXmlAttribute (sentinel-element),
+	//*ME:	Because of hidden/disabled copy-constructor in TiXmlAttribute (sentinel-element),
 	//*ME:	this class must be also use a hidden/disabled copy-constructor !!!
 	TiXmlAttributeSet( const TiXmlAttributeSet& );	// not allowed
 	void operator=( const TiXmlAttributeSet& );	// not allowed (as TiXmlAttribute)
@@ -1125,7 +1125,7 @@ public:
 	// Print the Element to a FILE stream.
 	virtual void Print( FILE* cfile, int depth ) const;
 
-	/*	Attribtue parsing starts: next char past '<'
+	/*	Attribute parsing starts: next char past '<'
 						 returns: next char past '>'
 	*/
 	virtual const char* Parse( const char* p, TiXmlParsingData* data, TiXmlEncoding encoding );
@@ -1178,7 +1178,7 @@ public:
 	// Write this Comment to a FILE stream.
 	virtual void Print( FILE* cfile, int depth ) const;
 
-	/*	Attribtue parsing starts: at the ! of the !--
+	/*	Attribute parsing starts: at the ! of the !--
 						 returns: next char past '>'
 	*/
 	virtual const char* Parse( const char* p, TiXmlParsingData* data, TiXmlEncoding encoding );
