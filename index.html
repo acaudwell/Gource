@@ -12,18 +12,24 @@
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/site.css" rel="stylesheet">
 
+<script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
 <script type="text/javascript">
-
-function donateClicked() {
-    document.getElementById('donations-box').style.display = 'block';
-    document.forms.donateform.amount.focus();
-}
-
+  kofiwidget2.init('Support Me on Ko-fi', '#29abe0', 'M4M6JIUO0');
 </script>
 
 </head>
 
 <body>
+
+<script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+<script>
+  kofiWidgetOverlay.draw('acaudwell', {
+    'type': 'floating-chat',
+    'floating-chat.donateButton.text': 'Donate',
+    'floating-chat.donateButton.background-color': '#00b9fe',
+    'floating-chat.donateButton.text-color': '#fff'
+  });
+</script>
 
     <nav class="navbar">
       <div class="container">
@@ -44,27 +50,7 @@ function donateClicked() {
             <li><a href="https://github.com/acaudwell/Gource/wiki">Wiki</a></li>
             <li><a href="https://github.com/acaudwell/Gource">Source</a></li>
             <li><a href="http://www.thealphablenders.com/">Blog</a></li>
-            <li><a href="#" id="donate" onClick="donateClicked();">Donate</a></li>
-            <div id="donations-box">
-                <form name="donateform" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-                    <input type="hidden" name="cmd" value="_donations">
-                    <input type="hidden" name="business" value="TZYLY4VTKC9TN">
-                    <input name="item_name" value="Gource" type="hidden">
-                    <input id="donations-amount" name="amount" value="5.00" type="text" maxlength="30" size="7">
-                    <select name="currency_code" id="donations-currency">
-                        <option value="USD" selected="selected">$ USD</option>
-                        <option value="EUR">&euro; EUR</option>
-                        <option value="GBP">&pound; GBP</option>
-                        <option value="CAD">$ CAD</option>
-                        <option value="AUD">$ AUD</option>
-                        <option value="NZD">$ NZD</option>
-                    </select>
-                    <span class="donations-button-span">
-                        <a href="javascript:document.forms.donateform.submit();" class="donations-button">Donate</a>
-                    </span>
-                </form>
-            </div>
-            </li>
+            <li><a href="#donations" id="donate">Donate</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -116,15 +102,6 @@ function donateClicked() {
 </center>
 </p>
 
-<ul class="index">
-    <li><a href="#introduction">Introduction</a></li>
-    <li><a href="#synopsis">Synopsis</a></li>
-    <li><a href="#related">Related Software</a></li>
-    <li><a href="#donations">Donations</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#news">News</a></li>
-</ul>
-
 <h2><a id="introduction"></a>Introduction</h2>
 
 <iframe class="player" width="640" height="360" src="https://www.youtube.com/embed/NjUuAuBcoqs?feature=player_embedded" frameborder="0" allowfullscreen></iframe>
@@ -151,7 +128,7 @@ gource
 
 <p>If you like Gource and would like to show your appreciation and encourage future work on this and other open source projects by the author, please consider making a donation!</p>
 
-<p><span class="donations-button-span"><a class="donations-button" href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TZYLY4VTKC9TN&lc=NZ&item_name=Gource&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted">Donate</a></span></p>
+<script type='text/javascript'>kofiwidget2.draw();</script>
 
 <h2><a id="contact"></a>Contact</h2>
 
