@@ -322,7 +322,7 @@ options:
             Caption duration.
 
     --caption-offset X
-            Caption horizontal offset (0 to centre captions).
+            Caption horizontal offset (0 to center captions).
 
     -o, --output-ppm-stream FILE
             Output a PPM image stream to a file ('-' for STDOUT).
