@@ -110,7 +110,7 @@ options:
             Use the time of the last commit if the time of a commit is in the past.
 
     -c, --time-scale SCALE
-            Change simulation time scale.
+            Change simulation time scale. This affects the movement speed of user avatars.
 
             E.g. 0.5 for half speed, 2 for double speed.
 
@@ -459,8 +459,9 @@ Interactive keyboard commands:
     (G)   Toggle display of users
     (T)   Toggle display of directory tree edges
     (R)   Toggle display of root directory edges
+    (<>)  Adjust time scale / user avatar movement speed
     (+-)  Adjust simulation speed
-    (<>)  Adjust time scale
+    (Keypad +-) Adjust camera zoom
     (TAB) Cycle through visible users
     (F12) Screenshot
     (Alt+Enter) Fullscreen toggle

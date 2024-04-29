@@ -92,7 +92,7 @@ Realtime playback speed.
 Use the time of the last commit if the time of a commit is in the past.
 .TP
 \fB\-c, \-\-time\-scale SCALE\fR
-Change simulation time scale.
+Change simulation time scale. This affects the movement speed of user avatars.
 
 E.g. 0.5 for half speed, 2 for double speed.
 .TP
@@ -439,9 +439,11 @@ Interactive keyboard commands:
 .ti 10
 (R)   Toggle display of root directory edges
 .ti 10
+(<>)  Adjust time scale / user avatar movement speed
+.ti 10
 (+-)  Adjust simulation speed
 .ti 10
-(<>)  Adjust time scale
+(Keypad +-) Adjust camera zoom
 .ti 10
 (TAB) Cycle through visible users
 .ti 10
