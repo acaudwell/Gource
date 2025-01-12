@@ -20,7 +20,7 @@ jobs:
             build-essential cmake libsdl2-dev libpcre3-dev libglew-dev \
             libglm-dev libboost-filesystem-dev libfreetype6-dev libpng-dev \
             libjpeg-dev libfftw3-dev libvorbis-dev libopenal-dev libxrandr-dev \
-            libxi-dev libsdl2-* libfuse libfuse-dev
+            libxi-dev libsdl2-* libfuse-dev
 
       - name: Build Gource
         run: |
