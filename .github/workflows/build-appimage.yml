@@ -57,3 +57,10 @@ jobs:
         with:
           name: Gource.AppImage
           path: Gource-x86_64.AppImage
+
+      - name: Upload AppImage to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: Gource-x86_64.AppImage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
