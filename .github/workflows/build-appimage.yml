@@ -51,16 +51,11 @@ jobs:
       - name: Bundle dependencies with linuxdeploy
         run: |
           ./linuxdeploy-x86_64.AppImage --appdir AppDir --executable AppDir/usr/bin/gource --desktop-file AppDir/gource.desktop --icon-file AppDir/gource.png --output appimage
-
-      - name: Upload AppImage as an artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: Gource.AppImage
-          path: Gource-x86_64.AppImage
+          mv Gource-x86_64.AppImage gource-${{ github.event.release.tag_name }}.AppImage
 
       - name: Upload AppImage to Release
         uses: softprops/action-gh-release@v1
         with:
-          files: Gource-x86_64.AppImage
+          files: gource-${{ github.event.release.tag_name }}.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
