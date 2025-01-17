@@ -19,8 +19,7 @@ jobs:
           sudo apt-get install -y \
             build-essential cmake libsdl2-dev libpcre3-dev libglew-dev \
             libglm-dev libboost-filesystem-dev libfreetype6-dev libpng-dev \
-            libjpeg-dev libfftw3-dev libvorbis-dev libopenal-dev libxrandr-dev \
-            libxi-dev libsdl2-* libfuse-dev
+            libjpeg-dev libsdl2-image-dev libfuse-dev
 
       - name: Build Gource
         run: |
