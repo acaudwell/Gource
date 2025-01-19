@@ -43,7 +43,7 @@ jobs:
           Exec=gource
           Icon=gource
           Type=Application
-          Categories=Graphics;Development;
+          Categories=Development;Graphics;
           Comment=Software version control visualization tool" > AppDir/gource.desktop
           cp data/file.png AppDir/gource.png
 
