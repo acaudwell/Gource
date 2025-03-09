@@ -109,6 +109,9 @@ options:
         --no-time-travel
             Use the time of the last commit if the time of a commit is in the past.
 
+        --author-time
+            Use the timestamp of the author instead of the timestamp of the committer
+
     -c, --time-scale SCALE
             Change simulation time scale. This affects the movement speed of user avatars.
 

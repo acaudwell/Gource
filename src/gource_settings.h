@@ -71,6 +71,7 @@ public:
     bool dont_stop;
     bool no_time_travel;
     bool fixed_user_size;
+    bool author_time;
 
     float auto_skip_seconds;
     float days_per_second;

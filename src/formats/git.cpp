@@ -88,7 +88,6 @@ void GitCommitLog::readGitVersion() {
 std::string GitCommitLog::logCommand() {
 
     std::string log_command = "git log "
-    "--pretty=format:user:%aN%n%ct "
     "--reverse --raw --encoding=UTF-8 "
     "--no-renames";
 
@@ -117,6 +116,12 @@ std::string GitCommitLog::logCommand() {
     if(!gGourceSettings.git_branch.empty()) {
         log_command += " ";
         log_command += gGourceSettings.git_branch;
+    }
+
+    if(gGourceSettings.author_time) {
+        log_command += " --pretty=format:user:%aN%n%at ";
+    } else {
+        log_command += " --pretty=format:user:%aN%n%ct ";
     }
 
     return log_command;
