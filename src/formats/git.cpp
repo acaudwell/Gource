@@ -100,7 +100,13 @@ std::string GitCommitLog::logCommand() {
        || git_version_major > 2
        || (git_version_major == 2 && git_version_minor >= 10))
     {
-        log_command.append(" --no-show-signature");
+        log_command += " --no-show-signature";
+    }
+
+    if(gGourceSettings.author_time) {
+        log_command += " --pretty=format:user:%aN%n%at";
+    } else {
+        log_command += " --pretty=format:user:%aN%n%ct";
     }
 
     if(!gGourceSettings.start_date.empty()) {
@@ -116,12 +122,6 @@ std::string GitCommitLog::logCommand() {
     if(!gGourceSettings.git_branch.empty()) {
         log_command += " ";
         log_command += gGourceSettings.git_branch;
-    }
-
-    if(gGourceSettings.author_time) {
-        log_command += " --pretty=format:user:%aN%n%at ";
-    } else {
-        log_command += " --pretty=format:user:%aN%n%ct ";
     }
 
     return log_command;
