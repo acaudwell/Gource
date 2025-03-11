@@ -1,4 +1,5 @@
 0.56:
+ * Added --author-time option (onlyJakob).
  * Request compatibility profile when creating OpenGL context.
 
 0.55:
