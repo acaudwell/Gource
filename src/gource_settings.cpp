@@ -77,6 +77,8 @@ void GourceSettings::help(bool extended_help) {
     printf("      --realtime                   Realtime playback speed\n");
     printf("      --no-time-travel             Use the time of the last commit if the\n");
     printf("                                   time of a commit is in the past\n");
+    printf("      --author-time                Use the timestamp of the author instead of\n");
+    printf("                                   the timestamp of the committer\n");
     printf("  -c, --time-scale SCALE           Change simulation time scale (default: 1.0)\n");
     printf("  -e, --elasticity FLOAT           Elasticity of nodes (default: 0.0)\n\n");
 
@@ -274,6 +276,7 @@ GourceSettings::GourceSettings() {
     arg_types["file-extensions"]         = "bool";
     arg_types["file-extension-fallback"] = "bool";
     arg_types["fixed-user-size"]         = "bool";
+    arg_types["author-time"]             = "bool";
     arg_types["key"]                     = "bool";
     arg_types["ffp"]                     = "bool";
 
@@ -395,6 +398,7 @@ void GourceSettings::setGourceDefaults() {
     dont_stop       = false;
     no_time_travel  = false;
     fixed_user_size = false;
+    author_time     = false;
 
     show_key = false;
 
@@ -1376,6 +1380,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if(gource_settings->getBool("fixed-user-size")) {
         fixed_user_size = true;
+    }
+
+    if(gource_settings->getBool("author-time")) {
+        author_time = true;
     }
 
     if((entry = gource_settings->getEntry("max-files")) != 0) {

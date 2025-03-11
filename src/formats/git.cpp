@@ -88,7 +88,6 @@ void GitCommitLog::readGitVersion() {
 std::string GitCommitLog::logCommand() {
 
     std::string log_command = "git log "
-    "--pretty=format:user:%aN%n%ct "
     "--reverse --raw --encoding=UTF-8 "
     "--no-renames";
 
@@ -101,7 +100,13 @@ std::string GitCommitLog::logCommand() {
        || git_version_major > 2
        || (git_version_major == 2 && git_version_minor >= 10))
     {
-        log_command.append(" --no-show-signature");
+        log_command += " --no-show-signature";
+    }
+
+    if(gGourceSettings.author_time) {
+        log_command += " --pretty=format:user:%aN%n%at";
+    } else {
+        log_command += " --pretty=format:user:%aN%n%ct";
     }
 
     if(!gGourceSettings.start_date.empty()) {
