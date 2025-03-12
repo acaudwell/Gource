@@ -32,6 +32,7 @@ sources = \
 	src/core/vectors.cpp \
 	src/dirnode.cpp \
 	src/file.cpp \
+	src/file_colours.cpp \
 	src/formats/apache.cpp \
 	src/formats/bzr.cpp \
 	src/formats/commitlog.cpp \
