@@ -236,7 +236,7 @@ bool RCommitLog::nextCommit(RCommit& commit, bool validate) {
 }
 
 bool RCommitLog::isFinished() {
-    if(seekable && logf->isFinished()) return true;
+    if(logf->isFinished()) return true;
 
     return false;
 }
