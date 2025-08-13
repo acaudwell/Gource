@@ -10,7 +10,7 @@
 #
 #   Test for the Boost C++ libraries of a particular version (or newer)
 #
-#   If no path to the installed boost library is given the macro searchs
+#   If no path to the installed boost library is given the macro searches
 #   under /usr, /usr/local, /opt, /opt/local and /opt/homebrew and evaluates
 #   the $BOOST_ROOT environment variable. Further documentation is available
 #   at <http://randspringer.de/boost/index.html>.
@@ -33,7 +33,7 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 51
+#serial 55
 
 # example boost program (need to pass version)
 m4_define([_AX_BOOST_BASE_PROGRAM],
@@ -114,7 +114,7 @@ AC_DEFUN([_AX_BOOST_BASE_RUNDETECT],[
     AS_CASE([${host_cpu}],
       [x86_64],[libsubdirs="lib64 libx32 lib lib64"],
       [mips*64*],[libsubdirs="lib64 lib32 lib lib64"],
-      [ppc64|powerpc64|s390x|sparc64|aarch64|ppc64le|powerpc64le|riscv64|e2k],[libsubdirs="lib64 lib lib64"],
+      [ppc64|powerpc64|s390x|sparc64|aarch64|ppc64le|powerpc64le|riscv64|e2k|loongarch64],[libsubdirs="lib64 lib lib64"],
       [libsubdirs="lib"]
     )
 
@@ -289,6 +289,8 @@ AC_DEFUN([_AX_BOOST_BASE_RUNDETECT],[
         else
             AC_MSG_NOTICE([Your boost libraries seems to old (version $_version).])
         fi
+        BOOST_LDFLAGS=""
+        BOOST_CPPFLAGS=""
         # execute ACTION-IF-NOT-FOUND (if present):
         ifelse([$3], , :, [$3])
     else

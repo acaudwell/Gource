@@ -46,8 +46,7 @@ AC_CHECK_FUNCS([IMG_LoadPNG_RW], , AC_MSG_ERROR([SDL2_image with PNG support req
 AC_CHECK_FUNCS([IMG_LoadJPG_RW], , AC_MSG_ERROR([SDL2_image with JPEG support required. Please see INSTALL]))
 
 #BOOST
-AX_BOOST_BASE([1.46], , AC_MSG_ERROR(Boost Filesystem >= 1.46 is required. Please see INSTALL))
-AX_BOOST_SYSTEM
+AX_BOOST_BASE([1.69], , AC_MSG_ERROR(Boost Filesystem >= 1.69 is required. Please see INSTALL))
 AX_BOOST_FILESYSTEM
 
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"

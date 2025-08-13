@@ -18,7 +18,7 @@ Gource requires the following libraries to compile (package names may vary):
     Freetype 2 (libfreetype6-dev)
     GLEW (libglew-dev)
     GLM >= 0.9.3 (libglm-dev)
-    Boost Filesystem >= 1.46 (libboost-filesystem-dev)
+    Boost Filesystem >= 1.69 (libboost-filesystem-dev)
     PNG >= 1.2 (libpng-dev)
 
 Optional:
