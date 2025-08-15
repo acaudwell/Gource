@@ -36,6 +36,7 @@ SOURCES += \
     caption.cpp \
     dirnode.cpp \
     file.cpp \
+    file_colours.cpp \
     gource.cpp \
     gource_settings.cpp \
     gource_shell.cpp \
@@ -92,6 +93,7 @@ HEADERS += \
     caption.h \
     dirnode.h \
     file.h \
+    file_colours.h \
     gource.h \
     gource_settings.h \
     gource_shell.h \

@@ -17,6 +17,7 @@
 
 #include "commitlog.h"
 #include "../gource_settings.h"
+#include "../file_colours.h"
 #include "../core/sdlapp.h"
 
 #include "../core/utf8/utf8.h"
@@ -310,12 +311,10 @@ vec3 RCommit::fileColour(const std::string& filename) {
     size_t dot   = filename.rfind('.');
 
     if(dot != std::string::npos && dot+1<filename.size() && (slash == std::string::npos || slash < dot)) {
-        std::string file_ext = filename.substr(dot+1);
-
-        return colourHash(file_ext);
-    } else {
-        return vec3(1.0, 1.0, 1.0);
+        return gRFileColours.find(filename.substr(dot+1));
     }
+
+    return vec3(1.0, 1.0, 1.0);
 }
 
 void RCommit::addFile(const std::string& filename, const std::string& action) {
