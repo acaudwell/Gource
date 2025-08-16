@@ -296,6 +296,7 @@ options:
             Hide one or more display elements from the list below:
 
             bloom     - bloom effect
+            captions  - caption text
             date      - current date
             dirnames  - names of directories
             files     - file icons
@@ -326,6 +327,10 @@ options:
 
     --caption-offset X
             Caption horizontal offset (0 to centre captions).
+
+    --caption-export FILE
+            Export captions to subtitle file (SRT or WebVTT format).
+            File format is determined by extension (.srt or .vtt/.webvtt).
 
     -o, --output-ppm-stream FILE
             Output a PPM image stream to a file ('-' for STDOUT).
