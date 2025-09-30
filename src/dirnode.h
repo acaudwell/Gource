@@ -95,6 +95,7 @@ class RDirNode : public QuadItem {
 
     vec2 calcFileDest(int max_files, int file_no);
     void updateFilePositions();
+    void applyFilePhysics(float dt);
 
     void adjustDepth();
     void adjustPath();

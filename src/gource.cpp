@@ -1003,6 +1003,7 @@ RFile* Gource::addFile(const RCommitFile& cf) {
     int tagid = tag_seq++;
 
     RFile* file = new RFile(cf.filename, cf.colour, vec2(0.0,0.0), tagid);
+    file->setFileSize(cf.file_size);
 
     files[cf.filename] = file;
 
@@ -1229,7 +1230,12 @@ void Gource::processCommit(const RCommit& commit, float t) {
         }
 
         std::map<std::string, RFile*>::iterator seen_file = files.find(cf.filename);
-        if(seen_file != files.end()) file = seen_file->second;
+        if(seen_file != files.end()) {
+            file = seen_file->second;
+            if (cf.action == "M") {
+                file->setFileSize(cf.file_size);
+            }
+        }
 
         if(file == 0) {
             file = addFile(cf);
@@ -2371,6 +2377,7 @@ void Gource::drawFiles(float dt) {
     } else {
         root->drawFiles(dt);
     }
+
 }
 
 void Gource::drawUsers(float dt) {
@@ -2678,6 +2685,9 @@ void Gource::draw(float t, float dt) {
 
         textbox.setText(hoverFile->getName());
         if(display_path.size()) textbox.addLine(display_path);
+        if (gGourceSettings.show_file_size_on_hover) {
+            textbox.addLine(std::to_string(hoverFile->getFileSize()) + " bytes");
+        }
         textbox.setColour(hoverFile->getColour());
 
         textbox.setPos(mousepos, true);

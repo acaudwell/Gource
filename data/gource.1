@@ -105,6 +105,24 @@ Time in seconds files remain idle before they are removed or 0 for no limit.
 \fB\-\-file\-idle\-time\-at\-end SECONDS\fR
 Time in seconds files remain idle at the end before they are removed.
 .TP
+\fB\-S, \-\-scale-by-file-size\fR
+Scale file nodes by file size.
+.TP
+\fB\-\-file-scale FACTOR\fR
+Scale factor for file nodes (default: 1.0).
+.TP
+\fB\-\-dir-spacing FACTOR\fR
+Spacing for directory nodes (default: 1.0).
+.TP
+\fB\-\-file-gravity FACTOR\fR
+Gravity for file nodes (default: 0.000001).
+.TP
+\fB\-\-file-repulsion FACTOR\fR
+Repulsion for file nodes (default: 1000.0).
+.TP
+\fB\-\-show-file-size-on-hover\fR
+Show file size on hover.
+.TP
 \fB\-e, \-\-elasticity FLOAT\fR
 Elasticity of nodes.
 .TP
@@ -378,6 +396,8 @@ type      - Single character for the update type - (A)dded, (M)odified or (D)ele
 file      - Path of the file updated.
 .ti 10
 colour    - A colour for the file in hex (FFFFFF) format. Optional.
+.ti 10
+file_size - The size of the file in bytes. Optional.
 
 .SS Caption Log Format
 
