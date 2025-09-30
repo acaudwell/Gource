@@ -19,8 +19,17 @@
 #define GITLOG_H
 
 #include "commitlog.h"
+#include <unordered_map>
 
 class GitCommitLog : public RCommitLog {
+private:
+    std::string m_repository_path;
+    std::unordered_map<std::string, unsigned int> m_blob_sizes;
+    bool m_blob_index_ready;
+    bool m_warned_missing_blob_size;
+
+    bool buildBlobSizeIndex(const std::string& dir);
+
 protected:
     bool parseCommit(RCommit& commit);
     BaseLog* generateLog(const std::string& dir);

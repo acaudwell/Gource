@@ -25,6 +25,8 @@ Pawn::Pawn(const std::string& name, vec2 pos, int tagid) {
     this->tagid = tagid;
     this->hidden = false;
     this->speed = 1.0;
+    this->vel = vec2(0.0f, 0.0f);
+    this->accel = vec2(0.0f, 0.0f);
 
     selected = false;
     mouseover = false;
