@@ -136,6 +136,13 @@ public:
     float user_scale;
     float time_scale;
 
+    bool scale_by_file_size;
+    float file_scale;
+    float dir_spacing;
+    float file_gravity;
+    float file_repulsion;
+    bool show_file_size_on_hover;
+
     bool highlight_dirs;
     bool highlight_all_users;
 

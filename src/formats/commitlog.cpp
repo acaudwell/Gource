@@ -287,7 +287,7 @@ bool RCommitLog::createTempFile(std::string& temp_file) {
 
 // RCommitFile
 
-RCommitFile::RCommitFile(const std::string& filename, const std::string& action, vec3 colour) {
+RCommitFile::RCommitFile(const std::string& filename, const std::string& action, vec3 colour, unsigned int file_size) {
 
     this->filename = RCommitLog::filter_utf8(filename);
 
@@ -298,6 +298,7 @@ RCommitFile::RCommitFile(const std::string& filename, const std::string& action,
 
     this->action   = action;
     this->colour   = colour;
+    this->file_size = file_size;
 }
 
 RCommit::RCommit() {
@@ -318,11 +319,11 @@ vec3 RCommit::fileColour(const std::string& filename) {
     }
 }
 
-void RCommit::addFile(const std::string& filename, const std::string& action) {
-    addFile(filename, action, fileColour(filename));
+void RCommit::addFile(const std::string& filename, const std::string& action, unsigned int file_size) {
+    addFile(filename, action, fileColour(filename), file_size);
 }
 
-void RCommit::addFile(const std::string& filename, const  std::string& action, const vec3& colour) {
+void RCommit::addFile(const std::string& filename, const  std::string& action, const vec3& colour, unsigned int file_size) {
     //check filename against filters
     if(!gGourceSettings.file_filters.empty()) {
 
@@ -347,7 +348,7 @@ void RCommit::addFile(const std::string& filename, const  std::string& action, c
         }
     }
 
-    files.push_back(RCommitFile(filename, action, colour));
+    files.push_back(RCommitFile(filename, action, colour, file_size));
 }
 
 void RCommit::postprocess() {

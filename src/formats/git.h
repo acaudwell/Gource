@@ -21,6 +21,8 @@
 #include "commitlog.h"
 
 class GitCommitLog : public RCommitLog {
+private:
+    std::string m_repository_path;
 protected:
     bool parseCommit(RCommit& commit);
     BaseLog* generateLog(const std::string& dir);
