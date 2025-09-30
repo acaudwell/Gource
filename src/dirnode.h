@@ -93,7 +93,7 @@ class RDirNode : public QuadItem {
     void updateSplinePoint(float dt);
     void move(float dt);
 
-    vec2 calcFileDest(int layer_no, int file_no);
+    vec2 calcFileDest(int max_files, int file_no);
     void updateFilePositions();
 
     void adjustDepth();
