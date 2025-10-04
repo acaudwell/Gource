@@ -16,11 +16,11 @@
 */
 
 #include "dirnode.h"
+#include "gource_settings.h"
 
 float gGourceMinDirSize   = 15.0;
 
 float gGourceForceGravity = 10.0;
-float gGourceDirPadding   = 1.5;
 
 bool  gGourceNodeDebug    = false;
 bool  gGourceGravity      = true;
@@ -108,7 +108,8 @@ void RDirNode::nodeUpdated(bool userInitiated) {
     if(userInitiated) since_last_node_change = 0.0;
 
     calcRadius();
-    updateFilePositions();
+    if (!gGourceSettings.scale_by_file_size)
+        updateFilePositions();
     if(visible && noDirs() && noFiles()) visible = false;
     if(parent !=0) parent->nodeUpdated(true);
 }
@@ -408,6 +409,11 @@ bool RDirNode::addFile(RFile* f) {
         //debugLog("addFile %s to %s\n", f->fullpath.c_str(), abspath.c_str());
 
         files.push_back(f);
+        if (parent == 0) {
+            float rx = (rand() % 200 - 100) / 100.0f;
+            float ry = (rand() % 200 - 100) / 100.0f;
+            f->setPos(f->getPos() + vec2(rx, ry));
+        }
         if(!f->isHidden()) visible_count++;
         f->setDir(this);
 
@@ -573,7 +579,17 @@ float RDirNode::getArea() const{
 
 void RDirNode::calcRadius() {
 
-    float total_file_area = file_area * visible_count;
+    float total_file_area = 0;
+    if (gGourceSettings.scale_by_file_size) {
+        for (RFile* f : files) {
+            if (!f->isHidden()) {
+                float r = f->getSize() / 2.0f;
+                total_file_area += r * r * PI;
+            }
+        }
+    } else {
+        total_file_area = file_area * visible_count;
+    }
 
     dir_area = total_file_area;
 
@@ -586,11 +602,11 @@ void RDirNode::calcRadius() {
     //    parent_circ += node->getRadiusSqrt();
     }
 
-    this->dir_radius = std::max(1.0f, (float)sqrt(dir_area)) * gGourceDirPadding;
+    this->dir_radius = std::max(1.0f, (float)sqrt(dir_area)) * gGourceSettings.dir_spacing;
     //this->dir_radius_sqrt = sqrt(dir_radius); //dir_radius_sqrt is not used
 
 //    this->parent_radius = std::max(1.0, parent_circ / PI);
-    this->parent_radius = std::max(1.0f, (float) sqrt(total_file_area) * gGourceDirPadding);
+    this->parent_radius = std::max(1.0f, (float) sqrt(total_file_area)) * gGourceSettings.dir_spacing;
 }
 
 float RDirNode::distanceToParent() const{
@@ -892,6 +908,53 @@ void RDirNode::calcEdges() {
     }
 }
 
+void RDirNode::applyFilePhysics(float dt) {
+    if (files.empty() || !gGourceSettings.scale_by_file_size) return;
+
+    const int iterations = 2;
+    for (int i = 0; i < iterations; ++i) {
+        // Apply forces
+        for (auto it1 = files.begin(); it1 != files.end(); ++it1) {
+            RFile* f1 = *it1;
+            if (f1->isHidden()) continue;
+
+            // Gravity
+            vec2 dir_to_center = pos - f1->getPos();
+            float dist_to_center = glm::length(dir_to_center);
+            f1->accel += normalise(dir_to_center) * dist_to_center * gGourceSettings.file_gravity;
+
+            // Repulsion from other files
+            for (auto it2 = std::next(it1); it2 != files.end(); ++it2) {
+                RFile* f2 = *it2;
+                if (f2->isHidden()) continue;
+
+                vec2 dir = f2->getPos() - f1->getPos();
+                float dist2 = glm::length2(dir);
+                float r1 = f1->getSize() / 2.0f;
+                float r2 = f2->getSize() / 2.0f;
+                float r_sum = r1 + r2;
+
+                if (dist2 < r_sum * r_sum) {
+                    float dist = sqrt(dist2);
+                    float overlap = r_sum - dist;
+                    vec2 force = normalise(dir) * overlap * gGourceSettings.file_repulsion;
+                    f1->accel -= force;
+                    f2->accel += force;
+                }
+            }
+        }
+
+        // Update positions
+        for (RFile* f : files) {
+            if (f->isHidden()) continue;
+            f->vel += f->accel * dt;
+            f->setPos(f->getPos() + f->vel * dt);
+            f->vel *= 0.9f; // Damping
+            f->accel = vec2(0.0f, 0.0f);
+        }
+    }
+}
+
 void RDirNode::logic(float dt) {
 
     //move
@@ -904,11 +967,14 @@ void RDirNode::logic(float dt) {
     }
 
     //update files
-     for(std::list<RFile*>::iterator it = files.begin(); it!=files.end(); it++) {
-         RFile* f = *it;
-
-         f->logic(dt);
-     }
+    if (gGourceSettings.scale_by_file_size) {
+        applyFilePhysics(dt);
+    }
+    for(std::list<RFile*>::iterator it = files.begin(); it!=files.end(); it++) {
+        RFile* f = *it;
+        
+        f->logic(dt);
+    }
 
     //update child nodes
     for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {

@@ -17,6 +17,7 @@
 
 #include "git.h"
 #include "../gource_settings.h"
+#include <boost/algorithm/string.hpp>
 
 #ifndef _MSC_VER
 #include <unistd.h>
@@ -104,9 +105,9 @@ std::string GitCommitLog::logCommand() {
     }
 
     if(gGourceSettings.author_time) {
-        log_command += " --pretty=format:user:%aN%n%at";
+        log_command += " --pretty=format:user:%aN%n%at%n%H";
     } else {
-        log_command += " --pretty=format:user:%aN%n%ct";
+        log_command += " --pretty=format:user:%aN%n%ct%n%H";
     }
 
     if(!gGourceSettings.start_date.empty()) {
@@ -127,7 +128,7 @@ std::string GitCommitLog::logCommand() {
     return log_command;
 }
 
-GitCommitLog::GitCommitLog(const std::string& logfile) : RCommitLog(logfile, 'u') {
+GitCommitLog::GitCommitLog(const std::string& logfile) : RCommitLog(logfile, 'u'), m_repository_path(logfile) {
 
     log_command = logCommand();
 
@@ -215,30 +216,63 @@ bool GitCommitLog::parseCommit(RCommit& commit) {
             //this isnt a commit we are parsing, abort
             if(commit.timestamp == 0) return false;
 
+            if(!logf->getNextLine(line)) return false;
+            commit.commit_hash = line;
+
             continue;
         }
 
         //should see username before files
         if(commit.username.empty()) return false;
 
-        size_t tab = line.find('\t');
+        if (line[0] == ':') {
+            std::vector<std::string> parts;
+            boost::split(parts, line, boost::is_any_of(" \t"));
 
-        //incorrect log format
-        if(tab == std::string::npos || tab == 0 || tab == line.size()-1) continue;
+            if (parts.size() >= 6) {
+                std::string status = parts[4];
+                std::string filename = parts[5];
+                std::string dst_blob = parts[3];
+                unsigned int file_size = 0;
 
-        std::string status = line.substr(tab - 1, 1);
-        std::string file   = line.substr(tab + 1);
+                if (gGourceSettings.scale_by_file_size && status != "D") {
+                    char cmd_buff[2048];
+                    int written = snprintf(cmd_buff, 2048, "git --git-dir=%s/.git --work-tree=%s cat-file -s %s", m_repository_path.c_str(), m_repository_path.c_str(), dst_blob.c_str());
 
-        if(file.empty()) continue;
+                    if(written > 0 && written < 2048) {
+                        FILE* pipe = popen(cmd_buff, "r");
+                        if (pipe) {
+                            char buffer[128];
+                            if (fgets(buffer, 128, pipe) != NULL) {
+                                file_size = atol(buffer);
+                            }
+                            pclose(pipe);
+                        }
+                    }
+                }
 
-        //check for and remove double quotes
-        if(file.find('"') == 0 && file.rfind('"') == file.size()-1) {
-            if(file.size()<=2) continue;
+                commit.addFile(filename, status, file_size);
+            }
+        } else {
+            size_t tab = line.find('\t');
 
-            file = file.substr(1,file.size()-2);
+            //incorrect log format
+            if(tab == std::string::npos || tab == 0 || tab == line.size()-1) continue;
+
+            std::string status = line.substr(tab - 1, 1);
+            std::string file   = line.substr(tab + 1);
+
+            if(file.empty()) continue;
+
+            //check for and remove double quotes
+            if(file.find('"') == 0 && file.rfind('"') == file.size()-1) {
+                if(file.size()<=2) continue;
+
+                file = file.substr(1,file.size()-2);
+            }
+
+            commit.addFile(file, status);
         }
-
-        commit.addFile(file, status);
     }
 
     //check we at least got a username

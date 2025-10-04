@@ -16,6 +16,9 @@
 */
 
 #include "file.h"
+#include "gource_settings.h"
+#include <cmath>
+#include <string>
 
 float gGourceFileDiameter  = 8.0;
 
@@ -28,6 +31,7 @@ RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, in
     hidden = true;
     size = gGourceFileDiameter * 1.05;
     radius = size * 0.5;
+    file_size = 0;
 
     setGraphic(gGourceSettings.file_graphic);
 
@@ -71,6 +75,24 @@ RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, in
 }
 
 RFile::~RFile() {
+}
+
+void RFile::setFileSize(unsigned int new_file_size) {
+    file_size = new_file_size;
+
+    if (gGourceSettings.scale_by_file_size) {
+        if (file_size > 0) {
+            radius = gGourceSettings.file_scale * log((float)file_size + 1.0f);
+        } else {
+            radius = gGourceSettings.file_scale;
+        }
+        size = radius * 2.0f;
+        setGraphic(gGourceSettings.file_graphic);
+    }
+}
+
+unsigned int RFile::getFileSize() const {
+    return file_size;
 }
 
 void RFile::remove(time_t removed_timestamp) {
@@ -283,11 +305,13 @@ void RFile::drawNameText(float alpha) {
 
     float name_alpha = selected ? 1.0 : alpha;
 
+    std::string label = gGourceSettings.file_extensions ? ext : name;
+
     if(selected) {
-        file_selected_font.draw(screenpos.x, screenpos.y, name);
+        file_selected_font.draw(screenpos.x, screenpos.y, label.c_str());
     } else {
         file_font.setAlpha(name_alpha);
-        file_font.draw(screenpos.x, screenpos.y, gGourceSettings.file_extensions ? ext : name);
+        file_font.draw(screenpos.x, screenpos.y, label.c_str());
     }
 }
 
