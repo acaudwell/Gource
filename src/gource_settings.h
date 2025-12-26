@@ -61,6 +61,11 @@ public:
     time_t start_timestamp;
     time_t stop_timestamp;
 
+    std::string output_start_date;
+    std::string output_stop_date;
+    time_t output_start_timestamp;
+    time_t output_stop_timestamp;
+
     float start_position;
     float stop_position;
     float stop_at_time;
