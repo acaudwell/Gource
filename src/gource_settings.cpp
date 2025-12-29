@@ -161,7 +161,13 @@ if(extended_help) {
 
     printf("  --user-friction SECONDS  Change the rate users slow down (default: 0.67)\n");
     printf("  --user-scale SCALE       Change scale of users (default: 1.0)\n");
-    printf("  --max-user-speed UNITS   Speed users can travel per second (default: 500)\n\n");
+    printf("  --max-user-speed UNITS   Speed users can travel per second (default: 500)\n");
+    printf("  --user-scale-by-commits  Scale user size based on commit count\n");
+    printf("  --persist-user-scale     Remember user scale when they reappear\n");
+    printf("  --commit-scale-factor F  Commit scaling intensity (default: 0.5)\n");
+    printf("  --commit-scale-type TYPE Scaling algorithm: log, linear, sqrt, exp (default: log)\n");
+    printf("  --user-min-scale SCALE   Minimum user scale (default: 1.0)\n");
+    printf("  --user-max-scale SCALE   Maximum user scale (default: 3.0)\n\n");
 
     printf("  --follow-user USER       Camera will automatically follow this user\n");
     printf("  --highlight-dirs         Highlight the names of all directories\n");
@@ -319,6 +325,13 @@ GourceSettings::GourceSettings() {
     arg_types["follow-user"]      = "multi-value";
     arg_types["highlight-user"]   = "multi-value";
 
+    arg_types["user-scale-by-commits"] = "bool";
+    arg_types["persist-user-scale"]    = "bool";
+    arg_types["commit-scale-factor"]   = "float";
+    arg_types["commit-scale-type"]     = "string";
+    arg_types["user-min-scale"]        = "float";
+    arg_types["user-max-scale"]        = "float";
+
     arg_types["log-level"]          = "string";
     arg_types["background-image"]   = "string";
     arg_types["logo"]               = "string";
@@ -471,6 +484,13 @@ void GourceSettings::setGourceDefaults() {
     user_idle_time = 3.0f;
     user_friction  = 1.0f;
     user_scale     = 1.0f;
+
+    user_scale_by_commits = false;
+    commit_scale_factor   = 0.5f;
+    user_min_scale        = 1.0f;
+    user_max_scale        = 3.0f;
+    persist_user_scale    = false;
+    commit_scale_type     = COMMIT_SCALE_LOG;
 
     follow_users.clear();
     highlight_users.clear();
@@ -1430,6 +1450,70 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(user_scale<=0.0 || user_scale>100.0) {
             conffile.invalidValueException(entry);
         }
+    }
+
+    if(gource_settings->getBool("user-scale-by-commits")) {
+        user_scale_by_commits = true;
+    }
+
+    if(gource_settings->getBool("persist-user-scale")) {
+        persist_user_scale = true;
+    }
+
+    if((entry = gource_settings->getEntry("commit-scale-factor")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify commit-scale-factor (float)");
+
+        commit_scale_factor = entry->getFloat();
+
+        if(commit_scale_factor<=0.0 || commit_scale_factor>10.0) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("commit-scale-type")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify commit-scale-type (log,linear,sqrt,exp)");
+
+        std::string scale_type_str = entry->getString();
+
+        if(scale_type_str == "log") {
+            commit_scale_type = COMMIT_SCALE_LOG;
+        } else if(scale_type_str == "linear") {
+            commit_scale_type = COMMIT_SCALE_LINEAR;
+        } else if(scale_type_str == "sqrt") {
+            commit_scale_type = COMMIT_SCALE_SQRT;
+        } else if(scale_type_str == "exp") {
+            commit_scale_type = COMMIT_SCALE_EXP;
+        } else {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("user-min-scale")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify user-min-scale (float)");
+
+        user_min_scale = entry->getFloat();
+
+        if(user_min_scale<=0.0 || user_min_scale>100.0) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("user-max-scale")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify user-max-scale (float)");
+
+        user_max_scale = entry->getFloat();
+
+        if(user_max_scale<=0.0 || user_max_scale>1000.0) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if(user_min_scale > user_max_scale) {
+        throw ConfFileException("user-min-scale cannot be greater than user-max-scale", "", 0);
     }
 
     if((entry = gource_settings->getEntry("max-user-speed")) != 0) {

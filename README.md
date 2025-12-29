@@ -283,6 +283,29 @@ options:
     --user-scale SCALE
             Change scale of user avatars.
 
+    --user-scale-by-commits
+            Scale user avatar size based on their commit count.
+
+    --persist-user-scale
+            Remember user scale when they disappear and reappear.
+
+    --commit-scale-factor FLOAT
+            Controls the intensity of commit-based scaling (default: 0.5).
+
+    --commit-scale-type TYPE
+            Algorithm for commit-based scaling (default: log).
+
+            log     - Logarithmic scaling, tapers off for high values.
+            linear  - Grows proportionally with commit count.
+            sqrt    - Middle ground between log and linear.
+            exp     - Aggressive growth
+            
+    --user-min-scale FLOAT
+            Minimum scale for commit-based user scaling (default: 1.0).
+
+    --user-max-scale FLOAT
+            Maximum scale for commit-based user scaling (default: 3.0).
+
     --camera-mode MODE
             Camera mode (overview,track).
 
