@@ -233,6 +233,24 @@ options:
     --user-show-filter REGEX
             Show only usernames matching the specified regular expression.
 
+    --user-alias ALIAS=NAME
+            Map a username alias to a canonical name. Multiple users can be
+            mapped to the same canonical name to combine their activity.
+
+            Example: --user-alias "John Smith=John"
+
+    --user-alias-file FILE
+            Load username aliases from a file. The file format is one mapping
+            per line: alias=canonical_name
+
+            Lines starting with # are treated as comments. Empty lines are
+            ignored.
+
+            Example file contents:
+                # Map old usernames to new
+                jsmith=John Smith
+                john.smith@example.com=John Smith
+
     --user-image-dir DIRECTORY
             Directory containing .jpg or .png images of users
             (eg "Full Name.png") to use as avatars.

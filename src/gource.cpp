@@ -1241,6 +1241,14 @@ void Gource::processCommit(const RCommit& commit, float t) {
     }
 }
 
+std::string Gource::resolveUsername(const std::string& username) {
+    std::map<std::string, std::string>::iterator it = gGourceSettings.user_alias_map.find(username);
+    if(it != gGourceSettings.user_alias_map.end()) {
+        return it->second;
+    }
+    return username;
+}
+
 void Gource::addFileAction(const RCommit& commit, const RCommitFile& cf, RFile* file, float t) {
     //create user if havent yet. do it here to ensure at least one of there files
     //was added (incase we hit gGourceSettings.max_files)
@@ -1248,12 +1256,14 @@ void Gource::addFileAction(const RCommit& commit, const RCommitFile& cf, RFile* 
     //find user of this commit or create them
     RUser* user = 0;
 
+    std::string resolved_username = resolveUsername(commit.username);
+
     //see if user already exists
-    std::map<std::string, RUser*>::iterator seen_user = users.find(commit.username);
+    std::map<std::string, RUser*>::iterator seen_user = users.find(resolved_username);
     if(seen_user != users.end()) user = seen_user->second;
 
     if(user == 0) {
-        user = addUser(commit.username);
+        user = addUser(resolved_username);
 
         if(gGourceSettings.highlight_all_users) user->setHighlighted(true);
         else {

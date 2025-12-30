@@ -213,6 +213,8 @@ class Gource : public SDLApp {
 
     void logReadingError(const std::string& error);
 
+    std::string resolveUsername(const std::string& username);
+
     void processCommit(const RCommit& commit, float t);
     void addFileAction(const RCommit& commit, const RCommitFile& cf, RFile* file, float t);
 

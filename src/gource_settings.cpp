@@ -21,6 +21,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/algorithm/string.hpp>
+#include <fstream>
 
 #include "core/utf8/utf8.h"
 #include <time.h>
@@ -156,6 +157,8 @@ if(extended_help) {
 
     printf("  --user-filter REGEX      Ignore usernames matching this regex\n");
     printf("  --user-show-filter REGEX Show only usernames matching this regex\n\n");
+    printf("  --user-alias ALIAS=NAME  Map a username alias to a canonical name\n");
+    printf("  --user-alias-file FILE   Load username aliases from a file\n\n");
     printf("  --file-filter REGEX      Ignore file paths matching this regex\n");
     printf("  --file-show-filter REGEX Show only file paths matching this regex\n\n");
 
@@ -314,8 +317,10 @@ GourceSettings::GourceSettings() {
 
     arg_types["user-filter"]      = "multi-value";
     arg_types["user-show-filter"] = "multi-value";
+    arg_types["user-alias"]       = "multi-value";
     arg_types["file-filter"]      = "multi-value";
     arg_types["file-show-filter"] = "multi-value";
+    arg_types["user-alias-file"]  = "string";
     arg_types["follow-user"]      = "multi-value";
     arg_types["highlight-user"]   = "multi-value";
 
@@ -423,6 +428,9 @@ void GourceSettings::setGourceDefaults() {
     user_image_dir     = "";
     user_image_map.clear();
 
+    user_alias_file = "";
+    user_alias_map.clear();
+
     camera_zoom_min     = 50.0f;
     camera_zoom_default = 100.0f;
     camera_zoom_max     = 10000.0f;
@@ -524,6 +532,25 @@ void GourceSettings::setScaledFontSizes() {
     scaled_user_font_size      = glm::clamp((int)(user_font_size * font_scale), 1, 100);
     scaled_dirname_font_size   = glm::clamp((int)(dirname_font_size * font_scale), 1, 100);
     scaled_filename_font_size  = glm::clamp((int)(filename_font_size * font_scale), 1, 100);
+}
+
+bool GourceSettings::parseUserAlias(const std::string& input, std::string& alias, std::string& canonical) {
+    size_t sep_pos = input.find('=');
+    if(sep_pos == std::string::npos) {
+        return false;
+    }
+
+    alias = input.substr(0, sep_pos);
+    canonical = input.substr(sep_pos + 1);
+
+    boost::algorithm::trim(alias);
+    boost::algorithm::trim(canonical);
+
+    if(alias.empty() || canonical.empty()) {
+        return false;
+    }
+
+    return true;
 }
 
 void GourceSettings::commandLineOption(const std::string& name, const std::string& value) {
@@ -1601,6 +1628,56 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             }
 
             user_show_filters.push_back(r);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("user-alias-file")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify user-alias-file (file path)");
+
+        user_alias_file = entry->getString();
+
+        std::ifstream alias_file(user_alias_file.c_str());
+
+        if(!alias_file.is_open()) {
+            conffile.entryException(entry, "unable to open user-alias-file");
+        }
+
+        std::string line;
+
+        while(std::getline(alias_file, line)) {
+            if(line.empty() || line[0] == '#') continue;
+
+            std::string alias, canonical;
+            if(!parseUserAlias(line, alias, canonical)) {
+                alias_file.close();
+                conffile.entryException(entry, "invalid format in user-alias-file (expected alias=canonical)");
+            }
+
+            user_alias_map[alias] = canonical;
+            debugLog("user alias: %s => %s", alias.c_str(), canonical.c_str());
+        }
+
+        alias_file.close();
+    }
+
+    if((entry = gource_settings->getEntry("user-alias")) != 0) {
+
+        ConfEntryList* aliases = gource_settings->getEntries("user-alias");
+
+        for(ConfEntryList::iterator it = aliases->begin(); it != aliases->end(); it++) {
+
+            entry = *it;
+
+            if(!entry->hasValue()) conffile.entryException(entry, "specify user-alias (alias=canonical)");
+
+            std::string alias, canonical;
+            if(!parseUserAlias(entry->getString(), alias, canonical)) {
+                conffile.entryException(entry, "invalid user-alias format (expected alias=canonical)");
+            }
+
+            user_alias_map[alias] = canonical;
+            debugLog("user alias: %s => %s", alias.c_str(), canonical.c_str());
         }
     }
 

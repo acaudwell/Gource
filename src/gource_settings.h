@@ -88,6 +88,9 @@ public:
     std::string user_image_dir;
     std::map<std::string, std::string> user_image_map;
 
+    std::string user_alias_file;
+    std::map<std::string, std::string> user_alias_map;
+
     float camera_zoom_min;
     float camera_zoom_max;
     float camera_zoom_default;
@@ -177,6 +180,8 @@ public:
     void setScaledFontSizes();
 
     void importGourceSettings(ConfFile& conf, ConfSection* gource_settings = 0);
+
+    bool parseUserAlias(const std::string& input, std::string& alias, std::string& canonical);
 
     void help(bool extended_help=false);
 };
