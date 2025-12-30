@@ -52,6 +52,18 @@ class RUser : public Pawn {
 
     bool highlighted;
 
+    // Parking constants
+    static constexpr float PARKING_ARRIVAL_THRESHOLD = 5.0f;
+    static constexpr float BASE_USER_SIZE = 20.0f;
+
+    // Parking state
+    bool parked;
+    bool parking;
+    vec2 parking_target;
+    vec2 pre_park_pos;
+    float parked_size;
+    float parking_start_dist;
+
     bool nameVisible() const;
 
     void updateFont();
@@ -71,6 +83,17 @@ public:
     bool isIdle();
     bool isFading();
     bool isInactive();
+
+    bool isParked() const { return parked; }
+    bool isParking() const { return parking; }
+    static float parkingArrivalThreshold() { return PARKING_ARRIVAL_THRESHOLD; }
+    void park(const vec2& target);
+    void unpark();
+    void updateParkingTarget(const vec2& target);
+    void snapToParkingTarget(const vec2& target);
+    float parkingDistance() const;
+    void forceParkSnap();
+    vec2 getParkingTarget() const { return parking_target; }
 
     void setSelected(bool selected);
     void setHighlighted(bool highlighted);

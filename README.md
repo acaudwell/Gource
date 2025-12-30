@@ -283,6 +283,47 @@ options:
     --user-scale SCALE
             Change scale of user avatars.
 
+    --park-idle-users
+            Park inactive users at the screen edge instead of removing them.
+
+    --park-immediate
+            Park users as soon as they become idle (implies --park-idle-users).
+
+    --park-lock-slots
+            Prevent parked users from shifting when a slot before them becomes
+            free. Empty slots can be reused by any user.
+
+    --park-position POSITION
+            Position of parking area (bottom, top, left, right).
+            Default: bottom.
+
+    --park-direction DIRECTION
+            Fill direction for parking slots (forward, reverse).
+            Default: forward.
+
+    --park-rows ROWS
+            Number of rows for parked users. Use 0 for auto. Default: 1.
+
+    --park-round-robin
+            Distribute users across rows in round-robin order instead of
+            filling each row completely before starting the next.
+
+    --park-y-offset PIXELS
+            Distance from the screen edge for the parking area. Default: 0.
+
+    --park-spacing PIXELS
+            Spacing between parked users. Default: 0 (auto).
+
+    --park-scale SCALE
+            Scale of parked user avatars. Default: 0.5.
+
+    --park-opacity FLOAT
+            Opacity of parked users (0.0 to 1.0). Default: 0.5.
+
+    --park-speed-factor FLOAT
+            Speed multiplier for users traveling to parking spots.
+            Default: 0.5.
+
     --camera-mode MODE
             Camera mode (overview,track).
 

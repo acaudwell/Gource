@@ -18,6 +18,9 @@
 #include "gource.h"
 #include "core/png_writer.h"
 
+#include <algorithm>
+#include <cmath>
+
 bool  gGourceDrawBackground  = true;
 bool  gGourceQuadTreeDebug   = false;
 int   gGourceMaxQuadTreeDepth = 6;
@@ -130,6 +133,9 @@ Gource::Gource(FrameExporter* exporter) {
 
     dirNodeTree = 0;
     userTree = 0;
+
+    // Initialize parking
+    parked_users.clear();
 
     selectedFile = 0;
     hoverFile = 0;
@@ -1053,6 +1059,19 @@ void Gource::deleteUser(RUser* user) {
     users.erase(user->getName());
     tagusermap.erase(user->getTagID());
 
+    std::unordered_map<RUser*, size_t>::iterator it = parking_slot_index.find(user);
+    if(it != parking_slot_index.end()) {
+        size_t slot = it->second;
+        if(slot < parked_users.size() && parked_users[slot] == user) {
+            parked_users[slot] = nullptr;
+        }
+        parking_slot_index.erase(it);
+    }
+
+    if(!gGourceSettings.park_lock_slots && !parked_users.empty()) {
+        parked_users.erase(std::remove(parked_users.begin(), parked_users.end(), nullptr), parked_users.end());
+    }
+
     //debugLog("deleted user %s, tagid = %d\n", user->getName().c_str(), user->getTagID());
 
     delete user;
@@ -1364,21 +1383,68 @@ void Gource::updateBounds() {
 
 void Gource::updateUsers(float t, float dt) {
     std::vector<RUser*> inactiveUsers;
+    std::vector<RUser*> usersToUnpark;
 
     size_t idle_users = 0;
 
-    // move users
-    for(std::map<std::string,RUser*>::iterator it = users.begin(); it!=users.end(); it++) {
-        RUser* u = it->second;
+    // If slot locking is disabled, drop any reserved slots and mapping
+    if(!gGourceSettings.park_lock_slots && !parking_slot_index.empty()) {
+        parking_slot_index.clear();
+        parked_users.erase(std::remove(parked_users.begin(), parked_users.end(), (RUser*)0), parked_users.end());
+    }
 
+    for(RUser* u : parked_users) {
+        if(u == 0) continue;
+        if(!u->isIdle()) {
+            usersToUnpark.push_back(u);
+        }
+    }
+
+    for(RUser* u : usersToUnpark) {
+        unparkUser(u);
+    }
+
+    // Update parked user positions to follow camera (screen-fixed)
+    for(size_t i = 0; i < parked_users.size(); i++) {
+        RUser* u = parked_users[i];
+        if(u == 0) continue;
+
+        vec2 screen_pos = calcParkingPosition(i);
+
+        if(u->isParked()) {
+            u->snapToParkingTarget(screen_pos);
+        } else if(u->isParking()) {
+            u->updateParkingTarget(screen_pos);
+
+            float snap_thresh = std::max(RUser::parkingArrivalThreshold() * 2.0f,
+                                        10.0f * gGourceSettings.park_scale);
+            snap_thresh = std::max(snap_thresh, gGourceSettings.park_spacing * gGourceSettings.park_scale * 0.75f);
+            if(u->parkingDistance() <= snap_thresh) {
+                u->forceParkSnap();
+            }
+        }
+    }
+    // move users
+    for(auto& kv : users) {
+        RUser* u = kv.second;
         u->logic(t, dt);
 
-        //deselect user if fading out from inactivity
-        if(u->isFading() && selectedUser == u) {
+        //deselect user if fading out from inactivity (only when not using parking)
+        if(!gGourceSettings.park_idle_users && u->isFading() && selectedUser == u) {
             selectUser(0);
         }
 
-        if(u->isInactive()) {
+        // Mark inactive users for parking or deletion
+        bool mark_inactive = false;
+        if(!u->isParked() && !u->isParking()) {
+            if(gGourceSettings.park_idle_users && gGourceSettings.park_immediate && u->isIdle()) {
+                mark_inactive = true;
+            } else if(u->isInactive()) {
+                mark_inactive = true;
+            }
+        }
+
+        if(mark_inactive) {
             inactiveUsers.push_back(u);
         }
 
@@ -1409,10 +1475,196 @@ void Gource::updateUsers(float t, float dt) {
         idle_time = 0;
     }
 
-    // delete inactive users
+    // delete inactive users or park them
     for(std::vector<RUser*>::iterator it = inactiveUsers.begin(); it != inactiveUsers.end(); it++) {
-        deleteUser(*it);
+        if(gGourceSettings.park_idle_users) {
+            parkUser(*it);
+        } else {
+            deleteUser(*it);
+        }
     }
+}
+
+vec2 Gource::calcParkingPosition(int slot) {
+    vec3 campos = camera.getPos();
+    float cam_z = -campos.z;
+
+    float fov_rad = camera.getFOV() * PI / 180.0f;
+    float half_height = cam_z * tan(fov_rad / 2.0f);
+    float aspect_ratio = display.width / (float)display.height;
+    float half_width = half_height * aspect_ratio;
+
+    // Y increases upward, so max_y is visual top of screen
+    float view_max_y = campos.y + half_height;
+    float view_min_y = campos.y - half_height;
+    float view_left = campos.x - half_width;
+    float view_right = campos.x + half_width;
+
+    bool horizontal = (gGourceSettings.park_position == GourceSettings::PARK_BOTTOM || gGourceSettings.park_position == GourceSettings::PARK_TOP);
+    float primary_length = horizontal ? (half_width * 2.0f) : (half_height * 2.0f);
+
+    // Calculate spacing - auto if 0 (based on parked user size + minimal gap)
+    float scaled_spacing;
+    if(gGourceSettings.park_spacing <= 0.0f) {
+        float parked_user_size = 20.0f * gGourceSettings.user_scale * gGourceSettings.park_scale;
+        float min_gap = 5.0f * gGourceSettings.park_scale;
+        scaled_spacing = parked_user_size + min_gap;
+    } else {
+        scaled_spacing = gGourceSettings.park_spacing * gGourceSettings.park_scale;
+    }
+    float scaled_offset = gGourceSettings.park_y_offset * gGourceSettings.park_scale;
+
+    int slots_per_row = std::max(1, (int)(primary_length / scaled_spacing));
+    float margin = scaled_spacing * 0.5f;
+
+    size_t max_slot = (size_t) slot;
+    for(size_t i = 0; i < parked_users.size(); i++) {
+        if(parked_users[i] != 0 && i > max_slot) {
+            max_slot = i;
+        }
+    }
+
+    int total_slots = (int) (max_slot + 1);
+    int effective_rows = gGourceSettings.park_rows;
+    if(effective_rows == 0) {
+        effective_rows = std::max(1, (int) std::ceil((float) total_slots / (float) slots_per_row));
+    }
+
+    int row, col;
+
+    if(gGourceSettings.park_round_robin && effective_rows > 1) {
+        row = slot % effective_rows;
+        col = slot / effective_rows;
+    } else {
+        row = slot / slots_per_row;
+        col = slot % slots_per_row;
+
+        if(effective_rows > 1 && row >= effective_rows) {
+            row = row % effective_rows;
+        }
+    }
+
+    float x, y;
+
+    if(gGourceSettings.park_position == GourceSettings::PARK_BOTTOM) {
+        y = view_max_y - scaled_offset - margin - row * scaled_spacing;
+        if(gGourceSettings.park_direction_reverse) {
+            x = view_right - margin - col * scaled_spacing;
+        } else {
+            x = view_left + margin + col * scaled_spacing;
+        }
+    } else if(gGourceSettings.park_position == GourceSettings::PARK_TOP) {
+        y = view_min_y + scaled_offset + margin + row * scaled_spacing;
+        if(gGourceSettings.park_direction_reverse) {
+            x = view_right - margin - col * scaled_spacing;
+        } else {
+            x = view_left + margin + col * scaled_spacing;
+        }
+    } else if(gGourceSettings.park_position == GourceSettings::PARK_LEFT) {
+        x = view_left + scaled_offset + margin + row * scaled_spacing;
+        if(gGourceSettings.park_direction_reverse) {
+            y = view_min_y + margin + col * scaled_spacing;
+        } else {
+            y = view_max_y - margin - col * scaled_spacing;
+        }
+    } else {
+        x = view_right - scaled_offset - margin - row * scaled_spacing;
+        if(gGourceSettings.park_direction_reverse) {
+            y = view_min_y + margin + col * scaled_spacing;
+        } else {
+            y = view_max_y - margin - col * scaled_spacing;
+        }
+    }
+
+    return vec2(x, y);
+}
+
+void Gource::recalcParkingPositions() {
+    for(size_t i = 0; i < parked_users.size(); i++) {
+        RUser* u = parked_users[i];
+        if(u == 0) continue;
+        vec2 new_target = calcParkingPosition(i);
+        if(u->isParked()) {
+            u->snapToParkingTarget(new_target);
+        } else if(u->isParking()) {
+            u->updateParkingTarget(new_target);
+        }
+    }
+}
+
+void Gource::parkUser(RUser* user) {
+    if(user->isParked() || user->isParking()) return;
+
+    size_t slot = parked_users.size();
+
+    if(gGourceSettings.park_lock_slots) {
+        std::unordered_map<RUser*, size_t>::iterator it = parking_slot_index.find(user);
+
+        if(it != parking_slot_index.end()) {
+            slot = it->second;
+        } else {
+            for(size_t i = 0; i < parked_users.size(); i++) {
+                if(parked_users[i] == 0) {
+                    slot = i;
+                    break;
+                }
+            }
+            if(slot == parked_users.size()) {
+                parked_users.push_back(0);
+            }
+            parking_slot_index[user] = slot;
+        }
+
+        if(slot < parked_users.size() && parked_users[slot] != 0 && parked_users[slot] != user) {
+            size_t new_slot = parked_users.size();
+            for(size_t i = 0; i < parked_users.size(); i++) {
+                if(parked_users[i] == 0) {
+                    new_slot = i;
+                    break;
+                }
+            }
+            if(new_slot == parked_users.size()) {
+                parked_users.push_back(0);
+            }
+            slot = new_slot;
+            parking_slot_index[user] = slot;
+        }
+
+        if(slot >= parked_users.size()) {
+            parked_users.resize(slot + 1, 0);
+        }
+
+        parked_users[slot] = user;
+    } else {
+        slot = parked_users.size();
+        parked_users.push_back(user);
+    }
+
+    vec2 target = calcParkingPosition((int) slot);
+    user->park(target);
+}
+
+void Gource::unparkUser(RUser* user) {
+    if(!user->isParked() && !user->isParking()) return;
+
+    if(gGourceSettings.park_lock_slots) {
+        std::unordered_map<RUser*, size_t>::iterator it = parking_slot_index.find(user);
+        if(it != parking_slot_index.end()) {
+            size_t slot = it->second;
+            if(slot < parked_users.size() && parked_users[slot] == user) {
+                parked_users[slot] = 0;
+            }
+        }
+    } else {
+        std::vector<RUser*>::iterator it = std::find(parked_users.begin(), parked_users.end(), user);
+        if(it != parked_users.end()) {
+            parked_users.erase(it);
+        }
+        parking_slot_index.erase(user);
+    }
+
+    user->unpark();
+    recalcParkingPositions();
 }
 
 void Gource::interactDirs() {
