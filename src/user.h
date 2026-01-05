@@ -39,6 +39,7 @@ class RUser : public Pawn {
     std::list<RAction*> activeActions;
     size_t actionCount;
     size_t activeCount;
+    size_t totalCommitCount;
 
     float action_interval;
     float action_dist;
@@ -77,6 +78,10 @@ public:
 
     int getActionCount();
     int getPendingActionCount();
+    size_t getTotalCommitCount() const;
+    void setTotalCommitCount(size_t count);
+
+    void updateSizeByCommits();
 
     float getAlpha() const;
 
