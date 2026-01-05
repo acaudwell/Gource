@@ -34,6 +34,14 @@ RUser::RUser(const std::string& name, vec2 pos, int tagid) : Pawn(name,pos,tagid
 
     highlighted=false;
 
+    // Initialize parking state
+    parked = false;
+    parking = false;
+    parking_target = vec2(0.0f, 0.0f);
+    pre_park_pos = vec2(0.0f, 0.0f);
+    parked_size = size * gGourceSettings.park_scale;
+    parking_start_dist = 0.0f;
+
     assignUserImage();
 
     setSelected(false);
@@ -296,7 +304,32 @@ void RUser::logic(float t, float dt) {
         accel = normalise(accel) * speed;
     }
 
-    pos += accel * dt;
+    if(parking) {
+        vec2 dir = parking_target - pos;
+        float dist = glm::length(dir);
+        float arrival_threshold = PARKING_ARRIVAL_THRESHOLD * gGourceSettings.park_scale;
+
+        if(dist < arrival_threshold) {
+            pos = parking_target;
+            parking = false;
+            parked = true;
+            accel = vec2(0.0f, 0.0f);
+            size = parked_size;
+            dims = vec2(size, size * graphic_ratio);
+        } else {
+            float park_speed = speed * gGourceSettings.park_speed_factor;
+            vec2 move_dir = normalise(dir) * std::min(park_speed * dt, dist);
+            pos += move_dir;
+
+            float progress = (parking_start_dist > 0.001f) ? (1.0f - (dist / parking_start_dist)) : 1.0f;
+            progress = glm::clamp(progress, 0.0f, 1.0f);
+            float target_size = BASE_USER_SIZE * gGourceSettings.user_scale;
+            size = glm::mix(target_size, parked_size, progress);
+            dims = vec2(size, size * graphic_ratio);
+        }
+    } else if(!parked) {
+        pos += accel * dt;
+    }
 
     accel = accel * std::max(0.0f, (1.0f - gGourceSettings.user_friction*dt));
 }
@@ -342,6 +375,15 @@ const std::string& RUser::getName() const {
 
 float RUser::getAlpha() const {
     float alpha = Pawn::getAlpha();
+
+    if(parked || parking) {
+        return gGourceSettings.park_opacity;
+    }
+
+    if(gGourceSettings.park_idle_users) {
+        return alpha;
+    }
+
     //user fades out if not doing anything
     if(elapsed - last_action > gGourceSettings.user_idle_time) {
         alpha = 1.0 - std::min(elapsed - last_action - gGourceSettings.user_idle_time, 1.0f);
@@ -360,6 +402,59 @@ bool RUser::isFading() {
 
 bool RUser::isInactive() {
     return isIdle() && (elapsed - last_action) > 10.0;
+}
+
+void RUser::park(const vec2& target) {
+    if(parked) {
+        parked = false;
+        pre_park_pos = pos;
+    } else if(!parking) {
+        pre_park_pos = pos;
+    }
+
+    parking_target = target;
+    parking = true;
+    parked_size = BASE_USER_SIZE * gGourceSettings.user_scale * gGourceSettings.park_scale;
+    parking_start_dist = glm::length(target - pre_park_pos);
+}
+
+void RUser::unpark() {
+    if(!parked && !parking) return;
+
+    parking = false;
+    parked = false;
+    size = BASE_USER_SIZE * gGourceSettings.user_scale;
+    dims = vec2(size, size * graphic_ratio);
+    last_action = elapsed;
+}
+
+void RUser::updateParkingTarget(const vec2& target) {
+    float current_dist = glm::length(parking_target - pos);
+    float new_dist = glm::length(target - pos);
+    if(parking_start_dist > 0.001f && current_dist > 0.001f) {
+        parking_start_dist = parking_start_dist * (new_dist / current_dist);
+    }
+    parking_target = target;
+}
+
+void RUser::snapToParkingTarget(const vec2& target) {
+    parking_target = target;
+    if(parked) {
+        setPos(target);
+    }
+}
+
+float RUser::parkingDistance() const {
+    return glm::length(parking_target - pos);
+}
+
+void RUser::forceParkSnap() {
+    parking = false;
+    parked = true;
+    pos = parking_target;
+    accel = vec2(0.0f, 0.0f);
+    size = parked_size;
+    dims = vec2(size, size * graphic_ratio);
 }
 
 bool RUser::nameVisible() const {

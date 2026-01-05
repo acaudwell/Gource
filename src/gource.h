@@ -21,6 +21,7 @@
 #include <deque>
 #include <list>
 #include <fstream>
+#include <unordered_map>
 
 #include "core/display.h"
 #include "core/shader.h"
@@ -189,6 +190,10 @@ class Gource : public SDLApp {
     QuadTree* dirNodeTree;
     QuadTree* userTree;
 
+    // Parking area management
+    std::vector<RUser*> parked_users;
+    std::unordered_map<RUser*, size_t> parking_slot_index;
+
     std::string message;
     float message_timer;
 
@@ -224,6 +229,11 @@ class Gource : public SDLApp {
 
     void updateUsers(float t, float dt);
     void updateDirs(float dt);
+
+    void parkUser(RUser* user);
+    void unparkUser(RUser* user);
+    vec2 calcParkingPosition(int slot);
+    void recalcParkingPositions();
 
     void interactUsers();
     void interactDirs();
