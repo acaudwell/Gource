@@ -79,6 +79,26 @@ options:
 
             Uses the same format as --start-date.
 
+    --output-start-date "YYYY-MM-DD hh:mm:ss +tz"
+            Start outputting frames from this date.
+
+            Unlike --start-date which filters log entries, this option simulates
+            the full repository history but only outputs frames from the specified
+            date onwards. Files and users will be in their correct positions as if
+            the entire history had been rendered.
+
+            Uses the same format as --start-date.
+
+    --output-stop-date "YYYY-MM-DD hh:mm:ss +tz"
+            Stop outputting frames after this date.
+
+            Unlike --stop-date which filters log entries, this option simulates
+            the full repository history but stops outputting frames after the
+            specified date. Useful for rendering segments of long repository
+            histories without processing the entire history multiple times.
+
+            Uses the same format as --start-date.
+
     -p, --start-position POSITION
             Begin at some position in the log (between 0.0 and 1.0 or 'random').
 
