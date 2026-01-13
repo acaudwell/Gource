@@ -45,6 +45,7 @@ RUser::RUser(const std::string& name, vec2 pos, int tagid) : Pawn(name,pos,tagid
     min_units_ps = 100.0;
 
     actionCount = activeCount = 0;
+    totalCommitCount = 0;
 }
 
 void RUser::addAction(RAction* action) {
@@ -56,6 +57,9 @@ void RUser::addAction(RAction* action) {
 
     actions.push_back(action);
     actionCount++;
+    totalCommitCount++;
+
+    updateSizeByCommits();
 }
 
 // remove references to this file
@@ -226,6 +230,52 @@ int RUser::getActionCount() {
 
 int RUser::getPendingActionCount() {
     return actionCount;
+}
+
+size_t RUser::getTotalCommitCount() const {
+    return totalCommitCount;
+}
+
+void RUser::setTotalCommitCount(size_t count) {
+    totalCommitCount = count;
+    updateSizeByCommits();
+}
+
+void RUser::updateSizeByCommits() {
+    if(!gGourceSettings.user_scale_by_commits) return;
+
+    float commitScale = 1.0f;
+    float commits = (float)totalCommitCount;
+    float factor = gGourceSettings.commit_scale_factor;
+
+    // tuned so factor=1 gives roughly 2x scale at 100 commits
+    const float LINEAR_COEFF = 0.01f;
+    const float SQRT_COEFF = 0.1f;
+    const float EXP_BASE_COEFF = 0.1f;
+    const float EXP_POWER_MULT = 3.0f;
+
+    switch(gGourceSettings.commit_scale_type) {
+        case COMMIT_SCALE_LINEAR:
+            commitScale = 1.0f + commits * factor * LINEAR_COEFF;
+            break;
+        case COMMIT_SCALE_SQRT:
+            commitScale = 1.0f + sqrtf(commits) * factor * SQRT_COEFF;
+            break;
+        case COMMIT_SCALE_EXP:
+            commitScale = powf(1.0f + factor * EXP_BASE_COEFF, log10f(1.0f + commits) * EXP_POWER_MULT);
+            break;
+        case COMMIT_SCALE_LOG:
+        default:
+            commitScale = 1.0f + log10f(1.0f + commits) * factor;
+            break;
+    }
+
+    commitScale = glm::clamp(commitScale, gGourceSettings.user_min_scale, gGourceSettings.user_max_scale);
+
+    size = 20.0f * gGourceSettings.user_scale * commitScale;
+    shadowOffset = vec2(2.0, 2.0) * gGourceSettings.user_scale * commitScale;
+
+    dims = vec2(size, size * graphic_ratio);
 }
 
 void RUser::logic(float t, float dt) {
