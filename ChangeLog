@@ -1,5 +1,6 @@
 0.56:
  * Added --author-time option (onlyJakob).
+ * Handle loading indexed colour images (sokripon).
  * Fixed build with Boost 1.89.0 by no longer linking boost system.
  * Increased minimum required version of Boost to 1.69.
  * Request compatibility profile when creating OpenGL context.
