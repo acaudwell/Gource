@@ -180,6 +180,7 @@ if(extended_help) {
     printf("  --filename-time SECONDS  Duration to keep filenames on screen (default: 4.0)\n\n");
 
     printf("  --caption-file FILE         Caption file\n");
+    printf("  --caption-export FILE       Export captions to file (SRT or WebVTT format)\n");
     printf("  --caption-size SIZE         Caption font size\n");
     printf("  --caption-colour FFFFFF     Caption colour in hex\n");
     printf("  --caption-duration SECONDS  Caption duration (default: 10.0)\n");
@@ -271,6 +272,7 @@ GourceSettings::GourceSettings() {
     arg_types["hide-bloom"]              = "bool";
     arg_types["hide-mouse"]              = "bool";
     arg_types["hide-root"]               = "bool";
+    arg_types["hide-captions"]           = "bool";
     arg_types["highlight-users"]         = "bool";
     arg_types["highlight-dirs"]          = "bool";
     arg_types["file-extensions"]         = "bool";
@@ -354,6 +356,7 @@ GourceSettings::GourceSettings() {
     arg_types["dir-colour"]         = "string";
 
     arg_types["caption-file"]       = "string";
+    arg_types["caption-export"]     = "string";
     arg_types["caption-size"]       = "int";
     arg_types["caption-duration"]   = "float";
     arg_types["caption-colour"]     = "string";
@@ -383,6 +386,7 @@ void GourceSettings::setGourceDefaults() {
     hide_bloom     = false;
     hide_mouse     = false;
     hide_root      = false;
+    hide_captions  = false;
 
     start_timestamp = 0;
     start_date = "";
@@ -478,6 +482,7 @@ void GourceSettings::setGourceDefaults() {
     highlight_dirs = false;
 
     caption_file     = "";
+    caption_export_file = "";
     caption_duration = 10.0f;
     caption_size     = 16;
     caption_offset   = 0;
@@ -695,6 +700,7 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             else if(hidestr == "bloom")     hide_bloom     = true;
             else if(hidestr == "progress")  hide_progress  = true;
             else if(hidestr == "root")      hide_root      = true;
+            else if(hidestr == "captions")  hide_captions  = true;
             else if(hidestr == "mouse")     {
                 hide_mouse     = true;
                 hide_progress  = true;
@@ -872,6 +878,13 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         if(!boost::filesystem::exists(caption_file)) {
             conffile.entryException(entry, "caption file not found");
         }
+    }
+
+    if((entry = gource_settings->getEntry("caption-export")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify caption export file (filename)");
+
+        caption_export_file = entry->getString();
     }
 
     if((entry = gource_settings->getEntry("caption-duration")) != 0) {

@@ -17,6 +17,10 @@
 
 #include "gource.h"
 #include "core/png_writer.h"
+#include <fstream>
+#include <iomanip>
+#include <algorithm>
+#include <map>
 
 bool  gGourceDrawBackground  = true;
 bool  gGourceQuadTreeDebug   = false;
@@ -28,6 +32,8 @@ Gource::Gource(FrameExporter* exporter) {
 
     this->logfile = gGourceSettings.path;
     commitlog = 0;
+    subtitle_export_stream = 0;
+    subtitle_export_index = 1;
 
     //disable OpenGL 2.0 functions if not supported
     if(!GLEW_VERSION_2_0) gGourceSettings.ffp = true;
@@ -155,6 +161,7 @@ Gource::Gource(FrameExporter* exporter) {
     //min physics rate 60fps (ie maximum allowed delta 1.0/60)
     max_tick_rate = 1.0 / 60.0;
     runtime = 0.0f;
+    video_time = 0.0f;
     frameskip = 0;
     framecount = 0;
 
@@ -216,6 +223,12 @@ void Gource::writeCustomLog(const std::string& logfile, const std::string& outpu
 Gource::~Gource() {
     reset();
 
+    if(subtitle_export_stream) {
+        subtitle_export_stream->close();
+        delete subtitle_export_stream;
+        subtitle_export_stream = 0;
+    }
+
     if(logmill!=0)   delete logmill;
     if(root!=0)      delete root;
 
@@ -256,7 +269,15 @@ void Gource::update(float t, float dt) {
     scaled_dt *= gGourceSettings.time_scale;
 
     //have to manage runtime internally as we're messing with dt
-    if(!paused) runtime += scaled_dt;
+    if(!paused) {
+        runtime += scaled_dt;
+        // Track unscaled video time for subtitle export
+        if(frameExporter != 0) {
+            video_time += max_tick_rate;  // Advances by 1/framerate per frame (1/25, 1/30, or 1/60)
+        } else {
+            video_time = runtime;  // When not exporting, use runtime
+        }
+    }
 
     if(gGourceSettings.stop_at_time > 0.0 && runtime >= gGourceSettings.stop_at_time) stop_position_reached = true;
 
@@ -955,6 +976,7 @@ void Gource::reset() {
     currtime=0;
     lasttime=0;
     subseconds=0.0;
+    video_time=0.0f;
     tag_seq = 1;
     commit_seq = 1;
 }
@@ -1126,6 +1148,76 @@ void Gource::loadCaptions() {
 
     //fprintf(stderr, "loaded %d captions\n", captions.size());
 
+}
+
+void Gource::exportCaptions() {
+    if(gGourceSettings.caption_export_file.empty()) return;
+
+    subtitle_export_stream = new std::ofstream(gGourceSettings.caption_export_file.c_str());
+    if(!subtitle_export_stream->is_open()) {
+        fprintf(stderr, "Failed to open caption export file: %s\n", gGourceSettings.caption_export_file.c_str());
+        delete subtitle_export_stream;
+        subtitle_export_stream = 0;
+        return;
+    }
+
+    // Determine format from file extension and write header if needed
+    std::string ext = gGourceSettings.caption_export_file.substr(gGourceSettings.caption_export_file.find_last_of(".") + 1);
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+    
+    if(ext == "vtt" || ext == "webvtt") {
+        *subtitle_export_stream << "WEBVTT\n\n";
+    }
+    
+    fprintf(stderr, "Caption export file opened: %s (will record actual timings)\n", gGourceSettings.caption_export_file.c_str());
+}
+
+void Gource::writeSubtitleEntry(RCaption* caption, float start_time, float end_time) {
+    if(!subtitle_export_stream || !subtitle_export_stream->is_open()) return;
+    
+    // Determine format from file extension
+    std::string ext = gGourceSettings.caption_export_file.substr(gGourceSettings.caption_export_file.find_last_of(".") + 1);
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+    bool is_webvtt = (ext == "vtt" || ext == "webvtt");
+    
+    // Format time for SRT/WebVTT
+    int start_hours = (int)(start_time / 3600);
+    int start_mins = (int)((start_time - start_hours * 3600) / 60);
+    int start_secs = (int)(start_time - start_hours * 3600 - start_mins * 60);
+    int start_ms = (int)((start_time - (int)start_time) * 1000);
+    
+    int end_hours = (int)(end_time / 3600);
+    int end_mins = (int)((end_time - end_hours * 3600) / 60);
+    int end_secs = (int)(end_time - end_hours * 3600 - end_mins * 60);
+    int end_ms = (int)((end_time - (int)end_time) * 1000);
+    
+    if(is_webvtt) {
+        // WebVTT format
+        *subtitle_export_stream << std::setfill('0') << std::setw(2) << start_hours << ":"
+            << std::setfill('0') << std::setw(2) << start_mins << ":"
+            << std::setfill('0') << std::setw(2) << start_secs << "."
+            << std::setfill('0') << std::setw(3) << start_ms
+            << " --> "
+            << std::setfill('0') << std::setw(2) << end_hours << ":"
+            << std::setfill('0') << std::setw(2) << end_mins << ":"
+            << std::setfill('0') << std::setw(2) << end_secs << "."
+            << std::setfill('0') << std::setw(3) << end_ms << "\n";
+    } else {
+        // SRT format
+        *subtitle_export_stream << subtitle_export_index++ << "\n";
+        *subtitle_export_stream << std::setfill('0') << std::setw(2) << start_hours << ":"
+            << std::setfill('0') << std::setw(2) << start_mins << ":"
+            << std::setfill('0') << std::setw(2) << start_secs << ","
+            << std::setfill('0') << std::setw(3) << start_ms
+            << " --> "
+            << std::setfill('0') << std::setw(2) << end_hours << ":"
+            << std::setfill('0') << std::setw(2) << end_mins << ":"
+            << std::setfill('0') << std::setw(2) << end_secs << ","
+            << std::setfill('0') << std::setw(3) << end_ms << "\n";
+    }
+    
+    *subtitle_export_stream << caption->getCaption() << "\n\n";
+    subtitle_export_stream->flush();
 }
 
 void Gource::readLog() {
@@ -1717,6 +1809,7 @@ void Gource::logic(float t, float dt) {
         subseconds = 0.0;
 
         loadCaptions();
+        exportCaptions();
     }
 
     //set current time
@@ -1806,51 +1899,71 @@ void Gource::logic(float t, float dt) {
         reloaded = false;
     }
 
-    while(captions.size() > 0) {
-        RCaption* caption = captions.front();
+    // Process captions if we need to display them OR export them
+    bool process_captions = !gGourceSettings.hide_captions || (subtitle_export_stream && subtitle_export_stream->is_open());
+    
+    if(process_captions) {
+        while(captions.size() > 0) {
+            RCaption* caption = captions.front();
 
-        if(caption->timestamp > currtime) break;
+            if(caption->timestamp > currtime) break;
 
-        float y = caption_start_y;
-
-        while(1) {
-
-            bool found = false;
-
-            for(RCaption* cap : active_captions) {
-
-                if(cap->getPos().y == y) {
-                    found = true;
-                    break;
-                }
+            // Record when this caption becomes active for subtitle export
+            if(subtitle_export_stream && subtitle_export_stream->is_open()) {
+                caption_start_times[caption] = video_time;  // Use unscaled video time
             }
 
-            if(!found) break;
+            // Only calculate position if we're showing captions
+            if(!gGourceSettings.hide_captions) {
+                float y = caption_start_y;
 
-            y -= caption_height;
+                while(1) {
+                    bool found = false;
+
+                    for(RCaption* cap : active_captions) {
+                        if(cap->getPos().y == y) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if(!found) break;
+                    y -= caption_height;
+                }
+
+                int caption_offset_x = gGourceSettings.caption_offset;
+
+                // centre
+                if(caption_offset_x == 0) {
+                    caption_offset_x = (display.width / 2) - (fontcaption.getWidth(caption->getCaption()) / 2);
+                } else if(caption_offset_x < 0) {
+                    caption_offset_x = display.width + caption_offset_x - fontcaption.getWidth(caption->getCaption());
+                }
+
+                caption->setPos(vec2(caption_offset_x, y));
+            }
+
+            captions.pop_front();
+            active_captions.push_back(caption);
         }
-
-        int caption_offset_x = gGourceSettings.caption_offset;
-
-        // centre
-        if(caption_offset_x == 0) {
-            caption_offset_x = (display.width / 2) - (fontcaption.getWidth(caption->getCaption()) / 2);
-        } else if(caption_offset_x < 0) {
-            caption_offset_x = display.width + caption_offset_x - fontcaption.getWidth(caption->getCaption());
-        }
-
-        caption->setPos(vec2(caption_offset_x, y));
-
-        captions.pop_front();
-        active_captions.push_back(caption);
     }
 
+    // Process all active captions (visible or hidden)
     for(std::list<RCaption*>::iterator it = active_captions.begin(); it!=active_captions.end();) {
          RCaption* caption = *it;
 
          caption->logic(dt);
 
          if(caption->isFinished()) {
+             // Export subtitle when it finishes
+             if(subtitle_export_stream && subtitle_export_stream->is_open()) {
+                 auto start_it = caption_start_times.find(caption);
+                 if(start_it != caption_start_times.end()) {
+                     writeSubtitleEntry(caption, start_it->second, video_time);
+                     caption_start_times.erase(start_it);
+                 }
+             }
+             
              it = active_captions.erase(it);
              delete caption;
              continue;
@@ -2655,10 +2768,12 @@ void Gource::draw(float t, float dt) {
         fontmedium.alignTop(true);
     }
 
-    for(std::list<RCaption*>::iterator it = active_captions.begin(); it!=active_captions.end(); it++) {
-        RCaption* caption = *it;
+    if(!gGourceSettings.hide_captions) {
+        for(std::list<RCaption*>::iterator it = active_captions.begin(); it!=active_captions.end(); it++) {
+            RCaption* caption = *it;
 
-        caption->draw();
+            caption->draw();
+        }
     }
 
     //file key
