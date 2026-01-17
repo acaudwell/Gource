@@ -34,7 +34,9 @@ protected:
 
     std::string name;
     float namewidth;
+public:
     vec2 accel;
+    vec2 vel;
     float speed;
 
     float elapsed;

@@ -35,8 +35,9 @@ public:
     std::string filename;
     std::string action;
     vec3 colour;
+    unsigned int file_size;
 
-    RCommitFile(const std::string& filename, const std::string& action, vec3 colour);
+    RCommitFile(const std::string& filename, const std::string& action, vec3 colour, unsigned int file_size);
 };
 
 class RCommit {
@@ -44,14 +45,15 @@ class RCommit {
 public:
     time_t timestamp;
     std::string username;
+    std::string commit_hash;
 
     std::list<RCommitFile> files;
 
     void postprocess();
     bool isValid();
 
-    void addFile(const std::string& filename, const std::string& action);
-    void addFile(const std::string& filename, const std::string& action, const vec3& colour);
+    void addFile(const std::string& filename, const std::string& action, unsigned int file_size = 0);
+    void addFile(const std::string& filename, const std::string& action, const vec3& colour, unsigned int file_size = 0);
 
     RCommit();
     void debug();
