@@ -16,6 +16,7 @@
 */
 
 #include "file.h"
+#include "file_colours.h"
 
 float gGourceFileDiameter  = 8.0;
 
@@ -134,7 +135,7 @@ void RFile::setFilename(const std::string& abs_file_path) {
 }
 
 void RFile::colourize() {
-    file_colour = ext.size() ? colourHash(ext) : vec3(1.0f, 1.0f, 1.0f);
+    file_colour = gRFileColours.find(ext);
 }
 
 const vec3& RFile::getNameColour() const{
