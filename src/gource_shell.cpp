@@ -215,8 +215,6 @@ Gource* GourceShell::getNext() {
         return 0;
     }
 
-    gGourceSettings.importGourceSettings(*conf, *gource_settings);
-
     //recording a video kind of implies you want this, unless:
     // -- dont stop requested
     // -- loop requested
