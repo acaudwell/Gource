@@ -16,6 +16,10 @@
 */
 
 #include "file.h"
+#include "gource_settings.h"
+#include <algorithm>
+#include <cmath>
+#include <string>
 
 float gGourceFileDiameter  = 8.0;
 
@@ -28,6 +32,11 @@ RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, in
     hidden = true;
     size = gGourceFileDiameter * 1.05;
     radius = size * 0.5;
+    file_size = 0;
+    target_size = size;
+    size_transition_start = size;
+    size_transition_elapsed = 0.0f;
+    size_transition_duration = 0.5f;
 
     setGraphic(gGourceSettings.file_graphic);
 
@@ -71,6 +80,34 @@ RFile::RFile(const std::string & name, const vec3 & colour, const vec2 & pos, in
 }
 
 RFile::~RFile() {
+}
+
+void RFile::setFileSize(unsigned int new_file_size) {
+    file_size = new_file_size;
+
+    if (gGourceSettings.scale_by_file_size) {
+        float new_size = 0.0f;
+        if (file_size > 0) {
+            new_size = gGourceSettings.file_scale * log((float)file_size + 1.0f) * 2.0f;
+        } else {
+            new_size = gGourceSettings.file_scale * 2.0f;
+        }
+
+        // Smoothly interpolate size changes (especially useful for modifies).
+        size_transition_start = size;
+        target_size = std::max(0.01f, new_size);
+        size_transition_elapsed = 0.0f;
+
+        if(std::fabs(target_size - size_transition_start) < 0.001f) {
+            size = target_size;
+            radius = size * 0.5f;
+            setGraphic(gGourceSettings.file_graphic);
+        }
+    }
+}
+
+unsigned int RFile::getFileSize() const {
+    return file_size;
 }
 
 void RFile::remove(time_t removed_timestamp) {
@@ -175,28 +212,41 @@ float RFile::getAlpha() const{
 void RFile::logic(float dt) {
     Pawn::logic(dt);
 
-    vec2 dest_pos = dest;
-/*
-    if(dir->getParent() != 0 && dir->noDirs()) {
-        vec2 dirnorm = dir->getNodeNormal();
-        dest_pos = dirnorm + dest;
-    }*/
-
-    dest_pos = dest_pos * distance;
-
-    accel = dest_pos - pos;
-
-    // apply accel
-    vec2 accel2 = accel * speed * dt;
-
-    if(glm::length2(accel2) > glm::length2(accel)) {
-        accel2 = accel;
+    if(gGourceSettings.scale_by_file_size && size_transition_elapsed < size_transition_duration) {
+        size_transition_elapsed = std::min(size_transition_duration, size_transition_elapsed + dt);
+        float t = size_transition_elapsed / size_transition_duration;
+        // Smoothstep easing to avoid abrupt starts/stops.
+        float eased = t * t * (3.0f - 2.0f * t);
+        size = size_transition_start + (target_size - size_transition_start) * eased;
+        radius = size * 0.5f;
+        setGraphic(gGourceSettings.file_graphic);
     }
 
-    pos += accel2;
+    // Only apply spiral layout forces when NOT using physics-based file sizing
+    if (!gGourceSettings.scale_by_file_size) {
+        vec2 dest_pos = dest;
+/*
+        if(dir->getParent() != 0 && dir->noDirs()) {
+            vec2 dirnorm = dir->getNodeNormal();
+            dest_pos = dirnorm + dest;
+        }*/
 
-    //files have no momentum
-    accel = vec2(0.0f, 0.0f);
+        dest_pos = dest_pos * distance;
+
+        accel = dest_pos - pos;
+
+        // apply accel
+        vec2 accel2 = accel * speed * dt;
+
+        if(glm::length2(accel2) > glm::length2(accel)) {
+            accel2 = accel;
+        }
+
+        pos += accel2;
+
+        //files have no momentum
+        accel = vec2(0.0f, 0.0f);
+    }
 
     if(fade_start < 0.0f && gGourceSettings.file_idle_time > 0.0f && (elapsed - last_action) > gGourceSettings.file_idle_time) {
         fade_start = elapsed;
@@ -283,11 +333,13 @@ void RFile::drawNameText(float alpha) {
 
     float name_alpha = selected ? 1.0 : alpha;
 
+    std::string label = gGourceSettings.file_extensions ? ext : name;
+
     if(selected) {
-        file_selected_font.draw(screenpos.x, screenpos.y, name);
+        file_selected_font.draw(screenpos.x, screenpos.y, label.c_str());
     } else {
         file_font.setAlpha(name_alpha);
-        file_font.draw(screenpos.x, screenpos.y, gGourceSettings.file_extensions ? ext : name);
+        file_font.draw(screenpos.x, screenpos.y, label.c_str());
     }
 }
 

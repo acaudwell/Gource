@@ -80,7 +80,9 @@ void GourceSettings::help(bool extended_help) {
     printf("      --author-time                Use the timestamp of the author instead of\n");
     printf("                                   the timestamp of the committer\n");
     printf("  -c, --time-scale SCALE           Change simulation time scale (default: 1.0)\n");
-    printf("  -e, --elasticity FLOAT           Elasticity of nodes (default: 0.0)\n\n");
+    printf("  -e, --elasticity FLOAT           Elasticity of nodes (default: 0.0)\n");
+    printf("  -S, --scale-by-file-size         Scale file nodes by file size.\n\n");
+    printf("  \n");
 
     printf("  --key                            Show file extension key\n\n");
 
@@ -187,6 +189,12 @@ if(extended_help) {
 
     printf("  --hash-seed SEED         Change the seed of hash function.\n\n");
 
+    printf("  --file-scale FACTOR          Scale factor for file nodes (default: 1.0).\n");
+    printf("  --dir-spacing FACTOR         Spacing for directory nodes (default: 1.0).\n");
+    printf("  --file-gravity FACTOR        Gravity for file nodes (default: 0.000001).\n");
+    printf("  --file-repulsion FACTOR      Repulsion for file nodes (default: 1000.0).\n");
+    printf("  --show-file-size-on-hover    Show file size on hover.\n\n");
+
     printf("  --path PATH\n\n");
 }
 
@@ -230,6 +238,7 @@ GourceSettings::GourceSettings() {
     arg_aliases["H"] = "extended-help";
     arg_aliases["b"] = "background-colour";
     arg_aliases["c"] = "time-scale";
+    arg_aliases["S"] = "scale-by-file-size";
     arg_aliases["background"]          = "background-colour";
     arg_aliases["disable-bloom"]       = "hide-bloom";
     arg_aliases["disable-progress"]    = "hide-progress";
@@ -363,6 +372,13 @@ GourceSettings::GourceSettings() {
     arg_types["filename-time"]      = "float";
 
     arg_types["dir-name-depth"]     = "int";
+
+    arg_types["scale-by-file-size"] = "bool";
+    arg_types["file-scale"] = "float";
+    arg_types["dir-spacing"] = "float";
+    arg_types["file-gravity"] = "float";
+    arg_types["file-repulsion"] = "float";
+    arg_types["show-file-size-on-hover"] = "bool";
 }
 
 void GourceSettings::setGourceDefaults() {
@@ -471,6 +487,15 @@ void GourceSettings::setGourceDefaults() {
     user_idle_time = 3.0f;
     user_friction  = 1.0f;
     user_scale     = 1.0f;
+
+    scale_by_file_size = false;
+    file_scale = 1.0f;
+
+    dir_spacing = 1.5f;
+    // Adjusted defaults for linear gravity and weak repulsion for tight packing
+    file_gravity = 0.002f;  // Linear gravity (dist), constant pull toward center
+    file_repulsion = 1000.0f;   // Inverse repulsion (strength/dist), weak for tight clusters
+    show_file_size_on_hover = false;
 
     follow_users.clear();
     highlight_users.clear();
@@ -1450,6 +1475,58 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
     if(gource_settings->getBool("highlight-dirs")) {
         highlight_dirs = true;
+    }
+
+    if(gource_settings->getBool("scale-by-file-size")) {
+        scale_by_file_size = true;
+    }
+
+    if((entry = gource_settings->getEntry("file-scale")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify file-scale (float)");
+
+        file_scale = entry->getFloat();
+
+        if(file_scale <= 0.0f) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("dir-spacing")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify dir-spacing (float)");
+
+        dir_spacing = entry->getFloat();
+
+        if(dir_spacing <= 0.0f) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("file-gravity")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify file-gravity (float)");
+
+        file_gravity = entry->getFloat();
+
+        if(file_gravity <= 0.0f) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("file-repulsion")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify file-repulsion (float)");
+
+        file_repulsion = entry->getFloat();
+
+        if(file_repulsion <= 0.0f) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if(gource_settings->getBool("show-file-size-on-hover")) {
+        show_file_size_on_hover = true;
     }
 
     if((entry = gource_settings->getEntry("camera-mode")) != 0) {

@@ -16,11 +16,11 @@
 */
 
 #include "dirnode.h"
+#include "gource_settings.h"
 
 float gGourceMinDirSize   = 15.0;
 
 float gGourceForceGravity = 10.0;
-float gGourceDirPadding   = 1.5;
 
 bool  gGourceNodeDebug    = false;
 bool  gGourceGravity      = true;
@@ -30,6 +30,33 @@ int  gGourceDirNodeInnerLoops = 0;
 int  gGourceFileInnerLoops = 0;
 
 std::map<std::string, RDirNode*> gGourceDirMap;
+
+namespace {
+
+float hashUnit(unsigned int h) {
+    return (float) (h & 0x00ffffffu) / 16777215.0f;
+}
+
+// Deterministic fallback direction used when two files overlap at exactly the same position.
+vec2 separationFallbackDir(RFile* f1, RFile* f2) {
+    unsigned int h = (unsigned int) f1->getTagID() * 73856093u
+                   ^ (unsigned int) f2->getTagID() * 19349663u
+                   ^ 0x9e3779b9u;
+    float angle = (float) (h % 6283) / 1000.0f; // [0, 2pi)
+    return vec2(cosf(angle), sinf(angle));
+}
+
+vec2 smallClusterAnchor(RFile* f, float packed_radius) {
+    unsigned int h1 = (unsigned int) f->getTagID() * 2654435761u;
+    unsigned int h2 = h1 ^ 0x9e3779b9u ^ (h1 >> 16);
+
+    float angle = hashUnit(h1) * PI * 2.0f;
+    float radial = sqrtf(hashUnit(h2));
+
+    return vec2(cosf(angle), sinf(angle)) * (packed_radius * radial);
+}
+
+}
 
 RDirNode::RDirNode(RDirNode* parent, const std::string & abspath) {
 
@@ -108,7 +135,8 @@ void RDirNode::nodeUpdated(bool userInitiated) {
     if(userInitiated) since_last_node_change = 0.0;
 
     calcRadius();
-    updateFilePositions();
+    if (!gGourceSettings.scale_by_file_size)
+        updateFilePositions();
     if(visible && noDirs() && noFiles()) visible = false;
     if(parent !=0) parent->nodeUpdated(true);
 }
@@ -408,6 +436,19 @@ bool RDirNode::addFile(RFile* f) {
         //debugLog("addFile %s to %s\n", f->fullpath.c_str(), abspath.c_str());
 
         files.push_back(f);
+        if(glm::length2(f->getPos()) < 0.000001f) {
+            // Seed new files around the center to avoid symmetric collapse into line-like layouts.
+            size_t file_index = files.size();
+            unsigned int seed = (unsigned int) f->getTagID() * 2246822519u
+                              ^ (unsigned int) file_index * 3266489917u
+                              ^ 0x85ebca6bu;
+            float angle = hashUnit(seed) * PI * 2.0f;
+            float radial = sqrtf(hashUnit(seed ^ 0xc2b2ae35u));
+            float base = std::max(0.3f, f->getSize() * 0.35f);
+            float spread = (1.0f + sqrtf((float)file_index) * 0.28f) * base;
+            vec2 dir(cosf(angle), sinf(angle));
+            f->setPos(dir * (spread * radial));
+        }
         if(!f->isHidden()) visible_count++;
         f->setDir(this);
 
@@ -573,7 +614,17 @@ float RDirNode::getArea() const{
 
 void RDirNode::calcRadius() {
 
-    float total_file_area = file_area * visible_count;
+    float total_file_area = 0;
+    if (gGourceSettings.scale_by_file_size) {
+        for (RFile* f : files) {
+            if (!f->isHidden()) {
+                float r = f->getSize() / 2.0f;
+                total_file_area += r * r * PI;
+            }
+        }
+    } else {
+        total_file_area = file_area * visible_count;
+    }
 
     dir_area = total_file_area;
 
@@ -586,11 +637,11 @@ void RDirNode::calcRadius() {
     //    parent_circ += node->getRadiusSqrt();
     }
 
-    this->dir_radius = std::max(1.0f, (float)sqrt(dir_area)) * gGourceDirPadding;
+    this->dir_radius = std::max(1.0f, (float)sqrt(dir_area)) * gGourceSettings.dir_spacing;
     //this->dir_radius_sqrt = sqrt(dir_radius); //dir_radius_sqrt is not used
 
 //    this->parent_radius = std::max(1.0, parent_circ / PI);
-    this->parent_radius = std::max(1.0f, (float) sqrt(total_file_area) * gGourceDirPadding);
+    this->parent_radius = std::max(1.0f, (float) sqrt(total_file_area)) * gGourceSettings.dir_spacing;
 }
 
 float RDirNode::distanceToParent() const{
@@ -892,6 +943,188 @@ void RDirNode::calcEdges() {
     }
 }
 
+void RDirNode::applyFilePhysics(float dt) {
+    if (files.empty() || !gGourceSettings.scale_by_file_size) return;
+
+    std::vector<RFile*> visible_files;
+    visible_files.reserve(files.size());
+
+    for(std::list<RFile*>::iterator it = files.begin(); it != files.end(); ++it) {
+        RFile* f = *it;
+        if(!f->isHidden()) visible_files.push_back(f);
+    }
+
+    if(visible_files.empty()) return;
+
+    // Position-based solver: resolve overlaps first, then gently compress toward center.
+    // This gives dense, near-touching clusters with minimal wobble.
+    const size_t file_count = visible_files.size();
+    const int iterations = std::min(28, std::max(8, (int)file_count / 12 + 8));
+    const float sub_dt = dt / (float)iterations;
+
+    const float contact_gap = 0.08f;
+    const float center_pull_speed = std::max(0.001f, gGourceSettings.file_gravity * 220.0f);
+    const float separation_stiffness = glm::clamp(gGourceSettings.file_repulsion * 0.0008f, 0.35f, 1.0f);
+
+    float occupied_area = 0.0f;
+    for(size_t i = 0; i < file_count; ++i) {
+        float r = visible_files[i]->getSize() * 0.5f;
+        occupied_area += PI * r * r;
+    }
+    float packed_radius = sqrtf(std::max(0.0001f, occupied_area / (float)PI));
+    bool use_small_cluster_shaping = file_count <= 40;
+
+    for (int iter = 0; iter < iterations; ++iter) {
+        // Keep the cluster anchored around the directory center.
+        vec2 centroid(0.0f, 0.0f);
+        for(size_t i = 0; i < file_count; ++i) {
+            centroid += visible_files[i]->getPos();
+        }
+        centroid *= (1.0f / (float)file_count);
+
+        float recenter_strength = std::min(1.0f, sub_dt * 8.0f);
+        for(size_t i = 0; i < file_count; ++i) {
+            RFile* f = visible_files[i];
+            f->setPos(f->getPos() - centroid * recenter_strength);
+        }
+
+        if(use_small_cluster_shaping) {
+            // Small clusters easily lock into line/chain minima.
+            // A weak attraction to deterministic disk anchors keeps them round and stable.
+            float anchor_pull = std::min(0.38f, sub_dt * 18.0f);
+            for(size_t i = 0; i < file_count; ++i) {
+                RFile* f = visible_files[i];
+                vec2 anchor = smallClusterAnchor(f, packed_radius);
+                vec2 p = f->getPos();
+                f->setPos(p + (anchor - p) * anchor_pull);
+            }
+        }
+
+        int iter_overlaps = 0;
+
+        // Resolve overlaps and enforce near-touching spacing.
+        for(size_t i = 0; i < file_count; ++i) {
+            RFile* f1 = visible_files[i];
+            float r1 = f1->getSize() * 0.5f;
+            vec2 p1 = f1->getPos();
+
+            for(size_t j = i + 1; j < file_count; ++j) {
+                RFile* f2 = visible_files[j];
+                float r2 = f2->getSize() * 0.5f;
+                vec2 p2 = f2->getPos();
+
+                float desired = r1 + r2 + contact_gap;
+                vec2 d = p2 - p1;
+                float dist2 = glm::length2(d);
+
+                if(dist2 >= desired * desired) continue;
+
+                float dist = 0.0f;
+                vec2 dir;
+
+                if(dist2 <= 0.000001f) {
+                    dir = separationFallbackDir(f1, f2);
+                } else {
+                    dist = sqrtf(dist2);
+                    dir = d / dist;
+                }
+
+                float overlap = desired - dist;
+                float correction = overlap * separation_stiffness;
+
+                float inv_mass1 = 1.0f / std::max(1.0f, r1);
+                float inv_mass2 = 1.0f / std::max(1.0f, r2);
+                float inv_mass_sum = inv_mass1 + inv_mass2;
+
+                if(inv_mass_sum <= 0.0f) continue;
+
+                float move1 = correction * (inv_mass1 / inv_mass_sum);
+                float move2 = correction * (inv_mass2 / inv_mass_sum);
+
+                p1 -= dir * move1;
+                p2 += dir * move2;
+
+                f1->setPos(p1);
+                f2->setPos(p2);
+
+                iter_overlaps++;
+            }
+        }
+
+        // Radial compression to make nodes pack tighter.
+        // If many overlaps are still being resolved this iteration, back off compression.
+        float pull_step = center_pull_speed * sub_dt;
+        if(iter_overlaps > 0) pull_step *= 0.2f;
+
+        for(size_t i = 0; i < file_count; ++i) {
+            RFile* f = visible_files[i];
+            vec2 p = f->getPos();
+            float dist = glm::length(p);
+            if(dist > 0.0001f) {
+                float step = std::min(dist, pull_step);
+                f->setPos(p - normalise(p) * step);
+            }
+        }
+
+        // Converged enough for this frame.
+        if(iter_overlaps == 0 && iter > 6) break;
+    }
+
+    // Final cleanup pass to remove residual overlaps.
+    for(int pass = 0; pass < 3; ++pass) {
+        bool had_overlap = false;
+        for(size_t i = 0; i < file_count; ++i) {
+            RFile* f1 = visible_files[i];
+            float r1 = f1->getSize() * 0.5f;
+            vec2 p1 = f1->getPos();
+
+            for(size_t j = i + 1; j < file_count; ++j) {
+                RFile* f2 = visible_files[j];
+                float r2 = f2->getSize() * 0.5f;
+                vec2 p2 = f2->getPos();
+
+                float desired = r1 + r2 + contact_gap;
+                vec2 d = p2 - p1;
+                float dist2 = glm::length2(d);
+                if(dist2 >= desired * desired) continue;
+
+                float dist = 0.0f;
+                vec2 dir;
+                if(dist2 <= 0.000001f) {
+                    dir = separationFallbackDir(f1, f2);
+                } else {
+                    dist = sqrtf(dist2);
+                    dir = d / dist;
+                }
+
+                float overlap = desired - dist;
+                float inv_mass1 = 1.0f / std::max(1.0f, r1);
+                float inv_mass2 = 1.0f / std::max(1.0f, r2);
+                float inv_mass_sum = inv_mass1 + inv_mass2;
+                if(inv_mass_sum <= 0.0f) continue;
+
+                float move1 = overlap * (inv_mass1 / inv_mass_sum);
+                float move2 = overlap * (inv_mass2 / inv_mass_sum);
+
+                p1 -= dir * move1;
+                p2 += dir * move2;
+                f1->setPos(p1);
+                f2->setPos(p2);
+                had_overlap = true;
+            }
+        }
+
+        if(!had_overlap) break;
+    }
+
+    // We intentionally avoid carrying momentum for this solver to reduce wobble.
+    for(size_t i = 0; i < file_count; ++i) {
+        visible_files[i]->vel = vec2(0.0f, 0.0f);
+        visible_files[i]->accel = vec2(0.0f, 0.0f);
+    }
+
+}
+
 void RDirNode::logic(float dt) {
 
     //move
@@ -904,11 +1137,14 @@ void RDirNode::logic(float dt) {
     }
 
     //update files
-     for(std::list<RFile*>::iterator it = files.begin(); it!=files.end(); it++) {
-         RFile* f = *it;
-
-         f->logic(dt);
-     }
+    if (gGourceSettings.scale_by_file_size) {
+        applyFilePhysics(dt);
+    }
+    for(std::list<RFile*>::iterator it = files.begin(); it!=files.end(); it++) {
+        RFile* f = *it;
+        
+        f->logic(dt);
+    }
 
     //update child nodes
     for(std::list<RDirNode*>::iterator it = children.begin(); it != children.end(); it++) {
@@ -1187,4 +1423,3 @@ void RDirNode::updateQuadItemBounds() {
     //set bounds
     quadItemBounds.set(pos - radoffset, pos + radoffset);
 }
-
