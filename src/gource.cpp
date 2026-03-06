@@ -24,6 +24,31 @@ int   gGourceMaxQuadTreeDepth = 6;
 
 int gGourceUserInnerLoops = 0;
 
+static std::string formatFileSize(unsigned int bytes) {
+    static const char* units[] = {"B", "KB", "MB", "GB", "TB"};
+
+    if(bytes < 1024) {
+        return std::to_string(bytes) + " B";
+    }
+
+    double value = (double) bytes;
+    unsigned int unit_index = 0;
+
+    while(value >= 1024.0 && unit_index < (sizeof(units) / sizeof(units[0])) - 1) {
+        value /= 1024.0;
+        unit_index++;
+    }
+
+    char buf[64];
+    if(value >= 100.0) {
+        snprintf(buf, sizeof(buf), "%.0f %s", value, units[unit_index]);
+    } else {
+        snprintf(buf, sizeof(buf), "%.1f %s", value, units[unit_index]);
+    }
+
+    return std::string(buf);
+}
+
 Gource::Gource(FrameExporter* exporter) {
 
     this->logfile = gGourceSettings.path;
@@ -1003,6 +1028,7 @@ RFile* Gource::addFile(const RCommitFile& cf) {
     int tagid = tag_seq++;
 
     RFile* file = new RFile(cf.filename, cf.colour, vec2(0.0,0.0), tagid);
+    file->setFileSize(cf.file_size);
 
     files[cf.filename] = file;
 
@@ -1229,7 +1255,12 @@ void Gource::processCommit(const RCommit& commit, float t) {
         }
 
         std::map<std::string, RFile*>::iterator seen_file = files.find(cf.filename);
-        if(seen_file != files.end()) file = seen_file->second;
+        if(seen_file != files.end()) {
+            file = seen_file->second;
+            if (cf.action == "M") {
+                file->setFileSize(cf.file_size);
+            }
+        }
 
         if(file == 0) {
             file = addFile(cf);
@@ -2371,6 +2402,7 @@ void Gource::drawFiles(float dt) {
     } else {
         root->drawFiles(dt);
     }
+
 }
 
 void Gource::drawUsers(float dt) {
@@ -2678,6 +2710,9 @@ void Gource::draw(float t, float dt) {
 
         textbox.setText(hoverFile->getName());
         if(display_path.size()) textbox.addLine(display_path);
+        if (gGourceSettings.show_file_size_on_hover) {
+            textbox.addLine(formatFileSize(hoverFile->getFileSize()));
+        }
         textbox.setColour(hoverFile->getColour());
 
         textbox.setPos(mousepos, true);
