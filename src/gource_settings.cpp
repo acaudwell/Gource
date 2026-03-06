@@ -163,6 +163,19 @@ if(extended_help) {
     printf("  --user-scale SCALE       Change scale of users (default: 1.0)\n");
     printf("  --max-user-speed UNITS   Speed users can travel per second (default: 500)\n\n");
 
+    printf("  --park-idle-users        Park inactive users at screen edge instead of removing\n");
+    printf("  --park-immediate         Park users as soon as they go idle\n");
+    printf("  --park-lock-slots        Keep parking slots reserved once claimed (not per-user)\n");
+    printf("  --park-y-offset PIXELS   Distance from edge for parking area (default: 0)\n");
+    printf("  --park-spacing PIXELS    Spacing between parked users (default: 0 = auto)\n");
+    printf("  --park-opacity FLOAT     Opacity of parked users (default: 0.5)\n");
+    printf("  --park-scale SCALE       Scale of parked users (default: 0.5)\n");
+    printf("  --park-speed-factor F    Speed multiplier while parking (default: 0.5)\n");
+    printf("  --park-rows ROWS         Number of rows for parked users (0 = auto, default: 1)\n");
+    printf("  --park-round-robin       Distribute users across rows in round-robin order\n");
+    printf("  --park-position POS      Position of parking area: bottom, top, left, right\n");
+    printf("  --park-direction DIR     Fill direction: forward or reverse (default: forward)\n\n");
+
     printf("  --follow-user USER       Camera will automatically follow this user\n");
     printf("  --highlight-dirs         Highlight the names of all directories\n");
     printf("  --highlight-user USER    Highlight the names of a particular user\n");
@@ -363,6 +376,19 @@ GourceSettings::GourceSettings() {
     arg_types["filename-time"]      = "float";
 
     arg_types["dir-name-depth"]     = "int";
+
+    arg_types["park-idle-users"]      = "bool";
+    arg_types["park-immediate"]       = "bool";
+    arg_types["park-lock-slots"]      = "bool";
+    arg_types["park-y-offset"]        = "float";
+    arg_types["park-spacing"]         = "float";
+    arg_types["park-opacity"]         = "float";
+    arg_types["park-scale"]           = "float";
+    arg_types["park-speed-factor"]    = "float";
+    arg_types["park-rows"]            = "int";
+    arg_types["park-round-robin"]     = "bool";
+    arg_types["park-position"]        = "string";
+    arg_types["park-direction"]       = "string";
 }
 
 void GourceSettings::setGourceDefaults() {
@@ -471,6 +497,19 @@ void GourceSettings::setGourceDefaults() {
     user_idle_time = 3.0f;
     user_friction  = 1.0f;
     user_scale     = 1.0f;
+
+    park_idle_users     = false;
+    park_immediate      = false;
+    park_lock_slots     = false;
+    park_y_offset       = 0.0f;
+    park_spacing        = 0.0f;
+    park_opacity        = 0.5f;
+    park_scale          = 0.5f;
+    park_speed_factor   = 0.5f;
+    park_rows           = 1;
+    park_round_robin    = false;
+    park_position       = PARK_BOTTOM;
+    park_direction_reverse = false;
 
     follow_users.clear();
     highlight_users.clear();
@@ -1428,6 +1467,122 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         user_scale = entry->getFloat();
 
         if(user_scale<=0.0 || user_scale>100.0) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if(gource_settings->getBool("park-idle-users")) {
+        park_idle_users = true;
+    }
+
+    if(gource_settings->getBool("park-immediate")) {
+        park_immediate = true;
+        // park-immediate implies park-idle-users
+        park_idle_users = true;
+    }
+
+    if(gource_settings->getBool("park-lock-slots")) {
+        park_lock_slots = true;
+    }
+
+    if((entry = gource_settings->getEntry("park-y-offset")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify park-y-offset (pixels)");
+
+        park_y_offset = entry->getFloat();
+
+        if(park_y_offset < 0.0f) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("park-spacing")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify park-spacing (pixels)");
+
+        park_spacing = entry->getFloat();
+
+        if(park_spacing < 0.0f) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("park-opacity")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify park-opacity (0.0-1.0)");
+
+        park_opacity = entry->getFloat();
+
+        if(park_opacity < 0.0f || park_opacity > 1.0f) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("park-scale")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify park-scale (scale)");
+
+        park_scale = entry->getFloat();
+
+        if(park_scale <= 0.0f || park_scale > 2.0f) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("park-speed-factor")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify park-speed-factor (multiplier)");
+
+        park_speed_factor = entry->getFloat();
+
+        if(park_speed_factor <= 0.0f || park_speed_factor > 5.0f) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("park-rows")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify park-rows (number)");
+
+        park_rows = entry->getInt();
+
+        if(park_rows < 0 || park_rows > 10) {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if(gource_settings->getBool("park-round-robin")) {
+        park_round_robin = true;
+    }
+
+    if((entry = gource_settings->getEntry("park-position")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify park-position (bottom, top, left, right)");
+
+        std::string pos = entry->getString();
+
+        if(pos == "bottom") {
+            park_position = PARK_BOTTOM;
+        } else if(pos == "top") {
+            park_position = PARK_TOP;
+        } else if(pos == "left") {
+            park_position = PARK_LEFT;
+        } else if(pos == "right") {
+            park_position = PARK_RIGHT;
+        } else {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("park-direction")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify park-direction (forward, reverse)");
+
+        std::string dir = entry->getString();
+
+        if(dir == "reverse") {
+            park_direction_reverse = true;
+        } else if(dir != "forward") {
             conffile.invalidValueException(entry);
         }
     }

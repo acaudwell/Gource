@@ -136,6 +136,20 @@ public:
     float user_scale;
     float time_scale;
 
+    bool park_idle_users;
+    bool park_immediate;
+    bool park_lock_slots;
+    float park_y_offset;
+    float park_spacing;
+    float park_opacity;
+    float park_scale;
+    float park_speed_factor;
+    int park_rows;
+    bool park_round_robin;
+    enum ParkPosition { PARK_BOTTOM, PARK_TOP, PARK_LEFT, PARK_RIGHT };
+    ParkPosition park_position;
+    bool park_direction_reverse;
+
     bool highlight_dirs;
     bool highlight_all_users;
 
