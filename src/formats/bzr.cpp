@@ -118,7 +118,24 @@ bool BazaarLog::parseCommit(RCommit& commit) {
 
     while(logf->getNextLine(line) && line.size()) {
         if (!bzr_file_regex.match(line, &entries)) continue;
-        commit.addFile(entries[1], entries[0]);
+
+        std::string action   = entries[0];
+        std::string filename = entries[1];
+
+        if(action == "R") {
+            // Rename: "old_path => new_path"
+            size_t arrow = filename.find(" => ");
+            if(arrow != std::string::npos) {
+                std::string old_path = filename.substr(0, arrow);
+                std::string new_path = filename.substr(arrow + 4);
+                commit.addFile(old_path, "D");
+                commit.addFile(new_path, "A");
+            } else {
+                commit.addFile(filename, "A");
+            }
+        } else {
+            commit.addFile(filename, action);
+        }
     }
 
     return true;
