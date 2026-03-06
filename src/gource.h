@@ -178,6 +178,9 @@ class Gource : public SDLApp {
     int commitqueue_max_size;
     float starting_z;
 
+    int commit_interval_count;
+    time_t commit_interval_base;
+
     std::deque<RCommit> commitqueue;
     std::map<std::string, RUser*> users;
     std::map<std::string, RFile*> files;

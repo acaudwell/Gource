@@ -918,6 +918,9 @@ void Gource::reset() {
 
     commitqueue_max_size = 100;
 
+    commit_interval_count = 0;
+    commit_interval_base  = 0;
+
     rotate_angle = 0.0f;
 
     if(root!=0) delete root;
@@ -1143,6 +1146,14 @@ void Gource::readLog() {
                 break;
             }
             continue;
+        }
+
+        if(gGourceSettings.commit_interval > 0.0f) {
+            if(commit_interval_count == 0) {
+                commit_interval_base = commit.timestamp;
+            }
+            commit.timestamp = commit_interval_base + (time_t)(commit_interval_count * gGourceSettings.commit_interval);
+            commit_interval_count++;
         }
 
         if(gGourceSettings.stop_timestamp != 0 && commit.timestamp > gGourceSettings.stop_timestamp) {

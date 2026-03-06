@@ -74,6 +74,7 @@ void GourceSettings::help(bool extended_help) {
     printf("                                   for a number of seconds (default: 3)\n");
     printf("      --disable-auto-skip          Disable auto skip\n");
     printf("  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 10)\n");
+    printf("      --commit-interval SECONDS    Fixed number of seconds between commits\n");
     printf("      --realtime                   Realtime playback speed\n");
     printf("      --no-time-travel             Use the time of the last commit if the\n");
     printf("                                   time of a commit is in the past\n");
@@ -295,6 +296,7 @@ GourceSettings::GourceSettings() {
     arg_types["bloom-multiplier"]  = "float";
     arg_types["elasticity"]        = "float";
     arg_types["seconds-per-day"]   = "float";
+    arg_types["commit-interval"]   = "float";
     arg_types["auto-skip-seconds"] = "float";
     arg_types["stop-at-time"]      = "float";
     arg_types["max-user-speed"]    = "float";
@@ -408,6 +410,7 @@ void GourceSettings::setGourceDefaults() {
 
     auto_skip_seconds     = 3.0f;
     days_per_second       = 0.1f; // TODO: check this is right
+    commit_interval       = -1.0f;
     file_idle_time        = 0.0f;
     file_idle_time_at_end = 0.0f;
     time_scale            = 1.0f;
@@ -1206,6 +1209,20 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
 
         // convert seconds-per-day to days-per-second
         days_per_second = 1.0 / seconds_per_day;
+    }
+
+    if((entry = gource_settings->getEntry("commit-interval")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify commit-interval (seconds)");
+
+        commit_interval = entry->getFloat();
+
+        if(commit_interval <= 0.0f) {
+            conffile.invalidValueException(entry);
+        }
+
+        // disable auto-skip in commit-interval mode
+        auto_skip_seconds = -1.0f;
     }
 
     if((entry = gource_settings->getEntry("auto-skip-seconds")) != 0) {
