@@ -271,7 +271,23 @@ void Gource::update(float t, float dt) {
     //extract frames based on frameskip setting if frameExporter defined
     if(frameExporter != 0 && commitlog && !gGourceSettings.shutdown) {
         if(framecount % (frameskip+1) == 0) {
-            frameExporter->dump();
+            // Check if current simulation time is within output date range
+            bool in_output_range = true;
+
+            // Skip frames before output-start-date
+            if(gGourceSettings.output_start_timestamp != 0 && currtime < gGourceSettings.output_start_timestamp) {
+                in_output_range = false;
+            }
+
+            // Skip frames after output-stop-date and mark as finished
+            if(gGourceSettings.output_stop_timestamp != 0 && currtime > gGourceSettings.output_stop_timestamp) {
+                in_output_range = false;
+                stop_position_reached = true;
+            }
+
+            if(in_output_range) {
+                frameExporter->dump();
+            }
         }
     }
 

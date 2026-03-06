@@ -63,6 +63,10 @@ void GourceSettings::help(bool extended_help) {
 
     printf("  --start-date 'YYYY-MM-DD hh:mm:ss +tz'  Start at a date and optional time\n");
     printf("  --stop-date  'YYYY-MM-DD hh:mm:ss +tz'  Stop at a date and optional time\n\n");
+    printf("  --output-start-date 'YYYY-MM-DD hh:mm:ss +tz'\n");
+    printf("                                   Start outputting frames from this date\n");
+    printf("  --output-stop-date  'YYYY-MM-DD hh:mm:ss +tz'\n");
+    printf("                                   Stop outputting frames after this date\n\n");
     printf("  -p, --start-position POSITION    Start at some position (0.0-1.0 or 'random')\n");
     printf("      --stop-position  POSITION    Stop at some position\n");
     printf("  -t, --stop-at-time SECONDS       Stop after a specified number of seconds\n");
@@ -340,6 +344,8 @@ GourceSettings::GourceSettings() {
     arg_types["start-position"]     = "string";
     arg_types["start-date"]         = "string";
     arg_types["stop-date"]          = "string";
+    arg_types["output-start-date"]  = "string";
+    arg_types["output-stop-date"]   = "string";
     arg_types["stop-position"]      = "string";
     arg_types["crop"]               = "string";
     arg_types["hide"]               = "string";
@@ -389,6 +395,12 @@ void GourceSettings::setGourceDefaults() {
 
     stop_timestamp = 0;
     stop_date = "";
+
+    output_start_timestamp = 0;
+    output_start_date = "";
+
+    output_stop_timestamp = 0;
+    output_stop_date = "";
 
     start_position  = 0.0f;
     stop_position   = 0.0f;
@@ -1305,6 +1317,49 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
             char datestr[256];
             strftime(datestr, 256, "%Y-%m-%d", localtime ( &stop_timestamp_rounded ));
             stop_date = datestr;
+
+        } else {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("output-start-date")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify output-start-date (YYYY-MM-DD hh:mm:ss)");
+
+        std::string output_start_date_string = entry->getString();
+
+        if(parseDateTime(output_start_date_string, output_start_timestamp)) {
+
+            char datestr[256];
+            strftime(datestr, 256, "%Y-%m-%d", localtime ( &output_start_timestamp ));
+            output_start_date = datestr;
+
+        } else {
+            conffile.invalidValueException(entry);
+        }
+    }
+
+    if((entry = gource_settings->getEntry("output-stop-date")) != 0) {
+
+        if(!entry->hasValue()) conffile.entryException(entry, "specify output-stop-date (YYYY-MM-DD hh:mm:ss)");
+
+        std::string output_stop_date_string = entry->getString();
+
+        if(parseDateTime(output_stop_date_string, output_stop_timestamp)) {
+
+            struct tm * timeinfo;
+            timeinfo = localtime ( &output_stop_timestamp );
+
+            time_t output_stop_timestamp_rounded = output_stop_timestamp;
+
+            if(timeinfo->tm_hour > 0 || timeinfo->tm_min > 0 || timeinfo->tm_sec > 0) {
+                output_stop_timestamp_rounded += 60*60*24;
+            }
+
+            char datestr[256];
+            strftime(datestr, 256, "%Y-%m-%d", localtime ( &output_stop_timestamp_rounded ));
+            output_stop_date = datestr;
 
         } else {
             conffile.invalidValueException(entry);
