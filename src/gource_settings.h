@@ -24,6 +24,14 @@
 #include "core/settings.h"
 #include "core/regex.h"
 
+// Commit-based user scaling algorithms
+enum CommitScaleType {
+    COMMIT_SCALE_LOG,     
+    COMMIT_SCALE_LINEAR,  
+    COMMIT_SCALE_SQRT,    
+    COMMIT_SCALE_EXP      
+};
+
 class GourceSettings : public SDLAppSettings {
 protected:
     void commandLineOption(const std::string& name, const std::string& value);
@@ -135,6 +143,13 @@ public:
     float user_friction;
     float user_scale;
     float time_scale;
+
+    bool user_scale_by_commits;
+    float commit_scale_factor;
+    float user_min_scale;
+    float user_max_scale;
+    bool persist_user_scale;
+    CommitScaleType commit_scale_type;
 
     bool highlight_dirs;
     bool highlight_all_users;

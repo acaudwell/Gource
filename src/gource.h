@@ -182,6 +182,7 @@ class Gource : public SDLApp {
     std::map<std::string, RUser*> users;
     std::map<std::string, RFile*> files;
     std::map<int, RUser*> tagusermap;
+    std::map<std::string, size_t> user_commit_counts;
 
     std::list<RCaption*> captions;
     std::list<RCaption*> active_captions;

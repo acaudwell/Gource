@@ -1032,6 +1032,14 @@ RUser* Gource::addUser(const std::string& username) {
 
     RUser* user = new RUser(username, pos, tagid);
 
+    // Restore persisted commit count
+    if(gGourceSettings.persist_user_scale && gGourceSettings.user_scale_by_commits) {
+        std::map<std::string, size_t>::iterator it = user_commit_counts.find(username);
+        if(it != user_commit_counts.end()) {
+            user->setTotalCommitCount(it->second);
+        }
+    }
+
     users[username]   = user;
     tagusermap[tagid] = user;
 
@@ -1048,6 +1056,11 @@ void Gource::deleteUser(RUser* user) {
 
     if(selectedUser == user) {
         selectUser(0);
+    }
+
+    // Save commit count for persistence
+    if(gGourceSettings.persist_user_scale && gGourceSettings.user_scale_by_commits) {
+        user_commit_counts[user->getName()] = user->getTotalCommitCount();
     }
 
     users.erase(user->getName());
