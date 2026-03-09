@@ -44,6 +44,7 @@
 #include "action.h"
 #include "caption.h"
 #include "file.h"
+#include "file_colours.h"
 #include "user.h"
 #include "dirnode.h"
 #include "zoomcamera.h"

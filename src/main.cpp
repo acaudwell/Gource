@@ -19,6 +19,8 @@
 
 int main(int argc, char *argv[]) {
 
+    gRFileColours.init();
+
     std::string exepath;
 #ifndef _WIN32
     if(argc > 0) {
