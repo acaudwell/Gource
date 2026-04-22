@@ -41,6 +41,7 @@ public:
     bool hide_bloom;
     bool hide_mouse;
     bool hide_root;
+    bool hide_captions;
 
     bool disable_auto_rotate;
 
@@ -156,6 +157,7 @@ public:
     bool file_extension_fallback;
 
     std::string caption_file;
+    std::string caption_export_file;
     vec3 caption_colour;
     float caption_duration;
     int caption_size;

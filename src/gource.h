@@ -145,6 +145,7 @@ class Gource : public SDLApp {
     time_t currtime;
     time_t lasttime;
     float runtime;
+    float video_time;  // Unscaled time for subtitle export
     float subseconds;
 
     float splash;
@@ -185,6 +186,11 @@ class Gource : public SDLApp {
 
     std::list<RCaption*> captions;
     std::list<RCaption*> active_captions;
+    
+    // Subtitle export tracking
+    std::ofstream* subtitle_export_stream;
+    int subtitle_export_index;
+    std::map<RCaption*, float> caption_start_times;
 
     QuadTree* dirNodeTree;
     QuadTree* userTree;
@@ -208,6 +214,8 @@ class Gource : public SDLApp {
     void selectNextUser();
 
     void loadCaptions();
+    void exportCaptions();
+    void writeSubtitleEntry(RCaption* caption, float start_time, float end_time);
 
     void readLog();
 
