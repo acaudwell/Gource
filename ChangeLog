@@ -1,4 +1,5 @@
 0.57:
+ * Added --single-slot-captions option for replacing overlapping captions.
  * Handle loading indexed colour images (sokripon).
 
 0.56:

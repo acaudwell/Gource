@@ -327,6 +327,10 @@ options:
     --caption-offset X
             Caption horizontal offset (0 to centre captions).
 
+    --single-slot-captions
+            Replace any visible caption with the next caption instead of
+            stacking overlapping captions.
+
     -o, --output-ppm-stream FILE
             Output a PPM image stream to a file ('-' for STDOUT).
 
