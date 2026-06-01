@@ -40,6 +40,11 @@ class RFile : public Pawn {
     float last_action;
 
     float radius;
+    unsigned int file_size;
+    float target_size;
+    float size_transition_start;
+    float size_transition_elapsed;
+    float size_transition_duration;
 
     vec2 dest;
     float distance;
@@ -75,6 +80,8 @@ public:
 
     void setDest(const vec2 & dest){ this->dest = dest; }
     void setDistance(float distance){ this->distance = distance; }
+    void setFileSize(unsigned int file_size);
+    unsigned int getFileSize() const;
 
     void calcScreenPos(GLint* viewport, GLdouble* modelview, GLdouble* projection);
 

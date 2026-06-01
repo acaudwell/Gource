@@ -17,8 +17,7 @@
 
 #include "custom.h"
 #include "../gource_settings.h"
-
-Regex custom_regex("^(?:\\xEF\\xBB\\xBF)?([^|]+)\\|([^|]*)\\|([ADM]?)\\|([^|]+)(?:\\|#?([a-fA-F0-9]{6}))?");
+#include <boost/algorithm/string.hpp>
 
 CustomLog::CustomLog(const std::string& logfile) : RCommitLog(logfile) {
 }
@@ -48,27 +47,25 @@ bool CustomLog::parseCommit(RCommit& commit) {
 bool CustomLog::parseCommitEntry(RCommit& commit) {
 
     std::string line;
-    std::vector<std::string> entries;
-
     if(!getNextLine(line)) return false;
 
-    //custom line
-    if(!custom_regex.match(line, &entries)) return false;
+    std::vector<std::string> parts;
+    boost::split(parts, line, boost::is_any_of("|"));
+
+    if (parts.size() < 4) return false;
 
     time_t timestamp;
-
-    // Allow timestamp to be a string
-    if(entries[0].size() > 1 && entries[0].find("-", 1) != std::string::npos) {
-        if(!SDLAppSettings::parseDateTime(entries[0], timestamp))
+    if(parts[0].size() > 1 && parts[0].find("-", 1) != std::string::npos) {
+        if(!SDLAppSettings::parseDateTime(parts[0], timestamp))
             return false;
     } else {
-        timestamp = (time_t) atoll(entries[0].c_str());
-        if(!timestamp && entries[0] != "0")
+        timestamp = (time_t) atoll(parts[0].c_str());
+        if(!timestamp && parts[0] != "0")
             return false;
     }
 
-    std::string username = (entries[1].size()>0) ? entries[1] : "Unknown";
-    std::string action   = (entries[2].size()>0) ? entries[2] : "A";
+    std::string username = (parts[1].size()>0) ? parts[1] : "Unknown";
+    std::string action   = (parts[2].size()>0) ? parts[2] : "A";
 
     //if this file is for the same person and timestamp
     //we add to the commit, else we save the lastline
@@ -85,16 +82,21 @@ bool CustomLog::parseCommitEntry(RCommit& commit) {
 
     bool has_colour = false;
     vec3 colour;
-
-    if(entries.size()>=5 && entries[4].size()>0) {
+    
+    if (parts.size() >= 5 && parts[4].size() > 0) {
         has_colour = true;
-        colour = parseColour(entries[4]);
+        colour = parseColour(parts[4]);
+    }
+
+    unsigned int file_size = 0;
+    if ((action == "A" || action == "M") && parts.size() >= 6 && parts[5].size() > 0) {
+        file_size = std::stoul(parts[5]);
     }
 
     if(has_colour) {
-        commit.addFile(entries[3], action, colour);
+        commit.addFile(parts[3], action, colour, file_size);
     } else {
-        commit.addFile(entries[3], action);
+        commit.addFile(parts[3], action, file_size);
     }
 
     return true;
