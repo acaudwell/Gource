@@ -183,7 +183,8 @@ if(extended_help) {
     printf("  --caption-size SIZE         Caption font size\n");
     printf("  --caption-colour FFFFFF     Caption colour in hex\n");
     printf("  --caption-duration SECONDS  Caption duration (default: 10.0)\n");
-    printf("  --caption-offset X          Caption horizontal offset\n\n");
+    printf("  --caption-offset X          Caption horizontal offset\n");
+    printf("  --single-slot-captions      Show at most one caption at a time\n\n");
 
     printf("  --hash-seed SEED         Change the seed of hash function.\n\n");
 
@@ -279,6 +280,7 @@ GourceSettings::GourceSettings() {
     arg_types["author-time"]             = "bool";
     arg_types["key"]                     = "bool";
     arg_types["ffp"]                     = "bool";
+    arg_types["single-slot-captions"]    = "bool";
 
     arg_types["disable-auto-rotate"] = "bool";
     arg_types["disable-auto-skip"]   = "bool";
@@ -482,6 +484,7 @@ void GourceSettings::setGourceDefaults() {
     caption_size     = 16;
     caption_offset   = 0;
     caption_colour   = vec3(1.0f, 1.0f, 1.0f);
+    single_slot_captions = false;
 
     filename_colour  = vec3(1.0f, 1.0f, 1.0f);
     filename_time = 4.0f;
@@ -919,6 +922,10 @@ void GourceSettings::importGourceSettings(ConfFile& conffile, ConfSection* gourc
         } else {
             conffile.invalidValueException(entry);
         }
+    }
+
+    if(gource_settings->getBool("single-slot-captions")) {
+        single_slot_captions = true;
     }
 
     if((entry = gource_settings->getEntry("filename-colour")) != 0) {

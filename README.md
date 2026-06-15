@@ -327,6 +327,9 @@ options:
     --caption-offset X
             Caption horizontal offset (0 to centre captions).
 
+    --single-slot-captions
+            Show at most one caption at a time.
+
     -o, --output-ppm-stream FILE
             Output a PPM image stream to a file ('-' for STDOUT).
 

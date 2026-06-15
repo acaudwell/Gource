@@ -160,6 +160,7 @@ public:
     float caption_duration;
     int caption_size;
     int caption_offset;
+    bool single_slot_captions;
 
     vec3 filename_colour;
     float filename_time;
