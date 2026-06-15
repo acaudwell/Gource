@@ -1811,9 +1811,16 @@ void Gource::logic(float t, float dt) {
 
         if(caption->timestamp > currtime) break;
 
+        if(gGourceSettings.single_slot_captions) {
+            for(RCaption* cap : active_captions) {
+                delete cap;
+            }
+            active_captions.clear();
+        }
+
         float y = caption_start_y;
 
-        while(1) {
+        while(!gGourceSettings.single_slot_captions) {
 
             bool found = false;
 
