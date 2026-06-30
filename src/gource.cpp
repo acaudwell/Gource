@@ -1398,7 +1398,7 @@ void Gource::updateUsers(float t, float dt) {
         }
     }
 
-    if(users.empty() && stop_position_reached) {
+    if(users.empty() && stop_position_reached && commitqueue.empty()) {
         appFinished = true;
     }
 
@@ -1745,8 +1745,8 @@ void Gource::logic(float t, float dt) {
 
         RCommit commit = commitqueue.front();
 
-        //auto skip ahead, unless stop_position_reached
-        if(gGourceSettings.auto_skip_seconds>=0.0 && idle_time >= gGourceSettings.auto_skip_seconds && !stop_position_reached) {
+        //auto skip ahead, unless stop_position_reached (still allow skip while commits remain queued)
+        if(gGourceSettings.auto_skip_seconds>=0.0 && idle_time >= gGourceSettings.auto_skip_seconds && (!stop_position_reached || !commitqueue.empty())) {
             currtime = lasttime = commit.timestamp;
             idle_time = 0.0;
         }
