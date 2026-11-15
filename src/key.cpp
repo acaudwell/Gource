@@ -273,16 +273,16 @@ void FileKey::logic(float dt) {
             std::sort(active_keys.begin(), active_keys.end(), file_key_entry_sort);
 
             //limit to entries we can put onto the screen
-            int max_visible_entries = std::max(0, (int)((display.height - 150.0f) / 20.0f));
-
+            float key_height    = gGourceSettings.scaled_font_size + 4.0f;
+            float offset_y      = key_height + 2.0f;
+            float bottom_margin = 150.0f;
+            int max_visible_entries = std::max(0, (int)((display.height - bottom_margin - key_height) / offset_y));
             if (active_keys.size() > max_visible_entries) {
                 active_keys.resize(max_visible_entries);
             }
 
             //set position
-            float offset_y = gGourceSettings.scaled_font_size + 6.0f;
             float key_y = offset_y;
-
             for(std::vector<FileKeyEntry*>::iterator it = active_keys.begin(); it != active_keys.end(); it++) {
                 FileKeyEntry* entry = *it;
                 if(entry->getCount()>0) {
