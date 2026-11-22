@@ -157,6 +157,7 @@ public:
 
     std::string caption_file;
     vec3 caption_colour;
+    bool single_slot_captions;
     float caption_duration;
     int caption_size;
     int caption_offset;

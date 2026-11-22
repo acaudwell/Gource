@@ -324,6 +324,9 @@ options:
     --caption-duration SECONDS
             Caption duration.
 
+    --single-slot-captions
+            Display only the latest due caption instead of stacking captions.
+
     --caption-offset X
             Caption horizontal offset (0 to centre captions).
 

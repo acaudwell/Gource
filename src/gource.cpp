@@ -1806,6 +1806,18 @@ void Gource::logic(float t, float dt) {
         reloaded = false;
     }
 
+    if(gGourceSettings.single_slot_captions && !captions.empty() && captions.front()->timestamp <= currtime) {
+        // A time jump can make several captions due in one frame. Only lay out
+        // the last such caption; leave future captions queued.
+        auto next = captions.begin();
+        while(++next != captions.end() && (*next)->timestamp <= currtime) {
+            delete captions.front();
+            captions.pop_front();
+        }
+        for(RCaption* cap : active_captions) delete cap;
+        active_captions.clear();
+    }
+
     while(captions.size() > 0) {
         RCaption* caption = captions.front();
 
